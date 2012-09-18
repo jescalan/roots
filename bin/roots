@@ -4,22 +4,26 @@ var fs = require('fs');
 var path = require('path');
 var colors = require('colors');
 var watch = require('watch');
+var _ = require('underscore');
 var coffeescript = require('../lib/compilers/coffee');
 
 var current_directory = path.normalize(process.cwd());
 var dir_contents = fs.readdirSync(current_directory);
-var get_files = function(dir){ return fs.readdirSync(path.join(current_directory, dir)); }
+var get_files = function(dir, type){ 
+  var all_files = fs.readdirSync(path.join(current_directory, dir));
+  return _.filter(all_files, function(f){ return !!f.match(type); });
+}
 
 // make sure this is a roots project
 
-if (dir_contents.indexOf('app.coffee') > 0) {
+if (_.include(dir_contents, 'package.json')) {
   // console.log('we have a legit app'.green);
 } else {
   // console.log('looks like youre missing the app.js file, try running roots new `name` to create a new project'.red);
 }
 
-// compile all the things!
-coffeescript.compile(get_files('assets/js'));
+// compile all the things!\
+coffeescript.compile(get_files('assets/js', 'coffee'));
 
 // serve to public and open the browser
 
