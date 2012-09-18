@@ -9,9 +9,11 @@ var coffeescript = require('../lib/compilers/coffee');
 
 var current_directory = path.normalize(process.cwd());
 var dir_contents = fs.readdirSync(current_directory);
+
+// pulls out only the type of file you pass it in the directory you pass it
 var get_files = function(dir, type){ 
   var all_files = fs.readdirSync(path.join(current_directory, dir));
-  return _.filter(all_files, function(f){ return !!f.match(type); });
+  return _.filter(all_files, function(f){ return !!f.match(new RegExp('\.' + type + '$')); });
 }
 
 // make sure this is a roots project
@@ -24,6 +26,7 @@ if (_.include(dir_contents, 'package.json')) {
 
 // compile all the things!\
 coffeescript.compile(get_files('assets/js', 'coffee'));
+// helpers.pass_through(get_files('assets/js', 'js'))
 
 // serve to public and open the browser
 
