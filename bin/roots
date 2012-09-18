@@ -5,8 +5,9 @@ var path = require('path');
 var colors = require('colors');
 var watch = require('watch');
 var _ = require('underscore');
+var readdirp = require('readdirp');
 var coffeescript = require('../lib/compilers/coffee');
-var helpers = require('../lib/helpers')
+var helpers = require('../lib/helpers');
 
 var current_directory = path.normalize(process.cwd());
 var dir_contents = fs.readdirSync(current_directory);
@@ -19,7 +20,7 @@ var get_files = function(dir, type){
 
 // could move this out to helpers
 var pass_through = function(type){
-  require('readdirp')({ root: './assets', fileFilter: '*.' + type }, function(err, res){
+  readdirp({ root: path.join(current_directory, 'assets'), fileFilter: '*.' + type }, function(err, res){
     res.files.forEach(function(file){
       var location = path.join(current_directory, 'assets', file.path);
       var destination = path.join(current_directory, 'public', file.path);
@@ -30,7 +31,7 @@ var pass_through = function(type){
 }
 
 var create_directories = function(cb){
-  require('readdirp')({ root: './assets' }, function(err, res){
+  readdirp({ root: path.join(current_directory, 'assets') }, function(err, res){
     res.directories.forEach(function(dir){
       helpers.mkdirp(path.join('public', dir.path), '0777', function(){ cb(); })
     });
