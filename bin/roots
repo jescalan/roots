@@ -6,6 +6,7 @@ var colors = require('colors');
 var watch = require('watch');
 var _ = require('underscore');
 var coffeescript = require('../lib/compilers/coffee');
+var helpers = require('../lib/helpers')
 
 var current_directory = path.normalize(process.cwd());
 var dir_contents = fs.readdirSync(current_directory);
@@ -16,6 +17,26 @@ var get_files = function(dir, type){
   return _.filter(all_files, function(f){ return !!f.match(new RegExp('\.' + type + '$')); });
 }
 
+// could move this out to helpers
+var pass_through = function(type){
+  require('readdirp')({ root: './assets', fileFilter: '*.' + type }, function(err, res){
+    res.files.forEach(function(file){
+      var location = path.join(current_directory, 'assets', file.path);
+      var destination = path.join(current_directory, 'public', file.path);
+      var contents = fs.readFileSync(location, 'utf8');
+      fs.writeFileSync(destination, contents);
+    });
+  });
+}
+
+var create_directories = function(cb){
+  require('readdirp')({ root: './assets' }, function(err, res){
+    res.directories.forEach(function(dir){
+      helpers.mkdirp(path.join('public', dir.path), '0777', function(){ cb(); })
+    });
+  });
+}
+
 // make sure this is a roots project
 
 if (_.include(dir_contents, 'package.json')) {
@@ -24,9 +45,17 @@ if (_.include(dir_contents, 'package.json')) {
   // console.log('looks like youre missing the app.js file, try running roots new `name` to create a new project'.red);
 }
 
-// compile all the things!\
-coffeescript.compile(get_files('assets/js', 'coffee'));
-// helpers.pass_through(get_files('assets/js', 'js'))
+// compile all the things!
+create_directories(function(){
+
+  // compile javascript
+  coffeescript.compile(get_files('assets/js', 'coffee'));
+  pass_through('js');
+
+  // compile css
+
+  // compile views
+});
 
 // serve to public and open the browser
 
