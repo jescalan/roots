@@ -20,7 +20,7 @@ var get_files = function(dir, type){
 // compile all the things!
 helpers.create_directories(function(){
 
-  coffeescript.compile(get_files('assets/js', 'coffee'));
+  coffeescript.compile('assets');
   helpers.pass_through('js');
 
 });
