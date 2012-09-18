@@ -20,7 +20,18 @@ var get_files = function(dir, type){
 // compile all the things!
 helpers.create_directories(function(){
 
+  // I'd love for it to make a list of filetypes so we can only compile those
+
+  // javascript
   coffeescript.compile('assets');
-  helpers.pass_through('js');
+  helpers.pass_through('assets', 'js');
+
+  // css
+  // stylus.compile('assets');
+  // helpers.pass_through('assets', 'css');
+
+  // views
+  // jade.compile('views');
+  // helpers.pass_through('views', 'html');
 
 });
