@@ -6,32 +6,25 @@ var fs = require('fs'),
     watch = require('watch'),
     _ = require('underscore'),
     coffeescript = require('../lib/compilers/coffee'),
+    stylus = require('../lib/compilers/stylus'),
     helpers = require('../lib/helpers');
 
-var current_directory = path.normalize(process.cwd()),
-    dir_contents = fs.readdirSync(current_directory);
-
-// pulls out only the type of file you pass it in the directory you pass it
-var get_files = function(dir, type){ 
-  var all_files = fs.readdirSync(path.join(current_directory, dir));
-  return _.filter(all_files, function(f){ return !!f.match(new RegExp('\.' + type + '$')); });
-}
+var current_directory = path.normalize(process.cwd());
 
 // compile all the things!
-helpers.create_directories(function(){
+var file_types = ['js', 'css', 'html', 'coffee', 'styl', 'jade']
 
-  // I'd love for it to make a list of filetypes so we can only compile those
+helpers.create_structure('assets', file_types, function(files){
 
   // javascript
-  coffeescript.compile('assets');
-  helpers.pass_through('assets', 'js');
+  coffeescript.compile(files.coffee);
+  helpers.pass_through(files.js);
 
   // css
-  // stylus.compile('assets');
-  // helpers.pass_through('assets', 'css');
+  stylus.compile(files.styl)
+  helpers.pass_through(files.css);
+  
 
-  // views
-  // jade.compile('views');
-  // helpers.pass_through('views', 'html');
+  // html
 
 });
