@@ -12,8 +12,9 @@ var fs = require('fs'),
 var current_directory = path.normalize(process.cwd());
 
 // compile all the things!
-var file_types = ['js', 'css', 'html', 'coffee', 'styl', 'jade']
+var file_types = ['js', 'css', 'html', 'coffee', 'styl', 'jade'];
 
+// asset pipeline
 helpers.create_structure('assets', file_types, function(files){
 
   // javascript
@@ -21,10 +22,16 @@ helpers.create_structure('assets', file_types, function(files){
   helpers.pass_through(files.js);
 
   // css
-  stylus.compile(files.styl)
+  stylus.compile(files.styl);
   helpers.pass_through(files.css);
-  
+
+});
+
+// view compilation
+helpers.create_structure('views', file_types, function(files){
 
   // html
+  // jade.compile(files.jade);
+  // helpers.pass_through(files.html);
 
 });
