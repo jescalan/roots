@@ -13,17 +13,18 @@ var current_directory = path.normalize(process.cwd());
 
 // compile all the things!
 var file_types = ['js', 'css', 'html', 'coffee', 'styl', 'jade'];
+process.stdout.write('compiling files... '.grey);
 
 // asset pipeline
 helpers.create_structure('assets', file_types, function(files){
 
   // javascript
-  coffeescript.compile(files.coffee);
-  helpers.pass_through(files.js);
+  coffeescript.compile('assets', files.coffee);
+  helpers.pass_through('assets', files.js);
 
   // css
-  stylus.compile(files.styl);
-  helpers.pass_through(files.css);
+  stylus.compile('assets', files.styl);
+  helpers.pass_through('assets', files.css);
 
 });
 
@@ -32,6 +33,8 @@ helpers.create_structure('views', file_types, function(files){
 
   // html
   // jade.compile(files.jade);
-  // helpers.pass_through(files.html);
+  helpers.pass_through('views', files.html);
 
 });
+
+process.stdout.write('done!\n'.green);
