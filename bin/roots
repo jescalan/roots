@@ -8,22 +8,21 @@ var fs = require('fs'),
     coffeescript = require('../lib/compilers/coffee'),
     stylus = require('../lib/compilers/stylus'),
     jade = require('../lib/compilers/jade'),
+    haml = require('../lib/compilers/haml'),
     helpers = require('../lib/helpers');
 
 var current_directory = path.normalize(process.cwd());
 
 // compile all the things!
-var file_types = ['js', 'css', 'html', 'coffee', 'styl', 'jade'];
+var file_types = ['js', 'css', 'html', 'coffee', 'styl', 'jade', 'haml'];
 process.stdout.write('compiling files... '.grey);
 
 // asset pipeline
 helpers.create_structure('assets', file_types, function(files){
 
-  // javascript
   coffeescript.compile('assets', files.coffee);
   helpers.pass_through('assets', files.js);
 
-  // css
   stylus.compile('assets', files.styl);
   helpers.pass_through('assets', files.css);
 
@@ -32,8 +31,8 @@ helpers.create_structure('assets', file_types, function(files){
 // view compilation
 helpers.create_structure('views', file_types, function(files){
 
-  // html
   jade.compile('views', files.jade);
+  haml.compile('views', files.haml);
   helpers.pass_through('views', files.html);
 
 });
