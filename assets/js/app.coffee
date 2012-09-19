@@ -1,1 +1,2 @@
-console.log 'hello world'
+#import "_helpers.coffee"
+console.log 'hello coffeescript'
