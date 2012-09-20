@@ -6,6 +6,6 @@
 
 (function() {
 
-  console.log('hello coffeescript');
+  console.log('hello coffeescript!');
 
 }).call(this);

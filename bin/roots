@@ -17,7 +17,7 @@ var file_types = ['js', 'css', 'html', 'coffee', 'styl', 'jade', 'haml'];
 var ignore_files = [];
 ignore_files.push(/^_/);
 
-process.stdout.write('compiling files... '.grey);
+process.stdout.write('compiling project... '.grey);
 
 // asset pipeline
 helpers.create_structure('assets', file_types, ignore_files, function(files){
@@ -40,3 +40,41 @@ helpers.create_structure('views', file_types, ignore_files, function(files){
 });
 
 process.stdout.write('done!\n'.green);
+
+// now let's keep an eye on the files and recompile when necessary
+
+var assets_or_views = function(f, stat){
+  var regex = new RegExp(current_directory.replace(/\//g, "\\\/") + '\/(views|assets).*');
+  if (f.match(regex)){
+    return false;
+  } else {
+    return true;
+  }
+}
+
+watch.watchTree(current_directory, { filter: assets_or_views }, function(f, curr, prev){
+  if (typeof f == "object" && prev === null && curr === null) {
+    // console.log('analyzed tree');
+  } else if (prev === null && !assets_or_views(f)) {
+    add_file(f);
+  } else if (curr.nlink === 0) {
+    remove_file(f);
+  } else {
+    recompile(f);
+  }
+});
+
+var add_file = function(file){
+ process.stdout.write('adding file: '.green);
+ process.stdout.write(path.basename(file).grey + '\n');
+}
+
+var remove_file = function(file){
+  process.stdout.write('removing file: '.red);
+  process.stdout.write(path.basename(file).grey + '\n');
+}
+
+var recompile = function(file){
+  process.stdout.write('compiling: '.yellow);
+  process.stdout.write(path.basename(file).grey + '\n');
+}

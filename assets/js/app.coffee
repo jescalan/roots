@@ -1,4 +1,4 @@
 
 #= require "_helper"
 
-console.log 'hello coffeescript'
+console.log 'hello coffeescript!'
