@@ -2,7 +2,7 @@
 
 This is the beginnings of a really fantastic command line build tool. Super super alpha, don't even think about attempting to install this.
 
-The assets and views folders are temporary, just used for example files and convenience during development.
+To test the script, `./run` from the terminal 
 
 ### to do
 

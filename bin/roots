@@ -8,18 +8,17 @@ var fs = require('fs'),
 
 var current_directory = path.normalize(process.cwd());
 
-// compile all the things!
+// config variables (these will come from app.js)
 var file_types = ['js', 'css', 'html', 'coffee', 'styl', 'jade', 'haml'];
 var ignore_files = [];
 ignore_files.push(/^_/);
+var folder_config = { assets: 'assets', views: 'views' }
 
 // --------------------------------------------------------------------------
 // compile entire project fresh
 // --------------------------------------------------------------------------
 
-process.stdout.write('compiling project... '.grey);
-compiler.compile_project({ assets: 'assets', views: 'views' }, file_types, ignore_files);
-process.stdout.write('done!\n'.green);
+compiler.compile_project(folder_config, file_types, ignore_files);
 
 // --------------------------------------------------------------------------
 // now let's keep an eye on the files and recompile when necessary
@@ -38,8 +37,6 @@ watch.watchTree(current_directory, { filter: assets_or_views }, function(f, curr
   if (typeof f == "object" && prev === null && curr === null) {
     // console.log('initial analysis complete');
   } else if (!assets_or_views(f)) {
-    process.stdout.write('compiling project... '.grey);
     compiler.compile_project({ assets: 'assets', views: 'views' }, file_types, ignore_files);
-    process.stdout.write('done!\n'.green);
   }
 });

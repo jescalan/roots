@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd test
+rm -rf public/
+../bin/roots
