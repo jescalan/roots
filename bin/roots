@@ -4,7 +4,8 @@ var fs = require('fs'),
     path = require('path'),
     colors = require('colors'),
     watch = require('watch'),
-    compiler = require('../lib/compile-project');
+    compiler = require('../lib/compile-project'),
+    server = require('../lib/server');
 
 var current_directory = path.normalize(process.cwd());
 
@@ -19,6 +20,7 @@ var folder_config = { assets: 'assets', views: 'views' }
 // --------------------------------------------------------------------------
 
 compiler.compile_project(folder_config, file_types, ignore_files);
+server.start(current_directory);
 
 // --------------------------------------------------------------------------
 // now let's keep an eye on the files and recompile when necessary
@@ -26,11 +28,7 @@ compiler.compile_project(folder_config, file_types, ignore_files);
 
 var assets_or_views = function(f, stat){
   var regex = new RegExp(current_directory.replace(/\//g, "\\\/") + '\/(views|assets).*');
-  if (f.match(regex)){
-    return false;
-  } else {
-    return true;
-  }
+  if (f.match(regex)){ return false; } else { return true; }
 }
 
 watch.watchTree(current_directory, { filter: assets_or_views }, function(f, curr, prev){
