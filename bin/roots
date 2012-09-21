@@ -36,5 +36,6 @@ watch.watchTree(current_directory, { filter: assets_or_views }, function(f, curr
     // console.log('initial analysis complete');
   } else if (!assets_or_views(f)) {
     compiler.compile_project({ assets: 'assets', views: 'views' }, file_types, ignore_files);
+    server.reload();
   }
 });

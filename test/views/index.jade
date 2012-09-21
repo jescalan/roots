@@ -3,5 +3,13 @@ html
   body
     p hello world!
 
+  script(src="/js/socket.js")
   script
-    document.write("<script src='http://" + (location.host || 'localhost').split(':')[0] + ":35729/livereload.js'></" + "script>")
+    var socket = io.connect('http://localhost');
+      socket.on('connected', function (data) {
+        console.log('socket connection established');
+      });
+      socket.on('reload', function(data){
+        console.log('reloading...');
+        if (data){ document.location.reload(true); }
+      });
