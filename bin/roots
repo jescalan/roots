@@ -9,7 +9,10 @@ var fs = require('fs'),
 
 var current_directory = path.normalize(process.cwd());
 
+// --------------------------------------------------------------------------
 // config variables (these will come from app.js)
+// --------------------------------------------------------------------------
+
 var file_types = ['js', 'css', 'html', 'coffee', 'styl', 'jade', 'haml'];
 var ignore_files = [];
 ignore_files.push(/^_/);
@@ -26,9 +29,9 @@ compiler.compile_project(folder_config, file_types, ignore_files);
 // now let's keep an eye on the files and recompile when necessary
 // --------------------------------------------------------------------------
 
-watch.add("./assets").add("./views").onChange(function(f, prev, curr, action){
+watch.add("./" + folder_config.assets).add("./" + folder_config.views).onChange(function(f, prev, curr, action){
   console.log('file change detected'.red);
-  compiler.compile_project({ assets: 'assets', views: 'views' }, file_types, ignore_files, function(){
+  compiler.compile_project(folder_config, file_types, ignore_files, function(){
     server.reload();
   });
 });
