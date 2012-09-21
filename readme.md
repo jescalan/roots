@@ -8,6 +8,5 @@ To test the script, `./run` from the terminal
 
 - layout files
 - partials (with locals)
-- more efficient file watching
-- logic that can happen within the app.js file
-- live reloading
+- pull settings from app.js file
+- is there any way to speed up file watching?
