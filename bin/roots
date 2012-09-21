@@ -19,8 +19,8 @@ var folder_config = { assets: 'assets', views: 'views' }
 // compile entire project fresh
 // --------------------------------------------------------------------------
 
-compiler.compile_project(folder_config, file_types, ignore_files);
 server.start(current_directory);
+compiler.compile_project(folder_config, file_types, ignore_files);
 
 // --------------------------------------------------------------------------
 // now let's keep an eye on the files and recompile when necessary
@@ -31,11 +31,16 @@ var assets_or_views = function(f, stat){
   if (f.match(regex)){ return false; } else { return true; }
 }
 
+// this is working very nicely with the reload, although it is a bit slow.
+// it seems like the file watch is what's slowing it down though, rather than the compile.
+
 watch.watchTree(current_directory, { filter: assets_or_views }, function(f, curr, prev){
+  console.log('file change detected'.red);
   if (typeof f == "object" && prev === null && curr === null) {
     // console.log('initial analysis complete');
   } else if (!assets_or_views(f)) {
-    compiler.compile_project({ assets: 'assets', views: 'views' }, file_types, ignore_files);
-    server.reload();
+    compiler.compile_project({ assets: 'assets', views: 'views' }, file_types, ignore_files, function(){
+      server.reload();
+    });
   }
 });
