@@ -4,6 +4,21 @@ This is the beginnings of a really fantastic command line build tool. Super supe
 
 To test the script, `./run` from the terminal 
 
+### valid filetypes
+
+- jade (with markdown)
+- haml
+- ejs
+- coffeescript
+- stylus
+- html
+- css
+- javascript
+
+_Default stack_: jade, stylus, coffeescript
+
+(to add: less, sass, handlebars, jst, etc?)
+
 ### to do
 
 - layout files
