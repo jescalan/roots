@@ -10,3 +10,4 @@ To test the script, `./run` from the terminal
 - partials (with locals)
 - pull settings from app.js file
 - is there any way to speed up file watching?
+- add project folder generation

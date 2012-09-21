@@ -35,7 +35,8 @@
     "haml": "~0.4.3",
     "snockets": "~1.3.8",
     "socket.io": "~0.9.10",
-    "nodewatch": "~0.3.1"
+    "nodewatch": "~0.3.1",
+    "marked": "~0.2.5"
   },
   "engines": {
     "node": ">=0.8.0"
