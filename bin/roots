@@ -32,7 +32,6 @@ compiler.compile_project(options);
 // --------------------------------------------------------------------------
 
 watch.add("./" + options.folder_config.assets).add("./" + options.folder_config.views).onChange(function(f, prev, curr, action){
-  console.log('file change detected'.red);
   compiler.compile_project(options, function(){
     server.reload();
   });
