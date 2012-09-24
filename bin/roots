@@ -3,9 +3,9 @@
 var fs = require('fs'),
     path = require('path'),
     colors = require('colors'),
-    watch = require('nodewatch'),
     compiler = require('../lib/compile-project'),
-    server = require('../lib/server');
+    server = require('../lib/server'),
+    watcher = require('../lib/watcher');
 
 var current_directory = path.normalize(process.cwd());
 
@@ -31,9 +31,9 @@ compiler.compile_project(options);
 // now let's keep an eye on the files and recompile when necessary
 // --------------------------------------------------------------------------
 
-watch.add("./" + options.folder_config.assets).add("./" + options.folder_config.views).onChange(function(f, prev, curr, action){
-  console.log('file change detected'.red);
-  compiler.compile_project(options, function(){
-    server.reload();
-  });
-});
+watcher.watchDirectories(["./" + options.folder_config.views,
+                          "./" + options.folder_config.assets], function() {
+                            compiler.compile_project(options, function() {
+                              server.reload();
+                            });
+                        });
