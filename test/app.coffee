@@ -8,13 +8,13 @@
 ignore_files = [/^_/, /^readme/i, '.git', '.gitignore']
 
 # Use this to specify which files are layout files.
-# A '*' represents all views. Overrides for specific
+# `default` applies to all views. Overrides for specific
 # views are possible - the path to the view with the custom
 # layout is the key, and the path to the layout is the value.
 
 layouts =
-  '*': 'views/layout.jade'
-  'views/special.jade': 'views/layout2.jade'
+  default: 'views/layout.jade'
+  # 'views/special.jade': 'views/layout2.jade'
 
 # Locals will be made available on any page. They can be
 # variables or (coffeescript) functions.
