@@ -17,9 +17,11 @@ var options = {
     view_file_types: ['jade', 'ejs', 'haml', 'html'],
     asset_file_types: ['coffee', 'js', 'styl', 'css'],
     ignore_files: [],
-    folder_config: { assets: 'assets', views: 'views' }
+    folder_config: { assets: 'assets', views: 'views' },
+    layouts: { default: 'layout.jade' }
 };
 options.ignore_files.push(/^_/);
+options.ignore_files.push(/^layout/);
 
 // add locals here, make sure to include a repeat(x) helper
 

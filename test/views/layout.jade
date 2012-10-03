@@ -1,0 +1,15 @@
+!!!
+html
+  head
+    link(rel='stylesheet', href='/css/example.css')
+  body
+    != yield
+
+  script(src="/js/socket.js")
+  :coffeescript
+    socket = io.connect 'http://localhost'
+    socket.on 'connected', ->
+      console.log('socket connection established')
+    socket.on 'reload', (data)->
+      console.log 'reloading...'
+      document.location.reload(true) if data
