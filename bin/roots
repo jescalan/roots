@@ -13,19 +13,21 @@ var current_directory = path.normalize(process.cwd());
 // config variables (these will come from app.js)
 // --------------------------------------------------------------------------
 
-require('coffee-script'); // enable coffeescript requires
-var options = require(current_directory + '/app.coffee');
+require('coffee-script');
+var options = require(current_directory + '/app.coffee'); // pull the app config file
 
-options.view_file_types = ['jade', 'ejs', 'haml', 'html'];
-options.asset_file_types = ['coffee', 'js', 'styl', 'css'];
+// hard coded until a plugin interface is developed
+options.file_types.html = ['jade', 'ejs', 'html'];
+options.file_types.css = ['styl', 'css'];
+options.file_types.js = ['coffee', 'js'];
 
 // make sure all layout files are ignored
 for (var key in options.layouts){
   options.ignore_files.push(new RegExp(options.layouts[key]));
 }
 
-// add any globally available locals here
-// 6.times would be nice
+// add any additional globally available locals here
+// - range(1, 100).forEach
 
 // --------------------------------------------------------------------------
 // compile entire project fresh
