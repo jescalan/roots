@@ -18,7 +18,7 @@ module.exports = class CompileHelper
       @target_extension = 'html'
       base_folder = @options.folder_config.views
 
-      # if a custom layout has been defined, use that instead
+      # deal with layouts
       @layout = @options.layouts.default
       for file, layout of @options.layouts
         @layout = layout if file == @file
@@ -41,7 +41,13 @@ module.exports = class CompileHelper
     @file_path = path.join @current_directory, base_folder, @file
     @file_contents = fs.readFileSync @file_path, 'utf8'
     @export_path = path.join @current_directory, 'public', path.dirname(@file), "#{path.basename @file, path.extname(@file)}.#{@target_extension}"
-    
+  
+  # pass the content for yield and it will render a full object
+  # with all custom locals and the yield function
+  # otherwise it will just render custom locals
+  locals: (yield_content) ->
+    @options.locals.yield = yield_content if yield_content
+    @options.locals
 
   write: (write_content) ->
     fs.writeFileSync @export_path, write_content
