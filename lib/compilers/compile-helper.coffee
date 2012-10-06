@@ -13,15 +13,25 @@ module.exports = class CompileHelper
 
     @current_directory = path.normalize process.cwd()
 
-    # figure out what type of file will be exported
+    # if we're working with file that will compile to html
     if @options.file_types.html.indexOf(@name) > -1
       @target_extension = 'html'
       base_folder = @options.folder_config.views
-      @layout_path = path.join @current_directory, base_folder, @options.layouts.default # check for customs
+
+      # if a custom layout has been defined, use that instead
+      @layout = @options.layouts.default
+      for file, layout of @options.layouts
+        @layout = layout if file == @file
+
+      @layout_path = path.join @current_directory, base_folder, @layout # check for customs
       @layout_contents = fs.readFileSync @layout_path, 'utf8'
+
+    # if we're working with file that will compile to css
     else if @options.file_types.css.indexOf(@name) > -1
       @target_extension = 'css'
       base_folder = @options.folder_config.assets
+
+    # if we're working with file that will compile to js
     else if @options.file_types.js.indexOf(@name) > -1
       @target_extension = 'js'
       base_folder = @options.folder_config.assets
