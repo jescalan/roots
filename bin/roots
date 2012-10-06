@@ -13,17 +13,19 @@ var current_directory = path.normalize(process.cwd());
 // config variables (these will come from app.js)
 // --------------------------------------------------------------------------
 
-var options = {
-    view_file_types: ['jade', 'ejs', 'haml', 'html'],
-    asset_file_types: ['coffee', 'js', 'styl', 'css'],
-    ignore_files: [],
-    folder_config: { assets: 'assets', views: 'views' },
-    layouts: { default: 'layout.jade' }
-};
-options.ignore_files.push(/^_/);
-options.ignore_files.push(/^layout/);
+require('coffee-script'); // enable coffeescript requires
+var options = require(current_directory + '/app.coffee');
 
-// add locals here, make sure to include a repeat(x) helper
+options.view_file_types = ['jade', 'ejs', 'haml', 'html'];
+options.asset_file_types = ['coffee', 'js', 'styl', 'css'];
+
+// make sure all layout files are ignored
+for (var key in options.layouts){
+  options.ignore_files.push(new RegExp(options.layouts[key]));
+}
+
+// add any globally available locals here
+// 6.times would be nice
 
 // --------------------------------------------------------------------------
 // compile entire project fresh
