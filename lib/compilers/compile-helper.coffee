@@ -43,6 +43,6 @@ module.exports = class CompileHelper
     @export_path = path.join @current_directory, 'public', path.dirname(@file), "#{path.basename @file, path.extname(@file)}.#{@target_extension}"
     
 
-  write: (write_content)->
+  write: (write_content) ->
     fs.writeFileSync @export_path, write_content
     debug.log "compiled #{path.basename(@file)}"
