@@ -17,6 +17,7 @@ require('coffee-script');
 var options = require(current_directory + '/app.coffee'); // pull the app config file
 
 // hard coded until a plugin interface is developed
+options.file_types = {}
 options.file_types.html = ['jade', 'ejs', 'html'];
 options.file_types.css = ['styl', 'css'];
 options.file_types.js = ['coffee', 'js'];

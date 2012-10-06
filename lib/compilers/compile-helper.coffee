@@ -2,7 +2,7 @@ path = require 'path'
 fs = require 'fs'
 debug = require '../debug'
 
-class CompileHelper
+module.exports = class CompileHelper
 
   constructor: (@file, @options, @name) ->
 
@@ -14,13 +14,15 @@ class CompileHelper
     @layout_contents = fs.readFileSync @layout_path, 'utf8'
 
     # figure out what type of file will be exported
-    if @options.file_types.html.indexOf(@name) > 0
+    if @options.file_types.html.indexOf(@name) > -1
       @target_extension = 'html'
-    else if @options.file_types.css.indexOf(@name) > 0
+    else if @options.file_types.css.indexOf(@name) > -1
       @target_extension = 'css'
-    else if @options.file_types.js.indexOf(@name) > 0
+    else if @options.file_types.js.indexOf(@name) > -1
       @target_extension = 'js'
     else
+      console.log @options.file_types.html
+      console.log @name
       throw 'unsupported file extension'
 
     # if a view file, drop it in public/, if an asset file, public/css/ or public/js/
@@ -31,4 +33,4 @@ class CompileHelper
 
   write: (write_content)->
     fs.writeFileSync @export_path, write_content
-    debug.log "compiled #{path.basename(file)}"
+    debug.log "compiled #{path.basename(@file)}"
