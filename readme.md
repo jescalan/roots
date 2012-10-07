@@ -14,9 +14,9 @@ Roots' main interface is it's command line tool. There are just a couple of comm
 
 `$ roots watch`: The bulk of roots' usefulness is here. This command compiles your project, opens it up in your browser, then continues watching all your files for changes. As soon as one of them changes, roots will recompile the project and immediately refresh the browser. So fresh.
 
-`$ roots compile`: Compiled your project once to the public folder.
+`$ roots compile`: Compiled your project once to the public folder, with everything minified and compressed.
 
-`$ roots deploy project-name`: Deploys your project to heroku as `project-name`. If you don't add a name, heroku will generate one automatically. This command depends on the heroku toolbelt - if you don't have it, the command will instruct you on how to install it.
+`$ roots deploy project-name`: Compiles, compresses, and deploys your project to heroku as `project-name`. If you don't add a name, heroku will generate one automatically. This command depends on the heroku toolbelt - if you don't have it, the command will instruct you on how to install it.
 
 ### Features
 
@@ -30,6 +30,10 @@ Roots' main interface is it's command line tool. There are just a couple of comm
 - also supports ejs and straight html, css, and javascript
 - easy to extend with whatever languages you like best
 - this section needs work
+
+### CSS Library
+
+CSS is a huge pain in the ass and we always end up doing the same shit over and over. Compass wasn't terse or magical enough for me and is too reliant on ruby, so I put together a css helper library. It's a lot like [nib](https://github.com/visionmedia/nib) except it's more thorough and actually has documentation. It's been living on its own for a number of months and is used in production on a number of high profile sites already. The CSS library will have received a full rewrite by the time roots is released, and should have a really sweet site with all sorts of interactive documentation.
 
 ### Love/Hate
 
