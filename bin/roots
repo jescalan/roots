@@ -12,7 +12,7 @@ var fs = require('fs'),
 var current_directory = path.normalize(process.cwd());
 
 // --------------------------------------------------------------------------
-// config variables (these will come from app.js)
+// set the config variables from app.coffee
 // --------------------------------------------------------------------------
 
 if (fs.existsSync(current_directory + '/app.coffee')) {
@@ -42,6 +42,7 @@ if (fs.existsSync(current_directory + '/app.coffee')) {
 // --------------------------------------------------------------------------
 
 if (argv._[0] === 'watch' || argv._[0] == undefined) {
+  // rimraf public
   server.start(current_directory);
   compiler.compile_project(options);
   watcher.watchDirectories(["./" + options.folder_config.views,
@@ -58,6 +59,7 @@ if (argv._[0] === 'watch' || argv._[0] == undefined) {
 // --------------------------------------------------------------------------
 
 if (argv._[0] === 'compile') {
+  // rimraf public
   compiler.compile_project(options);
 }
 
@@ -86,6 +88,7 @@ if (argv._[0] === 'deploy') {
         } else {
           // could be worth checking the current branch as well
           // instead of assuming master
+          // git rev-parse --abbrev-ref HEAD will directly output it
 
           // run('git push heroku master ' + name, function(err, out, stderr){
           //   console.log('deployed to heroku at (url)');
@@ -108,6 +111,7 @@ if (argv._[0] === 'help' || !fs.existsSync(current_directory + '/app.coffee')) {
   process.stdout.write("- ");
   process.stdout.write("new `name`: ".bold);
   process.stdout.write("create a new project structure in the current directory\n- ");
+  // also run git init automatically on roots new
 
   process.stdout.write("compile: ".bold);
   process.stdout.write("compile your project once to the public folder\n- ");
