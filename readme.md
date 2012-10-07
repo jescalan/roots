@@ -12,7 +12,7 @@ Roots' main interface is it's command line tool. There are just a couple of comm
 
 `$ roots new project-name`: Creates a new project template in the current directory, called `project-name`. Just a really simple scaffold of folders as well as some basic settings, a custom html boilerplate, and the roots css library linked. Good way to get off the ground quickly with the right structure.
 
-`$ roots watch`: The bulk of roots' usefulness is here. This command compiled your project, opens it up in your browser, then continues watching all your files for changes. As soon as one of them changes, roots will recompile the project and immediately refresh the browser. So no more command tab.
+`$ roots watch`: The bulk of roots' usefulness is here. This command compiles your project, opens it up in your browser, then continues watching all your files for changes. As soon as one of them changes, roots will recompile the project and immediately refresh the browser. So fresh.
 
 `$ roots compile`: Compiled your project once to the public folder.
 
@@ -33,4 +33,4 @@ Roots' main interface is it's command line tool. There are just a couple of comm
 
 ### Love/Hate
 
-Do you love and/or hate this? Maybe you even want to help, or suggest an improvement. Tell us all about it. Email hello@jenius.me or file an issue. <3
+Do you love and/or hate this? Maybe you even want to help, or suggest an improvement. Tell us all about it. Find my email and harass me or file an issue. <3
