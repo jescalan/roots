@@ -45,8 +45,9 @@ module.exports = class CompileHelper
   # pass the content for yield and it will render a full object
   # with all custom locals and the yield function
   # otherwise it will just render custom locals
-  locals: (yield_content) ->
-    @options.locals.yield = yield_content if yield_content
+  locals: (extra) ->
+    for key, value of extra
+      @options.locals[key] = value
     @options.locals
 
   write: (write_content) ->

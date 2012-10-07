@@ -22,7 +22,7 @@ exports.layouts =
 exports.locals =
   title: 'Welcome to Roots!'
   title_with_markup: ->
-    "<h1 class='title'>Welcome to Roots!</h1>"
+    "<h1 class='title'>#{this.title}</h1>"
 
 # names of the views and assets folder. Don't recommend
 # changing these, but if you have some other naming convention,
