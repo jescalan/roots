@@ -32,6 +32,11 @@ exports.folder_config =
   assets: 'assets'
   views: 'views'
 
+# if true, shows the compile process and page/asset status in the
+# terminal when watching and compiling files
+
+exports.debug = false
+
 ###
 
 Command line tool basics:
