@@ -14,6 +14,71 @@ var fs = require('fs'),
 var current_directory = path.normalize(process.cwd());
 
 // --------------------------------------------------------------------------
+// watch task (default)
+// --------------------------------------------------------------------------
+
+var run_other_tasks = function(){
+  if (argv._[0] === 'watch' || argv._[0] == undefined) {
+    // rimraf public
+    // add in the livereload function
+    options.locals.livereload = "<script>" + fs.readFileSync(path.join(__dirname, '../lib/reload.js'), 'utf8') + "</script>"
+    compiler.compile_project(options);
+    server.start(current_directory);
+    watcher.watchDirectories(["./" + options.folder_config.views,
+                              "./" + options.folder_config.assets], function() {
+                                compiler.compile_project(options, function() {
+                                  console.log('\nreloading page'.red);
+                                  server.reload();
+                                });
+                            });
+  }
+
+  // --------------------------------------------------------------------------
+  // compile task
+  // --------------------------------------------------------------------------
+
+  else if (argv._[0] === 'compile') {
+    // rimraf public
+    compiler.compile_project(options);
+  }
+
+  // --------------------------------------------------------------------------
+  // deploy task
+  // --------------------------------------------------------------------------
+
+  else if (argv._[0] === 'deploy') {
+    var run = require('child_process').exec
+    // check to see if heroku is installed
+    run('which heroku', function(err, out, stderr){
+      if (err) {
+        console.log("You need to install heroku first. Here's the download page".red)
+        setTimeout(function(){ require('open')('https://toolbelt.heroku.com/') }, 700)
+      } else {
+        // check if there is alread a heroku app
+        run("git branch -r | grep heroku", function(err,out,stdout){
+          if (err) {
+            console.log('creating app on heroku...'.green);
+            var name = argv._[1]
+            if (name == undefined) { name = "" }
+            // run('heroku create ' + name, function(err, out, stderr){
+            //   console.log('new heroku app created');
+            //   should run `heroku open` here as well
+            // });
+          } else {
+            // run("git rev-parse --abbrev-ref HEAD", function(err, branch, stdout){
+              // run('git push heroku ' + branch, function(err, out, stderr){
+              // // need to parse the output to grab the url here if possible
+              //   console.log('deployed to heroku at (url)');
+              // });
+            // });
+          }
+        })
+      }
+    })
+  }
+}
+
+// --------------------------------------------------------------------------
 // new task
 // --------------------------------------------------------------------------
 
@@ -57,79 +122,18 @@ else if (fs.existsSync(current_directory + '/app.coffee')) {
   // livereload function won't render anything unless in watch mode
   options.locals.livereload = ""
 
+  run_other_tasks()
+
 } else if (!fs.existsSync(current_directory + '/app.coffee')) {
   // if there's no app.coffee file, chances are you aren't in a roots project
   console.log("\nnot a roots project - run `roots help` if you are confused\n".yellow);
 }
 
 // --------------------------------------------------------------------------
-// watch task (default)
-// --------------------------------------------------------------------------
-
-else if (argv._[0] === 'watch' || argv._[0] == undefined) {
-  // rimraf public
-  // add in the livereload function
-  options.locals.livereload = "<script>" + fs.readFileSync(path.join(__dirname, '../lib/reload.js'), 'utf8') + "</script>"
-  server.start(current_directory);
-  compiler.compile_project(options);
-  watcher.watchDirectories(["./" + options.folder_config.views,
-                            "./" + options.folder_config.assets], function() {
-                              compiler.compile_project(options, function() {
-                                console.log('\nreloading page'.red);
-                                server.reload();
-                              });
-                          });
-}
-
-// --------------------------------------------------------------------------
-// compile task
-// --------------------------------------------------------------------------
-
-else if (argv._[0] === 'compile') {
-  // rimraf public
-  compiler.compile_project(options);
-}
-
-// --------------------------------------------------------------------------
-// deploy task
-// --------------------------------------------------------------------------
-
-else if (argv._[0] === 'deploy') {
-  var run = require('child_process').exec
-  // check to see if heroku is installed
-  run('which heroku', function(err, out, stderr){
-    if (err) {
-      console.log("You need to install heroku first. Here's the download page".red)
-      setTimeout(function(){ require('open')('https://toolbelt.heroku.com/') }, 700)
-    } else {
-      // check if there is alread a heroku app
-      run("git branch -r | grep heroku", function(err,out,stdout){
-        if (err) {
-          console.log('creating app on heroku...'.green);
-          var name = argv._[1]
-          if (name == undefined) { name = "" }
-          // run('heroku create ' + name, function(err, out, stderr){
-          //   console.log('new heroku app created');
-          //   should run `heroku open` here as well
-          // });
-        } else {
-          // run("git rev-parse --abbrev-ref HEAD", function(err, branch, stdout){
-            // run('git push heroku ' + branch, function(err, out, stderr){
-            // // need to parse the output to grab the url here if possible
-            //   console.log('deployed to heroku at (url)');
-            // });
-          // });
-        }
-      })
-    }
-  })
-}
-
-// --------------------------------------------------------------------------
 // help task
 // --------------------------------------------------------------------------
 
-else if (argv._[0] === 'help') {
+if (argv._[0] === 'help') {
   console.log("");
   console.log("Need some help? Here's what you can do with the roots command line tool:");
   console.log("");
