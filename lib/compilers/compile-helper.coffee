@@ -3,7 +3,7 @@ fs = require 'fs'
 debug = require '../debug'
 
 # this class is absurd. its purpose is to resolve and
-# hold on to all the file paths and contents necessary to
+# hold on to all the file paths and file contents necessary to
 # compile the file. this looks messy, but it's what keeps
 # the actual compilers clean
 

@@ -36,6 +36,10 @@ if (fs.existsSync(current_directory + '/app.coffee')) {
 
   // add any additional globally available locals here
   // - range(1, 100).forEach
+  
+  // livereload function won't render anything unless in watch mode
+  options.locals.livereload = ""
+
 } else {
   // if there's no app.coffee file, chances are you aren't in a roots project
   argv._[0] = 'help'
@@ -47,6 +51,8 @@ if (fs.existsSync(current_directory + '/app.coffee')) {
 
 if (argv._[0] === 'watch' || argv._[0] == undefined) {
   // rimraf public
+  // add in the livereload function
+  options.locals.livereload = "<script>" + fs.readFileSync(path.join(__dirname, '../lib/reload.js'), 'utf8') + "</script>"
   server.start(current_directory);
   compiler.compile_project(options);
   watcher.watchDirectories(["./" + options.folder_config.views,
