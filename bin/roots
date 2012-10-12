@@ -96,12 +96,11 @@ if (argv._[0] === 'deploy') {
           //   should run `heroku open` here as well
           // });
         } else {
-          // could be worth checking the current branch as well
-          // instead of assuming master
-          // git rev-parse --abbrev-ref HEAD will directly output it
-
-          // run('git push heroku master ' + name, function(err, out, stderr){
-          //   console.log('deployed to heroku at (url)');
+          // run("git rev-parse --abbrev-ref HEAD", function(err, branch, stdout){
+            // run('git push heroku ' + branch, function(err, out, stderr){
+            // // need to parse the output to grab the url here if possible
+            //   console.log('deployed to heroku at (url)');
+            // });
           // });
         }
       })
