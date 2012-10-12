@@ -2,4 +2,4 @@
 
 cd test
 rm -rf public/
-../bin/roots
+../bin/roots new new-project

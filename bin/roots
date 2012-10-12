@@ -6,6 +6,7 @@ var fs = require('fs'),
     compiler = require('../lib/compile-project'),
     server = require('../lib/server'),
     debug = require('../lib/debug'),
+    ncp = require('ncp').ncp,
     argv = require('optimist').argv,
     watcher = require('../lib/watcher');
 
@@ -13,10 +14,26 @@ var fs = require('fs'),
 var current_directory = path.normalize(process.cwd());
 
 // --------------------------------------------------------------------------
+// new task
+// --------------------------------------------------------------------------
+
+if (argv._[0] === 'new') {
+  if (!argv._[1]) { return console.log('\nyou must specify a name for your project\n'.red); }
+
+  var source = path.join(__dirname, '../lib/template');
+  var destination = path.join(current_directory, argv._[1]);
+
+  ncp(source, destination, function (err) {
+   if (err) { return console.error(err); }
+   console.log('\nnew project created at /'.green + argv._[1].green + '\n');
+  });
+}
+
+// --------------------------------------------------------------------------
 // set the config variables from app.coffee
 // --------------------------------------------------------------------------
 
-if (fs.existsSync(current_directory + '/app.coffee')) {
+else if (fs.existsSync(current_directory + '/app.coffee')) {
   require('coffee-script');
   var options = require(current_directory + '/app.coffee'); // pull the app config file
 
@@ -40,16 +57,16 @@ if (fs.existsSync(current_directory + '/app.coffee')) {
   // livereload function won't render anything unless in watch mode
   options.locals.livereload = ""
 
-} else {
+} else if (!fs.existsSync(current_directory + '/app.coffee')) {
   // if there's no app.coffee file, chances are you aren't in a roots project
-  argv._[0] = 'help'
+  console.log("\nnot a roots project - run `roots help` if you are confused\n".yellow);
 }
 
 // --------------------------------------------------------------------------
 // watch task (default)
 // --------------------------------------------------------------------------
 
-if (argv._[0] === 'watch' || argv._[0] == undefined) {
+else if (argv._[0] === 'watch' || argv._[0] == undefined) {
   // rimraf public
   // add in the livereload function
   options.locals.livereload = "<script>" + fs.readFileSync(path.join(__dirname, '../lib/reload.js'), 'utf8') + "</script>"
@@ -68,7 +85,7 @@ if (argv._[0] === 'watch' || argv._[0] == undefined) {
 // compile task
 // --------------------------------------------------------------------------
 
-if (argv._[0] === 'compile') {
+else if (argv._[0] === 'compile') {
   // rimraf public
   compiler.compile_project(options);
 }
@@ -77,7 +94,7 @@ if (argv._[0] === 'compile') {
 // deploy task
 // --------------------------------------------------------------------------
 
-if (argv._[0] === 'deploy') {
+else if (argv._[0] === 'deploy') {
   var run = require('child_process').exec
   // check to see if heroku is installed
   run('which heroku', function(err, out, stderr){
@@ -112,7 +129,7 @@ if (argv._[0] === 'deploy') {
 // help task
 // --------------------------------------------------------------------------
 
-if (argv._[0] === 'help' || !fs.existsSync(current_directory + '/app.coffee')) {
+else if (argv._[0] === 'help') {
   console.log("");
   console.log("Need some help? Here's what you can do with the roots command line tool:");
   console.log("");
