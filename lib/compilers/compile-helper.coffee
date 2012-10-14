@@ -12,9 +12,12 @@ module.exports = class CompileHelper
   constructor: (@file, @options, @name) ->
 
     @current_directory = path.normalize process.cwd()
+    html_file = @options.file_types.html.indexOf(@name) > -1
+    css_file = @options.file_types.css.indexOf(@name) > -1
+    js_file = @options.file_types.js.indexOf(@name) > -1
 
     # if we're working with file that will compile to html
-    if @options.file_types.html.indexOf(@name) > -1
+    if html_file
       @target_extension = 'html'
       base_folder = @options.folder_config.views
 
@@ -27,14 +30,16 @@ module.exports = class CompileHelper
       @layout_contents = fs.readFileSync @layout_path, 'utf8'
 
     # if we're working with file that will compile to css
-    else if @options.file_types.css.indexOf(@name) > -1
+    else if css_file
       @target_extension = 'css'
       base_folder = @options.folder_config.assets
 
     # if we're working with file that will compile to js
-    else if @options.file_types.js.indexOf(@name) > -1
+    else if js_file
       @target_extension = 'js'
       base_folder = @options.folder_config.assets
+
+    # something really whack happened
     else
       throw "unsupported file extension: .#{@name}"
 
@@ -42,13 +47,11 @@ module.exports = class CompileHelper
     @file_contents = fs.readFileSync @file_path, 'utf8'
     @export_path = path.join @current_directory, 'public', path.dirname(@file), "#{path.basename @file, path.extname(@file)}.#{@target_extension}"
   
-  # pass the content for yield and it will render a full object
-  # with all custom locals and the yield function
-  # otherwise it will just render custom locals
+  # extra locals (like yield) can be added here
   locals: (extra) ->
     for key, value of extra
       @options.locals[key] = value
-    @options.locals
+    return @options.locals
 
   write: (write_content) ->
     fs.writeFileSync @export_path, write_content

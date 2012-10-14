@@ -14,7 +14,7 @@ Roots' main interface is it's command line tool. There are just a couple of comm
 
 `$ roots watch`: The bulk of roots' usefulness is here. This command compiles your project, opens it up in your browser, then continues watching all your files for changes. As soon as one of them changes, roots will recompile the project and immediately refresh the browser. So fresh.
 
-`$ roots compile`: Compiled your project once to the public folder, with everything minified and compressed.
+`$ roots compile`: Compiles your project once to the public folder, with everything minified and compressed.
 
 `$ roots deploy project-name`: Compiles, compresses, and deploys your project to heroku as `project-name`. If you don't add a name, heroku will generate one automatically. This command depends on the heroku toolbelt - if you don't have it, the command will instruct you on how to install it.
 

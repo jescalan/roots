@@ -22,7 +22,19 @@ var run_other_tasks = function(){
     // rimraf public
     // add in the livereload function
     options.locals.livereload = "<script>" + fs.readFileSync(path.join(__dirname, '../lib/reload.js'), 'utf8') + "</script>"
-    compiler.compile_project(options);
+
+    // the error happened here --
+    // the project is compiled once before serving, and you
+    // weren't catching the error here as well. we do need
+    // to figure out what to serve if it happens here though rather
+    // than while it's watching. probably some custom error page that
+    // we make that just shows the error and injects the livereload
+    // function so that it automatically gets fixed
+
+    compiler.compile_project(options, function(err){
+      console.log("ERRRARRRRR".red);
+    });
+
     server.start(current_directory);
     watcher.watchDirectories(["./" + options.folder_config.views,
                               "./" + options.folder_config.assets], function() {
@@ -43,7 +55,14 @@ var run_other_tasks = function(){
 
   else if (argv._[0] === 'compile') {
     // rimraf public
-    compiler.compile_project(options);
+
+    // also happens here for the one time compile. we might want to wrap
+    // the compile and error handling so that it's not repeated, as it is on this
+    // page three times.
+    // ...or we could push the error handling back into the compile-project file
+    compiler.compile_project(options, function(err){
+      console.log("ERRRARRRRR".red);
+    });
   }
 
   // --------------------------------------------------------------------------
