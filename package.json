@@ -37,7 +37,8 @@
     "marked": "~0.2.5",
     "ejs": "~0.8.3",
     "coffee-script": "latest",
-    "optimist": "~0.3.4"
+    "optimist": "~0.3.4",
+    "ncp": "~0.2.6"
   },
   "engines": {
     "node": ">=0.8.0"
