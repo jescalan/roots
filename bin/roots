@@ -26,9 +26,13 @@ var run_other_tasks = function(){
     server.start(current_directory);
     watcher.watchDirectories(["./" + options.folder_config.views,
                               "./" + options.folder_config.assets], function() {
-                                compiler.compile_project(options, function() {
-                                  console.log('\nreloading page'.red);
-                                  server.reload();
+                                compiler.compile_project(options, function(err) {
+                                  if (err) {
+                                    console.log("ERRROR".red);
+                                  } else {
+                                    console.log('\nreloading page'.red);
+                                    server.reload();
+                                  }
                                 });
                             });
   }
@@ -118,7 +122,7 @@ else if (fs.existsSync(current_directory + '/app.coffee')) {
 
   // add any additional globally available locals here
   // - range(1, 100).forEach
-  
+
   // livereload function won't render anything unless in watch mode
   options.locals.livereload = ""
 
