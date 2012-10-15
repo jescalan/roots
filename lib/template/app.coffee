@@ -26,7 +26,7 @@ exports.locals =
 
 # names of the views and assets folder. Don't recommend
 # changing these, but if you have some other naming convention,
-# go for it.
+# go for it. make sure you change the actual folders as well
 
 exports.folder_config =
   assets: 'assets'
