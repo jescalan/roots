@@ -1,7 +1,7 @@
 {
   "name": "roots",
-  "version": "1.0.0",
-  "description": "Roots is where it all begins",
+  "version": "0.0.1-alpha",
+  "description": "Roots is a tiny, fast, and flexible build system for static sites",
   "keywords": [
     "front-end",
     "development",
@@ -11,15 +11,15 @@
     "tool"
   ],
   "homepage": "http://roots.carrotbeta.com",
-  "bugs": "https://github.com/roots/roots-static/issues",
+  "bugs": "https://github.com/jenius/roots-cli/issues",
   "author": "Jeff Escalante",
-  "main": "./roots",
+  "main": "./lib",
   "bin": {
     "roots": "./bin/roots"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/carrot/roots-static.git"
+    "url": "git://github.com/jenius/roots-cli.git"
   },
   "scripts": {
     "uninstall": "rm -rf ~/.roots"

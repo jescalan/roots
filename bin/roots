@@ -13,13 +13,15 @@ var fs = require('fs'),
 
 var current_directory = path.normalize(process.cwd());
 
-// --------------------------------------------------------------------------
-// watch task (default)
-// --------------------------------------------------------------------------
-
 var run_other_tasks = function(){
+
+  // --------------------------------------------------------------------------
+  // watch task (default)
+  // --------------------------------------------------------------------------
+
   if (argv._[0] === 'watch' || argv._[0] == undefined) {
     // rimraf public
+    
     // add in the livereload function
     options.locals.livereload = "<script>" + fs.readFileSync(path.join(__dirname, '../lib/reload.js'), 'utf8') + "</script>"
 

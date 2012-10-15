@@ -54,5 +54,11 @@ module.exports = class CompileHelper
     return @options.locals
 
   write: (write_content) ->
+    # @compress(write_content) if @options.compress
     fs.writeFileSync @export_path, write_content
     debug.log "compiled #{path.basename(@file)}"
+
+  compress: (write_content) ->
+    # this is where the file should be minified, compressed, etc
+    # if that option is active
+    # @target_extension is available so it's easy to tell how to compress

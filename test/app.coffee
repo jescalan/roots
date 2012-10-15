@@ -37,6 +37,14 @@ exports.folder_config =
 
 exports.debug = false
 
+# if you want to extend roots with extra plugins, compilers, etc
+# include them here. just include a link to the github repo and
+# make sure the formatting is correct according to [docs link]
+
+# exports.extensions = [
+#   'http://github.com/jenius/roots-compass'
+# ]
+
 ###
 
 Command line tool basics:
