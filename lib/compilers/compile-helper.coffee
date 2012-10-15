@@ -62,3 +62,12 @@ module.exports = class CompileHelper
     # this is where the file should be minified, compressed, etc
     # if that option is active
     # @target_extension is available so it's easy to tell how to compress
+
+    # UglifyJS = require 'uglify-js2'
+    # UglifyJS.minify("/path/to/file.js")
+    # this needs to take text input rather than a file path. yech.
+    # we have to do it the long way then:
+    # https://github.com/mishoo/UglifyJS2
+
+    # csso = require 'csso'
+    # csso.justDoIt(css-content)
