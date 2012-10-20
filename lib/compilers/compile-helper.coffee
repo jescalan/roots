@@ -5,34 +5,32 @@ options = global.options
 
 # this class is absurd. its purpose is to resolve and
 # hold on to all the file paths and file contents necessary to
-# compile the file. this looks messy, but it's what keeps
-# the actual compilers clean
+# compile the file. this looks messy, but it's necessary and is
+# what keeps the actual compilers so clean
 
 module.exports = class CompileHelper
 
   constructor: (@file) ->
 
-    @name = path.extname(@file).slice(1)
-
+    @extension = path.extname(@file).slice(1)
     @current_directory = path.normalize process.cwd()
-    html_file = options.file_types.html.indexOf(@name) > -1
-    css_file = options.file_types.css.indexOf(@name) > -1
-    js_file = options.file_types.js.indexOf(@name) > -1
 
-    # if we're working with file that will compile to html
+    html_file = options.file_types.html.indexOf(@extension) > -1
+    css_file = options.file_types.css.indexOf(@extension) > -1
+    js_file = options.file_types.js.indexOf(@extension) > -1
+
     if html_file
       @target_extension = 'html'
       base_folder = options.folder_config.views
 
       # deal with layouts
       @layout = options.layouts.default
-      for file, layout of options.layouts
-        @layout = layout if file == @file
+      for file, layout_path of options.layouts
+        @layout = layout_path if @file == file
 
-      @layout_path = path.join @current_directory, base_folder, @layout # check for customs
+      @layout_path = path.join @current_directory, base_folder, @layout
       @layout_contents = fs.readFileSync @layout_path, 'utf8'
 
-    # if we're working with file that will compile to css
     else if css_file
       @target_extension = 'css'
       base_folder = options.folder_config.assets
@@ -44,7 +42,7 @@ module.exports = class CompileHelper
 
     # something really whack happened
     else
-      throw "unsupported file extension for file: #{@name}"
+      throw "unsupported file extension for file: #{@file}"
 
     @file_path = path.join @current_directory, base_folder, @file
     @file_contents = fs.readFileSync @file_path, 'utf8'
@@ -79,8 +77,3 @@ module.exports = class CompileHelper
     # see https://github.com/css/csso
     if @target_extension == 'css'
       return require('csso').justDoIt(write_content)
-
-    # images i'm going to handle separately - it will optimize them in place
-    # then copy them all over. this will only happen on deploy or single compile
-    # so there's really no need to attempt to store which images have already been
-    # optimized to save time or anything like that

@@ -13,7 +13,7 @@ var fs = require('fs'),
 
 var current_directory = path.normalize(process.cwd());
 
-var run_other_tasks = function(){
+var project_tasks = function(){
 
   // --------------------------------------------------------------------------
   // watch task (default)
@@ -69,8 +69,8 @@ var run_other_tasks = function(){
             //   should run `heroku open` here as well
             // });
           } else {
-            // run("git rev-parse --abbrev-ref HEAD", function(err, branch, stdout){
-              // run('git push heroku ' + branch, function(err, out, stderr){
+            // run("git rev-parse --abbrev-ref HEAD", function(err, out, stdout){
+              // run('git push heroku ' + out, function(err, out, stderr){
               // // need to parse the output to grab the url here if possible
               //   console.log('deployed to heroku at (url)');
               // });
@@ -126,9 +126,9 @@ else if (fs.existsSync(current_directory + '/app.coffee')) {
   // livereload function won't render anything unless in watch mode
   options.locals.livereload = ""
 
-  run_other_tasks()
+  project_tasks()
 
-} else if (!fs.existsSync(current_directory + '/app.coffee')) {
+} else if (!fs.existsSync(current_directory + '/app.coffee') && argv._[0] !== 'help') {
   // if there's no app.coffee file, chances are you aren't in a roots project
   console.log("\nnot a roots project - run `roots help` if you are confused\n".yellow);
 }
@@ -154,7 +154,7 @@ if (argv._[0] === 'help') {
   process.stdout.write("watch your project, compile when changes occur, and live reload\n- ");
 
   process.stdout.write("deploy `name`: ".bold);
-  process.stdout.write("deploy your project to heroku (requires heroku gem)\n");
+  process.stdout.write("deploy your project to heroku\n");
 
   // consider adding roots open and roots open remote
 
