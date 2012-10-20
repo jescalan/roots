@@ -25,12 +25,12 @@ var run_other_tasks = function(){
     // add in the livereload function
     options.locals.livereload = "<script>" + fs.readFileSync(path.join(__dirname, '../lib/reload.js'), 'utf8') + "</script>"
     
-    compiler.compile_project(options);
+    compiler.compile_project();
 
     server.start(current_directory);
     watcher.watchDirectories(["./" + options.folder_config.views,
                               "./" + options.folder_config.assets], function() {
-                                compiler.compile_project(options, function(err) {
+                                compiler.compile_project(function(err) {
                                   console.log('\nreloading page'.red);
                                   server.reload();
                                 });
@@ -43,7 +43,7 @@ var run_other_tasks = function(){
 
   else if (argv._[0] === 'compile') {
     // rimraf public
-    compiler.compile_project(options);
+    compiler.compile_project();
   }
 
   // --------------------------------------------------------------------------
@@ -104,7 +104,7 @@ if (argv._[0] === 'new') {
 
 else if (fs.existsSync(current_directory + '/app.coffee')) {
   require('coffee-script');
-  var options = require(current_directory + '/app.coffee'); // pull the app config file
+  var options = global.options = require(current_directory + '/app.coffee'); // pull the app config file
 
   // hard coded until a plugin interface is developed
   options.file_types = {}
