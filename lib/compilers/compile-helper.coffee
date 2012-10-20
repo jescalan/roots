@@ -41,7 +41,7 @@ module.exports = class CompileHelper
 
     # something really whack happened
     else
-      throw "unsupported file extension: .#{@name}"
+      throw "unsupported file extension for file: #{@name}"
 
     @file_path = path.join @current_directory, base_folder, @file
     @file_contents = fs.readFileSync @file_path, 'utf8'
@@ -59,15 +59,24 @@ module.exports = class CompileHelper
     debug.log "compiled #{path.basename(@file)}"
 
   compress: (write_content) ->
-    # this is where the file should be minified, compressed, etc
-    # if that option is active
-    # @target_extension is available so it's easy to tell how to compress
+    # not sure how i'm going to concat files, but this should happen
+    # perhaps another pass on the public folder afterward...
 
-    # UglifyJS = require 'uglify-js2'
-    # UglifyJS.minify("/path/to/file.js")
-    # this needs to take text input rather than a file path. yech.
-    # we have to do it the long way then:
-    # https://github.com/mishoo/UglifyJS2
+    if @target_extension == 'js'
+      UglifyJS = require 'uglify-js2'
+      toplevel_ast = UglifyJS.parse(write_content)
+      toplevel.figure_out_scope()
+      compressed_ast = toplevel.transform(UglifyJS.Compressor())
+      compressed_ast.figure_out_scope()
+      compressed_ast.compute_char_frequency()
+      compressed_ast.mangle_names()
+      output = compressed_ast.print_to_string()
 
-    # csso = require 'csso'
-    # csso.justDoIt(css-content)
+    if @target_extension == 'css'
+      csso = require 'csso'
+      csso.justDoIt(write_content)
+
+    # images i'm going to handle separately - it will optimize them in place
+    # then copy them all over. when watching it would be pretty sweet to only
+    # optimize once and store which images have already been optimized for a
+    # little speed boost. we shall see.
