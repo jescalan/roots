@@ -3,11 +3,12 @@
 var fs = require('fs'),
     path = require('path'),
     colors = require('colors'),
-    compiler = require('../lib/compile-project'),
+    compiler = require('../lib/roots'),
     server = require('../lib/server'),
     debug = require('../lib/debug'),
     ncp = require('ncp').ncp,
     argv = require('optimist').argv,
+    run = require('child_process').exec,
     watcher = require('../lib/watcher');
 
 
@@ -51,7 +52,6 @@ var project_tasks = function(){
   // --------------------------------------------------------------------------
 
   else if (argv._[0] === 'deploy') {
-    var run = require('child_process').exec
     // check to see if heroku is installed
     run('which heroku', function(err, out, stderr){
       if (err) {
@@ -83,23 +83,28 @@ var project_tasks = function(){
 }
 
 // --------------------------------------------------------------------------
-// new task
+// new task - create a roots app
 // --------------------------------------------------------------------------
 
 if (argv._[0] === 'new') {
   if (!argv._[1]) { return console.log('\nyou must specify a name for your project\n'.red); }
 
-  var source = path.join(__dirname, '../lib/template');
+  var source = path.join(__dirname, '../template');
   var destination = path.join(current_directory, argv._[1]);
 
   ncp(source, destination, function (err) {
    if (err) { return console.error(err); }
    console.log('\nnew project created at /'.green + argv._[1].green + '\n');
   });
+
+  run("cd " + destination + "; git init", function(err,out,stdout){
+    if (err) { console.log("You should install git ASAP.".red); console.log('Check out http://git-scm.com/ for a quick and easy download\n'.yellow); }
+  });
+
 }
 
 // --------------------------------------------------------------------------
-// set the config variables from app.coffee
+// looks like we are in a roots app folder!
 // --------------------------------------------------------------------------
 
 else if (fs.existsSync(current_directory + '/app.coffee')) {
@@ -120,12 +125,10 @@ else if (fs.existsSync(current_directory + '/app.coffee')) {
   // set the debug flag
   debug.set_debug(options.debug)
 
-  // add any additional globally available locals here
-  // - range(1, 100).forEach
-
   // livereload function won't render anything unless in watch mode
   options.locals.livereload = ""
 
+  // now that that's done, parse the actual command
   project_tasks()
 
 } else if (!fs.existsSync(current_directory + '/app.coffee') && argv._[0] !== 'help') {
@@ -145,7 +148,6 @@ if (argv._[0] === 'help') {
   process.stdout.write("- ");
   process.stdout.write("new `name`: ".bold);
   process.stdout.write("create a new project structure in the current directory\n- ");
-  // also run git init automatically on roots new
 
   process.stdout.write("compile: ".bold);
   process.stdout.write("compile your project once to the public folder\n- ");
