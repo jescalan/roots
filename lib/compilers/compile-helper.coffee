@@ -10,7 +10,9 @@ options = global.options
 
 module.exports = class CompileHelper
 
-  constructor: (@file, @name) ->
+  constructor: (@file) ->
+
+    @name = path.extname(@file).slice(1)
 
     @current_directory = path.normalize process.cwd()
     html_file = options.file_types.html.indexOf(@name) > -1
