@@ -9,9 +9,11 @@ html
     title welcome to roots!
     
     link(rel='stylesheet', href='/css/example.css')
-    script(data-main="js/app", src="js/require.js")
   body
     != yield
+
+  //- add other scripts through require.js, not here
+  script(data-main="js/main", src="js/require.js")
 
   //- this must be included for live reload to work in developement
   //- it will be automatically ignored when deployed
