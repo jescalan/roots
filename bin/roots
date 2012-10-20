@@ -158,7 +158,7 @@ if (argv._[0] === 'help') {
   process.stdout.write("deploy `name`: ".bold);
   process.stdout.write("deploy your project to heroku\n");
 
-  // consider adding roots open and roots open remote
+  // consider adding roots open, roots open remote, roots version, and roots update
 
   console.log("");
   console.log("...and by all means check out [docs link] for more help!");

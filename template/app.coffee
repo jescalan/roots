@@ -11,10 +11,11 @@ exports.ignore_files = [/^_/, /^readme/i, '.git', '.gitignore', '.DS_Store']
 # `default` applies to all views. Overrides for specific
 # views are possible - the path to the view with the custom
 # layout is the key, and the path to the layout is the value.
+# The second line is an example of a custom layout.
 
 exports.layouts =
   default: 'layout.jade'
-  'special.jade': 'layout2.jade'
+  # 'special.jade': 'layout2.jade'
 
 # Locals will be made available on every page. They can be
 # variables or (coffeescript) functions.
@@ -24,16 +25,16 @@ exports.locals =
   title_with_markup: ->
     "<h1 class='title'>#{this.title}</h1>"
 
-# names of the views and assets folder. Don't recommend
+# Names of the views and assets folder. Don't recommend
 # changing these, but if you have some other naming convention,
-# go for it. make sure you change the actual folders as well
+# go for it. Make sure you change the actual folders as well.
 
 exports.folder_config =
   assets: 'assets'
   views: 'views'
 
-# if true, shows the compile process and page/asset status in the
-# terminal when watching and compiling files
+# If true, shows the compile process and page/asset status in the
+# terminal when watching and compiling files.
 
 exports.debug = false
 
