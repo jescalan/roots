@@ -88,6 +88,18 @@ Although not required, it's highly recommended that you also use [require.js](ht
 
 I'm very excited about this project, because it makes my life a ton easier and it saves me and my employer many hours. Once the static site compiler is finished and tested, I plan on porting the system first to node (with express), then to rails (likely a gem for rails 4). Life without useful tools like the roots css library, bower, require, live reloading, nice templating langiages, and single-command deploys just seems sad to me, and makes everything take longer. If you are interested in helping out with this project or the rails or node ports, get in touch. I'd love to have you on board.
 
+##### To Do
+
+- build and test plugins
+- custom range local for repeated content
+- implement bower
+- install script
+- deploy to npm
+- roots update task
+- think about tumblr theming plugin
+- error messages to flash in views
+- implement image optimization
+
 ### Love/Hate
 
 Do you love and/or hate this? Maybe you even want to help, or suggest an improvement. Tell us all about it. Find my email and harass me or file an issue. <3
