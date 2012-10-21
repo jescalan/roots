@@ -92,14 +92,14 @@ var options = {
     global.options.locals.livereload = "<script>" + fs.readFileSync(path.join(__dirname, '../lib/reload.js'), 'utf8') + "</script>"
     
     // compile once
-    compiler.compile_project();
+    compiler.compile_project(function(){ server.reload(); });
 
     // run the local server
     server.start(current_directory);
 
     // watch the directory for changes and reload
     watcher.watchDirectories(["./" + global.options.folder_config.views, "./" + global.options.folder_config.assets], function() {
-      compiler.compile_project(function(err) {
+      compiler.compile_project(function() {
         console.log('\nreloading page'.red); server.reload();
       });
     });
