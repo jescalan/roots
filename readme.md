@@ -65,7 +65,7 @@ It's pretty straightforward to add a plugin to customize roots' functionality. P
     # the project's options as defined in app.coffee, a helper object, and a callback
     # the callback must be run or everything will break.
 
-    exports.compile = (files, options, helper, callback) ->
+    exports.compile = (files, options, Helper, callback) ->
       error = false
       counter = 0
 
@@ -75,7 +75,7 @@ It's pretty straightforward to add a plugin to customize roots' functionality. P
         # the helper module is a very useful tool that exposes a bunch of information
         # about the file and methods that help with compiling it. more details are
         # needed here.
-        helper = new helper(file)
+        helper = new Helper(file)
 
         # you can do your compiling here, however it's done.
         require('child_process').exec "sass #{helper.file_path}", (err, compiled_sass) ->
