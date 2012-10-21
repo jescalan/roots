@@ -5,7 +5,7 @@
 # Files in this list will not be compiled -
 # you can use a string (exact match) or a regex.
 
-exports.ignore_files = [/^_/, /^readme/i, '.git', '.gitignore', '.DS_Store']
+exports.ignore_files = [/^_/, /^readme/i, '.git', '.gitignore', '.gitkeep', '.DS_Store']
 
 # Use this to specify which files are layout files.
 # `default` applies to all views. Overrides for specific
