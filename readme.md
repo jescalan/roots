@@ -114,7 +114,7 @@ I'm very excited about this project, because it makes my life a ton easier and i
 
 ##### To Do
 
-- figure out how to handle errors in the html on the page you're looking at
+- full debug sweep of the flash message error thing
 - implement bower
 - install script
 - deploy to npm
