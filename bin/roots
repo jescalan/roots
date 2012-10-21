@@ -154,23 +154,35 @@ var options = {
     process.stdout.write("create a new project structure in the current directory\n- ");
 
     process.stdout.write("compile: ".bold);
-    process.stdout.write("compile your project once to the public folder\n- ");
+    process.stdout.write("compile, compress, and minify to /public\n- ");
 
     process.stdout.write("watch: ".bold);
-    process.stdout.write("watch your project, compile when changes occur, and live reload\n- ");
+    process.stdout.write("watch your project, compile and reload whenever you save\n- ");
 
     process.stdout.write("deploy `name`: ".bold);
-    process.stdout.write("deploy your project to heroku\n");
+    process.stdout.write("deploy your project to heroku\n- ");
+
+    process.stdout.write("update: ".bold);
+    process.stdout.write("update roots if there's a new version\n- ");
+
+    process.stdout.write("version: ".bold);
+    process.stdout.write("print the version of your current install\n");
 
     console.log("");
     console.log("...and by all means check out [docs link] for more help!");
     console.log("");
 
     // to add:
-    // - version
-    // - update
     // - js (list, search, install)
     // - plugin (generate, install)
+  },
+
+  // --------------------------------------------------------------------------
+  // update task
+  // --------------------------------------------------------------------------
+
+  update: function(){
+    console.log('this method still needs to be written');
   },
 
   // --------------------------------------------------------------------------
