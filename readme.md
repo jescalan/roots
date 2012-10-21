@@ -70,7 +70,7 @@ It's pretty straightforward to add a plugin to customize roots' functionality. P
       counter = 0
 
       # you'll usually want to start by looping through each file, if there are any
-      files && for file in files
+      files && files.forEach (file) ->
 
         # the helper module is a very useful tool that exposes a bunch of information
         # about the file and methods that help with compiling it. more details are
