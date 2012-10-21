@@ -9,10 +9,8 @@ exports.settings =
   target: 'css'
 
 exports.compile = (files, options, helper, cb) ->
-  error = false
   files && files.forEach (file) ->
     helper = new helper(file)
-    require('child_process').exec "sass #{helper.file_path}", (err, out, stderr) ->
-      error = err if err
-      helper.write(out)
-      cb(error)
+    require('child_process').exec "sass #{helper.file_path}", (err, compiled_sass) ->
+      helper.write(compiled_sass) unless !!err
+      cb(!!err)
