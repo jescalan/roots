@@ -49,9 +49,28 @@ The css library is very modular in its construction, and higher level mixins can
 
 It's pretty straightforward to add a plugin to customize roots' functionality. Plugins need only be one file, and can be as short as three lines (many of the core compilers are, actually). To create a plugin, just drop a new file, javascript of coffeescript, into `vendor/plugins` that exports "file_type", a string with the file type you are aiming to compile, and a  "compile" method. The compile method is a function. The function takes two parameters, a helper and a file. The helper can be invoked inside the compiler by passing the file to it, and acts as an interface to a bunch of useful variables and methods that can be used to get the compile done very quickly and cleanly.
 
--- document compile helper interface here --
+    // create a new helper by instantiating it with a file as such
+    var helper = new CompileHelper(file)
 
-Plugins can be manually installed into vendor/plugins or directly pulled from a github repo using the command `roots plugin install jenius/roots-sass`. If you'd like to write a plugin, the command `roots plugin generate` will create a nice starting template. All public and known plugins will be listed on the roots website [link].
+    // the helper object will export the following variables
+    helper.file_path
+    helper.file_content
+    helper.extension
+
+    // and if your file compiles to html, it will also have
+    helper.layout_path
+    helper.layout_content
+
+    // the helper also exports these methods
+    helper.locals(extra)
+      // => returns all locals, if you pass it one, it will add it to the locals object
+      //    (this is useful particularly for handling layouts)
+    helper.write(content)
+      // => writes the content it's passed to the appropriate file in public/
+
+    // note about sample compilers to get an idea of how it's done
+
+Plugins can be manually installed into vendor/plugins or directly pulled from a github repo using a command like `roots plugin install jenius/roots-sass`, the final parameter being `github-username/repo-name`. If you'd like to write a plugin, the command `roots plugin generate` will create a nice starting template inside vendor/plugins. All known plugins will be listed on the roots website [link].
 
 ### Client Side JS
 

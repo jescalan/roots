@@ -36,6 +36,9 @@ var options = {
     options.file_types.css = ['styl', 'css'];
     options.file_types.js = ['coffee', 'js'];
 
+    // go through compilers, pull the types, and add them to the target
+    // objects, creating if necessary.
+
     // make sure all layout files are ignored
     for (var key in options.layouts){
       options.ignore_files.push(new RegExp(options.layouts[key]));
@@ -47,8 +50,6 @@ var options = {
     // livereload function won't render anything unless in watch mode
     options.locals.livereload = ""
 
-    // now that that's done, parse the actual command
-    project_tasks()
   },
 
   // --------------------------------------------------------------------------
@@ -144,7 +145,7 @@ var options = {
   // help task
   // --------------------------------------------------------------------------
 
-  help: function(command){
+  help: function(){
     console.log("");
     console.log("Need some help? Here's what you can do with the roots command line tool:");
     console.log("");
