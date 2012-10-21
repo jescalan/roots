@@ -9,49 +9,108 @@ var fs = require('fs'),
     ncp = require('ncp').ncp,
     argv = require('optimist').argv,
     run = require('child_process').exec,
-    watcher = require('../lib/watcher');
+    watcher = require('../lib/watcher'),
+    current_directory = path.normalize(process.cwd());
 
-
-var current_directory = path.normalize(process.cwd());
-
-var project_tasks = function(){
+var options = {
 
   // --------------------------------------------------------------------------
-  // watch task (default)
+  // run a warning if not in a roots folder
   // --------------------------------------------------------------------------
 
-  if (argv._[0] === 'watch' || argv._[0] == undefined) {
-    // rimraf public
+  in_project: function(){ return fs.existsSync(current_directory + '/app.coffee') },
+  no_project_warning: function(){ console.log("\nnot a roots project - run `roots help` if you are confused\n".yellow); },
+
+  // --------------------------------------------------------------------------
+  // set up options if we're in a roots project folder
+  // --------------------------------------------------------------------------
+
+  initiate_options: function(){
+    // pull the app config file, compiled with coffeescript
+    require('coffee-script');
+    var options = global.options = require(current_directory + '/app.coffee');
+
+    // hard coded until a plugin interface is developed
+    options.file_types = {}
+    options.file_types.html = ['jade', 'ejs', 'html'];
+    options.file_types.css = ['styl', 'css'];
+    options.file_types.js = ['coffee', 'js'];
+
+    // make sure all layout files are ignored
+    for (var key in options.layouts){
+      options.ignore_files.push(new RegExp(options.layouts[key]));
+    }
+
+    // set the debug flag
+    debug.set_debug(options.debug)
+
+    // livereload function won't render anything unless in watch mode
+    options.locals.livereload = ""
+
+    // now that that's done, parse the actual command
+    project_tasks()
+  },
+
+  // --------------------------------------------------------------------------
+  // new task
+  // --------------------------------------------------------------------------
+
+  new: function(){
+    if (!argv._[1]) { return console.log('\nyou must specify a name for your project\n'.red); }
+
+    var source = path.join(__dirname, '../template');
+    var destination = path.join(current_directory, argv._[1]);
+
+    ncp(source, destination, function (err) {
+     if (err) { return console.error(err); }
+     console.log('\nnew project created at /'.green + argv._[1].green + '\n');
+    });
+
+    run("cd " + destination + "; git init", function(err){
+      if (err) { console.log("You should install git ASAP.".red); console.log('Check out http://git-scm.com/ for a quick and easy download\n'.yellow); }
+    });
+  },
+
+  // --------------------------------------------------------------------------
+  // watch task
+  // --------------------------------------------------------------------------
+
+  watch: function(){
+    if (this.in_project()) { this.initiate_options() } else { return this.no_project_warning() }
     
     // add in the livereload function
-    options.locals.livereload = "<script>" + fs.readFileSync(path.join(__dirname, '../lib/reload.js'), 'utf8') + "</script>"
+    global.options.locals.livereload = "<script>" + fs.readFileSync(path.join(__dirname, '../lib/reload.js'), 'utf8') + "</script>"
     
+    // compile once
     compiler.compile_project();
 
+    // run the local server
     server.start(current_directory);
-    watcher.watchDirectories(["./" + options.folder_config.views,
-                              "./" + options.folder_config.assets], function() {
-                                compiler.compile_project(function(err) {
-                                  console.log('\nreloading page'.red);
-                                  server.reload();
-                                });
-                            });
-  }
+
+    // watch the directory for changes and reload
+    watcher.watchDirectories(["./" + global.options.folder_config.views, "./" + global.options.folder_config.assets], function() {
+      compiler.compile_project(function(err) {
+        console.log('\nreloading page'.red); server.reload();
+      });
+    });
+  },
 
   // --------------------------------------------------------------------------
   // compile task
   // --------------------------------------------------------------------------
 
-  else if (argv._[0] === 'compile') {
-    // rimraf public
+  compile: function(){
+    if (this.in_project()) { this.initiate_options() } else { return this.no_project_warning() }
     compiler.compile_project();
-  }
+  },
 
   // --------------------------------------------------------------------------
   // deploy task
   // --------------------------------------------------------------------------
 
-  else if (argv._[0] === 'deploy') {
+  deploy: function(){
+    if (this.in_project()) { this.initiate_options() } else { return this.no_project_warning() }
+
     // check to see if heroku is installed
     run('which heroku', function(err, out, stderr){
       if (err) {
@@ -79,88 +138,48 @@ var project_tasks = function(){
         })
       }
     })
-  }
+  },
+
+  // --------------------------------------------------------------------------
+  // help task
+  // --------------------------------------------------------------------------
+
+  help: function(command){
+    console.log("");
+    console.log("Need some help? Here's what you can do with the roots command line tool:");
+    console.log("");
+
+    process.stdout.write("- ");
+    process.stdout.write("new `name`: ".bold);
+    process.stdout.write("create a new project structure in the current directory\n- ");
+
+    process.stdout.write("compile: ".bold);
+    process.stdout.write("compile your project once to the public folder\n- ");
+
+    process.stdout.write("watch: ".bold);
+    process.stdout.write("watch your project, compile when changes occur, and live reload\n- ");
+
+    process.stdout.write("deploy `name`: ".bold);
+    process.stdout.write("deploy your project to heroku\n");
+
+    console.log("");
+    console.log("...and by all means check out [docs link] for more help!");
+    console.log("");
+
+    // to add:
+    // - version
+    // - update
+    // - js (list, search, install)
+    // - plugin (generate, install)
+  },
+
+  // --------------------------------------------------------------------------
+  // print the version
+  // --------------------------------------------------------------------------
+
+  version: function(){ console.log('not even released'); }
+
 }
 
-// --------------------------------------------------------------------------
-// new task - create a roots app
-// --------------------------------------------------------------------------
-
-if (argv._[0] === 'new') {
-  if (!argv._[1]) { return console.log('\nyou must specify a name for your project\n'.red); }
-
-  var source = path.join(__dirname, '../template');
-  var destination = path.join(current_directory, argv._[1]);
-
-  ncp(source, destination, function (err) {
-   if (err) { return console.error(err); }
-   console.log('\nnew project created at /'.green + argv._[1].green + '\n');
-  });
-
-  run("cd " + destination + "; git init", function(err,out,stdout){
-    if (err) { console.log("You should install git ASAP.".red); console.log('Check out http://git-scm.com/ for a quick and easy download\n'.yellow); }
-  });
-
-}
-
-// --------------------------------------------------------------------------
-// looks like we are in a roots app folder!
-// --------------------------------------------------------------------------
-
-else if (fs.existsSync(current_directory + '/app.coffee')) {
-  require('coffee-script');
-  var options = global.options = require(current_directory + '/app.coffee'); // pull the app config file
-
-  // hard coded until a plugin interface is developed
-  options.file_types = {}
-  options.file_types.html = ['jade', 'ejs', 'html'];
-  options.file_types.css = ['styl', 'css'];
-  options.file_types.js = ['coffee', 'js'];
-
-  // make sure all layout files are ignored
-  for (var key in options.layouts){
-    options.ignore_files.push(new RegExp(options.layouts[key]));
-  }
-
-  // set the debug flag
-  debug.set_debug(options.debug)
-
-  // livereload function won't render anything unless in watch mode
-  options.locals.livereload = ""
-
-  // now that that's done, parse the actual command
-  project_tasks()
-
-} else if (!fs.existsSync(current_directory + '/app.coffee') && argv._[0] !== 'help') {
-  // if there's no app.coffee file, chances are you aren't in a roots project
-  console.log("\nnot a roots project - run `roots help` if you are confused\n".yellow);
-}
-
-// --------------------------------------------------------------------------
-// help task
-// --------------------------------------------------------------------------
-
-if (argv._[0] === 'help') {
-  console.log("");
-  console.log("Need some help? Here's what you can do with the roots command line tool:");
-  console.log("");
-
-  process.stdout.write("- ");
-  process.stdout.write("new `name`: ".bold);
-  process.stdout.write("create a new project structure in the current directory\n- ");
-
-  process.stdout.write("compile: ".bold);
-  process.stdout.write("compile your project once to the public folder\n- ");
-
-  process.stdout.write("watch: ".bold);
-  process.stdout.write("watch your project, compile when changes occur, and live reload\n- ");
-
-  process.stdout.write("deploy `name`: ".bold);
-  process.stdout.write("deploy your project to heroku\n");
-
-  // consider adding roots open, roots open remote, roots version, and roots update
-
-  console.log("");
-  console.log("...and by all means check out [docs link] for more help!");
-  console.log("");
-}
+// run it (and run help if there's no command)
+argv._[0] == undefined ? options.help() : options[argv._[0]](argv._.slice(1))
