@@ -47,7 +47,9 @@ The css library is very modular in its construction, and higher level mixins can
 
 ### Plugins
 
-It's pretty straightforward to add a plugin to customize roots' functionality. Plugins need only be one file, and are frequently less than 10 lines of javascript (many of the core compilers are, actually). To create a plugin, just drop a new file, javascript or coffeescript, into `vendor/plugins`. The module need only export two methods, `settings` and `compile`. The details of these are shown below (in coffeescript, but could just as easily be js as well)
+It's pretty straightforward to add a plugin to customize roots' functionality. Plugins need only be one file, and are frequently less than 10 lines of javascript (many of the core compilers are, actually). To create a plugin, just drop a new file, javascript or coffeescript, into `vendor/plugins`. The module need only export two methods, `settings` and `compile`. The details of these are shown below (in coffeescript, but could just as easily be js as well).
+
+**NOTE:** At the moment, the file name must match the type of file you want to compile. This might change in the future. So this one would be sass.coffee, since it's used to compile sass.
     
     # this is a sample plugin written in coffeescript
     # -----------------------------------------------
@@ -64,9 +66,11 @@ It's pretty straightforward to add a plugin to customize roots' functionality. P
     # the callback must be run or everything will break.
 
     exports.compile = (files, options, helper, callback) ->
+      error = false
+      counter = 0
 
       # you'll usually want to start by looping through each file, if there are any
-      files && files.forEach (file) ->
+      files && for file in files
 
         # the helper module is a very useful tool that exposes a bunch of information
         # about the file and methods that help with compiling it. more details are
@@ -76,14 +80,19 @@ It's pretty straightforward to add a plugin to customize roots' functionality. P
         # you can do your compiling here, however it's done.
         require('child_process').exec "sass #{helper.file_path}", (err, compiled_sass) ->
 
+          # if there was an error, set it
+          error = err if !!err
+
           # call helper.write to write the compiled text to the appropriate
           # file in public/
-          helper.write(compiled_sass) unless err
+          helper.write(compiled_sass) unless error
 
           # the callback must be called once everything is done. it takes one optional
           # parameter detailing any errors that occurred. if the error param evaluates
           # to true, roots will show the error message on the reloaded page
-          callback(!!err)
+          counter++
+          callback(error) if counter == files.length
+
 
 Plugins can be manually installed into vendor/plugins or directly pulled from a github repo using a command like `roots plugin install jenius/roots-sass`, the final parameter being `github-username/repo-name`. If you'd like to write a plugin, the command `roots plugin generate` will create a nice starting template inside vendor/plugins. All known plugins will be listed on the roots website [link].
 
@@ -105,15 +114,14 @@ I'm very excited about this project, because it makes my life a ton easier and i
 
 ##### To Do
 
-- build and test plugins
-- custom range local for repeated content
+- error messages to flash in views
 - implement bower
 - install script
 - deploy to npm
 - roots update task
-- think about tumblr theming plugin
-- error messages to flash in views
 - implement image optimization
+- custom range local for repeated content
+- think about tumblr theming plugin
 
 ### Love/Hate
 

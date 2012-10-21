@@ -8,9 +8,14 @@ exports.settings =
   file_type: 'sass'
   target: 'css'
 
-exports.compile = (files, options, helper, cb) ->
-  files && files.forEach (file) ->
-    helper = new helper(file)
+exports.compile = (files, options, Helper, cb) ->
+  error = false
+  counter = 0
+
+  files && for file in files
+    helper = new Helper(file)
     require('child_process').exec "sass #{helper.file_path}", (err, compiled_sass) ->
-      helper.write(compiled_sass) unless !!err
-      cb(!!err)
+      error = err if err
+      helper.write(compiled_sass) unless error
+      counter++
+      cb(error) if counter == files.length
