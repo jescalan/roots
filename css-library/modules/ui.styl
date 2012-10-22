@@ -1,0 +1,201 @@
+// -----------------------------------------------------
+// UI
+// -----------------------------------------------------
+
+// Mixin: Area
+// Just a nice little area for you to put content in. Rounded corners, box with light
+// grey background by default. You can pass it a different color if you'd like.
+// ex. +area
+// ex. +area(red) -- not recommended
+
+area(color = #F5F5F5)
+  box-shadow(inset 0 0 6px rgba(#000,.05))
+  background-color: color
+  padding: 15px
+  border-radius: 4px
+  margin: 20px 0
+  pie()
+
+// Mixin: Notice
+// A notice for you. Best used for flash alerts, this was originally an internal
+// mixin, but you can use it if you'd like. Give it a color and a width and it will
+// output a nice lightly gradiented box for your notice to reside in.
+// ex. +notice
+// ex. +notice(500px, blue)
+
+notice(width = false, color = #EEEEEE)
+  simple-gradient(color, 3%)
+  group()
+  border-radius: 5px
+  padding: 15px
+  border: 1px solid darken(color, 10%)
+  -webkit-box-shadow: 1px 1px 3px rgba(#000,.05)
+  position: relative
+  width: width if width
+
+// Mixin: Flash
+// This is really great for rails flash messages, or really any little notifications like
+// 'logged in!', 'logged out!', or 'errarrrr!'. Takes one of four types and colors them nicely
+// for you - notice, success, warning, or error. Defaults to notice
+// ex. +flash
+// ex. +flash(error )
+
+flash(type = notice)
+  if type == notice
+    notice(color: #6CC5FA)
+    color: #fff
+    font-weight: bold
+    text-shadow: 1px 1px 1px rgba(#000,.2)
+  if type == success
+    notice(color: #7BDEA3)
+    color: #fff
+    font-weight: bold
+    text-shadow: 1px 1px 1px rgba(#000,.2) 
+  if type == warning
+    notice(color: #FAE677)
+    font-weight: bold
+    text-shadow: 1px 1px 1px rgba(#fff,.2)
+  if type == error
+    notice(color: #E77C70)
+    color: #fff
+    font-weight: bold
+    text-shadow: 1px 1px 1px rgba(#000,.2)
+
+// Mixin: Breadcrumb
+// Lay this one down on a list and it will turn the list into a breadcrumb-y thing. By default
+// separates with a slash, but you can feed it any character. Second param is spacing between the
+// list items, and the third is the color of the divider. All are optional.
+// ex. +breadcrumb
+// ex. +breadcrumb(">")
+// ex. +breadcrumb("-", 25px, red)
+
+breadcrumb(character = "/", spacing = 10px, divider-color = #CDCDCD)
+  inline-list(spacing)
+  li:after
+    content: character
+    margin-left: spacing
+    color: divider-color
+  li:last-child:after
+    content: ""
+
+// Mixin: Bubble
+// If you're anything like me, you always seem to find your designers putting little bubbles in things.
+// This mixin takes care of that problem, and makes a nice bubble with 100% css.
+// All parameters optional - accepts width, pointer position (left, center, or right), and a color.
+// ex. +bubble
+// ex. +bubble(color: blue)
+// ex. +bubble(center, #57777E)
+// ex. +bubble(right, #5740A1, 500px)
+
+bubble(pointer = left, color = #EEEEEE, width = false)
+  notice(width, color)
+
+  &:after
+    triangle(down, 10px, darken(color, 3%))
+    position: absolute
+    bottom: -9px
+    if pointer == center
+      warn("you must specify a width to center the pointer") unless width
+      left: width/2
+    else if pointer == right
+      right: 15px
+  
+  &:before
+    triangle(down, 10px, darken(color, 10%))
+    position: absolute
+    bottom: -11px
+    if pointer == center
+      warn("you must specify a width to center the pointer") unless width
+      left: width/2
+    else if pointer == right
+      right: 15px
+
+// Mixin: Figure
+// For when you want to *semantically* show an image. Put this on your <figure /> element and it will style
+// the nested image and figcaption in a wonderfully pleasing manner. Takes a color (for the thin outline), and
+// if you want, dimensions of the image as a space separated list.
+// ex. +figure
+// ex. +figure(blue)
+// ex. +figure(#D29E78, 100px 250px)
+// ex. +figure(dimensions: 100px 250px)
+
+figure(color = default, dimensions = false)
+  if length(dimensions) > 1
+    display: block
+    width: dimensions[0]
+    height: dimensions[1]
+  else if dimensions == false
+    inline-block()
+  else
+    warn("Pass dimensions as false or a space-spearated list, as such: +figure(dimensions: 100px 250px) or +figure(blue, 100px 250px)")
+  img
+    display: block
+    padding: 4px
+    round-corners(3px)
+    border: 1px solid rgba(color, .6)
+  figcaption
+    padding: 10px 0
+    text-align: center
+    font-style: italic
+
+// Mixin: Nav
+// Makes a fantastic nav bar for you that doesn't look exactly like bootstrap's and you can
+// customize it as well. Params: fixed (boolean), color (recommend something dark), link color,
+// and size, which is an integer from one up, and scales every aspect of the nav bar for you.
+// All have defaults.
+// This mixin is meant to be placed on a <nav> element that contains a ul.
+// ex. +nav
+// ex. +nav(false, #444, red, 3)
+
+nav(fixed = true, color = #222, link-color = #fff, size = 1)
+  display: block
+  z-index: 10
+  simple-noise-gradient(color, 5%)
+  group()
+  box-shadow(0 3px 3px rgba(0,0,0,.15))
+  border-bottom: 1px solid rgba(darken(color, 15%),.7)
+  height: {round((size + 14)*2.866)}px
+  width: 100%
+  font-size: {size + 14}px
+  if fixed
+    position: fixed
+  else
+    position: relative
+
+  ul
+    float: right
+    margin: 0
+    padding: {(size + 14)*.8}px
+    color: link-color
+
+    li
+      list-style-type: none
+      margin-right: 30px
+      float: left
+
+      a
+        color: link-color
+        border: none
+        cursor: pointer
+
+        &:hover
+          color: darken(link-color, 20%)
+          border: none
+
+// Additive Mixin: Flash Notices
+// WARNING: Creates classes in your css and styles them - not to be used inside an element.
+// Super convenient flash notices. Anything with .flash on it will display as a notice, and if
+// you add the additional class .error, .warning, .notice, or .success, it will display the
+// appropriate color background for the message.
+// ex. +flash-notices
+
+flash-notices()
+  .flash
+    &.error
+      flash(error)
+    &.warning
+      flash(warning)
+    &.notice
+      flash(notice)
+    &.success
+      flash(success)
