@@ -117,7 +117,6 @@ That being said, I have a lot to learn about node still, and this project is des
 ##### To Do
 
 - full debug sweep of the flash message error thing
-- implement bower
 - install script
 - deploy to npm
 - roots update task

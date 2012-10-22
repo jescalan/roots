@@ -1,5 +1,5 @@
 {
-  "name": "roots",
+  "name": "roots-static",
   "version": "0.0.1-alpha",
   "description": "Roots is a tiny, fast, and flexible build system for static sites",
   "keywords": [
@@ -10,7 +10,7 @@
     "library",
     "tool"
   ],
-  "homepage": "http://roots.carrotbeta.com",
+  "homepage": "https://github.com/jenius/roots-cli",
   "bugs": "https://github.com/jenius/roots-cli/issues",
   "author": "Jeff Escalante",
   "main": "./lib",
@@ -20,9 +20,6 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/jenius/roots-cli.git"
-  },
-  "scripts": {
-    "uninstall": "rm -rf ~/.roots"
   },
   "dependencies": {
     "connect": "2.6.x",
