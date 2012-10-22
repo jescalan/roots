@@ -8,6 +8,7 @@ var fs = require('fs'),
     debug = require('../lib/debug'),
     ncp = require('ncp').ncp,
     argv = require('optimist').argv,
+    bower = require('bower'),
     run = require('child_process').exec,
     watcher = require('../lib/watcher'),
     current_directory = path.normalize(process.cwd());
@@ -112,6 +113,20 @@ var options = {
   compile: function(){
     if (this.in_project()) { this.initiate_options() } else { return this.no_project_warning() }
     compiler.compile_project();
+  },
+
+  // --------------------------------------------------------------------------
+  // bower integration
+  // --------------------------------------------------------------------------
+
+  js: function(command){
+    if (this.in_project()) { this.initiate_options() } else { return this.no_project_warning() }
+
+    bower.config.directory = "vendor/js"; // had to fork bower to expose the config api
+    bower.commands[command[0] || 'help'].line(['node', __dirname].concat(command))
+      .on('data',  function (data) { data && console.log(data); })
+      .on('end',   function (data) { data && console.log(data); })
+      .on('error', function (err)  { throw err })
   },
 
   // --------------------------------------------------------------------------

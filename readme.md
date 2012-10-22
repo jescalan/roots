@@ -112,6 +112,8 @@ Although not required, it's highly recommended that you also use [require.js](ht
 
 I'm very excited about this project, because it makes my life a ton easier and it saves me and my employer many hours. Once the static site compiler is finished and tested, I plan on porting the system first to node (with express), then to rails (likely a gem for rails 4). Life without useful tools like the roots css library, bower, require, live reloading, nice templating langiages, and single-command deploys just seems sad to me, and makes everything take longer. If you are interested in helping out with this project or the rails or node ports, get in touch. I'd love to have you on board.
 
+That being said, I have a lot to learn about node still, and this project is desperately in need of better modularization, better use of the module require system (index.js, module.exports), and probably more use of EventEmitter rather than crazy callbacks. This will gradually happen as I clean, learn, and refactor.
+
 ##### To Do
 
 - full debug sweep of the flash message error thing
