@@ -47,7 +47,7 @@ var options = {
 
     // add all core compilers and plugins, if there are any
     parse_filetypes(core_compilers_path);
-    if (fs.existsSync(plugins_path)) { parse_filetypes(plugins_path); }
+    if (fs.existsSync(plugins_path) && fs.readdirSync(plugins_path).length > 1) { parse_filetypes(plugins_path); }
 
     // make sure all layout files are ignored
     for (var key in options.layouts){
