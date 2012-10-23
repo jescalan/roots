@@ -7,7 +7,7 @@
 # matcher.
 # https://github.com/isaacs/minimatch for more info
 
-exports.ignore_files = ['_*', 'readme*', 'roots', '.git', '.gitignore', '.DS_Store']
+exports.ignore_files = ['_*', 'readme*', 'roots-css', '.git', '.gitignore', '.DS_Store']
 
 # Use this to specify which files are layout files.
 # `default` applies to all views. Overrides for specific
