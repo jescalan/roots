@@ -2,10 +2,12 @@
 # Project Configuration
 # ----------------------------------------
 
-# Files in this list will not be compiled -
-# you can use a string (exact match) or a regex.
+# Files or directories matching any of these will not be compiled
+# you can use minimatch syntax in place of a regex for a more dynamic
+# matcher.
+# https://github.com/isaacs/minimatch for more info
 
-exports.ignore_files = [/^_/, /^readme/i, '.git', '.gitignore', '.DS_Store']
+exports.ignore_files = ['_*', 'readme*', 'roots', '.git', '.gitignore', '.DS_Store']
 
 # Use this to specify which files are layout files.
 # `default` applies to all views. Overrides for specific
