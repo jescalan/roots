@@ -1,24 +1,7 @@
-nav
-  h1 roots-prototype
-  ul
-    li
-      a hello
-    li  
-      a world
 
-#container
+!= title_with_markup()
 
-  != title_with_markup()
+:markdown
+  **hello world**, the reload is working slightly better, _aw yeaa_!
 
-  :markdown
-    **hello world**, the reload is working slightly better, _aw yeaa_!
-
-  include _partial
-
-  .button push me
-
-  .test
-    p hello
-    cite me
-
-  input(type = 'text')
+include _partial
