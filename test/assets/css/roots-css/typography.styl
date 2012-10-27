@@ -8,7 +8,7 @@
 // ex. +text-margin(14)
 
 text-margin(size)
-  margin: unit(size/1.2, px) 0
+  margin: unit(size/1.6, px) 0
 
 // Mixin: P
 // Takes care of all your paragraph needs. Pass it an optional size and it will
@@ -36,13 +36,6 @@ paragraph(size = font-size, margins = true, width = false)
   line-height: unit(height, px)
   font-size: unit(size, px)
 
-// Mixin: Size
-// An alias for 'font-size'
-// ex. +size(16px)
-
-size(size)
-  font-size: size
-
 // Mixin: Fs
 // An alias for 'font-size'
 // ex. +size(16px)
@@ -59,28 +52,35 @@ uppercase()
 
 // Mixin: Upcase
 // An alias for 'text-transform: uppercase'
-// ex. +upcase
+// ex. upcase()
 
 upcase()
   uppercase()
 
 // Mixin: Lowercase
 // An alias for 'text-transform: lowercase'
-// ex. +lowercase
+// ex. lowercase()
 
 lowercase()
   text-transform: lowercase
 
 // Mixin: Downcase
 // An alias for 'text-transform: lowercase'
-// ex. +downcase
+// ex. downcase()
 
 downcase()
   lowercase()
 
+// Mixin: Reset Case
+// Gets rid of an text transform
+// ex. reset-case()
+
+reset-case()
+  text-transform: none
+
 // Mixin: Small
 // Makes your text smaller and a little lighter. Great on <small /> tags.
-// ex. +small
+// ex. small()
 
 small()
   font-size: 55%
@@ -185,7 +185,7 @@ reset-link()
 // found in _roots.sass. If you really want, you can pass it a color override too
 // ex. +text-selection()
 
-text-selection(color = hilight-color)
+text-select(color = hilight-color)
   
   textColor = light(color) ? white : #494949
   
@@ -356,9 +356,12 @@ typography()
 
   p
     paragraph(font-size)
+
   small
     small()
+    
   a
     link()
+
   blockquote
     blockquote()

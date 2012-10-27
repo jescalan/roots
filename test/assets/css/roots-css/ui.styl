@@ -87,6 +87,9 @@ breadcrumb(character = "/", spacing = 10px, divider-color = #CDCDCD)
 // ex. +bubble(center, #57777E)
 // ex. +bubble(right, #5740A1, 500px)
 
+// TODO: add option to put the pointer on the top or left
+// bottom left, bottom center, bottom right, left, right, top left...
+
 bubble(pointer = left, color = #EEEEEE, width = false)
   notice(width, color)
 
@@ -131,12 +134,12 @@ figure(color = default, dimensions = false)
   img
     display: block
     padding: 4px
-    round-corners(3px)
+    round(3px)
     border: 1px solid rgba(color, .6)
   figcaption
     padding: 10px 0
     text-align: center
-    font-style: italic
+    italic()
 
 // Mixin: Nav
 // Makes a fantastic nav bar for you that doesn't look exactly like bootstrap's and you can
@@ -147,25 +150,33 @@ figure(color = default, dimensions = false)
 // ex. +nav
 // ex. +nav(false, #444, red, 3)
 
-nav(fixed = true, color = #222, link-color = #fff, size = 1)
+nav(size = 1, fixed = true, color = #222, link-color = #fff)
   display: block
   z-index: 10
   simple-noise-gradient(color, 5%)
   group()
   box-shadow(0 3px 3px rgba(0,0,0,.15))
   border-bottom: 1px solid rgba(darken(color, 15%),.7)
-  height: {round((size + 14)*2.866)}px
+  height: (size + 14) * 2.866px
   width: 100%
-  font-size: {size + 14}px
+  font-size: unit(size + 14, px)
   if fixed
-    position: fixed
+    position: unquote('fixed')
   else
     position: relative
+
+  h1
+    float: left
+    padding: (size + 14) * .58px
+    padding-left: 17px
+    color: link-color
+    bold()
+    font-size: (size + 14) * 1.3px
 
   ul
     float: right
     margin: 0
-    padding: {(size + 14)*.8}px
+    padding: (size + 14) * .8px
     color: link-color
 
     li

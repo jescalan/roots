@@ -1,10 +1,22 @@
-!= title_with_markup()
+nav
+  h1 roots-prototype
+  ul
+    li
+      a hello
+    li  
+      a world
 
-:markdown
-  **hello world**, the reload is working slightly better, _aw yeaa_!
+#container
 
-include _partial
+  != title_with_markup()
 
-.button push me
+  :markdown
+    **hello world**, the reload is working slightly better, _aw yeaa_!
 
-.test i'm a testing element
+  include _partial
+
+  .button push me
+
+  .test
+    p hello
+    cite me
