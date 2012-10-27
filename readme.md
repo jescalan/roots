@@ -116,8 +116,10 @@ That being said, I have a lot to learn about node still, and this project is des
 
 ##### To Do
 
-- deploy to npm
 - roots update task
+- implement compression on compile
+- test deploy task, make sure it's playing nice with heroku
+- pull in vendor css and js (only static here)
 - implement image optimization
 - custom range local for repeated content
 - deploy to custom ftp server
