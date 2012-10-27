@@ -7,7 +7,7 @@
 // elements that can use it. Which makes IE look a lot nicer.
 
 pie()
-  behavior: url(/vendor/pie.htc)
+  // behavior: url(/vendor/pie.htc)
 
 // Mixin: Prefix
 // Pass this a key and a value and it will put all the browser prefixes on it.
@@ -28,7 +28,7 @@ prefix(prop, val)
 // ex. +transition(color 1s ease)
 // ex. +transition("color, background 1s ease")
   
-transition(params = all .3s ease-in-out)
+transition(params = 'all .3s ease-in-out')
   prefix(transition, unquote(params))
 
 // Mixin: Box Shadow
@@ -86,7 +86,7 @@ round(px)
 // Mixin: Border
 // Alias of border, but with an intelligent default
 
-border(params = 1px solid)
+border(params = '1px solid')
   border: params
 
 // Mixin: B

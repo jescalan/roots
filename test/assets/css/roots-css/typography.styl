@@ -8,7 +8,7 @@
 // ex. +text-margin(14)
 
 text-margin(size)
-  margin: {size/1.2}px 0
+  margin: unit(size/1.2, px) 0
 
 // Mixin: P
 // Takes care of all your paragraph needs. Pass it an optional size and it will
@@ -21,7 +21,7 @@ text-margin(size)
 // ex. +p(18)
 // ex. +p(14, true, 500px)
 
-p(size = font-size, margins = true, width = false)
+paragraph(size = font-size, margins = true, width = false)
 
   gr = 1.61803399
   height = size * gr
@@ -33,9 +33,8 @@ p(size = font-size, margins = true, width = false)
   if margins
     text-margin(size)
   
-  line-height: {round(height)}px
-  font-size: size + px
-  font-size: size * .0615384 + rem // this is questionable, so be careful
+  line-height: unit(height, px)
+  font-size: unit(size, px)
 
 // Mixin: Size
 // An alias for 'font-size'
@@ -101,8 +100,7 @@ heading(color = #333)
 // Feed it a size and it will get you rem and some nice header-y margins.
 
 heading-size(size)
-  font-size: size + px
-  font-size: size * .0615384 + rem // this is questionable
+  font-size: unit(size, px)
   text-margin(size/2)
 
 // Mixin Set: h1, h2, h3, h4, h5, h6
@@ -154,12 +152,12 @@ link(color = blue, style = underline)
   text-decoration: none
   transition()
   if style == underline
-    hover-darken(color)
+    hover-darken()
     hover-underline()
   else if style == darken
-    hover-darken(color, 20%)
+    hover-darken(20%)
   else if style == lighten
-    hover-lighten(color)
+    hover-lighten()
   else if style == glow
     &:hover
       text-shadow: 0 0 7px rgba(color, .6)
@@ -288,7 +286,7 @@ base(fonts = font-stack, size = font-size, color = font-color)
   body
     font-family: fonts
     font-size: {size*6.46}unquote("%")
-    font-size: {size}px
+    font-size: unit(size, px)
     color: color
     -webkit-font-smoothing: antialiased
     -webkit-text-size-adjust: 100%
@@ -357,7 +355,7 @@ typography()
   lists()
 
   p
-    p(font-size)
+    paragraph(font-size)
   small
     small()
   a

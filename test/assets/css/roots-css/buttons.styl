@@ -30,8 +30,8 @@ gradient(color1, color2)
 // ex. +simple-gradient(#61D464, 20%)
 
 simple-gradient(color, strength = 10%)
-  start: lighten(color, strength)
-  end:   darken(color, strength)
+  start = lighten(color, strength)
+  end = darken(color, strength)
   gradient(start, end)
 
 // Mixin: Noise Gradient
@@ -54,8 +54,8 @@ noise-gradient(color1, color2)
 // ex. +simple-noise-gradient(#EB8468, #BA6952)
 
 simple-noise-gradient(color, strength = 10%)
-  start: lighten(color, strength)
-  end:   darken(color, strength)
+  start = lighten(color, strength)
+  end = darken(color, strength)
   noise-gradient(start, end)
 
 // Mixin: Hilight
@@ -65,25 +65,19 @@ simple-noise-gradient(color, strength = 10%)
 // ex. +hilight(.7)
 
 hilight(strength = .3)
-  box-shadow(inset 0 1px 0 rgba(255,255,255,strength))
+  box-shadow(s("inset 0 1px 0 %s", rgba(255,255,255,strength)))
 
 // This is an internal function used for the button mixins, not intended for use.
 
-parseSize(size)
-  if size == small
+parse(size)
+  if size == "small"
     return 10
-  else if size == medium
+  else if size == "medium"
     return 13
-  else if size == large
-    @return 18
-  else if type-of(size) == number
-    if unitless(size)
-      return size
-    else
-      // eventually there should be a function here which allows it to take pixels and strips the "px" off the end
-      warn("No units necessary, you can just pass a unitless number")
-  else
-    warn("You must pass small, medium, large, or a number to this mixin")
+  else if size == "large"
+    return 18
+  else if typeof(size) == unit
+    return size
 
 // Mixin: Simple Button
 // Creates a very basic looking button style. Two optional params:
@@ -98,22 +92,20 @@ parseSize(size)
 
 // These will accept font icons interally in the very near future
 
-simpleButton(color = default, size = medium)
+simpleButton(color = default, size = "medium")
 
   // color detection and changes
   textColor = light(color) ? white : #494949
+  parsed_size = parse(size)
 
-  // parse words, make sure it's a number
-  size = parseSize(size)
-  
   // now that we've got numbers, let's work some proportions
-  height: round(size*1.53)/2
-  width: round(round(size*1.53)*2.2)/2
+  height = (parsed_size * 1.53px) / 2
+  width = ((parsed_size * 1.53px) * 2.2) / 2
 
   // dynamically calculated styles
-  font-size: unit(size, px)
+  font-size: unit(parsed_size, px)
   padding: unit(height, px) unit(width, px)
-  border-radius: unit(round(size/4.33333), px)
+  border-radius: parsed_size / 4.33333px
   background-color: color
   color: textColor
   color: rgba(textColor, .95)
@@ -148,30 +140,30 @@ simpleButton(color = default, size = medium)
 
 // These will accept font icons interally in the very near future
 
-button(color = default, size = medium)
+button(color = default, size = "medium")
 
   // color detection and changes
   // this could be refactored for sure
-  darkText = light(color) ? true : false
+  darkText = light(color) ? false : true
   textColor = darkText ? white : #494949
   shadowColor = darkText ? rgba(#000,.1) : rgba(#fff,.3)
   hoverColor = darkText ? rgba(#000,.2) : rgba(#fff,.5)
   downShadow = darkText ? 0 -1px 1px rgba(#000,.2) : 1px 1px 1px rgba(#fff,.6)
 
   // parse words, make sure it's a number
-  size = parseSize(size)
+  parsed_size = parse(size)
 
   // now that we've got numbers, let's work some proportions
-  height: round(size*1.53)/2
-  width: round(round(size*1.53)*2.2)/2
+  height = (parsed_size*1.53px)/2
+  width = ((parsed_size*1.53px)*2.2)/2
 
   // dynamically calculated styles
-  font-size: unit(size, px)
+  font-size: unit(parsed_size, px)
   padding: unit(height, px) unit(width, px)
-  border-radius: unit(round(size/4.33333), px)
+  border-radius: floor(parsed_size/4.33333px)
   simple-noise-gradient(color)
   text-shadow: 1px 1px 1px shadowColor
-  border: 1px solid darken(color, 10%)
+  border: s('1px solid %s', darken(color, 10%))
   color: textColor
   color: rgba(textColor, .95)
 
@@ -186,13 +178,13 @@ button(color = default, size = medium)
   display: inline-block
 
   &:hover, &:focus
-    background-position: 0 unit(height * -1,px)
+    background-position: 0 unit(height * -1, px)
     color: darken(textColor, 3%)
     color: rgba(darken(textColor, 3%), .95)
     text-shadow: 1px 1px 1px hoverColor
 
   &:active
-    box-shadow(inset 0 1px unit(size/2.6, px) rgba(darken(color, 25%),.6))
+    box-shadow(s("inset 0 1px %s %s", parsed_size/2.6px, rgba(darken(color, 25%),.6)))
     text-shadow: downShadow
     border-color: darken(color, 18%)
 
