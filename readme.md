@@ -4,7 +4,7 @@ A light, super fast, and intuitive build system meant for rapid advanced front e
 
 ### Installation
 
-Currently there is no install script, but there will be. To test the project quickly, hit `./run` from the terminal.
+Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm install roots-static -g` and you'll be all set.
 
 ### Usage
 
@@ -116,9 +116,6 @@ That being said, I have a lot to learn about node still, and this project is des
 
 ##### To Do
 
-- polish and test css library integration
-- full debug sweep of the flash message error thing
-- install script
 - deploy to npm
 - roots update task
 - implement image optimization

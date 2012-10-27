@@ -1,0 +1,160 @@
+// -----------------------------------------------------
+// Better start drinking that kool aid
+// -----------------------------------------------------
+
+// Mixin: Img Scale
+// Lay this down on an image and it will scale as it's container does. Great for mobile sites.
+// ex. +img-scale
+
+=img-scale
+  max-width: 100%
+  display: block
+  border: 0
+  height: auto
+  -ms-interpolation-mode: bicubic
+
+// Mixin: Scale Image IE
+// IE is an unfortunate situation, generally. Although it doesn't even typically respond to
+// media queries or appear on mobile devices, if for some reason you need a scaling image, you
+// can use this mixin. You have to pass the image path to it though.
+// ex. +scale-image-ie(/images/sample.png)
+
+=scale-image-ie($src)
+  background: none
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="#{image_url($src, true, false)}",  sizingMethod="scale")
+
+// Mixin: Border Box
+// Border box sizing makes a whole ton of sense, especially when working with mobile layouts.
+// This just implements border box sizing on an element. For more on this concept, check out
+// http://paulirish.com/2012/box-sizing-border-box-ftw/
+// ex. +border-box
+
+=border-box
+  -webkit-box-sizing: border-box
+  -moz-box-sizing: border-box
+  box-sizing: border-box
+
+// Mixin: When
+// This is a very important mixin to understand and can be used to very easily implement mobile
+// layouts. It is very flexible and rides on advanced sass features. Takes one parameter, which
+// accepts a variety of things, as well as a content block.
+
+// $at: Accepts 'phone', 'landscape', 'tablet', one number, or two numbers.
+// if given one number, it will apply the block styles when the screen is that width or less
+// if given two numbers, it will apply the block styles only when the width is between the two numbers.
+
+// This mixin accepts a content block of styles indented below it, which it applies when it meets
+// the conditions you specified in the parameters. See below for examples.
+
+// ex. +when(phone)
+//       color: red
+// ex. +when(tablet)
+//       color: red
+//       font-size: .8em
+// ex. +when(800)
+//       width: 500px
+// ex. +when(500 700)
+//       content: "OMG the dead zone!"
+
+// Huge props to Chris Eppstein for the block feature in sass and the brilliant
+// concepts that follow. Modified from https://gist.github.com/1215856
+
+=when($at)
+  @if $at == phone
+    @media only screen and (max-width: 479px)
+      @content
+  @else if $at == landscape
+    @media only screen and (min-width: 480px) and (max-width: 767px)
+      @content
+  @else if $at == tablet
+    @media only screen and (min-width: 768px) and (max-width: 959px)
+      @content
+  @else if type-of($at) == number
+    @media only screen and (max-width: #{$at}px)
+      @content
+  @else if type-of($at) == list
+    @media only screen and (min-width: nth($at, 1)px) and (max-width: nth($at, 2)px)
+      @content
+  @else
+    @warn "The mixin doesn't want what you're servin up. Check the documentation for usage details"
+
+// Mixin: Split
+// This mixin is also extremely important to understand for quickly crafting up mobile layouts.
+// It is to be used on a parent element, and will horizontally split it's children, make their widths 
+// fluid, and automatically rearrange them to be vertical at a certain width. This is the most common
+// rearrangement pattern in mobile design, and this mixin should more or less replace floats.
+
+// Example:
+
+// **haml**
+// #container
+//   .sidebar
+//   .content
+
+// **sass**
+// #container
+//   +split(25% 75%, 600)
+
+// What this does is splits .sidebar and .content horizontally to the widths that were passed to +split, 
+// 25% and 75%. This is the percentage of the screen they will take up, so as it is resized smaller, these
+// areas will flex. At one point, they will become too thin to look normal anymore, and this is where they
+// should be rearranged to split vertically. The second argument passed (600) is the width at which they will
+// switch to a normal block layout.
+
+// Note that the first argument can take *as many percentages as you want* - it's not limited to two. Just
+// make sure that the number of child divs matches the number of percentages passed.
+
+// Also note that in order for the divs to behave correctly in this setup, the sizing has to be set to
+// border-box. This means padding will not change the width, it will just pad the inside of the containers.
+
+
+=split($params, $respond-at: 480)
+  $total-val: 0%
+  @for $i from 1 to length($params) + 1
+    // warn the user if they are over 100%
+    $total-val: $total-val + nth($params, $i)
+    @if $total-val > 100%
+      @warn "Your total was #{$total-val}. You should probably shoot for a total value under 100% if you want this to come out right"
+    // float em and set the widths
+    & > *:nth-child(#{$i})
+      float: left
+      width: nth($params, $i)
+      +border-box
+      +when($respond-at)
+        width: 100%
+
+// Additive Mixin: Fluid Images
+// WARNING: Creates classes in your css and styles them - not to be used inside an element.
+// Makes images fluid when within <figure> elements. For any and all images, it's up to you
+// to decide whether they are fluid or not.
+
+=fluid-images
+  figure
+    position: relative
+
+  figure img, figure object, figure embed, figure video
+    +img-scale
+
+  img
+    border: 0
+    -ms-interpolation-mode: bicubic
+
+// Additive Mixin: Responsive
+// WARNING: Creates classes in your css and styles them - not to be used inside an element.
+// Add fluid images to your page as well as a utility class for border-box elements, and a couple
+// others that will employ common split patterns, see below.
+
+=responsive
+  +fluid-images
+  .border-box
+    +border-box
+  .s50-50
+    +split(50% 50%)
+  .s25-75
+    +split(25% 75%)
+  .s75-25
+    +split(75% 25%)
+  .s25-50-25
+    +split(25% 50% 25%, 500)
+
+
