@@ -2,12 +2,32 @@
 // Utilities
 // -----------------------------------------------------
 
+vendor-prefixes ?= webkit moz o ms official
+pie-enabled = false
+
 // Mixin: Pie
 // When turned on, enables css3 pie (http://css3pie.com/) for all
 // elements that can use it. Which makes IE look a lot nicer.
 
 pie()
-  // behavior: url(/vendor/pie.htc)
+  behavior: url(/vendor/pie.htc) if pie-enabled
+
+// Helper: Literal Join
+// Ported from visionmedia/nib
+
+literal-join(string, literals)
+  result = unquote('')
+  first = true
+  for args in literals
+    subresult = unquote('')
+    for arg in args
+      subresult = subresult arg
+    if first
+      result = subresult
+      first = false
+    else
+      result = s('%s%s%s', result, unquote(string), subresult)
+  return result
 
 // Mixin: Prefix
 // Pass this a key and a value and it will put all the browser prefixes on it.
@@ -15,11 +35,14 @@ pie()
 // ex. +prefix(transition, all .3s ease)
 
 prefix(prop, val)
-  -webkit-{prop}: val
-  -moz-{prop}: val
-  -o-{prop}: val
-  -ms-{prop}: val
-  {prop}: val
+  
+  val = literal-join(',', val) if length(val) > 1
+
+  for prefix in vendor-prefixes
+    if prefix == official
+      {prop}: val
+    else
+      -{prefix}-{prop}: val
 
 // Mixin: Transition
 // A shortcut for prefixed transitions with an intelligent default. If you want to pass it multiple
@@ -28,8 +51,9 @@ prefix(prop, val)
 // ex. +transition(color 1s ease)
 // ex. +transition("color, background 1s ease")
   
-transition(params = 'all .3s ease-in-out')
-  prefix(transition, unquote(params))
+transition(params...)
+  params = unquote('all .3s ease') unless params
+  prefix(transition, params)
 
 // Mixin: Box Shadow
 // A shortcut for prefixed box-shadows with an intelligent default. If you want to pass it multiple
@@ -38,8 +62,8 @@ transition(params = 'all .3s ease-in-out')
 // ex. +box-shadow(1px 1px 3px blue)
 // ex. +box-shadow("1px 1px 3px blue, inset 2px 0 5px rgba(0,0,0,.5)")
 
-box-shadow(params)
-  prefix(box-shadow, unquote(params))
+box-shadow(params...)
+  prefix(box-shadow, params)
   pie()
 
 // Mixin: Opacity
@@ -48,7 +72,7 @@ box-shadow(params)
 // ex. +opacity(.6)
 
 opacity(opacity)
-  filter: unquote("progid:DXImageTransform.Microsoft.Alpha(Opacity=#{round(opacity * 100)})")
+  filter: s("progid:DXImageTransform.Microsoft.Alpha(Opacity=%s)", opacity * 100)
   opacity: opacity
 
 // Mixin: Rotate
@@ -56,7 +80,7 @@ opacity(opacity)
 // ex. +rotate(45deg)
 
 rotate(params)
-  prefix(transform, rotate(params))
+  prefix(transform, s("rotate(%s)", params))
   pie()
 
 // Mixin: Rounded
@@ -86,7 +110,8 @@ round(px)
 // Mixin: Border
 // Alias of border, but with an intelligent default
 
-border(params = '1px solid')
+border(params...)
+  params = unquote('1px solid') unless params
   border: params
 
 // Mixin: B
@@ -128,7 +153,7 @@ italic()
 // ex. +columns(5)
 // ex. +columns(8, 15px, 200px, 1px solid red)
 
-columns(count = 3, gap = 30px, width = false, rule = false)
+columns(count = 3, gap = 30px, width = null, rule = null)
   prefix(column-count, count)
   prefix(column-gap, gap)
   prefix(column-width, width) if width
@@ -173,11 +198,11 @@ triangle(direction = up, size = 10px, color = #000)
 // Avoid any possibility of an error by quoting the image path. Also looks cleaner.
 // ex. +ir("../img/test.jpg", 200px 400px)
 
-ir(img-path = false, dimensions = false)
+ir(path = null, dimensions = null)
   font: 0/0 a
   text-shadow: none
   color: transparent
-  bg(img-path) if img-path
+  bg(path) if path
   if length(dimensions) > 1
     width: dimensions[0]
     height: dimensions[1]
@@ -192,7 +217,8 @@ ir(img-path = false, dimensions = false)
 
 group()
   zoom: 1
-  &:before, &:after
+  &:before
+  &:after
     content: ""
     display: table
   &:after
@@ -270,25 +296,23 @@ raquo()
 
 dimensions(numbers)
   if length(numbers) > 1
-    if unit(numbers[0]) == ''
-      width: {numbers[0]}px
-      height: {numbers[1]}px
-    else
-      width: nth(numbers, 1)
-      height: nth(numbers, 2)
+    width: unit(numbers[0], px)
+    height: unit(numbers[1], px)
   else
-    if unit(numbers[0]) == ''
-      width: {numbers}px
-      height: {numbers}px
-    else
-      width: numbers
-      height: numbers
+    width: unit(numbers, px)
+    height: unit(numbers, px)
 
-// Mixin: D
-// A shorter alias for +dimensions, because I use it so so often.
+// Mixin: Size
+// A shorter alias for dimensions, because I use it so so often. Also is called like a 
+// regular css property, to make life a bit easier
 
-d(arg)
-  dimensions(arg)
+size(numbers...)
+  if length(numbers) > 1
+    width: unit(numbers[0], px)
+    height: unit(numbers[1], px)
+  else
+    width: unit(numbers, px)
+    height: unit(numbers, px)
 
 // Mixin: Debug
 // Debugging tool - drop this at root level in your css and it will put borders on every element so
@@ -339,5 +363,5 @@ debug()
 // looping. works the same way as the official, just prefixes it.
 // ex. +animation(fade-out, 5s, infinite)
 
-// animation(params)
-//   prefix(animation, params)
+animation(params)
+  prefix(animation, params)
