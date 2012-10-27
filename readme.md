@@ -116,12 +116,15 @@ That being said, I have a lot to learn about node still, and this project is des
 
 ##### To Do
 
+- polish and test css library integration
 - full debug sweep of the flash message error thing
 - install script
 - deploy to npm
 - roots update task
 - implement image optimization
 - custom range local for repeated content
+- deploy to custom ftp server
+- integrate with express 3.0
 - think about tumblr theming plugin
 
 ### Love/Hate

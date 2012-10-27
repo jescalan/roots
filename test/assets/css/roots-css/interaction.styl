@@ -1,5 +1,3 @@
-@import 'utilities'
-
 // -----------------------------------------------------
 // Interaction
 // -----------------------------------------------------
@@ -48,7 +46,7 @@ hover-underline()
 // ex. +hover-pop(1.2, 45deg, true)
 // ex. +hover-pop(1.7, shadow: true)
 
-hover-pop(scale, rotate = false, shadow = false)
+hover-pop(scale, rotate = null, shadow = null)
   if shadow
     box-shadow(0 0 1px transparent)
   &:hover
@@ -58,7 +56,7 @@ hover-pop(scale, rotate = false, shadow = false)
     if shadow
       box-shadow(0 0 5px rgba(#000, .3))
     if rotate
-      -webkit-transform: scale(scale) rotate(rotate)
+      -webkit-transform: s("%s %s", scale(scale), rotate(rotate))
 
 // Mixin: Hover Fade
 // On hover, fades the element's opacity down. Takes an amount as an integer between
@@ -76,7 +74,7 @@ hover-fade(amount)
 // ex. +hover-color(#D45D86)
 // ex. +hover-color(red, true)
 
-hover-color(color, bg = false)
+hover-color(color, bg = null)
   &:hover
     if bg
       background-color: color
