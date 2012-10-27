@@ -76,7 +76,7 @@ parse(size)
     return 13
   else if size == "large"
     return 18
-  else if typeof(size) == unit
+  else
     return size
 
 // Mixin: Simple Button
@@ -92,10 +92,10 @@ parse(size)
 
 // These will accept font icons interally in the very near future
 
-simpleButton(color = default, size = "medium")
+simple-button(color = default, size = "medium")
 
   // color detection and changes
-  textColor = light(color) ? white : #494949
+  textColor = light(color) ? #494949 : #fff
   parsed_size = parse(size)
 
   // now that we've got numbers, let's work some proportions
@@ -105,7 +105,7 @@ simpleButton(color = default, size = "medium")
   // dynamically calculated styles
   font-size: unit(parsed_size, px)
   padding: unit(height, px) unit(width, px)
-  border-radius: parsed_size / 4.33333px
+  border-radius: (parsed_size / 4.33333px)
   background-color: color
   color: textColor
   color: rgba(textColor, .95)
@@ -160,7 +160,7 @@ button(color = default, size = "medium")
   // dynamically calculated styles
   font-size: unit(parsed_size, px)
   padding: unit(height, px) unit(width, px)
-  border-radius: floor(parsed_size/4.33333px)
+  border-radius: (parsed_size/4.33333px)
   simple-noise-gradient(color)
   text-shadow: 1px 1px 1px shadowColor
   border: s('1px solid %s', darken(color, 10%))
@@ -195,7 +195,7 @@ button(color = default, size = "medium")
 // ex.  .disabled
 //        +button-disabled
 
-buttonDisabled()
+button-disabled()
   background: #ccc
   border-color: darken(#ccc, 10%)
   opacity: .5
@@ -216,10 +216,10 @@ buttonDisabled()
 
 buttons()
   .btn-simple
-    transition(all .2s ease-in-out)
-    simpleButton(blue)
+    transition()
+    simple-button(blue)
   .btn
-    transition(all .2s ease-in-out)
+    transition()
     button(blue)
   .btn.disabled, .btn-simple.disabled
-    buttonDisabled()
+    button-disabled()
