@@ -208,7 +208,15 @@ var options = {
   // --------------------------------------------------------------------------
 
   update: function(){
-    console.log('this method still needs to be written');
+    // there should be some sort of check for updates as well
+    console.log("updating...".yellow)
+    run('npm update roots-static -g', function(err, out, stderr){
+      if (err) {
+        console.log("something went wrong here. file an issue on http://github.com/jenius/root-cli/issues !")
+      } else {
+        console.log("done!".green)
+      }
+    });
   },
 
   // --------------------------------------------------------------------------
