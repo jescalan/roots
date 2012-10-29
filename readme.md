@@ -122,6 +122,7 @@ That being said, I have a lot to learn about node still, and this project is in 
 - implement compression on compile
 - test deploy task, make sure it's playing nice with heroku
 - roots plugin generate and roots plugin install commands
+- package the css library into its own module and stylus.use() it instead
 - pull in vendor css, js, and img (only static)
 - implement image optimization
 - custom range local for repeated content
