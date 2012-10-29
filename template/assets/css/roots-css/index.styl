@@ -3,10 +3,15 @@
 // -------------------------------------------------------
 
 // font options (add your own!)
-helvetica = "Helvetica Neue", HelveticaNeue, Helvetica, Arial, "Lucida Grande", sans-serif
+helvetica-neue = "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif
+helvetica = "Helvetica Neue", Helvetica, Arial, sans-serif
+georgia = Georgia, Cambria, "Times New Roman", Times, serif
+lucidia-grande = "Lucida Grande", Tahoma, Verdana, Arial, sans-serif
+monospace = unquote("'Bitstream Vera Sans Mono', Consolas, Courier, monospace")
+verdana = Verdana, Geneva, sans-serif
 
 // default font stack
-font-stack = helvetica
+font-stack = helvetica-neue
 font-size = 15
 font-color = #555
 
@@ -33,14 +38,15 @@ hilight-color = blue
 
 @import 'reset'
 @import 'utilities'
+@import 'gradients'
 @import 'interaction'
+@import 'positions'
 @import 'typography'
 @import 'code'
 @import 'ui'
 @import 'buttons'
 @import 'forms'
 @import 'tables'
-// @import 'fluid'
 
 // -------------------------------------------------------
 // Framework Mixin (loads all default styles)

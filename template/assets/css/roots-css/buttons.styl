@@ -3,66 +3,11 @@
 // -----------------------------------------------------
 // I realize that this is insane, but trust me, it's worth it
 
-
-// Mixin: Gradient
-// Takes two colors and outputs a vertical gradient that fades between the two colors.
-// ex. +gradient(#EB8468, #BA6952)
-
-// TODO: add option to change direction
-
-gradient(color1, color2)
-  background-color: color2
-  background-repeat: repeat-x
-  background-image: -moz-linear-gradient(top, color1 0%, color2 100%)
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, color1), color-stop(100%, color2))
-  background-image: -webkit-linear-gradient(top, color1 0%, color2 100%)
-  background-image: -o-linear-gradient(top, color1 0%, color2 100%)
-  background-image: -ms-linear-gradient(top, color1 0%, color2 100%)
-  background-image: linear-gradient(top, color1 0%, color2 100%)
-  -pie-background: linear-gradient(top, color1 0%, color2 100%)
-  pie()
-
-// Mixin: Simple Gradient
-// Takes one color and an optional strength. Darkens and lightens the color according to the strength
-// and creates a gradient between those two values, the average being the originally passed color.
-// Higher strength will result in a more strongly contrasted gradient
-// ex. +simple-gradient(#EB8468)
-// ex. +simple-gradient(#61D464, 20%)
-
-simple-gradient(color, strength = 10%)
-  start = lighten(color, strength)
-  end = darken(color, strength)
-  gradient(start, end)
-
-// Mixin: Noise Gradient
-// Exactly the same as the gradient mixin, but overlays a very light noise to give it more texture.
-// ex. +noise-gradient(#EB8468, #BA6952)
-
-noise-gradient(color1, color2)
-  background: color2
-  background: url(../img/noise.png) repeat, color2 -moz-linear-gradient(top, color1 0%, color2 100%) repeat-x
-  background: url(../img/noise.png) repeat, color2 -webkit-gradient(linear, left top, left bottom, color-stop(0%, color1), color-stop(100%, color2)) repeat-x
-  background: url(../img/noise.png) repeat, color2 -webkit-linear-gradient(top, color1 0%, color2 100%) repeat-x
-  background: url(../img/noise.png) repeat, color2 -o-linear-gradient(top, color1 0%, color2 100%) repeat-x
-  background: url(../img/noise.png) repeat, color2 -ms-linear-gradient(top, color1 0%, color2 100%) repeat-x
-  background: url(../img/noise.png) repeat, color2 linear-gradient(top, color1 0%, color2 100%) repeat-x
-  -pie-background: url(../img/noise.png) repeat, color2 linear-gradient(top, color1 0%, color2 100%) repeat-x
-  pie()
-
-// Mixin: Simple Noise Gradient
-// Exactly like simple gradient, but overlays a very light noise to give it more texture.
-// ex. +simple-noise-gradient(#EB8468, #BA6952)
-
-simple-noise-gradient(color, strength = 10%)
-  start = lighten(color, strength)
-  end = darken(color, strength)
-  noise-gradient(start, end)
-
 // Mixin: Hilight
 // Adds a light brighter line across the top of the element for a perspective effect.
 // Takes an optional argument for strength, which takes a value between 0 and 1
-// ex. +hilight
-// ex. +hilight(.7)
+// ex. hilight
+// ex. hilight(.7)
 
 hilight(strength = .3)
   box-shadow(s("inset 0 1px 0 %s", rgba(255,255,255,strength)))
