@@ -41,9 +41,11 @@ Roots' main interface is it's command line tool. There are just a couple of comm
 
 ### CSS Library
 
-CSS is a huge pain in the ass and we always end up doing the same shit over and over. Compass wasn't terse or magical enough for me, doesnt include UI components, and is too reliant on ruby, so I put together a css helper library. It's a lot like [nib](https://github.com/visionmedia/nib) except it's more thorough and actually has documentation. It's been living on its own for a number of months and is used in production on a number of high profile sites already. The CSS library will have received a full rewrite by the time roots is released, and should have a really sweet site with all sorts of interactive documentation.
+CSS is a huge pain in the ass and we always end up doing the same shit over and over. Compass is great, but wasn't terse or magical enough for me, doesnt include UI components, is too reliant on ruby, and is too tied together with its build system. So I put together my own css helper library. It's a lot like [nib](https://github.com/visionmedia/nib) except it's more thorough and actually has documentation. It's been living on its own for a number of months and is used in production on a number of production sites for large companies already.
 
-The css library is very modular in its construction, and higher level mixins can easily be broken down into their components and customized as is necessary.
+The CSS library is very modular in its construction, and higher level mixins can easily be broken down into their components and customized as is necessary. This means you can start with the full bootstrap-like framework for an initial mock, then break it down into custom components when it's time to build a production site without having to trash your code. The library itself is completely independent from the build system, and can be used anywhere else if you want. It lives entirely in the `roots-css` folder in `assets/css`.
+
+The library will have received a full rewrite by the time roots is released, and should have really sweet docs with all sorts of interactive examples, which will be linked to here.
 
 ### Plugins
 
@@ -116,10 +118,10 @@ That being said, I have a lot to learn about node still, and this project is des
 
 ##### To Do
 
-- roots update task
 - implement compression on compile
 - test deploy task, make sure it's playing nice with heroku
-- pull in vendor css and js (only static here)
+- roots plugin generate and roots plugin install commands
+- pull in vendor css and js (only static)
 - implement image optimization
 - custom range local for repeated content
 - deploy to custom ftp server
