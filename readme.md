@@ -8,7 +8,7 @@ Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm i
 
 ### Usage
 
-Roots' main interface is it's command line tool. There are just a couple of commands that do more or less what you would expect.
+Roots' main interface is it's command line tool. There are just a couple of main commands that do more or less what you would expect.
 
 `$ roots new project-name`: Creates a new project template in the current directory, called `project-name`. Just a really simple scaffold of folders as well as some basic settings, a custom html boilerplate, and the roots css library. Good way to get off the ground quickly with the right structure.
 
@@ -16,34 +16,35 @@ Roots' main interface is it's command line tool. There are just a couple of comm
 
 `$ roots compile`: Compiles your project once to the public folder, with everything minified and compressed.
 
-`$ roots deploy project-name`: Compiles, compresses, and deploys your project to heroku as `project-name`. If you don't add a name, heroku will generate one automatically. This command depends on the heroku toolbelt - if you don't have it, the command will instruct you on how to install it. Coming soon, custom ftp server deploys
+`$ roots deploy project-name`: Compiles, compresses, and deploys your project to heroku as `project-name`. If you don't add a name, heroku will generate one automatically. This command depends on the heroku toolbelt - if you don't have it, the command will instruct you on how to install it. Coming soon, custom ftp server deploys!
 
 `$ roots update`: Upgrades roots to the latest version.
 
 ### Features
 
-- super straightforward installation (does not rely on ruby)
+- super straightforward installation (no ruby needed)
 - jade, stylus, and coffeescript default stack
 - sprockets-style coffeescript requires
 - custom super fast live reload implementation
 - compile errors reported as a flash message, doesn't break workflow
 - layouts - default and custom overrides
 - partials (all locals automatically available)
-- intuitive app settings file
-- ignore files based on string or regex
-- global variables and view helpers
-- also supports ejs and straight html, css, and javascript
+- clean and intuitive settings file
+- ignore files based on string or regex (minimatch)
+- global variables and functions for views
 - one command deploys to heroku or a custom server (via ftp)
 - coffeescript and markdown can be written directly into views
 - minifies and compresses files and optimizes images on deploy
 - efficient javascript package management via bower and require.js
-- easy to extend with a well-documented and simple plugin interface
+- awesome built-in css helper library makes life so much easier
+- also supports ejs and straight html, css, and javascript
+- easy to extend and add languages with a well-documented and simple plugin interface
 
 ### CSS Library
 
 CSS is a huge pain in the ass and we always end up doing the same shit over and over. Compass is great, but wasn't terse or magical enough for me, doesnt include UI components, is too reliant on ruby, and is too tied together with its build system. So I put together my own css helper library. It's a lot like [nib](https://github.com/visionmedia/nib) except it's more thorough and actually has documentation. It's been living on its own for a number of months and is used in production on a number of production sites for large companies already.
 
-The CSS library is very modular in its construction, and higher level mixins can easily be broken down into their components and customized as is necessary. This means you can start with the full bootstrap-like framework for an initial mock, then break it down into custom components when it's time to build a production site without having to trash your code. The library itself is completely independent from the build system, and can be used anywhere else if you want. It lives entirely in the `roots-css` folder in `assets/css`.
+The CSS library is very modular in its construction, and higher level mixins can easily be broken down into their components and customized as is necessary. This means you can start with the full bootstrap-like framework for an initial mock, then break it down into custom components when it's time to build a production site without having to trash your code. The library itself is completely independent from the build system, and can be used anywhere else if you want. It lives entirely in the `roots-css` folder in `assets/css`, and at [this repo](#).
 
 The library will have received a full rewrite by the time roots is released, and should have really sweet docs with all sorts of interactive examples, which will be linked to here.
 
@@ -74,7 +75,7 @@ It's pretty straightforward to add a plugin to customize roots' functionality. P
       # you'll usually want to start by looping through each file, if there are any
       files && files.forEach (file) ->
 
-        # the helper module is a very useful tool that exposes a bunch of information
+        # the helper class is a very useful tool that exposes a bunch of information
         # about the file and methods that help with compiling it. more details are
         # needed here.
         helper = new Helper(file)
@@ -82,11 +83,11 @@ It's pretty straightforward to add a plugin to customize roots' functionality. P
         # you can do your compiling here, however it's done.
         require('child_process').exec "sass #{helper.file_path}", (err, compiled_sass) ->
 
-          # if there was an error, set it
+          # if there was an error, save it
           error = err if !!err
 
-          # call helper.write to write the compiled text to the appropriate
-          # file in public/
+          # call helper.write to write the compiled string to the appropriate
+          # file in public/ - don't write a whack file with an error though
           helper.write(compiled_sass) unless error
 
           # the callback must be called once everything is done. it takes one optional
@@ -112,16 +113,16 @@ Although not required, it's highly recommended that you also use [require.js](ht
 
 ### Ambition
 
-I'm very excited about this project, because it makes my life a ton easier and it saves me and my employer many hours. Once the static site compiler is finished and tested, I plan on porting the system first to node (with express), then to rails (likely a gem for rails 4). Life without useful tools like the roots css library, bower, require, live reloading, nice templating langiages, and single-command deploys just seems sad to me, and makes everything take longer. If you are interested in helping out with this project or the rails or node ports, get in touch. I'd love to have you on board.
+I'm very excited about this project, because it makes my life a ton easier and it saves me and my employer many hours. Once the static site compiler is finished and tested, I plan on porting the system first to node (with express), then to rails (likely a gem for rails 4). Life without useful tools like the roots css library, bower, requirejs, live reloading, nice templating languages, and single-command deploys just seems sad to me, and makes everything take longer. If you are interested in helping out with this project or the rails or node ports, get in touch. I'd love to have you on board.
 
-That being said, I have a lot to learn about node still, and this project is desperately in need of better modularization, better use of the module require system (index.js, module.exports), and probably more use of EventEmitter rather than crazy callbacks. This will gradually happen as I clean, learn, and refactor.
+That being said, I have a lot to learn about node still, and this project is in its current state not the most clear, organized, and modular thing on earth. But it will be eventually, and will gradually happen as I clean, learn, and refactor.
 
 ##### To Do
 
 - implement compression on compile
 - test deploy task, make sure it's playing nice with heroku
 - roots plugin generate and roots plugin install commands
-- pull in vendor css and js (only static)
+- pull in vendor css, js, and img (only static)
 - implement image optimization
 - custom range local for repeated content
 - deploy to custom ftp server
@@ -134,6 +135,6 @@ Do you love and/or hate this? Maybe you even want to help, or suggest an improve
 
 ### Contributors
 
-Everyone who has contributed to this project is the most awesome person ever. I want to give a huge thanks especially to these people
+Everyone who has contributed to this project is the most awesome person ever. I want to give a huge thanks especially to these people:
 
-- Sam Saccone (@samccone), advice, support, and responsable for a lot of code
+- Sam Saccone (@samccone), advice, support, and responsable for a good bit of code
