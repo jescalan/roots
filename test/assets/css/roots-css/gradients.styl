@@ -122,6 +122,9 @@ linear-gradient(start, stops...)
 
 gradient(color1, color2)
   background: color2 linear-gradient(top, color1, color2) repeat-x
+  if pie-enabled
+    -pie-background: unquote('linear-gradient(top,') color1 unquote(' 0%, ') color2 unquote('color2 100%)')
+    pie()
 
 // Mixin: Simple Gradient
 // Takes one color and an optional strength. Darkens and lightens the color according to the strength
@@ -141,6 +144,9 @@ simple-gradient(color, strength = 10%)
 
 noise-gradient(color1, color2)
   background: url(/img/noise.png) repeat, color2 linear-gradient(top, color1, color2) repeat-x
+  if pie-enabled
+    -pie-background: unquote('linear-gradient(top,') color1 unquote(' 0%, ') color2 unquote('color2 100%)')
+    pie()
 
 // Mixin: Simple Noise Gradient
 // Exactly like simple gradient, but overlays a very light noise to give it more texture.
