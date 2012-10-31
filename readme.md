@@ -130,6 +130,12 @@ That being said, I have a lot to learn about node still, and this project is in 
 - integrate with express 3.0
 - think about tumblr theming plugin
 
+##### Refactor Phases
+
+- phases 1 and 2 complete
+- phase 3: figure out how to deal with callbacks for parallel async operations
+- phase 4: optimize speed
+
 ### Love/Hate
 
 Do you love and/or hate this? Maybe you even want to help, or suggest an improvement. Tell us all about it. Find my email and harass me or file an issue. <3
