@@ -8,7 +8,7 @@ exports.settings =
   file_type: 'sass'
   target: 'css'
 
-exports.compile = (files, options, Helper, cb) ->
+exports.compile = (files, Helper, cb) ->
   error = false
   counter = 0
 
