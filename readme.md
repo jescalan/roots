@@ -119,6 +119,7 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
+- add a plugins load flag to app.coffee: no plugins = speed boost
 - implement compression on compile
 - test deploy task, make sure it's playing nice with heroku
 - roots plugin generate and roots plugin install commands
@@ -132,7 +133,7 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### Refactor Phases
 
-- phases 1 and 2 complete
+- phases 1 and 2 complete (organize commands and organize compile process)
 - phase 3: figure out how to deal with callbacks for parallel async operations
 - phase 4: optimize speed
 
