@@ -2,7 +2,7 @@
 
 A light, super fast, and intuitive build system meant for rapid advanced front end development.
 
-**NOTE:** This is super alpha at the moment, and not prepared for mainstream use. If you still want to check it out, by all means feel free, but don't be surprised if a few little pieces aren't working properly. And get in touch too, ping me [on twitter](http://twitter.com/jenius) and I'd be glad to help out!
+**NOTE:** This is super alpha at the moment, and not prepared for mainstream use. If you still want to check it out, by all means feel free, but don't be surprised if a few little pieces aren't working properly. And get in touch too, ping me [on twitter](http://twitter.com/jescalan) and I'd be glad to help out!
 
 ### Installation
 
