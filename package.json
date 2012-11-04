@@ -1,6 +1,6 @@
 {
   "name": "roots-static",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Roots is a tiny, fast, and flexible build system for static sites",
   "keywords": [
     "front-end",

@@ -2,7 +2,7 @@
 
 A light, super fast, and intuitive build system meant for rapid advanced front end development.
 
-**NOTE:** This is super alpha at the moment, and not prepared for mainstream use. If you still want to check it out, by all means feel free, but don't be surprised if a few little pieces aren't working properly. And get in touch too, ping me [on twitter](http://twitter.com/jescalan) and I'd be glad to help out!
+**NOTE:** This is super alpha at the moment, and not prepared for mainstream use. If you still want to check it out, by all means feel free, but don't be surprised if a few little pieces aren't working properly. And get in touch too, ping me [on twitter](http://twitter.com/jescalan) and I'd be glad to help!
 
 ### Installation
 
@@ -34,7 +34,7 @@ Roots' main interface is it's command line tool. There are just a couple of main
 - clean and intuitive settings file
 - ignore files based on string or regex (minimatch)
 - global variables and functions for views
-- one command deploys to heroku or a custom server (via ftp)
+- one command deploys to heroku or a custom server via ftp (custom server not yet implemented)
 - coffeescript and markdown can be written directly into views
 - minifies and compresses files and optimizes images on deploy
 - efficient javascript package management via bower and require.js
@@ -52,52 +52,17 @@ The library will have received a full rewrite by the time roots is released, and
 
 ### Plugins
 
-It's pretty straightforward to add a plugin to customize roots' functionality. Plugins need only be one file, and are frequently less than 10 lines of javascript (many of the core compilers are, actually). To create a plugin, just drop a new file, javascript or coffeescript, into `vendor/plugins`. The module need only export two methods, `settings` and `compile`. The details of these are shown below (in coffeescript, but could just as easily be js as well).
+It's pretty straightforward to add a plugin to customize roots' functionality. Plugins need only be one file, and are frequently less than 10 lines of javascript (many of the core compilers are, actually). To create a plugin, just drop a new file, javascript or coffeescript, into `vendor/plugins`. The module need only export two methods, `settings` and `compile`.
 
-**NOTE:** At the moment, the file name must match the type of file you want to compile. This might change in the future. So this one would be sass.coffee, since it's used to compile sass.
-    
-    # this is a sample plugin written in coffeescript
-    # -----------------------------------------------
+Here are a few examples of how plugins can look. Note that currently there is no dependency management system for plugins, so you must include any npm packages directly with the plugin.
 
-    # The settings object should have only two keys - the file type that
-    # you are aiming to compile, and its target output
+- [sass compiler (command line)](https://github.com/jenius/roots-cli/blob/master/test/vendor/plugins/sass.coffee)
+- [ejs compiler (templates)](https://github.com/jenius/roots-cli/blob/master/lib/compilers/core/jade.js)
+- [stylus compiler (js library-based)](https://github.com/jenius/roots-cli/blob/master/lib/compilers/core/styl.js)
 
-    exports.settings =
-      file_type: 'sass'
-      target: 'css'
+More thorough documentation on `Helper`'s api will be available on the near future. For now, if you are curious, just check out the [compile helper source](https://github.com/jenius/roots-cli/blob/master/lib/compilers/compile-helper.coffee).
 
-    # Compile is handed a list of files that match the filetype declared above,
-    # the project's options as defined in app.coffee, a helper object, and a callback
-    # the callback must be run or everything will break.
-
-    exports.compile = (files, options, Helper, callback) ->
-      error = false
-      counter = 0
-
-      # you'll usually want to start by looping through each file, if there are any
-      files && files.forEach (file) ->
-
-        # the helper class is a very useful tool that exposes a bunch of information
-        # about the file and methods that help with compiling it. more details are
-        # needed here.
-        helper = new Helper(file)
-
-        # you can do your compiling here, however it's done.
-        require('child_process').exec "sass #{helper.file_path}", (err, compiled_sass) ->
-
-          # if there was an error, save it
-          error = err if !!err
-
-          # call helper.write to write the compiled string to the appropriate
-          # file in public/ - don't write a whack file with an error though
-          helper.write(compiled_sass) unless error
-
-          # the callback must be called once everything is done. it takes one optional
-          # parameter detailing any errors that occurred. if the error param evaluates
-          # to true, roots will show the error message on the reloaded page
-          counter++
-          callback(error) if counter == files.length
-
+##### not yet implemented
 
 Plugins can be manually installed into vendor/plugins or directly pulled from a github repo using a command like `roots plugin install jenius/roots-sass`, the final parameter being `github-username/repo-name`. If you'd like to write a plugin, the command `roots plugin generate` will create a nice starting template inside vendor/plugins. All known plugins will be listed on the roots website [link].
 
@@ -121,8 +86,7 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
-- fix command line output for debug mode
-- add a plugins load flag to app.coffee: no plugins = speed boost
+- load plugins based on paths provided in app.coffee for speed + simplicity
 - roots plugin generate and roots plugin install commands
 - package the css library into its own module and stylus.use() it instead
 - pull in vendor css, js, and img (only static)
