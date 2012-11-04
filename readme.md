@@ -121,17 +121,16 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
-- fix command line output for debug mode and compile command
-- add a plugins load flag to app.coffee: no plugins = speed boost
-- implement compression on compile
-- test deploy task, make sure it's playing nice with heroku
+- implement deploy task
+- fix command line output for debug mode
+- app.coffee should point to plugins for quicker load
+- implement image compression on compile
 - roots plugin generate and roots plugin install commands
 - package the css library into its own module and stylus.use() it instead
 - pull in vendor css, js, and img (only static)
-- implement image optimization
 - custom range local for repeated content
 - deploy to custom ftp server
-- integrate with express 3.0
+- integrate with express 3
 - think about tumblr theming plugin
 
 ##### Refactor Phases
