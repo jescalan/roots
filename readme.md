@@ -121,9 +121,8 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
-- fix command line output for debug mode and compile command
+- fix command line output for debug mode
 - add a plugins load flag to app.coffee: no plugins = speed boost
-- implement compression on compile
 - roots plugin generate and roots plugin install commands
 - package the css library into its own module and stylus.use() it instead
 - pull in vendor css, js, and img (only static)
