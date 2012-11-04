@@ -2,6 +2,8 @@
 
 A light, super fast, and intuitive build system meant for rapid advanced front end development.
 
+**NOTE:** This is super alpha at the moment, and not prepared for mainstream use. If you still want to check it out, by all means feel free, but don't be surprised if a few little pieces aren't working properly. And get in touch too, ping me [on twitter](http://twitter.com/jenius) and I'd be glad to help out!
+
 ### Installation
 
 Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm install roots-static -g` and you'll be all set.
@@ -119,6 +121,7 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
+- fix command line output for debug mode and compile command
 - add a plugins load flag to app.coffee: no plugins = speed boost
 - implement compression on compile
 - test deploy task, make sure it's playing nice with heroku
