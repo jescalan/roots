@@ -77,3 +77,18 @@ module.exports = class CompileHelper
     # see https://github.com/css/csso
     if @target_extension == 'css'
       return require('csso').justDoIt(write_content)
+
+    # https://github.com/kangax/html-minifier
+    if @target_extension == 'html'
+
+      opts =
+        removeComments: true
+        collapseBooleanAttributes: true
+        removeCDATASectionsFromCDATA: true
+        collapseWhitespace: true
+        removeAttributeQuotes: true
+        removeEmptyAttributes: true
+
+      return require('html-minifier').minify(write_content, opts)
+
+

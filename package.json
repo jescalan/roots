@@ -39,7 +39,8 @@
     "uglify-js2": "2.0.x",
     "rimraf": "2.0.x",
     "bower": "git+https://github.com/jenius/bower.git",
-    "async": "~0.1.22"
+    "async": "~0.1.22",
+    "html-minifier": "~0.4.5"
   },
   "engines": {
     "node": ">=0.8.0"
