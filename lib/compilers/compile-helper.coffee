@@ -55,20 +55,20 @@ module.exports = class CompileHelper
     return options.locals
 
   write: (write_content) ->
-    # write_content = @compress(write_content) if options.compress
+    write_content = @compress(write_content) if options.compress
     fs.writeFileSync @export_path, write_content
     debug.log "compiled #{path.basename(@file)}"
 
   compress: (write_content) ->
-    # not sure how i'm going to concat files. maybe on a second pass
-    # on the public folder afterwards...
+    # concat can't happen here, it will have to be manual or application.js-based
+    # like it is in the asset pipeline.
 
     # see https://github.com/mishoo/UglifyJS2
     if @target_extension == 'js'
       UglifyJS = require 'uglify-js2'
       toplevel_ast = UglifyJS.parse(write_content)
-      toplevel.figure_out_scope()
-      compressed_ast = toplevel.transform(UglifyJS.Compressor())
+      toplevel_ast.figure_out_scope()
+      compressed_ast = toplevel_ast.transform(UglifyJS.Compressor())
       compressed_ast.figure_out_scope()
       compressed_ast.compute_char_frequency()
       compressed_ast.mangle_names()
