@@ -1,6 +1,6 @@
 {
   "name": "roots-static",
-  "version": "0.0.5",
+  "version": "0.0.5-1",
   "description": "Roots is a tiny, fast, and flexible build system for static sites",
   "keywords": [
     "front-end",
@@ -25,22 +25,22 @@
     "connect": "2.6.x",
     "colors": "0.6.x",
     "open": "latest",
-    "readdirp": "0.1.x",
+    "readdirp": "0.2.x",
     "mkdirp": "0.3.x",
-    "stylus": "0.29.x",
-    "jade": "0.27.x",
+    "stylus": "latest",
+    "jade": "latest",
     "snockets": "1.3.x",
     "socket.io": "0.9.x",
     "marked": "0.2.x",
     "ejs": "0.8.x",
-    "coffee-script": "1.3.x",
+    "coffee-script": "latest",
     "ncp": "0.2.x",
-    "csso": "1.3.x",
-    "uglify-js2": "2.1.x",
+    "csso": "latest",
+    "uglify-js2": "latest",
     "rimraf": "2.0.x",
     "bower": "git+https://github.com/jenius/bower.git",
-    "async": "~0.1.22",
-    "html-minifier": "~0.4.5"
+    "async": "0.1.x",
+    "html-minifier": "latest"
   },
   "engines": {
     "node": ">=0.8.0"
