@@ -52,11 +52,11 @@ The library will have received a full rewrite by the time roots is released, and
 
 ### Plugins
 
-It's pretty straightforward to add a plugin to customize roots' functionality. Plugins need only be one file, and are frequently less than 10 lines of javascript (many of the core compilers are, actually). To create a plugin, just drop a new file, javascript or coffeescript, into `vendor/plugins`. The module need only export two methods, `settings` and `compile`.
+It's pretty straightforward to add a plugin to customize roots' functionality. Plugins need only be one file, and are frequently less than 10 lines of javascript (many of the core compilers are, actually). To create a plugin, just drop a new file, javascript or coffeescript, into `/plugins`. The module need only export two methods, `settings` and `compile`.
 
 Here are a few examples of how plugins can look. Note that currently there is no dependency management system for plugins, so you must include any npm packages directly with the plugin.
 
-- [sass compiler (command line)](https://github.com/jenius/roots-cli/blob/master/test/vendor/plugins/sass.coffee)
+- [sass compiler (command line)](https://github.com/jenius/roots-cli/blob/master/test/plugins/sass.coffee)
 - [ejs compiler (templates)](https://github.com/jenius/roots-cli/blob/master/lib/compilers/core/jade.js)
 - [stylus compiler (js library-based)](https://github.com/jenius/roots-cli/blob/master/lib/compilers/core/styl.js)
 
@@ -64,7 +64,7 @@ More thorough documentation on `Helper`'s api will be available on the near futu
 
 ##### not yet implemented
 
-Plugins can be manually installed into vendor/plugins or directly pulled from a github repo using a command like `roots plugin install jenius/roots-sass`, the final parameter being `github-username/repo-name`. If you'd like to write a plugin, the command `roots plugin generate` will create a nice starting template inside vendor/plugins. All known plugins will be listed on the roots website [link].
+Plugins can be manually installed into vendor/plugins or directly pulled from a github repo using a command like `roots plugin install jenius/roots-sass`, the final parameter being `github-username/repo-name`. If you'd like to write a plugin, the command `roots plugin generate` will create a nice starting template inside `/plugins`. All known plugins will be listed on the roots website [link].
 
 ### Client Side JS
 
