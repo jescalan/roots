@@ -86,10 +86,9 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
-- load plugins based on paths provided in app.coffee for speed + simplicity
+- load plugins based on paths provided in app.coffee for speed + simplicity (?)
 - roots plugin generate and roots plugin install commands
 - package the css library into its own module and stylus.use() it instead
-- pull in vendor css, js, and img (only static)
 - implement image optimization
 - custom range local for repeated content
 - deploy to custom ftp server
