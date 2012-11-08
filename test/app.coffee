@@ -37,7 +37,7 @@ exports.folder_config =
 # if true, shows the compile process and page/asset status in the
 # terminal when watching and compiling files
 
-exports.debug = true
+exports.debug = false
 
 ###
 

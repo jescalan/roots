@@ -41,7 +41,8 @@
     "bower": "git+https://github.com/jenius/bower.git",
     "async": "0.1.x",
     "html-minifier": "latest",
-    "roots-css": "~0.1.0"
+    "roots-css": "~0.1.0",
+    "underscore": "latest"
   },
   "engines": {
     "node": ">=0.8.0"
