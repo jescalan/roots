@@ -21,15 +21,13 @@ exports.compile = (files, Helper, cb) ->
 
     # the helper has a ton of useful methods for managing the file paths, contents,
     # and writing the file to the right place. pass the constructor a file.
-
-    # full helper documentation will be available at TODO: [link]
     helper = new Helper(file)
 
     # do your compiler thing here. if this is an async function, it is your responsability
     # to manage it and hit the callback at the right time. this example is assumed to be sync.
     try
       compiled_contents = helper.file_contents
-    catch err
+    catch err 
       error = err
 
     # helper.write will write a string to the right file in /public, compressing it when necessary
