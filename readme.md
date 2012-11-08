@@ -4,6 +4,16 @@ A light, super fast, and intuitive build system meant for rapid advanced front e
 
 **NOTE:** This is super alpha at the moment, and not prepared for mainstream use. If you still want to check it out, by all means feel free, but don't be surprised if a few little pieces aren't working properly. And get in touch too, ping me [on twitter](http://twitter.com/jescalan) and I'd be glad to help!
 
+**Release Notes:**
+
+v0.0.6: 
+  - watcher pulls in new files interactively and watches them
+  - roots-css library moved out to it's own repo and required inside styl compiler
+  - roots plugin generate command creates a plugins folder and commented template
+  - replaced ncp with fs.extra package, better error reporting
+  - roots js (bower integration) tested and functional (P.S. pull request accepted to bower!)
+  - remove vendor folder, roots js installs to `assets/js/components`
+
 ### Installation
 
 Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm install roots-static -g` and you'll be all set.
@@ -86,9 +96,9 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
-- roots plugin generate and roots plugin install commands
-- plugins folder should be generated only if there are plugins
+- roots plugin install command
 - implement image optimization
+- clean up this readme
 - custom range local for repeated content
 - deploy to custom ftp server
 - integrate with express 3.0

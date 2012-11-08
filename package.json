@@ -1,6 +1,6 @@
 {
   "name": "roots-static",
-  "version": "0.0.5-1",
+  "version": "0.0.6",
   "description": "Roots is a tiny, fast, and flexible build system for static sites",
   "keywords": [
     "front-end",
@@ -34,7 +34,6 @@
     "marked": "0.2.x",
     "ejs": "0.8.x",
     "coffee-script": "latest",
-    "ncp": "0.2.x",
     "csso": "latest",
     "uglify-js2": "latest",
     "rimraf": "2.0.x",
@@ -43,7 +42,7 @@
     "html-minifier": "latest",
     "roots-css": "~0.1.0",
     "underscore": "latest",
-    "fs.extra": "~1.2.0"
+    "fs.extra": "1.2.x"
   },
   "engines": {
     "node": ">=0.8.0"
