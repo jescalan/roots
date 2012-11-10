@@ -4,11 +4,14 @@
 
 # sass ruby gem must be installed to use this compiler
 
+test = module.require('./test')
+
 exports.settings =
   file_type: 'sass'
   target: 'css'
 
 exports.compile = (files, Helper, cb) ->
+
   error = false
   counter = 0
 

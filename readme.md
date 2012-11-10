@@ -72,9 +72,13 @@ Here are a few examples of how plugins can look. Note that currently there is no
 
 More thorough documentation on `Helper`'s api will be available on the near future. For now, if you are curious, just check out the [compile helper source](https://github.com/jenius/roots-cli/blob/master/lib/compilers/compile-helper.coffee).
 
+Note that plugins are pulled into roots' environment, so if you want to require any external files, you need to use `module.require()` instead of just `require()` in order to have roots look for files starting in the plugins directory.
+
+You can run `roots plugin generate` to have roots generate a plugin template for you in the `/plugins` folder.
+
 ##### not yet implemented
 
-Plugins can be manually installed into vendor/plugins or directly pulled from a github repo using a command like `roots plugin install jenius/roots-sass`, the final parameter being `github-username/repo-name`. If you'd like to write a plugin, the command `roots plugin generate` will create a nice starting template inside `/plugins`. All known plugins will be listed on the roots website [link].
+Plugins can be manually installed into vendor/plugins or directly pulled from a github repo using a command like `roots plugin install jenius/roots-sass`, the final parameter being `github-username/repo-name`. All known plugins will be listed on the roots website [link].
 
 ### Client Side JS
 
@@ -97,6 +101,7 @@ That being said, I have a lot to learn about node still, and this project is in 
 ##### To Do
 
 - roots plugin install command
+- figure out how to handle dependencies for roots plugins
 - implement image optimization
 - clean up this readme
 - custom range local for repeated content
