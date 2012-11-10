@@ -101,19 +101,10 @@ That being said, I have a lot to learn about node still, and this project is in 
 ##### To Do
 
 - roots plugin install command
-- figure out how to handle dependencies for roots plugins
-- implement image optimization
+- implement image optimization (this has external dependencies... yech)
 - clean up this readme
-- custom range local for repeated content
 - deploy to custom ftp server
-- integrate with express 3.0
-- think about tumblr theming plugin
-
-##### Refactor Phases
-
-- phases 1 and 2 complete (organize commands and organize compile process)
-- phase 3: figure out how to deal with callbacks for parallel async operations
-- phase 4: optimize speed
+- integration with express and rails
 
 ### Love/Hate
 
