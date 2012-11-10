@@ -82,27 +82,25 @@ Plugins can be manually installed into vendor/plugins or directly pulled from a 
 
 ### Client Side JS
 
-Using javascript libraries on the client-side is super helpful, but downloading them for every project and keeping them up to date is a huge pain. The wonderful folks at twitter created [bower](#) to make life easier for us as far as javascript client-side package management. You can run `roots install` followed by any package name to have bower install it directly into the vendor folder of your roots project. Also available:
+Using javascript libraries on the client-side is super helpful, but downloading them for every project and keeping them up to date is a huge pain. The wonderful folks at twitter created [bower](http://twitter.github.com/bower/) to make life easier for us as far as javascript client-side package management. You can run `roots install` followed by any package name to have bower install it directly into the `js/components` folder of your roots project. Also available:
 
-`roots js list`    
-`roots js search`    
-`roots js update package-name`    
+`roots js list` - list of installed packages   
+`roots js search name` - search for a package by `name`    
+`roots js update name` - update `name` to the latest version    
+`roots js uninstall name` - remove `name`    
+`roots js info name` - get more info about `name`    
 
-There are a lot of great open-source packages registered with bower. Check them out [here](http://sindresorhus.com/bower-components/). But don't ever use bootstrap, or I will cry. Root's css library ships with nicely designed defaults if you are trying to make a good-looking wireframe or back end (just run `framework()` in your main stylus file), and if you are working on a production site, get a designer to help, or shame on you.
-
-Although not required, it's highly recommended that you also use [require.js](http://requirejs.org) to load your client-side javascript dependencies smoothly. This functionality is already built in if you generate your project with `roots new`, and includes instruction on how to use require.js's system. The require.js site is well stuctured and has great docs if you are looking for more information.
+There are a lot of great open-source packages registered with bower. Check them out [here](http://sindresorhus.com/bower-components/). In addition, [require.js](http://requirejs.org) is included by default to help load your client-side javascript dependencies smoothly.
 
 ### Ambition
 
-I'm very excited about this project, because it makes my life a ton easier and it saves me and my employer many hours. Once the static site compiler is finished and tested, I plan on porting the system first to node (with express), then to rails (likely a gem for rails 4). Life without useful tools like the roots css library, bower, requirejs, live reloading, nice templating languages, and single-command deploys just seems sad to me, and makes everything take longer. If you are interested in helping out with this project or the rails or node ports, get in touch. I'd love to have you on board.
+I'm very excited about this project, because it makes my life a ton easier and it saves me and my employer many hours. Once the static site compiler is finished and tested, I plan on porting the system first to node (with express), then to rails (likely a gem for rails 4). If you are interested in helping out with this project or the rails or node ports, get in touch. I'd love to have you on board.
 
 That being said, I have a lot to learn about node still, and this project is in its current state not the most clear, organized, and modular thing on earth. But it will be eventually, and will gradually happen as I clean, learn, and refactor.
 
 ##### To Do
 
-- roots plugin install command
 - implement image optimization (this has external dependencies... yech)
-- clean up this readme
 - deploy to custom ftp server
 - integration with express and rails
 
