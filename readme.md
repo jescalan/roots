@@ -84,9 +84,9 @@ Plugins can be manually installed into vendor/plugins or directly pulled from a 
 
 Using javascript libraries on the client-side is super helpful, but downloading them for every project and keeping them up to date is a huge pain. The wonderful folks at twitter created [bower](#) to make life easier for us as far as javascript client-side package management. You can run `roots install` followed by any package name to have bower install it directly into the vendor folder of your roots project. Also available:
 
-`roots js list`
-`roots js search`
-`roots js update package-name`
+`roots js list`    
+`roots js search`    
+`roots js update package-name`    
 
 There are a lot of great open-source packages registered with bower. Check them out [here](http://sindresorhus.com/bower-components/). But don't ever use bootstrap, or I will cry. Root's css library ships with nicely designed defaults if you are trying to make a good-looking wireframe or back end (just run `framework()` in your main stylus file), and if you are working on a production site, get a designer to help, or shame on you.
 
