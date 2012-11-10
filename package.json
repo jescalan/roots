@@ -42,7 +42,8 @@
     "html-minifier": "latest",
     "roots-css": "~0.1.0",
     "underscore": "latest",
-    "fs.extra": "1.2.x"
+    "fs.extra": "1.2.x",
+    "wrench": "~1.4.1"
   },
   "engines": {
     "node": ">=0.8.0"
