@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd test
-../bin/roots js
+../bin/roots watch

@@ -26,14 +26,6 @@ exports.locals =
   title_with_markup: ->
     "<h1 class='title'>#{this.title}</h1>"
 
-# names of the views and assets folder. Don't recommend
-# changing these, but if you have some other naming convention,
-# go for it.
-
-exports.folder_config =
-  assets: 'assets'
-  views: 'views'
-
 # if true, shows the compile process and page/asset status in the
 # terminal when watching and compiling files
 
