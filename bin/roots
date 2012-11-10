@@ -7,6 +7,7 @@ if (argv[0] == undefined) {
   commands.help.execute();
 } else {
   var current_command = commands[argv[0]];
+  if (current_command == undefined) return commands.help.execute();
 
   if (current_command.needs_config) {
     commands.configure(function(){ current_command.execute(argv.slice(1)) });
