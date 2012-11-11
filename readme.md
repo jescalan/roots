@@ -96,6 +96,8 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
+- handling for extra folders going to public
+- it appears as if images are not copying to public
 - roots new --basic option for straight html/css/js (for those learning)
 - replace socket.io with faye
 - mocha tests
