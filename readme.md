@@ -96,7 +96,6 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
-- replace socket.io with faye
 - better testing
 - image optimization (this has external dependencies... yech)
 - deploy to custom ftp server
