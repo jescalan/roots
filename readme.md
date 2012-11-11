@@ -96,10 +96,9 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
-- handling for extra folders going to public
 - roots new --basic option for straight html/css/js (for those learning)
 - replace socket.io with faye
-- mocha tests
+- better testing
 - image optimization (this has external dependencies... yech)
 - deploy to custom ftp server
 - integration with express and rails
