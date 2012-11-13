@@ -1,7 +1,6 @@
 path = require 'path'
 fs = require 'fs'
 debug = require '../debug'
-options = global.options
 
 # this class is absurd. its purpose is to resolve and
 # hold on to all the file paths and file contents necessary to
@@ -12,6 +11,7 @@ module.exports = class CompileHelper
 
   constructor: (@file) ->
 
+    options = global.options
     @extension = path.extname(@file).slice(1)
     @current_directory = path.normalize process.cwd()
 
@@ -60,35 +60,4 @@ module.exports = class CompileHelper
     debug.log "compiled #{path.basename(@file)}"
 
   compress: (write_content) ->
-    # concat can't happen here, it will have to be manual or application.js-based
-    # like it is in the asset pipeline.
-
-    # see https://github.com/mishoo/UglifyJS2
-    if @target_extension == 'js'
-      UglifyJS = require 'uglify-js2'
-      toplevel_ast = UglifyJS.parse(write_content)
-      toplevel_ast.figure_out_scope()
-      compressed_ast = toplevel_ast.transform(UglifyJS.Compressor())
-      compressed_ast.figure_out_scope()
-      compressed_ast.compute_char_frequency()
-      compressed_ast.mangle_names()
-      return compressed_ast.print_to_string()
-
-    # see https://github.com/css/csso
-    if @target_extension == 'css'
-      return require('csso').justDoIt(write_content)
-
-    # https://github.com/kangax/html-minifier
-    if @target_extension == 'html'
-
-      opts =
-        removeComments: true
-        collapseBooleanAttributes: true
-        removeCDATASectionsFromCDATA: true
-        collapseWhitespace: true
-        removeAttributeQuotes: true
-        removeEmptyAttributes: true
-
-      return require('html-minifier').minify(write_content, opts)
-
-
+    require('../utils/compressor')(write_content, @target_extension)
