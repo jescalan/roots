@@ -96,6 +96,7 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
+- page reloads twice and it shouldnt (ship when this is done)
 - better testing
 - image optimization (this has external dependencies... yech)
 - deploy to custom ftp server
