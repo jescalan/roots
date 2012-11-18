@@ -14,7 +14,7 @@ Usage
 
 Roots' main interface is it's command line tool. There are just a couple of main commands that do more or less what you would expect.
 
-`$ roots new project-name`: Creates a new project template in the current directory, called `project-name`. Just a really simple scaffold of folders as well as some basic settings, a custom html boilerplate, and the roots css library. Good way to get off the ground quickly with the right structure.
+`$ roots new project-name`: Creates a new project template in the current directory, called `project-name`. Just a really simple scaffold of folders as well as some basic settings, a custom html boilerplate, and the roots css library. Good way to get off the ground quickly with the right structure. Add `--basic` for straight html, css and js or `--express` for an express app with roots integrated.
 
 `$ roots watch`: The bulk of roots' usefulness is here. This command compiles your project, opens it up in your browser, then continues watching all your files for changes. As soon as you save, roots will recompile the project and immediately refresh the browser. So fresh.
 
@@ -79,11 +79,11 @@ Client Side JS
 
 Using javascript libraries on the client-side is super helpful, but downloading them for every project and keeping them up to date is a huge pain. The wonderful folks at twitter created [bower](http://twitter.github.com/bower/) to make life easier for us as far as javascript client-side package management. You can run `roots install` followed by any package name to have bower install it directly into the `js/components` folder of your roots project. Also available:
 
-`roots js list` - list of installed packages   
-`roots js search name` - search for a package by `name`    
-`roots js update name` - update `name` to the latest version    
-`roots js uninstall name` - remove `name`    
-`roots js info name` - get more info about `name`    
+`roots js list` - list of installed packages
+`roots js search name` - search for a package by `name`
+`roots js update name` - update `name` to the latest version
+`roots js uninstall name` - remove `name`
+`roots js info name` - get more info about `name`
 
 There are a lot of great open-source packages registered with bower. Check them out [here](http://sindresorhus.com/bower-components/). In addition, [require.js](http://requirejs.org) is included by default to help load your client-side javascript dependencies smoothly.
 
@@ -96,11 +96,10 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
-- page reloads twice and it shouldnt (ship when this is done)
-- better testing
-- image optimization (this has external dependencies... yech)
 - deploy to custom ftp server
-- integration with express and rails
+- rails gem
+- image optimization (this has external dependencies... yech)
+- better testing
 
 Contributors
 ------------
