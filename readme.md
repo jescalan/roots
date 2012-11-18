@@ -96,6 +96,8 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
+- include roots-css index file
+- roots watch should fire up supervisor in an express app
 - deploy to custom ftp server
 - rails gem
 - image optimization (this has external dependencies... yech)
