@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/example.css">
+  </head>
+  <body>
+    <p>hello from the partial!!</p><h1 class='title'>Welcome to Roots!</h1><p><strong>hello world</strong>, the reload is working slightly better, <em>aw yea</em>!
+</p>
+
+<p>hello from the partial!!</p>
+  </body><script>protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://'; address = protocol + window.location.host + window.location.pathname + '/ws'; socket = new WebSocket(address);
+socket.onmessage = function(msg) { msg.data == 'reload' && window.location.reload() }</script>
+</html>

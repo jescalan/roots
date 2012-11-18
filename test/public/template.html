@@ -1,0 +1,21 @@
+!!!
+html
+  head
+    link(rel='stylesheet', href='css/example.css')
+  body
+    include _partial
+    != yield
+
+  //- this must be included for live reload to work in developement
+  //- it will be automatically ignored when deployed
+  != livereload
+
+  //- testing faye websocket
+  //- :coffeescript
+  //-   protocol = if window.location.protocol == 'http:' then 'ws://' else 'wss://'
+  //-   address = "#{protocol}#{window.location.host}#{window.location.pathname}/ws"
+  //-   socket = new WebSocket(address)
+
+  //-   socket.onmessage = (msg) ->
+  //-     console.log msg.data
+  //-     window.location.reload() if msg.data == 'reload'
