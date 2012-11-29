@@ -96,10 +96,12 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
-- include roots-css index file
-- roots watch should fire up supervisor in an express app
+- add noise png image
+- add pie.htc
+- add selectivizr
+- add favicon
+- roots watch should fire up the server in a rails or express app
 - deploy to custom ftp server
-- rails gem
 - image optimization (this has external dependencies... yech)
 - better testing
 
