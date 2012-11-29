@@ -96,10 +96,12 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
+- fix html compression options so it doesn't strip spaces
 - add noise png image
 - add pie.htc
 - add selectivizr
 - add favicon
+- create installer script
 - roots watch should fire up the server in a rails or express app
 - deploy to custom ftp server
 - image optimization (this has external dependencies... yech)
