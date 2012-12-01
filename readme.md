@@ -98,6 +98,12 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 - add new_rails and new_railway templates
 - rename from roots-static to roots
+- add noise png image
+- add pie.htc
+- add selectivizr
+- add favicon
+- create installer script
+- roots watch should fire up the server in a rails or express app
 - deploy to custom ftp server
 - image optimization (this has external dependencies... yech)
 - better testing

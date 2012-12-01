@@ -1,6 +1,6 @@
 {
   "name": "roots-static",
-  "version": "0.0.8-4",
+  "version": "0.0.8-5",
   "description": "Roots is a tiny, fast, and flexible build system for static sites",
   "keywords": [
     "front-end",
@@ -36,7 +36,7 @@
     "csso": "latest",
     "uglify-js2": "latest",
     "rimraf": "2.0.x",
-    "bower": "git+https://github.com/jenius/bower.git",
+    "bower": "latest",
     "async": "0.1.x",
     "html-minifier": "latest",
     "roots-css": "latest",
