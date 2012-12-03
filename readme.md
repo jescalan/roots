@@ -96,7 +96,6 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
-- add rails template
 - update express template with modded connect-assets
 - create installer script
 - roots watch should fire up the server in a rails or express app
