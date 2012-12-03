@@ -1,7 +1,7 @@
 {
   "name": "roots-cli",
   "version": "0.0.8-6",
-  "description": "Roots is a tiny, fast, and flexible build system for static sites",
+  "description": "roots is a toolbox for building simple, beautiful, and efficient products for the web",
   "keywords": [
     "front-end",
     "development",
