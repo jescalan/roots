@@ -34,7 +34,7 @@
     "ejs": "0.8.x",
     "coffee-script": "latest",
     "csso": "latest",
-    "uglify-js2": "latest",
+    "uglify-js": "latest",
     "rimraf": "2.0.x",
     "bower": "latest",
     "async": "0.1.x",
