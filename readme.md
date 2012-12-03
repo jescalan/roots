@@ -96,10 +96,10 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
-- fix html compression options so it doesn't strip spaces
+- add rails template
 - add noise png image
 - add pie.htc
-- add selectivizr
+- update express template with modded connect-assets
 - add favicon
 - create installer script
 - roots watch should fire up the server in a rails or express app
