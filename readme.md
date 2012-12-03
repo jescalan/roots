@@ -7,14 +7,14 @@ A light, super fast, and intuitive build system meant for rapid advanced front e
 Installation
 ------------
 
-Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm install roots-static -g` and you'll be all set.
+Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm install roots -g` and you'll be all set.
 
 Usage
 -----
 
 Roots' main interface is it's command line tool. There are just a couple of main commands that do more or less what you would expect.
 
-`$ roots new project-name`: Creates a new project template in the current directory, called `project-name`. Just a really simple scaffold of folders as well as some basic settings, a custom html boilerplate, and the roots css library. Good way to get off the ground quickly with the right structure. Add `--basic` for straight html, css and js or `--express` for an express app with roots integrated.
+`$ roots new project-name`: Creates a new project template in the current directory, called `project-name`. Just a really simple scaffold of folders as well as some basic settings, a custom html boilerplate, and the roots css library. Good way to get off the ground quickly with the right structure. Add `--basic` for straight html, css, and js or `--express` for an express app template with roots integrated. To use roots with rails, use the [`roots-rails` gem](http://github.com/jenius/roots-rails) instead.
 
 `$ roots watch`: The bulk of roots' usefulness is here. This command compiles your project, opens it up in your browser, then continues watching all your files for changes. As soon as you save, roots will recompile the project and immediately refresh the browser. So fresh.
 
@@ -97,10 +97,7 @@ That being said, I have a lot to learn about node still, and this project is in 
 ##### To Do
 
 - add rails template
-- add noise png image
-- add pie.htc
 - update express template with modded connect-assets
-- add favicon
 - create installer script
 - roots watch should fire up the server in a rails or express app
 - deploy to custom ftp server
