@@ -1,5 +1,5 @@
 {
-  "name": "roots",
+  "name": "roots-cli",
   "version": "0.0.8-6",
   "description": "Roots is a tiny, fast, and flexible build system for static sites",
   "keywords": [
