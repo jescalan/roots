@@ -8,18 +8,19 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , roots = require('roots-express')
+  , assets = require('connect-assets')
   , path = require('path');
 
 require('coffee-script');
 
 var app = express();
+roots.add_compiler(assets);
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-  app.use(require('stylus').middleware({ src: __dirname + '/public', compile: roots.middleware }));
-  app.use(express.favicon());
+  app.use(assets());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());

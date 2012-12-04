@@ -10,6 +10,7 @@
     "jade": "latest",
     "stylus": "latest",
     "coffee-script": "latest",
-    "roots-express": "latest"
+    "roots-express": "latest",
+    "connect-assets": "latest"
   }
 }
