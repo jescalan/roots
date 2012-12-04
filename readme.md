@@ -96,6 +96,7 @@ That being said, I have a lot to learn about node still, and this project is in 
 
 ##### To Do
 
+- add new_railway template
 - create installer script
 - roots watch should fire up the server in a rails or express app
 - deploy to custom ftp server
