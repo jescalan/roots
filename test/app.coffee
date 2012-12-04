@@ -31,6 +31,10 @@ exports.locals =
 
 exports.debug = false
 
+# coffeescript without closures
+
+exports.coffeescript_bare = true
+
 ###
 
 Command line tool basics:
