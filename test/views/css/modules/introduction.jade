@@ -1,0 +1,22 @@
+h3#introduction introduction
+:markdown
+  Roots includes a css library built on top of [stylus](http://learnboost.github.com/stylus/). It contains a lot of functionality and is very large, but it should be an easy transition from regular css, less, or sass. With stylus, you can use brackets and semicolons or not, your choice. You can even mix them. Pasting straight css will compile perfectly, and nothing in this library overrides anything in regular css in a destructive manner. In addition, this library adds no extra weight to your css footprint unless you do it specifically using mixins or imports. Roots css is an enhancement of regular css, and you can ease into it gradually, unlike some other libraries which require you to learn entirely new syntax.
+
+  Since this library is mixin-based, it's worth briefly discussing mixins here. There are two ways to call a mixin in stylus, what I call the _mixin form_ or the _native form_. The mixin form has parens and comma-separated arguments while the native form uses a colon and space-separated args.
+
+  this is the mixin form: `mixin(arg1, arg2)`    
+  and this is the native form: `mixin: arg1 arg2`
+
+  When calling mixins in roots, you should use the native style, _unless the mixin is being called at the root level_, in which case you should use the native syntax. When you call a mixin with no arguments, it must be followed by empty parens `()`. Examples below:
+
+      // root level, call with mixin syntax
+      font-face('proxima-nova', '/fonts')
+
+      .picture
+        // not root level, call with native syntax
+        bg: '/img/whatever.png'
+        
+        // no arguments, call with empty parens
+        transition()
+
+  Finally, the source code for roots is organized exactly as this page is, and is thoroughly commented and as clear as possible. Feel free to [check out the source](https://github.com/jenius/roots-css/tree/master/roots-css) if you are after implementation details.

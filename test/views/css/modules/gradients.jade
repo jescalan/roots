@@ -1,0 +1,25 @@
+h3#gradients gradients
+:markdown
+  Gradients are a huge pain in css, but roots makes life a bit easier on that front. There are a number of methods available that you can utilize to make gradients easier, ranging from finer control to simpler and more generic mixins. All credit for the incredible base gradient logic goes again to [TJ](https://github.com/visionmedia) and [nib](https://github.com/visionmedia/nib), which I shamelessly ported here. Open source ftw!
+
+  **`linear-gradient(start, stops...)`**    
+  Probably the most insane mixin in this library. It can be used as the value of a background, and will automatically prefix itself with multiple background properties. The way it's declared is with an optional starting point (top, bottom, left, right, defaults to top if not provided) then gradient stops, which is a percentage followed by a space followed by a color. A few examples:
+
+  `background: linear-gradient(top, red, green, blue)`    
+  `background: linear-gradient(bottom, red, green 50%, blue)`    
+  `background: linear-gradient(bottom, red, 50% green, blue)`    
+  `background: linear-gradient(bottom, red, 50% green, 90% white, blue)`    
+
+  Try experimenting around a bit with this one, you'll get it quickly.
+
+  **`gradient(color1, color2)`**    
+  Simple top-to-bottom two-color gradient. IE support if pie is enabled in settings.
+
+  **`simple-gradient(color, strength = 10%)`**    
+  Pass the base color, the mixin will lighten and darken it by the specified strength and create a simple gradient with the base color being the middle/average.
+
+  **`noise-gradient(color1, color2, imagePath = '/img/noise.png')`**    
+  Roots ships with a tiny light noise image tile which is useful for adding a bit of randomness to an otherwise solid color. This gradient adds that image on top, which gives it a slightly more organic feel. Of course if you have your own noise or other image, you can override the default here.
+
+  **`simple-noise-gradient(color, strength = 10%, imagePath = '/img/noise.png)`**    
+  Same as simple gradient, but includes the noise image over the top.
