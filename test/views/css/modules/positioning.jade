@@ -1,0 +1,10 @@
+h3#positioning positioning
+:markdown
+  Let's face it, writing out absolute, relative, or fixed positioning and the dimensions is a pain and takes a long time. So I ported (read: stole) this incredible couple of utilities from [nib](https://github.com/visionmedia/nib), which allow you to write out positions like such:
+
+  `absolute: top left`    
+  `absolute: top 5px right`    
+  `absolute: top left 5px`    
+  `absolute: bottom 5px left 5px`
+
+  Of course absolute can be substituted for relative or fixed. When you call `top`, `bottom`, `left`, or `right` without a value after it, the value is assumed to be zero.

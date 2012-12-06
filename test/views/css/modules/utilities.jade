@@ -1,0 +1,51 @@
+h3#utilities utilities
+:markdown
+  The utilities module is a mixed bag of moderately to extremely useful css shortcuts.
+
+  **`size()`**    
+  This is the mixin I use most; it's a combination of width and height. Pass it a width and height or just one number which is set as the width and height. like this: `size: 50px 20px` or this: `size: 30px`. It defaults to `px` if you don't pass it a unit, so you can even call it like this if you want: `size: 10 27`
+
+  **`bold()`**    
+  Bold text. Makes way more sense and is a lot faster.
+
+  **`italic()`**    
+  Italic text.
+
+  **`normal()`**    
+  Removes all traces of boldenss and italic-ness from the text.
+
+  **`group()`**    
+  A way better name for clearfix. Can also be called as `clearfix()` if you really can't give up the nonsensical word.
+
+  **`inline-block()`**    
+  Renders `display: inline-block`, except it works in all browsers including old IE.
+
+  **`rounded()`**    
+  Renders `border-radius: 999px`
+
+  **`no-select()`**    
+  Sets `user-select` (prefixed) to none so that the text inside the specified element can't be selected. [More info  on user-select here](https://developer.mozilla.org/en-US/docs/CSS/user-select).
+
+  **`b()`**    
+  Short alias for `border: 1px solid`.
+
+  **`bg(path, args...)`**    
+  Shortcut for setting the background to an image. Call it with a quoted image path to render `background: url(path/image.jpg) no-repeat`. If you pass it more arguments after the image path, they will replace `no-repeat`.
+
+  **`font-face(name, folder, weight = normal, style = normal)`**    
+  Pass a name for the font and the folder it's in and it will declare the font-face using the lightweight and reliable [fontspring syntax](http://www.fontspring.com/blog/the-new-bulletproof-font-face-syntax). It will look for the font based on `folder/name.extension` - we'll take care of the extension. So if you passed it like this: `font-face: myfont '/fonts'`, it would look in `/fonts/myfont.ttf` for the ttf file, for example, and the font would be named `myfont` in your css.
+
+  **`triangle(direction = up, size = 10px, color = #000)`**    
+  Makes a little html triangle. Pass it a direction, size, and color.
+
+  **`image-replace(path, dimensions)`**    
+  Image replacement. Pass it an image path and the dimensions of the image and it will replace get rid of any text in the div and render an image instead. But it's still semantic! Can also be called with `ir()`.
+
+  **`raquo()`**    
+  Puts a [raquo](http://www.raquo.net/) after whatever text is in your div semantically. Because raquos are awesome, but they aren't really that semantic.
+
+  **`columns(count = 3, gap = 30px, width = null, rule = null)`**    
+  Column-ize that shit. Takes number of columns, gap between columns, width of each column, and if you want a column rule (syntax like border). Combines `column-count`, `column-gap`, `column-width`, and `column-rule` into one convenient package.
+
+  **`debug()`**    
+  A moderately useful mixin - drop this at root level and it will put yellow or red borders around objects for which there are errors, like missing alt attributes on images or empty links. Everything valid gets a green border.

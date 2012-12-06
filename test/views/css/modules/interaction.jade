@@ -1,0 +1,21 @@
+h3#interaction interaction
+:markdown
+  This module is where stylus' power really shines. Often times, we find ourselves executing the same types of hover effects over and over. Hover this and it's underlined. Hover this and it lightens or darkens the background color, etc. This set of mixins are shortcuts for these situations.
+
+  **`hover-darken(percent = 15%)`**    
+  Looks first for a background color defined on the element, then for a color. If it finds either of these, it will darken them by the specified percentage when the element is hovered. If not, it will throw a warning that the element needs a color or background color.
+
+  **`hover-lighten(percent = 15%)`**    
+  Exact same as above, but it lightens the color instead.
+
+  **`hover-underline()`**    
+  Uses border-bottom to add an underline to the specified element on hover. If you already have a border on the bottom, this will probably cause an issue.
+
+  **`hover-pop(scale = 1.2, rotate = null, shadow = null)`**    
+  When you hover an element, it will scale up so it appears to be popping out. Works best with a css transition. If you specify a degree measure (like `45deg`), it will rotate that much as it pops, and if you set shadow to true, it will add a little drop shadow as it comes out. An example of a call with all params specified: `hover-pop: 1.2 15deg true`
+
+  **`hover-fade(amount)`**    
+  When the element is hovered, it's opacity is set to the specified amount. Also works great with a transition.
+
+  **`hover-color(color)`**    
+  Looks first for a background color, then a color on the current element. If it finds one, it will swap it for the color passed as an argument. Also looks much better with a transition.

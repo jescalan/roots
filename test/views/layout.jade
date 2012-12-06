@@ -1,12 +1,25 @@
 !!!
 html
   head
-    link(rel='stylesheet', href='css/example.css')
+    meta(charset='utf8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge, chrome=1')
+    meta(name='description', content='roots is a light, fast build system for advanced front end development')
+    meta(name='author', content= "jeff escalante")
+    title roots | where it all begins
+    link(rel='stylesheet', href='/css/main.css')
+    script(src="//use.typekit.net/ltb5pgo.js")
+    :coffeescript
+      try
+        Typekit.load()
+      catch e
   body
-    include _partial
+    a.fork-ribbon(href='http://github.com/jenius/roots-cli') fork on github
+    include _header
     != yield
+
+  //- add other scripts through require.js, not here
+  script(data-main="/js/main", src="/js/require.js")
 
   //- this must be included for live reload to work in developement
   //- it will be automatically ignored when deployed
-  script(src='/js/app.js')
   != livereload

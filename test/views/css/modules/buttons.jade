@@ -1,0 +1,24 @@
+h3#buttons buttons
+:markdown
+  This begins the UI section of roots, which is designed to be as modular and flexible as possible. Since the buttons are so complex, they are split into their own section, and below this is a collection of other smaller UI components.
+
+  **`simple-button(color = default, size = 'medium')`**    
+  A simple, flat, one-color button. Example below. Takes a color and a size. Color can be any valid color, and the size can be `small`, `medium`, `large`, or a number from 1 to infinity, no units necessary.
+
+.btn-simple click me!
+
+:markdown
+  **`button(color = default, size = 'medium')`**    
+  A more shinier and modern button, same parameters as the simple button. Any color, any size. Very flexible and useful. Example below.
+
+.btn no me, i'm shinier
+
+:markdown
+  **`button-disabled()`**    
+  Lay this mixin down on any roots-css button and it will appear to be disabled. Again, make sure you actually disable it in your html.
+
+.btn.disabled don't click me :(
+
+:markdown
+  **`buttons()`**    
+  This is _a root level mixin_ that applies the `simple-button` mixin to the class `btn-simple` and the `button` mixin to the class `btn`. If you add a `disabled` class to either one, it will render appropriately as well.

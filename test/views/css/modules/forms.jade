@@ -1,0 +1,35 @@
+h3#forms forms
+:markdown
+  Forms are one of the most difficult and annoying things to style. It's impossible to make assumptions about the html structure of the forms, so many of the core mixins here just provide basic nicer-looking form fields without trying to align things correctly for you (although a few mixins present that option if you want).
+
+  **`input(color = light-blue, width = 250px)`**    
+  The most important mixin here. Nice-looking and basic default styles for input fields. Takes an optional color and width, and comes with a style when focused based on the color.
+
+  **`input-disabled()`**    
+  Put this on an input and it will style it so that it looks disabled. Make sure to actually disable the input in your html as well.
+
+  **`label(display = inline-block)`**    
+  Super basic label styles. Pass it an optional value for `display`.
+
+  **`field(direction = right, width = 370px)`**    
+  Often times it's easier to wrap your input and label in a div called `field` so the input and label can be floated, positioned, and manipulated without screwing up the rest of the form. That's what this mixin is for - put it on a div that contains a label and an input. Then feed it a direction to align (default is right), and an optional width.
+
+  **`input-error(color = red)`**    
+  Throw this on an input element to give it a red hue indicitive of an egregious error. Best used when applied to a class called `.error`, for example. Can also be called on a wrapper div as `field-error(color)` (if you are using wrapper divs) to color the label text red as well.
+
+  **`input-warning(color = yellow)`**    
+  Exactly the same as above, but yellow for warning. Can also be called as `field-warning(color)`, same as above.
+
+  **`input-success(color = green)`**    
+  Exactly the same as the two others but with a green color. Again, you can use `field-success(color)` on a wrapper div for the same effect.
+
+  --------
+  _These form helpers can be applied at root level to apply defaults intelligently to certain classes and elements._
+
+  --------
+
+  **`forms()`**    
+  Applies the `input` mixin to all types of input and if classes of `disabled`, `success`, `warning`, and/or `error` are applied to an input, they are styled appropriately.
+
+  **`fields()`**    
+  Applies the `field()` mixin to any element with a `field` class. If a `success`, `warning`, or `error` class is applied, they are also styled appropriately.
