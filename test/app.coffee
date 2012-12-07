@@ -4,7 +4,7 @@
 
 # Files in this list will not be compiled - minimatch supported
 
-exports.ignore_files = ['_*', 'readme*', 'roots-css', '.git', '.gitignore', '.DS_Store', 'modules']
+exports.ignore_files = ['_*', 'readme*', '.git', '.gitignore', '.DS_Store', 'modules']
 
 # Layout file config
 # `default` applies to all views. Overrides for specific
