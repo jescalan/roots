@@ -2,8 +2,6 @@
 
 A light, super fast, and intuitive build system meant for rapid advanced front end development.
 
-**NOTE:** This is still beta at the moment, and not prepared for mainstream use. If you still want to check it out, by all means feel free, but don't be surprised if a few little pieces aren't working properly. And get in touch too, ping me [on twitter](http://twitter.com/jescalan) and I'd be glad to help!
-
 Installation
 ------------
 
@@ -17,7 +15,7 @@ Roots' main interface is it's command line tool. There are just a couple of main
 `$ roots new project-name`: Creates a new project template in the current directory, called `project-name`. 
   - append `--basic` for straight html, css, and js
   - append `--express` for an express app template with roots integrated
-  - To use roots with rails, use the [`roots-rails`](http://github.com/jenius/roots-rails) ruby gem instead.
+  - To use roots with rails, use the [roots-rails](http://github.com/jenius/roots-rails) ruby gem instead.
 
 `$ roots watch`: The bulk of roots' usefulness is here. This command compiles your project, opens it up in your browser, then continues watching all your files for changes. As soon as you save, roots will recompile the project and immediately refresh the browser. So fresh.
 
