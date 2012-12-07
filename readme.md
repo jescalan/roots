@@ -71,7 +71,7 @@ Roots can easily be extended with new compilers on a per-project basis. See the 
 The Future
 ----------
 
-Let it be known that this is my first large project with node.js - I'm no expert. I'm sure I still have plenty to learn, and if you have any advice about how to improve the code or structure of this project, it is more than welcome - feel free to [email me](http://jenius.me/#!/contact), put in a pull request, or file an issue and I'd be happy to take a look.
+Let it be known that this is my first large project with node.js - I'm no expert. I definitely still have plenty to learn, and if you have any advice about how to improve the code or structure of this project, it is more than welcome - feel free to [email me](http://jenius.me/#!/contact), put in a pull request, or file an issue and I'd be happy to take a look : )
 
 One thing that I'm particularly bad at is testing. I'll be working hard on this in the coming months, but if anyone would like to help out with testing particularly, that would be incredible. Below, I keep track of what's on my list to implement next.
 
@@ -87,4 +87,4 @@ Contributors
 
 Everyone who has contributed to this project is the most awesome person ever. I want to give a huge thanks especially to these people:
 
-- Sam Saccone (@samccone), advice, support, and responsable for a good bit of code
+- [Sam Saccone](https://github.com/samccone): advice, support, and responsable for a good bit of code
