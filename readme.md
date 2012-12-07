@@ -5,7 +5,7 @@ A light, super fast, and intuitive build system meant for rapid advanced front e
 Installation
 ------------
 
-Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm install roots -g` and you'll be all set.
+Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm install roots -g` and you'll be all set. Or run this script from your terminal: `curl get.roots.cx | sh`.
 
 Usage
 -----
@@ -53,11 +53,11 @@ Client Side JS
 
 Using javascript libraries on the client-side is super helpful, but downloading them for every project and keeping them up to date is a huge pain. Luckily, the wonderful developers at twitter created [bower](http://twitter.github.com/bower/) for this exact purpose. You can run `roots install` followed by any package name to have bower install it directly into the `js/components` folder of your roots project. Also available:
 
-    `roots js list` - list of installed packages    
-    `roots js search name` - search for a package by `name`    
-    `roots js update name` - update `name` to the latest version    
-    `roots js uninstall name` - remove `name`    
-    `roots js info name` - get more info about `name`    
+`roots js list` - list of installed packages    
+`roots js search name` - search for a package by `name`    
+`roots js update name` - update `name` to the latest version    
+`roots js uninstall name` - remove `name`    
+`roots js info name` - get more info about `name`    
 
 There are a lot of great open-source packages registered with bower. Check them out [here](http://sindresorhus.com/bower-components/). In addition, [require.js](http://requirejs.org) is included by default to help load your client-side javascript dependencies smoothly.
 
