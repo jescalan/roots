@@ -1,14 +1,32 @@
 should = require 'should'
+path = require 'path'
+fs = require 'fs'
+colors = require 'colors'
+run = require('child_process').exec
+root = path.join process.cwd(), 'test'
 
 # 
 # command line interface
 # 
 
 describe 'command', ->
-
+  cli_root = path.join root, 'cli'
+  
   describe 'compile', ->
-    it 'should minify all css and javascript'
-    it 'should compile all files to public'
+
+    before (done) ->
+      run "cd #{cli_root}; roots compile", (a,b,c) -> done()
+
+    it 'should compile files to /public', ->
+      fs.readdirSync(path.join(cli_root, 'public')).should.have.lengthOf(5)
+
+    it 'should minify all css and javascript', () ->
+      js_content = fs.readFileSync path.join(cli_root, 'public/js/main.js'), 'utf8'
+      js_content.should.not.match /\n/
+
+    it 'should compile all files to public', ->
+      css_content = fs.readFileSync(path.join(cli_root, 'public/css/example.css'), 'utf8')
+      css_content.should.not.match /\n/
 
   describe 'new', ->
     it 'should create a new folder in the current directory with the specified name'

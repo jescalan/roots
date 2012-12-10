@@ -1,0 +1,1 @@
+(function(){console.log("hello from a require'd coffee file")}).call(this),function(){var e;e=["http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"],require(e,function(){return $(function(){return console.log("jquery loaded, dom ready")})})}.call(this);
