@@ -75,6 +75,7 @@ One thing that I'm particularly bad at is testing. I'll be working hard on this 
 
 ##### To Do
 
+- add `roots -v` and `roots --version`
 - add railway.js template
 - deploy to custom ftp server (difficult)
 - image optimization (this has external dependencies... yech)
@@ -86,3 +87,12 @@ Contributors
 Everyone who has contributed to this project is the most awesome person ever. I want to give a huge thanks especially to these people:
 
 - [Sam Saccone](https://github.com/samccone): advice, support, and responsable for a good bit of code
+
+License
+-------
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
