@@ -84,7 +84,7 @@ One thing that I'm particularly bad at is testing. I'll be working hard on this 
 Contributors
 ------------
 
-Everyone who has contributed to this project is the most awesome person ever. I want to give a huge thanks especially to these people:
+I would love to have more contributors, and if you've helped out, you are awesome. I want to give a huge thanks especially to these people:
 
 - [Sam Saccone](https://github.com/samccone): advice, support, and responsable for a good bit of code
 
