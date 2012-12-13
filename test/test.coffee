@@ -4,7 +4,7 @@ fs = require 'fs'
 rimraf = require 'rimraf'
 colors = require 'colors'
 run = require('child_process').exec
-root = path.join process.cwd(), 'test'
+root = path.join __dirname
 basic_root = path.join root, 'basic'
 
 # 
@@ -111,6 +111,8 @@ describe 'command', ->
 # 
 
 describe 'compiler', ->
+
+  compiler_path = root
 
   describe 'stylus', ->
     it 'should compile to css'
