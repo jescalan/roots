@@ -5,7 +5,7 @@ A light, super fast, and intuitive build system meant for rapid advanced front e
 Installation
 ------------
 
-Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm install roots -g` and you'll be all set. Or run this script from your terminal: `curl get.roots.cx | sh`.
+Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm install roots -g` and you'll be all set. Or run this script from your terminal: `curl roots.cx/get | sh`.
 
 Usage
 -----
