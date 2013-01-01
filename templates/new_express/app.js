@@ -3,12 +3,12 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes')
-  , http = require('http')
-  , roots = require('roots-express')
-  , assets = require('connect-assets')
-  , path = require('path');
+var express = require('express'),
+    routes  = require('./routes'),
+    http    = require('http'),
+    roots   = require('roots-express'),
+    assets  = require('connect-assets'),
+    path    = require('path');
 
 require('coffee-script');
 
@@ -34,7 +34,7 @@ app.configure('development', function(){
 app.get('/', routes.index);
 
 var server = http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+  console.log("Server listening on port " + app.get('port') + "\n Control + C to stop");
 });
 
 roots.watch(server);
