@@ -41,8 +41,9 @@
     "html-minifier": "latest",
     "roots-css": "latest",
     "underscore": "latest",
-    "wrench": "1.4.x",
-    "faye-websocket": "0.4.x"
+    "shelljs": "latest",
+    "q": "latest",
+    "faye-websocket": "0.4.x",
   },
   "devDependencies": {
     "mocha": "latest",
