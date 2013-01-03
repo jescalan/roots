@@ -43,7 +43,7 @@
     "underscore": "latest",
     "shelljs": "latest",
     "q": "latest",
-    "faye-websocket": "0.4.x",
+    "faye-websocket": "0.4.x"
   },
   "devDependencies": {
     "mocha": "latest",
