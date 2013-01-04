@@ -1,6 +1,5 @@
 path = require 'path'
 fs = require 'fs'
-debug = require '../debug'
 
 # this class is absurd. its purpose is to resolve and
 # hold on to all the file paths and file contents necessary to
@@ -57,7 +56,7 @@ module.exports = class CompileHelper
   write: (write_content) ->
     write_content = @compress(write_content) if options.compress
     fs.writeFileSync @export_path, write_content
-    debug.log "compiled #{path.basename(@file)}"
+    global.options.debug.log "compiled #{path.basename(@file)}"
 
   compress: (write_content) ->
     require('../utils/compressor')(write_content, @target_extension)
