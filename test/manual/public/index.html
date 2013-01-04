@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="description" content="roots is a light, fast build system for advanced front end development">
+    <meta name="author" content="jeff escalante">
+    <title>roots | where it all begins</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="//use.typekit.net/ltb5pgo.js"></script><script type="text/javascript">
+(function() {
+
+  try {
+    Typekit.load();
+  } catch (e) {
+
+  }
+
+}).call(this);
+</script>
+  </head>
+  <body><a href="http://github.com/jenius/roots-cli" class="fork-ribbon">fork on github</a>
+    <header><a href="/" class="logo">roots | where it all begins</a>
+      <nav>
+        <ul>
+          <li><a href="/#overview">overview</a></li>
+          <li><a href="/css">css library</a></li>
+          <li><a href="/#installation">installation</a></li>
+          <li><a href="/#commands">commands</a></li>
+          <li><a href="/#plugins">plugins</a></li>
+          <li><a href="/#help">help</a></li>
+        </ul>
+      </nav>
+    </header>
+<div id="hero">
+  <h2>roots is a toolbox for building simple, beautiful, and efficient products for the web.</h2>
+  <ul>
+    <li>
+      <div class="icon">&#9874;</div><span>powerful compiled languages</span>
+    </li>
+    <li>
+      <div class="icon">&#128213;</div><span>simple project structure</span>
+    </li>
+    <li>
+      <div class="icon">&#59254;</div><span>css library &amp; live reload</span>
+    </li>
+  </ul>
+</div>
+<div id="content">
+  <h3 id="overview">overview</h3><p>Roots is toolkit built on best pratices for advanced front-end web development. It has a very large number of features, which I’ll attempt to list below. Roots comes in the form of a static site build tool by default, but also includes templates and plugins for <a href="https://github.com/jenius/roots-express">express.js</a> and <a href="https://github.com/jenius/roots-rails">rails</a>. Plugins for <a href="http://railwayjs.com/">RailwayJS</a> and <a href="http://www.sinatrarb.com/">Sinatra</a> are also in the works.
+
+</p>
+<ul>
+<li>extremely simple <a href="#installation">installation</a></li>
+<li>clean and minimal default project template</li>
+<li><a href="http://jade-lang.com/">jade</a>, <a href="http://learnboost.github.com/stylus/">stylus</a>, and <a href="http://coffeescript.org/">coffeescript</a> default stack</li>
+<li>super fast live reload implementation</li>
+<li>compile errors displayed as a flash message, doesn’t break workflow</li>
+<li>layouts and partials fully supported</li>
+<li><a href="http://coffeescript.org/">coffeescript</a> and <a href="http://daringfireball.net/projects/markdown/">markdown</a> can be written directly in views</li>
+<li>extremely robust, modular, and powerful <a href="/css">css helper library</a> built in</li>
+<li>global variables and functions (view helpers)</li>
+<li>clean and intuitive app settings file</li>
+<li>single command deploy to heroku</li>
+<li>intelligently minifies html, css, and js on deploy</li>
+<li>efficient client-side js management through <a href="http://twitter.github.com/bower/">bower</a> and <a href="http://requirejs.org/">require.js</a></li>
+<li>easy to extend with a simple and well-documented plugin interface</li>
+</ul>
+
+  <h3 id="installation">installation</h3><p>Installation is super straightforward and relies only on <a href="http://nodejs.org">node.js</a>, which has a well-maintined universal installer. If you want to do it the &quot;longer and more manual way&quot;, head over to nodejs.org and install node, then run <code>npm install roots -g</code> from your command line. Or even easier, if you are on mac or linux, run the command below from your terminal:
+</p>
+<code class="big">curl get.roots.cx | sh</code>
+  <h3 id="commands">commands</h3><p>Once you have roots installed, it exposes a few useful commands for getting your project set up. You must be at least somewhat familiar with the command line to be able to use roots.
+
+</p>
+<p><code>$ roots new name</code>   - creates a new project in the current directory called name<br><code>$ roots compile</code>    - compiles, minifies, and compresses the project to the public folder<br><code>$ roots watch</code>      - compiles the project, opens it on a local server, watches files for change, and live reloads<br><code>$ roots update</code>     - installs a new version of roots if there is one<br><code>$ roots js</code>         - wrapper for bower, type <code>roots help</code> for details on roots js commands    
+
+</p>
+<p>...and if you forget or need help, just type <code>roots help</code> for a list of available commands
+</p>
+
+  <h3 id="plugins">plugins</h3><p>Roots ships with a few core compilers that are optimized for a speedy and efficient workflow. But of course everyone has their own preferred tools, and if there are languages you would rather work in, you can build them in to roots through the plugin interface.
+
+</p>
+<p>Plugins need only be one file, and are frequently less than 10 lines of javascript (many of the core compilers are, actually). To create a plugin, just drop a new file, javascript or coffeescript, into <code>/plugins</code>. The module need only export two methods, <code>settings</code> and <code>compile</code>. To get you started, you can run <code>roots plugin generate</code> to have roots generate a basic plugin template.
+
+</p>
+<p>Here are a few examples of how plugins can look. Note that plugins are executed inside roots&#39; environment, so if you want to require any external files, you need to use <code>module.require()</code> instead of just <code>require()</code> in order to have roots look for files starting in the plugins directory.
+
+</p>
+<ul>
+<li><a href="https://github.com/jenius/roots-cli/blob/master/test/plugins/sass.coffee">sass compiler</a> (command line)</li>
+<li><a href="https://github.com/jenius/roots-cli/blob/master/lib/compilers/core/jade.js">ejs compiler</a> (handles layout files)</li>
+<li><a href="https://github.com/jenius/roots-cli/blob/master/lib/compilers/core/styl.js">stylus compiler</a> (js library based)</li>
+</ul>
+<p>You will probably notice that a class called <code>Helper</code> is provided and does much of the work. This class manages important paths and file info and is designed to make compilers clean and easy to manage. Documentation for the <code>Helper</code> class is below.
+
+</p>
+<p><strong><code>helper = new Helper(file)</code></strong><br>Sample code for how to initialize the helper. Takes a single file from the <code>files</code> object that the <code>compile</code> method receives
+
+</p>
+<p><strong><code>helper.extension</code></strong><br>Returns the extension of the current file
+
+</p>
+<p><strong><code>helper.target_extension</code></strong><br>Returns the extension that the file will compile into
+
+</p>
+<p><strong><code>helper.export_path</code></strong><br>Returns the absolute path that the file will be placed into after compile
+
+</p>
+<p><strong><code>helper.file_path</code></strong><br>Returns the absolute path of the current file
+
+</p>
+<p><strong><code>helper.file_contents</code></strong><br>Returns a string with the contents of the current file
+
+</p>
+<p><strong><code>helper.layout_path</code></strong><br><em>If the file&#39;s target extension is html</em>, Returns the absolute path of the layout file it will be compiled into.
+
+</p>
+<p><strong><code>helper.layout_contents</code></strong><br><em>If the file&#39;s target extension is html</em>, Returns the contents of the layout file it will be compiled into.
+
+</p>
+<p><strong><code>helper.locals(extra_object)</code></strong><br>Returns all the local functions to be rendered with a view template. If you pass it an object, it will include it in the locals. You will want to add yield when compiling the layout, like in the ejs compiler example above.
+
+</p>
+<p><strong><code>helper.write(content)</code></strong><br>Writes the provided string to the correct file in the public directory.  
+
+</p>
+<p>If you want to dig into the <code>Helper</code> a bit more, feel free to <a href="https://github.com/jenius/roots-cli/blob/master/lib/compilers/compile-helper.coffee">check out the source</a>. It&#39;s only one small file.
+</p>
+
+  <h3 id="help">help</h3><p>Speaking of helpers, if you need help or something is confusing, feel free to <a href="http://github.com/jenius/roots-cli/issues">file an issue</a>, or get in touch with me directly (you shouldn&#39;t have much trouble finding my email). I can&#39;t debug your app, but if you have found an issue or have a feature request I&#39;d be more than happy to discuss and try to implement it!
+
+</p>
+<h3>faq</h3>
+<p><strong>Can I contribute to this project?</strong><br>Yes! In fact, I would love it if you did. The repo for the command line client is <a href="https://github.com/jenius/roots-cli">right here on github</a>, and the repo for the css library is <a href="https://github.com/jenius/roots-css">here</a>. Please, help a brother out!
+
+</p>
+<p><strong>I&#39;m having a problem with roots and I&#39;m mad at you.</strong><br>Breathe deep. I know this project is not perfect. I&#39;m only one guy, I&#39;m doing my best &mdash; promise! I&#39;d be happy to look into any issue - just <a href="https://github.com/jenius/roots-cli/issues">file an issue on github</a> and I&#39;ll get to it as quickly as I can.
+
+</p>
+<p><strong>Is roots totally free?</strong><br>Why yes it is! It&#39;s licensed under <strong><em>_</em></strong>, which means you can use it free forever. It&#39;s because I love you. If you love roots, I would feel great if you <a href="http://twitter.com/jescalan">let me know</a>.
+
+</p>
+<p><strong>Why isn&#39;t this site responsive?</strong>
+Because it doesn&#39;t need to be. You don&#39;t code on your mobile phone, so you don&#39;t need coding docs there. Be responsable with responsiveness.
+
+</p>
+<p><strong>Who is responsable for the awesome icons on this site?</strong><br>Glad you asked! The icons on this site are from <a href="http://www.entypo.com/">entypo</a>, by Daniel Bruce, and he is the man for making such awesome free icons.</p>
+
+</div>
+  </body>
+  <script data-main="/js/main" src="/js/require.js"></script><script>protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://'; address = protocol + window.location.host + window.location.pathname + '/ws'; socket = new WebSocket(address);
+socket.onmessage = function(msg) { msg.data == 'reload' && window.location.reload() }</script>
+</html>

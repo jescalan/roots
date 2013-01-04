@@ -1,5 +1,6 @@
 path = require 'path'
 fs = require 'fs'
+adapters = require '../adapters'
 
 # this class is absurd. its purpose is to resolve and
 # hold on to all the file paths and file contents necessary to
@@ -14,38 +15,19 @@ module.exports = class CompileHelper
     @extension = path.extname(@file).slice(1)
     @current_directory = path.normalize process.cwd()
 
-    html_file = options.file_types.html.indexOf(@extension) > -1
-    css_file = options.file_types.css.indexOf(@extension) > -1
-    js_file = options.file_types.js.indexOf(@extension) > -1
+    @target_extension = adapters[@extension].settings.target
 
-    if html_file
-      @target_extension = 'html'
-      base_folder = options.folder_config.views
-
-      # deal with layouts
+    # handling for layouts
+    if @target_extension == 'html'
       @layout = options.layouts.default
       for file, layout_path of options.layouts
         @layout = layout_path if @file == file
-
-      @layout_path = path.join @current_directory, base_folder, @layout
+      @layout_path = path.join @current_directory, options.folder_config.views, @layout
       @layout_contents = fs.readFileSync @layout_path, 'utf8'
 
-    else if css_file
-      @target_extension = 'css'
-      base_folder = options.folder_config.assets
-
-    # if we're working with file that will compile to js
-    else if js_file
-      @target_extension = 'js'
-      base_folder = options.folder_config.assets
-
-    # something really whack happened
-    else
-      throw "unsupported file extension for file: #{@file}"
-
-    @file_path = path.join @current_directory, base_folder, @file
+    @file_path = path.join @current_directory, @file
     @file_contents = fs.readFileSync @file_path, 'utf8'
-    @export_path = path.join @current_directory, 'public', path.dirname(@file), "#{path.basename @file, path.extname(@file)}.#{@target_extension}"
+    @export_path = path.join @current_directory, 'public', path.dirname(@file).replace(/^assets|views/,''), "#{path.basename(@file, path.extname(@file))}.#{@target_extension}"
   
   # extra locals (like yield) can be added here
   locals: (extra) ->
