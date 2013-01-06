@@ -1,4 +1,4 @@
-# Roots CLI
+# Roots
 
 A light, super fast, and intuitive build system meant for rapid advanced front end development.
 
