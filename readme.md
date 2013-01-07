@@ -75,7 +75,7 @@ One thing that I'm particularly bad at is testing. I'll be working hard on this 
 
 ##### To Do
 
-- add `roots -v` and `roots --version`
+- compile single file on save (not whole project)
 - add railway.js template
 - deploy to custom ftp server (difficult)
 - image optimization (this has external dependencies... yech)
