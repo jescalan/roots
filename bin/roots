@@ -5,7 +5,6 @@ var argv = process.argv.slice(2),
     configure_options = require('../lib/utils/configure_options');
 
 if (argv[0] == undefined) {
-  console.log(argv[0])
   commands.help.execute();
 } else {
   var current_command = commands[argv[0]];

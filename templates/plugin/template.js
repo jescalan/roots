@@ -5,9 +5,10 @@
 // will be executed in roots' environment.
 
 // you must exports a settings object in order for the compiler to be used
-exports.settings =
-  file_type: 'xxx'
+exports.settings = {
+  file_type: 'xxx',
   target: 'css'
+}
 
 // the compile method is passed a list of files of the file type specified in the above
 // settings object, a helper class, and a callback. the callback must be called only
