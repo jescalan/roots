@@ -1,4 +1,4 @@
-# Roots CLI
+# Roots
 
 A light, super fast, and intuitive build system meant for rapid advanced front end development.
 
@@ -75,7 +75,6 @@ One thing that I'm particularly bad at is testing. I'll be working hard on this 
 
 ##### To Do
 
-- add `roots -v` and `roots --version`
 - add railway.js template
 - deploy to custom ftp server (difficult)
 - image optimization (this has external dependencies... yech)
