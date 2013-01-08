@@ -13,7 +13,6 @@ module.exports = class CompileHelper
 
     options = global.options
     @extension = path.extname(@file).slice(1)
-    @current_directory = path.normalize process.cwd()
 
     @target_extension = adapters[@extension].settings.target
 
@@ -22,12 +21,12 @@ module.exports = class CompileHelper
       @layout = options.layouts.default
       for file, layout_path of options.layouts
         @layout = layout_path if @file == file
-      @layout_path = path.join @current_directory, options.folder_config.views, @layout
+      @layout_path = path.join process.cwd(), options.folder_config.views, @layout
       @layout_contents = fs.readFileSync @layout_path, 'utf8'
 
-    @file_path = path.join @current_directory, @file
-    @file_contents = fs.readFileSync @file_path, 'utf8'
-    @export_path = path.join @current_directory, 'public', path.dirname(@file).replace(/^assets|views/,''), "#{path.basename(@file, path.extname(@file))}.#{@target_extension}"
+    @file_contents = fs.readFileSync @file, 'utf8'
+    # export path is brutal, could use some cleaning
+    @export_path = path.join process.cwd(), 'public', path.dirname(@file).replace(process.cwd(),'').replace(/^\/assets|\/views/,''), "#{path.basename(@file, path.extname(@file))}.#{@target_extension}"
   
   # extra locals (like yield) can be added here
   locals: (extra) ->
