@@ -43,6 +43,7 @@
     "underscore": "latest",
     "shelljs": "latest",
     "q": "latest",
+    "minimatch": "latest",
     "faye-websocket": "0.4.x"
   },
   "devDependencies": {
