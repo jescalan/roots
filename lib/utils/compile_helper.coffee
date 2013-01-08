@@ -29,6 +29,8 @@ module.exports = class CompileHelper
     
   # extra locals (like yield) can be added here
   locals: (extra) ->
+    # add path as an automatic local variable
+    options.locals.path = @export_path.replace(process.cwd(),'').replace('/public/','')
     for key, value of extra
       options.locals[key] = value
     return options.locals
