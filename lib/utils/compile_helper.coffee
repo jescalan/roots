@@ -1,6 +1,6 @@
 path = require 'path'
 fs = require 'fs'
-adapters = require '../adapters'
+output_path = require './output_path'
 
 # this class is absurd. its purpose is to resolve and
 # hold on to all the file paths and file contents necessary to
@@ -10,24 +10,23 @@ adapters = require '../adapters'
 module.exports = class CompileHelper
 
   constructor: (@file) ->
-
     options = global.options
-    @extension = path.extname(@file).slice(1)
 
-    @target_extension = adapters[@extension].settings.target
+    @export_path = output_path(@file)
+    @extension = path.extname(@file).slice(1)
+    @target_extension = path.extname(@export_path).slice(1)
+    @file_contents = fs.readFileSync(@file, 'utf8')
 
     # handling for layouts
     if @target_extension == 'html'
       @layout = options.layouts.default
+      
       for file, layout_path of options.layouts
         @layout = layout_path if @file == file
-      @layout_path = path.join process.cwd(), options.folder_config.views, @layout
-      @layout_contents = fs.readFileSync @layout_path, 'utf8'
 
-    @file_contents = fs.readFileSync @file, 'utf8'
-    # export path is brutal, could use some cleaning
-    @export_path = path.join process.cwd(), 'public', path.dirname(@file).replace(process.cwd(),'').replace(/^\/assets|\/views/,''), "#{path.basename(@file, path.extname(@file))}.#{@target_extension}"
-  
+      @layout_path = path.join(process.cwd(), options.folder_config.views, @layout)
+      @layout_contents = fs.readFileSync @layout_path, 'utf8'
+    
   # extra locals (like yield) can be added here
   locals: (extra) ->
     for key, value of extra
