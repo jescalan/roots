@@ -105,33 +105,33 @@ basic_root = path.join root, 'basic'
 #         out.should.match /bower/
 #         done()
 
-# # 
-# # adapters
-# # 
+# 
+# adapters
+# 
 
-# describe 'adapter', ->
+describe 'adapter', ->
 
-#   compiler_path = root
+  compiler_path = root
 
-#   describe 'stylus', ->
-#     it 'should compile to css'
-#     it 'should make the roots css library available'
-#     it 'should include the project directory for requires'
+  describe 'stylus', ->
+    it 'should compile to css'
+    it 'should make the roots css library available'
+    it 'should include the project directory for requires'
 
-#   describe 'jade', ->
-#     it 'should compile to html'
-#     it 'should compile views into default layout'
-#     it 'should compile views with specified layout files to the right layout'
+  describe 'jade', ->
+    it 'should compile to html'
+    it 'should compile views into default layout'
+    it 'should compile views with specified layout files to the right layout'
 
-#   describe 'ejs', ->
-#     it 'should compile to html'
-#     it 'should compile views into default layout'
-#     it 'should compile views with specified layout files to the right layout'
+  describe 'ejs', ->
+    it 'should compile to html'
+    it 'should compile views into default layout'
+    it 'should compile views with specified layout files to the right layout'
 
-#   describe 'coffeescript', ->
-#     it 'should compile to javascript'
-#     it 'should include other files when #= require ]\'file\' is present'
-#     it 'should compile without closures when specified in app.coffee'
+  describe 'coffeescript', ->
+    it 'should compile to javascript'
+    it 'should include other files when #= require ]\'file\' is present'
+    it 'should compile without closures when specified in app.coffee'
 
 # 
 # compiler
@@ -145,13 +145,23 @@ describe 'compiler', ->
     Compiler = require path.join(root, '../lib/compiler')
     compiler = new Compiler()
 
-  it 'should have access to all adapters', ->
-    adapters = require(path.join(root, '../lib/adapters'))
-    adapters.coffee.should.be.ok
-    adapters.ejs.should.be.ok
-    adapters.jade.should.be.ok
-    adapters.styl.should.be.ok
-
   it 'eventemitter should be hooked up properly', (done) ->
     compiler.on 'finished', -> done()
     compiler.finish()
+
+# 
+# deploy
+# 
+
+describe 'deploy', ->
+  deployer = null
+
+  before ->
+    Deployer = require path.join(root, '../lib/deployer')
+    test_adapter = { test: (input)-> return input }
+    deployer = new Deployer(test_adapter)
+    deployer.add_shell_method('test');
+
+  it 'works correctly', ->
+    deployer.test(true).should.be.ok
+    deployer.test(false).should.not.be.ok
