@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd test/manual
-../../bin/roots watch
+../../bin/roots deploy
