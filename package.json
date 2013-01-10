@@ -44,6 +44,7 @@
     "shelljs": "latest",
     "q": "latest",
     "minimatch": "latest",
+    "ftp": "latest",
     "faye-websocket": "0.4.x"
   },
   "devDependencies": {
