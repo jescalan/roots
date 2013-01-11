@@ -137,7 +137,7 @@ describe 'jade', ->
 
 describe 'ejs', ->
 
-  ejs_path = path.join root, 'sandbox/ejs'  
+  ejs_path = path.join root, 'sandbox/ejs'
 
   it 'should compile ejs', (done) ->
     run "cd #{ejs_path}; ../../../bin/roots compile --no-compress", ->
@@ -146,9 +146,21 @@ describe 'ejs', ->
       done()
 
 describe 'coffeescript', ->
-  it 'should compile coffeescript'
-  it 'should include other files when #= require ]\'file\' is present'
+
+  coffeescript_path = path.join root, 'sandbox/coffeescript'
+
+  it 'should compile coffeescript', (done) ->
+    run "cd #{coffeescript_path}; ../../../bin/roots compile --no-compress", ->
+      fs.existsSync(path.join(coffeescript_path, 'public/basic.js')).should.be.ok
+      # '#= require' test
+      fs.existsSync(path.join(coffeescript_path, 'public/require.js')).should.be.ok
+      require_content = fs.readFileSync path.join(coffeescript_path, 'public/require.js')
+      require_content.should.match /BASIC/
+      shell.rm '-rf', path.join(coffeescript_path, 'public')
+      done()
+
   it 'should compile without closures when specified in app.coffee'
+    # this needs a separate app.coffee file
 
 describe 'stylus', ->
   it 'should compile stylus'
