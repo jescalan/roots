@@ -16,22 +16,23 @@ basic_root = path.join root, 'basic'
 
 describe 'command', ->
   
-#   describe 'compile', -> # ----------------------------------------------------------------------
+  describe 'compile', -> # ----------------------------------------------------------------------
 
-#     before (done) ->
-#       run "cd #{basic_root}; ../../bin/roots compile", (a,b,c) -> done()
+    before (done) ->
+      run "cd #{basic_root}; ../../bin/roots compile", (a,b,c) ->
+        console.log a,b,c
 
-#     it 'should compile files to /public', ->
-#       fs.readdirSync(path.join(basic_root, 'public')).should.have.lengthOf(5)
+    it 'should compile files to /public', ->
+      fs.readdirSync(path.join(basic_root, 'public')).should.have.lengthOf(5)
 
-#     it 'should minify all css and javascript', () ->
-#       js_content = fs.readFileSync path.join(basic_root, 'public/js/main.js'), 'utf8'
-#       js_content.should.not.match /\n/
+    it 'should minify all css and javascript', () ->
+      js_content = fs.readFileSync path.join(basic_root, 'public/js/main.js'), 'utf8'
+      js_content.should.not.match /\n/
 
-#     it 'should compile all files to public', ->
-#       css_content = fs.readFileSync path.join(basic_root, 'public/css/example.css'), 'utf8'
-#       css_content.should.not.match /\n/
-#       rimraf.sync path.join(basic_root, 'public') 
+    it 'should compile all files to public', ->
+      css_content = fs.readFileSync path.join(basic_root, 'public/css/master.css'), 'utf8'
+      css_content.should.not.match /\n/
+      rimraf.sync path.join(basic_root, 'public') 
 
   describe 'new', -> # -------------------------------------------------------------------------
 
