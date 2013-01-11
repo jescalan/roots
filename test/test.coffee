@@ -90,20 +90,20 @@ describe 'command', ->
 
     it 'should install a plugin from github if install is called'
 
-#   describe 'version', -> # ---------------------------------------------------------------------
+  describe 'version', -> # ---------------------------------------------------------------------
 
-#     it 'should output the correct version number for roots', (done) ->
-#       version = JSON.parse(fs.readFileSync('package.json')).version
-#       run './bin/roots version', (err,out) ->
-#         out.replace(/\n/, '').should.eql(version)
-#         done()
+    it 'should output the correct version number for roots', (done) ->
+      version = JSON.parse(fs.readFileSync('package.json')).version
+      run './bin/roots version', (err,out) ->
+        out.replace(/\n/, '').should.eql(version)
+        done()
 
-#   describe 'js', -> # --------------------------------------------------------------------------
+  describe 'js', -> # --------------------------------------------------------------------------
 
-#     it 'should expose bower\'s interface', (done) ->
-#       run "cd #{basic_root}; ../../bin/roots js", (err,out, stdout) ->
-#         out.should.match /bower/
-#         done()
+    it 'should expose bower\'s interface', (done) ->
+      run "cd #{basic_root}; ../../bin/roots js", (err,out, stdout) ->
+        out.should.match /bower/
+        done()
 
 # 
 # adapters
@@ -162,6 +162,15 @@ describe 'deploy', ->
     deployer = new Deployer(test_adapter, '')
     deployer.add_shell_method('test');
 
-  it 'works correctly', ->
+  it 'handles adapters correctly', ->
     deployer.test(true).should.be.ok
     deployer.test(false).should.not.be.ok
+
+  it 'has all the required shell methods', ->
+    deployer.check_install_status.should.exist
+    deployer.check_credentials.should.exist
+    deployer.compile_project.should.exist
+    deployer.add_config_files.should.exist
+    deployer.commit_files.should.exist
+    deployer.create_project.should.exist
+    deployer.push_code.should.exist
