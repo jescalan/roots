@@ -18,7 +18,7 @@ Roots' main interface is it's command line tool. There are just a couple of main
   - To use roots with rails, use the [roots-rails](http://github.com/jenius/roots-rails) ruby gem instead.
 
 `$ roots watch`: The bulk of roots' usefulness is here. This command compiles your project, opens it up in your browser, then continues watching all your files for changes. As soon as you save, roots will recompile the project and immediately refresh the browser. So fresh. 
-To change default running port (so you can simply work on few apps in the same time) just type `$ PORT=3000 roots watch`, and change 3000 to any number you like.
+You can manually set the port roots will run on using the `PORT` environment variable if you want. For example, `$ PORT=3000 roots watch` would run the app on port 3000.
 
 `$ roots compile`: Compiles your project once to the public folder, with everything minified and compressed.
 
