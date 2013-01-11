@@ -37,7 +37,7 @@ describe 'command', ->
 
     test_path = path.join(root, 'testproj')
 
-    it 'should create a new folder in the current directory with the right name and files', (done) ->
+    it 'should use the default template if no flags present', (done) ->
       run "cd #{root}; ../bin/roots new testproj", ->
         fs.existsSync(test_path).should.be.ok
         fs.existsSync(path.join(test_path, 'app.coffee')).should.be.ok
@@ -82,7 +82,7 @@ describe 'command', ->
 
   describe 'plugin', -> # ---------------------------------------------------------------------
 
-    it 'should create a new template inside /plugins if generate is called', (done) ->
+    it 'should create a template inside /plugins on \'generate\'', (done) ->
       run "cd #{basic_root}; ../../bin/roots plugin generate", ->
         fs.existsSync(path.join(basic_root, 'plugins/template.coffee')).should.be.ok
         shell.rm '-rf', path.join(basic_root, 'plugins')
@@ -126,7 +126,13 @@ describe 'compiler', ->
     compiler.finish()
 
   describe 'jade', ->
-    it 'should compile jade'
+
+    jade_root = path.join root, 'sandbox/jade'
+
+    it 'should compile jade', (done) ->
+      run "cd #{jade_root}; ../../../bin/roots compile", ->
+        done() 
+
     it 'should compile views into default layout'
     it 'should compile views with specified layout files to the right layout'
 
