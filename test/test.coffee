@@ -127,14 +127,12 @@ describe 'compiler', ->
 
   describe 'jade', ->
 
-    jade_root = path.join root, 'sandbox/jade'
+    jade_path = path.join root, 'sandbox/jade'
 
-    it 'should compile jade', (done) ->
-      run "cd #{jade_root}; ../../../bin/roots compile", ->
-        done() 
-
-    it 'should compile views into default layout'
-    it 'should compile views with specified layout files to the right layout'
+    it 'should compile jade view templates', (done) ->
+      run "cd #{jade_path}; ../../../bin/roots compile --no-compress", ->
+        fs.existsSync(path.join(jade_path, 'public/index.html')).should.be.ok
+        done()
 
   describe 'ejs', ->
     it 'should compile ejs'
