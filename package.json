@@ -45,6 +45,7 @@
     "q": "latest",
     "minimatch": "latest",
     "ftp": "latest",
+    "semver": "latest",
     "faye-websocket": "0.4.x"
   },
   "devDependencies": {
