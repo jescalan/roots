@@ -88,7 +88,11 @@ describe 'command', ->
         shell.rm '-rf', path.join(basic_root, 'plugins')
         done()
 
-    it 'should install a plugin from github if install is called'
+    it 'should use the javascript template if called with --js', (done) ->
+      run "cd #{basic_root}; ../../bin/roots plugin generate --js", ->
+        fs.existsSync(path.join(basic_root, 'plugins/template.js')).should.be.ok
+        shell.rm '-rf', path.join(basic_root, 'plugins')
+        done()
 
   describe 'version', -> # ---------------------------------------------------------------------
 
@@ -106,34 +110,6 @@ describe 'command', ->
         done()
 
 # 
-# adapters
-# 
-
-describe 'adapter', ->
-
-  compiler_path = root
-
-  describe 'stylus', ->
-    it 'should compile to css'
-    it 'should make the roots css library available'
-    it 'should include the project directory for requires'
-
-  describe 'jade', ->
-    it 'should compile to html'
-    it 'should compile views into default layout'
-    it 'should compile views with specified layout files to the right layout'
-
-  describe 'ejs', ->
-    it 'should compile to html'
-    it 'should compile views into default layout'
-    it 'should compile views with specified layout files to the right layout'
-
-  describe 'coffeescript', ->
-    it 'should compile to javascript'
-    it 'should include other files when #= require ]\'file\' is present'
-    it 'should compile without closures when specified in app.coffee'
-
-# 
 # compiler
 # 
  
@@ -148,6 +124,29 @@ describe 'compiler', ->
   it 'eventemitter should be hooked up properly', (done) ->
     compiler.on 'finished', -> done()
     compiler.finish()
+
+  describe 'jade', ->
+    it 'should compile jade'
+    it 'should compile views into default layout'
+    it 'should compile views with specified layout files to the right layout'
+
+  describe 'ejs', ->
+    it 'should compile ejs'
+    it 'should compile views into default layout'
+    it 'should compile views with specified layout files to the right layout'
+
+  describe 'coffeescript', ->
+    it 'should compile coffeescript'
+    it 'should include other files when #= require ]\'file\' is present'
+    it 'should compile without closures when specified in app.coffee'
+
+  describe 'stylus', ->
+    it 'should compile stylus'
+    it 'should make the roots css library available'
+    it 'should include the project directory for requires'
+
+  describe 'static files', ->
+    it 'should copy static files'
 
 # 
 # deploy
