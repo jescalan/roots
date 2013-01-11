@@ -19,8 +19,7 @@ describe 'command', ->
   describe 'compile', -> # ----------------------------------------------------------------------
 
     before (done) ->
-      run "cd #{basic_root}; ../../bin/roots compile", (a,b,c) ->
-        console.log a,b,c
+      run "cd #{basic_root}; ../../bin/roots compile", done
 
     it 'should compile files to /public', ->
       fs.readdirSync(path.join(basic_root, 'public')).should.have.lengthOf(5)
@@ -30,9 +29,9 @@ describe 'command', ->
       js_content.should.not.match /\n/
 
     it 'should compile all files to public', ->
-      css_content = fs.readFileSync path.join(basic_root, 'public/css/master.css'), 'utf8'
+      css_content = fs.readFileSync path.join(basic_root, 'public/css/example.css'), 'utf8'
       css_content.should.not.match /\n/
-      rimraf.sync path.join(basic_root, 'public') 
+      shell.rm '-rf', path.join(basic_root, 'public') 
 
   describe 'new', -> # -------------------------------------------------------------------------
 
