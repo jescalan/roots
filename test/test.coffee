@@ -136,8 +136,14 @@ describe 'jade', ->
       done()
 
 describe 'ejs', ->
-  it 'should compile ejs'
-  it 'should compile views with specified layout files to the right layout'
+
+  ejs_path = path.join root, 'sandbox/ejs'  
+
+  it 'should compile ejs', (done) ->
+    run "cd #{ejs_path}; ../../../bin/roots compile --no-compress", ->
+      fs.existsSync(path.join(ejs_path, 'public/index.html')).should.be.ok
+      shell.rm '-rf', path.join(ejs_path, 'public')
+      done()
 
 describe 'coffeescript', ->
   it 'should compile coffeescript'
