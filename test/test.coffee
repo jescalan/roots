@@ -125,32 +125,32 @@ describe 'compiler', ->
     compiler.on 'finished', -> done()
     compiler.finish()
 
-  describe 'jade', ->
+describe 'jade', ->
 
-    jade_path = path.join root, 'sandbox/jade'
+  jade_path = path.join root, 'sandbox/jade'
 
-    it 'should compile jade view templates', (done) ->
-      run "cd #{jade_path}; ../../../bin/roots compile --no-compress", ->
-        fs.existsSync(path.join(jade_path, 'public/index.html')).should.be.ok
-        done()
+  it 'should compile jade view templates', (done) ->
+    run "cd #{jade_path}; ../../../bin/roots compile --no-compress", ->
+      fs.existsSync(path.join(jade_path, 'public/index.html')).should.be.ok
+      shell.rm '-rf', path.join(jade_path, 'public')
+      done()
 
-  describe 'ejs', ->
-    it 'should compile ejs'
-    it 'should compile views into default layout'
-    it 'should compile views with specified layout files to the right layout'
+describe 'ejs', ->
+  it 'should compile ejs'
+  it 'should compile views with specified layout files to the right layout'
 
-  describe 'coffeescript', ->
-    it 'should compile coffeescript'
-    it 'should include other files when #= require ]\'file\' is present'
-    it 'should compile without closures when specified in app.coffee'
+describe 'coffeescript', ->
+  it 'should compile coffeescript'
+  it 'should include other files when #= require ]\'file\' is present'
+  it 'should compile without closures when specified in app.coffee'
 
-  describe 'stylus', ->
-    it 'should compile stylus'
-    it 'should make the roots css library available'
-    it 'should include the project directory for requires'
+describe 'stylus', ->
+  it 'should compile stylus'
+  it 'should make the roots css library available'
+  it 'should include the project directory for requires'
 
-  describe 'static files', ->
-    it 'should copy static files'
+describe 'static files', ->
+  it 'should copy static files'
 
 # 
 # deploy
