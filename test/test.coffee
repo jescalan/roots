@@ -5,7 +5,7 @@ colors = require 'colors'
 shell = require 'shelljs'
 run = require('child_process').exec
 root = path.join __dirname
-basic_root = path.join root, 'basic'
+basic_root = path.join root, 'sandbox/basic'
 
 # 
 # command line interface
@@ -19,7 +19,7 @@ describe 'command', ->
   describe 'compile', -> # ----------------------------------------------------------------------
 
     before (done) ->
-      run "cd #{basic_root}; ../../bin/roots compile", done
+      run "cd #{basic_root}; ../../../bin/roots compile", done
 
     it 'should compile files to /public', ->
       fs.readdirSync(path.join(basic_root, 'public')).should.have.lengthOf(5)
@@ -83,13 +83,13 @@ describe 'command', ->
   describe 'plugin', -> # ---------------------------------------------------------------------
 
     it 'should create a template inside /plugins on \'generate\'', (done) ->
-      run "cd #{basic_root}; ../../bin/roots plugin generate", ->
+      run "cd #{basic_root}; ../../../bin/roots plugin generate", ->
         fs.existsSync(path.join(basic_root, 'plugins/template.coffee')).should.be.ok
         shell.rm '-rf', path.join(basic_root, 'plugins')
         done()
 
     it 'should use the javascript template if called with --js', (done) ->
-      run "cd #{basic_root}; ../../bin/roots plugin generate --js", ->
+      run "cd #{basic_root}; ../../../bin/roots plugin generate --js", ->
         fs.existsSync(path.join(basic_root, 'plugins/template.js')).should.be.ok
         shell.rm '-rf', path.join(basic_root, 'plugins')
         done()
@@ -105,7 +105,7 @@ describe 'command', ->
   describe 'js', -> # --------------------------------------------------------------------------
 
     it 'should expose bower\'s interface', (done) ->
-      run "cd #{basic_root}; ../../bin/roots js", (err,out, stdout) ->
+      run "cd #{basic_root}; ../../../bin/roots js", (err,out, stdout) ->
         out.should.match /bower/
         done()
 
@@ -149,10 +149,9 @@ describe 'coffeescript', ->
 
   coffeescript_path = path.join root, 'sandbox/coffeescript'
 
-  it 'should compile coffeescript', (done) ->
+  it 'should compile coffeescript and requires should work', (done) ->
     run "cd #{coffeescript_path}; ../../../bin/roots compile --no-compress", ->
       fs.existsSync(path.join(coffeescript_path, 'public/basic.js')).should.be.ok
-      # '#= require' test
       fs.existsSync(path.join(coffeescript_path, 'public/require.js')).should.be.ok
       require_content = fs.readFileSync path.join(coffeescript_path, 'public/require.js')
       require_content.should.match /BASIC/
