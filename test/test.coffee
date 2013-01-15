@@ -148,23 +148,41 @@ describe 'ejs', ->
 describe 'coffeescript', ->
 
   coffeescript_path = path.join root, 'sandbox/coffeescript'
+  coffeescript_path_2 = path.join root, 'sandbox/coffee-basic'
 
   it 'should compile coffeescript and requires should work', (done) ->
     run "cd #{coffeescript_path}; ../../../bin/roots compile --no-compress", ->
       fs.existsSync(path.join(coffeescript_path, 'public/basic.js')).should.be.ok
       fs.existsSync(path.join(coffeescript_path, 'public/require.js')).should.be.ok
-      require_content = fs.readFileSync path.join(coffeescript_path, 'public/require.js')
+      require_content = fs.readFileSync path.join(coffeescript_path, 'public/require.js'), 'utf8'
       require_content.should.match /BASIC/
       shell.rm '-rf', path.join(coffeescript_path, 'public')
       done()
 
-  it 'should compile without closures when specified in app.coffee'
-    # this needs a separate app.coffee file
+  it 'should compile without closures when specified in app.coffee', (done) ->
+    run "cd #{coffeescript_path_2}; ../../../bin/roots compile --no-compress", ->
+      fs.existsSync(path.join(coffeescript_path_2, 'public/testz.js')).should.be.ok
+      require_content = fs.readFileSync path.join(coffeescript_path_2, 'public/testz.js'), 'utf8'
+      require_content.should.not.match /function/
+      shell.rm '-rf', path.join(coffeescript_path_2, 'public')
+      done()
 
 describe 'stylus', ->
-  it 'should compile stylus'
-  it 'should make the roots css library available'
-  it 'should include the project directory for requires'
+
+  stylus_path = path.join root, 'sandbox/stylus'
+
+  before (done) ->
+    run "cd #{stylus_path}; ../../../bin/roots compile --no-compress", ->
+      done()
+
+  it 'should compile stylus with roots css', ->
+    fs.existsSync(path.join(stylus_path, 'public/basic.css')).should.be.ok
+
+  it 'should include the project directory for requires', ->
+    fs.existsSync(path.join(stylus_path, 'public/req.css')).should.be.ok
+    require_content = fs.readFileSync path.join(stylus_path, 'public/req.css'), 'utf8'
+    require_content.should.match /#000/
+    shell.rm '-rf', path.join(stylus_path, 'public')
 
 describe 'static files', ->
   it 'should copy static files'

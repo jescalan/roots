@@ -1,0 +1,1 @@
+exports.ignore_files = ['partial']
