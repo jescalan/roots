@@ -185,7 +185,18 @@ describe 'stylus', ->
     shell.rm '-rf', path.join(stylus_path, 'public')
 
 describe 'static files', ->
-  it 'should copy static files'
+
+  static_path = path.join root, 'sandbox/static'
+  
+  before (done) ->
+    run "cd #{static_path}; ../../../bin/roots compile --no-compress", ->
+      done()
+
+  it 'copies static files', ->
+    fs.existsSync(path.join(static_path, 'public/whatever.poop')).should.be.ok
+    require_content = fs.readFileSync path.join(static_path, 'public/whatever.poop'), 'utf8'
+    require_content.should.match /roots dont care/
+    shell.rm '-rf', path.join(static_path, 'public')
 
 # 
 # deploy
