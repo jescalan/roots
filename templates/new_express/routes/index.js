@@ -1,8 +1,10 @@
+exports.set = function(app) {
+  app.get('/', homePage);
+}
 
 /*
  * GET home page.
  */
-
-exports.index = function(req, res){
+function homePage(req, res) {
   res.render('index', { title: 'Express' });
-};
+}
