@@ -46,7 +46,8 @@
     "minimatch": "latest",
     "ftp": "latest",
     "semver": "latest",
-    "faye-websocket": "0.4.x"
+    "faye-websocket": "0.4.x",
+    "wrench": "latest"
   },
   "devDependencies": {
     "mocha": "latest",
