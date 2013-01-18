@@ -52,6 +52,9 @@
     "mocha": "latest",
     "should": "latest"
   },
+  "directories": {
+    "man": "./setup/man"
+  },
   "engines": {
     "node": ">=0.8.0"
   },
