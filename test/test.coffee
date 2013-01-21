@@ -198,6 +198,15 @@ describe 'static files', ->
     require_content.should.match /roots dont care/
     shell.rm '-rf', path.join(static_path, 'public')
 
+describe 'errors', ->
+
+  errors_path = path.join root, 'sandbox/errors'
+
+  it 'notifies you if theres an error', (done) ->
+    run "cd #{errors_path}; ../../../bin/roots compile --no-compress", (a,b,stderr) ->
+      stderr.should.match /ERROR/
+      done()
+
 # 
 # deploy
 # 
