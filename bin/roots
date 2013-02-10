@@ -4,15 +4,15 @@ var argv = process.argv.slice(2),
     commands = require('../lib/commands'),
     configure_options = require('../lib/utils/configure_options');
 
-if (argv[0] == undefined) {
+if (typeof argv[0] == "undefined") {
   commands.help.execute();
 } else {
   var current_command = commands[argv[0]];
-  if (argv[0] == '-v' || argv[0] == '--version') return commands.version.execute()
-  if (current_command == undefined) return commands.help.execute();
+  if (argv[0] == '-v' || argv[0] == '--version') return commands.version.execute();
+  if (typeof current_command == "undefined") return commands.help.execute();
 
   if (current_command.needs_config) {
-    configure_options(function(){ current_command.execute(argv.slice(1)) });
+    configure_options(function(){ current_command.execute(argv.slice(1)); });
   } else {
     current_command.execute(argv.slice(1));
   }
