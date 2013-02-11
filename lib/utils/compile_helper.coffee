@@ -22,11 +22,7 @@ module.exports = class CompileHelper
       for file, layout_path of options.layouts
         @layout = layout_path if @file == file
 
-      @layout_path = path.join(
-        process.cwd(),
-        options.folder_config.views,
-        @layout
-      )
+      @layout_path = path.join(process.cwd(), options.folder_config.views, @layout)
       @layout_contents = fs.readFileSync @layout_path, 'utf8'
 
   # extra locals (like yield) can be added here
