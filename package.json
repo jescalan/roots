@@ -33,7 +33,7 @@
     "marked": "0.2.x",
     "ejs": "0.8.x",
     "coffee-script": "latest",
-    "csso": "latest",
+    "clean-css": "latest",
     "uglify-js": "latest",
     "rimraf": "2.0.x",
     "bower": "latest",

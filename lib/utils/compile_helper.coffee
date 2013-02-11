@@ -2,10 +2,8 @@ path = require 'path'
 fs = require 'fs'
 output_path = require './output_path'
 
-# this class is absurd. its purpose is to resolve and
-# hold on to all the file paths and file contents necessary to
-# compile the file. this looks messy, but it's necessary and is
-# what keeps the actual compilers so clean
+# this class' purpose is to resolve and hold on to all the file
+# paths and file contents necessary to compile the file.
 
 module.exports = class CompileHelper
 
