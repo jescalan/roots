@@ -47,7 +47,7 @@
     "ftp": "latest",
     "semver": "latest",
     "faye-websocket": "0.4.x",
-    "tmpl-precompile": "latest"
+    "tmpl-precompile": "git://github.com/jenius/tmpl-precompile.git"
   },
   "devDependencies": {
     "mocha": "latest",

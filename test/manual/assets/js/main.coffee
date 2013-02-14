@@ -6,7 +6,7 @@ js = ["http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js", '/js/wa
 require js, ->
   $ ->
 
-    console.log templates.test()
+    console.log templates
 
     setTimeout (-> $('.icon').css opacity: 1), 500
 
