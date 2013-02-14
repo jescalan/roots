@@ -23,9 +23,4 @@ exports.locals =
   title_with_markup: ->
     "<h1 class='title'>#{this.title}</h1>"
 
-# If true, shows the compile process and page/asset status in the
-# terminal when watching and compiling files.
-
-exports.debug = false
-
-# run `roots help` to get help on using the command line tool
+exports.templates = 'views/templates'
