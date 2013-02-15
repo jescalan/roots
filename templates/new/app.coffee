@@ -23,9 +23,9 @@ exports.locals =
   title_with_markup: ->
     "<h1 class='title'>#{this.title}</h1>"
 
-# If true, shows the compile process and page/asset status in the
-# terminal when watching and compiling files.
+# If you are working with a client-side js framework that would benefit
+# from precompiled templates, set this variable to the location of a folder
+# that contains your templates. they will be precompiled to public/js/templates.js
+# and made available under window.templates if you load that file.
 
-exports.debug = false
-
-# run `roots help` to get help on using the command line tool
+# exports.templates = 'views/templates'
