@@ -52,7 +52,7 @@ Roots ships with an awesome feature-rich css library built on top of stylus. Thi
 Client Side JS
 --------------
 
-Using javascript libraries on the client-side is super helpful, but downloading them for every project and keeping them up to date is a huge pain. Luckily, the wonderful developers at twitter created [bower](http://twitter.github.com/bower/) for this exact purpose. You can run `roots install` followed by any package name to have bower install it directly into the `js/components` folder of your roots project. Also available:
+Using javascript libraries on the client-side is super helpful, but downloading them for every project and keeping them up to date is a huge pain. Luckily, the wonderful developers at twitter created [bower](http://twitter.github.com/bower/) for this exact purpose. You can run `roots install` followed by any package name to have bower install it directly into the `assets/components` folder of your roots project. Also available:
 
 `roots js list` - list of installed packages    
 `roots js search name` - search for a package by `name`    
