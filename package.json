@@ -25,6 +25,7 @@
     "connect": "2.6.x",
     "colors": "latest",
     "open": "latest",
+    "monocle": "latest",
     "readdirp": "0.2.x",
     "mkdirp": "0.3.x",
     "stylus": "latest",
