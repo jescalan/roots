@@ -46,6 +46,7 @@
     "q": "latest",
     "minimatch": "latest",
     "ftp": "latest",
+    "js-yaml": "latest",
     "semver": "latest",
     "faye-websocket": "0.4.x",
     "tmpl-precompile": "git://github.com/jenius/tmpl-precompile.git"

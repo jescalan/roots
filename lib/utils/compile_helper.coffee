@@ -1,5 +1,7 @@
 path = require 'path'
 fs = require 'fs'
+js_yaml = require 'js-yaml'
+_ = require 'underscore'
 output_path = require './output_path'
 
 # this class' purpose is to resolve and hold on to all the file
@@ -15,12 +17,29 @@ module.exports = class CompileHelper
     @target_extension = path.extname(@export_path).slice(1)
     @file_contents = fs.readFileSync(@file, 'utf8')
 
-    # parse front matter, pull out locals and add them to the class
-    # set alternate layout if necessary
+    # dynamic content handling
+    yaml_matcher = /^---\s*\n([\s\S]*?)\n?---\s*\n?/
+    front_matter_string = @file_contents.match(yaml_matcher)
 
-    # handling for layouts
+    if front_matter_string
+      template_name = "#{path.basename(@file, path.extname(@file))}"
+      options.locals.site = {}
+      # this should add to an array
+      options.locals.site[template_name] = {}
+      front_matter = js_yaml.safeLoad(front_matter_string[1], { filename: @file })
+
+      options.locals.site[template_name][k] = v for k,v of front_matter
+      @layout = front_matter.layout if _.pluck(front_matter, 'layout')
+      @file_contents = @file_contents.replace yaml_matcher, ''
+
+      # this needs to be compiled contents, which means it has to happen later.
+      # perhaps in the write method, but this is scary
+      # or i could force jade, but thats lame
+      options.locals.site[template_name].content = @file_contents
+
+    # layout handling
     if @target_extension == 'html'
-      @layout = options.layouts.default
+      @layout ?= options.layouts.default
       
       for file, layout_path of options.layouts
         @layout = layout_path if @file == file
