@@ -15,6 +15,9 @@ module.exports = class CompileHelper
     @target_extension = path.extname(@export_path).slice(1)
     @file_contents = fs.readFileSync(@file, 'utf8')
 
+    # parse front matter, pull out locals and add them to the class
+    # set alternate layout if necessary
+
     # handling for layouts
     if @target_extension == 'html'
       @layout = options.layouts.default
