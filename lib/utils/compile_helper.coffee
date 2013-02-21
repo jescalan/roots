@@ -22,13 +22,13 @@ module.exports = class CompileHelper
     front_matter_string = @file_contents.match(yaml_matcher)
 
     if front_matter_string
-      @template_name = "#{path.basename(@file, path.extname(@file))}"
-      options.locals.site = {}
-      # this should add to an array
-      options.locals.site[@template_name] = {}
-      front_matter = js_yaml.safeLoad(front_matter_string[1], { filename: @file })
+      # set up variables
+      options.locals.site = []
+      @dynamic_locals = {}
 
-      options.locals.site[@template_name][k] = v for k,v of front_matter
+      front_matter = js_yaml.safeLoad(front_matter_string[1], { filename: @file })
+      @dynamic_locals[k] = v for k,v of front_matter
+  
       @layout = front_matter.layout if _.pluck(front_matter, 'layout')
       @file_contents = @file_contents.replace yaml_matcher, ''
 
@@ -49,8 +49,10 @@ module.exports = class CompileHelper
     for key, value of extra
       options.locals[key] = value
 
-    if @template_name and extra? and extra.yield?
-      options.locals.site[@template_name].content = extra.yield
+    # add compiled content to locals for dynamic templates
+    if @dynamic_locals and extra? and extra.yield?
+      @dynamic_locals.content = extra.yield.trim()
+      options.locals.site.push(@dynamic_locals)
 
     return options.locals
 
@@ -58,6 +60,7 @@ module.exports = class CompileHelper
     write_content = @compress(write_content) if options.compress
     fs.writeFileSync @export_path, write_content
     global.options.debug.log "compiled #{path.basename(@file)}"
+    console.log options.locals.site
 
   compress: (write_content) ->
     require('../utils/compressor')(write_content, @target_extension)
