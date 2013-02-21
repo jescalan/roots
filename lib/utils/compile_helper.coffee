@@ -2,6 +2,7 @@ path = require 'path'
 fs = require 'fs'
 js_yaml = require 'js-yaml'
 _ = require 'underscore'
+fleck = require 'fleck'
 output_path = require './output_path'
 
 # this class' purpose is to resolve and hold on to all the file
@@ -23,14 +24,18 @@ module.exports = class CompileHelper
 
     if front_matter_string
       # set up variables
-      options.locals.site = []
+      @plural_name = @file.replace(process.cwd(),'').match(/\/(.*?)\//)[1]
+      options.locals.site ?= {}
+      options.locals.site[@plural_name] ?= []
       @dynamic_locals = {}
 
       front_matter = js_yaml.safeLoad(front_matter_string[1], { filename: @file })
       @dynamic_locals[k] = v for k,v of front_matter
-      options.locals.post = @dynamic_locals
   
-      @layout = front_matter.layout if _.pluck(front_matter, 'layout')
+      if _.pluck(front_matter, 'layout')
+        @layout = front_matter.layout
+        @dynamic_locals.url = @file.replace(process.cwd(), '').replace(/\..*?$/, '.html')
+
       @file_contents = @file_contents.replace yaml_matcher, ''
 
     # layout handling
@@ -47,22 +52,22 @@ module.exports = class CompileHelper
   locals: (extra) ->
     # add path as an automatic local variable
     options.locals.path = @export_path
+    options.locals.post = @dynamic_locals if @dynamic_locals
     for key, value of extra
       options.locals[key] = value
 
     # add compiled content to locals for dynamic templates
     if @dynamic_locals and extra? and extra.yield?
-      @dynamic_locals.content = extra.yield.trim()
-      options.locals.site.push(@dynamic_locals)
-      delete options.locals.post
+      @dynamic_locals.content = extra.yield
+      options.locals.site[@plural_name].push(@dynamic_locals)
 
     return options.locals
 
   write: (write_content) ->
     write_content = @compress(write_content) if options.compress
     fs.writeFileSync @export_path, write_content
+    # delete options.locals.post
     global.options.debug.log "compiled #{path.basename(@file)}"
-    console.log options.locals.site
 
   compress: (write_content) ->
     require('../utils/compressor')(write_content, @target_extension)
