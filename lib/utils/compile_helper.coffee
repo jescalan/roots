@@ -28,6 +28,7 @@ module.exports = class CompileHelper
 
       front_matter = js_yaml.safeLoad(front_matter_string[1], { filename: @file })
       @dynamic_locals[k] = v for k,v of front_matter
+      options.locals.post = @dynamic_locals
   
       @layout = front_matter.layout if _.pluck(front_matter, 'layout')
       @file_contents = @file_contents.replace yaml_matcher, ''
@@ -53,6 +54,7 @@ module.exports = class CompileHelper
     if @dynamic_locals and extra? and extra.yield?
       @dynamic_locals.content = extra.yield.trim()
       options.locals.site.push(@dynamic_locals)
+      delete options.locals.post
 
     return options.locals
 
