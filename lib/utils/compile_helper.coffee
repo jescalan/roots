@@ -22,20 +22,15 @@ module.exports = class CompileHelper
     front_matter_string = @file_contents.match(yaml_matcher)
 
     if front_matter_string
-      template_name = "#{path.basename(@file, path.extname(@file))}"
+      @template_name = "#{path.basename(@file, path.extname(@file))}"
       options.locals.site = {}
       # this should add to an array
-      options.locals.site[template_name] = {}
+      options.locals.site[@template_name] = {}
       front_matter = js_yaml.safeLoad(front_matter_string[1], { filename: @file })
 
-      options.locals.site[template_name][k] = v for k,v of front_matter
+      options.locals.site[@template_name][k] = v for k,v of front_matter
       @layout = front_matter.layout if _.pluck(front_matter, 'layout')
       @file_contents = @file_contents.replace yaml_matcher, ''
-
-      # this needs to be compiled contents, which means it has to happen later.
-      # perhaps in the write method, but this is scary
-      # or i could force jade, but thats lame
-      options.locals.site[template_name].content = @file_contents
 
     # layout handling
     if @target_extension == 'html'
@@ -53,6 +48,10 @@ module.exports = class CompileHelper
     options.locals.path = @export_path
     for key, value of extra
       options.locals[key] = value
+
+    if @template_name and extra? and extra.yield?
+      options.locals.site[@template_name].content = extra.yield
+
     return options.locals
 
   write: (write_content) ->
