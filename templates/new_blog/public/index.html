@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="description" content="description of your site">
+    <meta name="author" content="author of the site">
+    <title>welcome to roots!</title>
+    <link rel="stylesheet" href="/css/master.css">
+  </head>
+  <body>
+<h1>my new blog</h1><a href="/posts/hello_world.html">hello world</a><br/><a href="/posts/second_post.html">second post</a><br/>
+  </body>
+  <script data-main="js/main" src="js/require.js"></script><script>protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://'; address = protocol + window.location.host + window.location.pathname + '/ws'; socket = new WebSocket(address);
+socket.onmessage = function(msg) { msg.data == 'reload' && window.location.reload() }</script>
+</html>
