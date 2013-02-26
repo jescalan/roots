@@ -1,8 +1,8 @@
 path = require 'path'
 fs = require 'fs'
-js_yaml = require 'js-yaml'
 _ = require 'underscore'
 output_path = require './output_path'
+yaml_parser = require './yaml_parser'
 
 # this class' purpose is to resolve and hold on to all the file
 # paths and file contents necessary to compile the file.
@@ -55,8 +55,7 @@ set_layout = ->
 # front matter and content, sets layout if present, removes front matter
 # from content for parsing
 compile_dynamic_content = ->
-  yaml_matcher = /^---\s*\n([\s\S]*?)\n?---\s*\n?/
-  front_matter_string = @file_contents.match(yaml_matcher)
+  front_matter_string = yaml_parser.match(@file_contents)
 
   if front_matter_string
 
@@ -67,7 +66,7 @@ compile_dynamic_content = ->
     @dynamic_locals = {}
 
     # load variables from front matter
-    front_matter = js_yaml.safeLoad(front_matter_string[1], { filename: @file })
+    front_matter = yaml_parser.parse @file_contents, { filename: @file }
     @dynamic_locals[k] = v for k,v of front_matter
     
     # if layout is present, set the layout and single post url
@@ -76,7 +75,7 @@ compile_dynamic_content = ->
       @dynamic_locals.url = @file.replace(process.cwd(), '').replace(/\..*?$/, '.html')
 
     # remove the front matter
-    @file_contents = @file_contents.replace yaml_matcher, ''
+    @file_contents = @file_contents.replace front_matter_string[0], ''
 
 # adds front matter variables to a 'post' local for 
 # dynamic layouts, adds the compiled content to the post's local
