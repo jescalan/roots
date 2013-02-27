@@ -207,6 +207,18 @@ describe 'errors', ->
       stderr.should.match /ERROR/
       done()
 
+describe 'dynamic content', ->
+
+  dynamic_path = path.join root, 'sandbox/dynamic'
+
+  before (done) ->
+    run "cd #{dynamic_path}; ../../../bin/roots compile --no-compress", ->
+      done()
+
+  it 'compiles dynamic files', ->
+    fs.existsSync(path.join(dynamic_path, 'public/posts/hello_world.html')).should.be.ok
+    shell.rm '-rf', path.join(dynamic_path, 'public')
+
 # 
 # deploy
 # 
