@@ -16,7 +16,7 @@ basic_root = path.join root, 'sandbox/basic'
 
 describe 'command', ->
   
-  describe 'compile', -> # ----------------------------------------------------------------------
+  describe 'compile', -> # ----------------------------------------------------------------
 
     before (done) ->
       run "cd #{basic_root}; ../../../bin/roots compile", done
@@ -33,7 +33,7 @@ describe 'command', ->
       css_content.should.not.match /\n/
       shell.rm '-rf', path.join(basic_root, 'public') 
 
-  describe 'new', -> # -------------------------------------------------------------------------
+  describe 'new', -> # --------------------------------------------------------------------
 
     test_path = path.join(root, 'testproj')
 
@@ -80,7 +80,7 @@ describe 'command', ->
         shell.rm '-rf', path.join(root, 'testproj')
         done()
 
-  describe 'plugin', -> # ---------------------------------------------------------------------
+  describe 'plugin', -> # -----------------------------------------------------------------
 
     it 'should create a template inside /plugins on \'generate\'', (done) ->
       run "cd #{basic_root}; ../../../bin/roots plugin generate", ->
@@ -94,7 +94,7 @@ describe 'command', ->
         shell.rm '-rf', path.join(basic_root, 'plugins')
         done()
 
-  describe 'version', -> # ---------------------------------------------------------------------
+  describe 'version', -> # ----------------------------------------------------------------
 
     it 'should output the correct version number for roots', (done) ->
       version = JSON.parse(fs.readFileSync('package.json')).version
@@ -102,7 +102,7 @@ describe 'command', ->
         out.replace(/\n/, '').should.eql(version)
         done()
 
-  describe 'js', -> # --------------------------------------------------------------------------
+  describe 'js', -> # ---------------------------------------------------------------------
 
     it 'should expose bower\'s interface', (done) ->
       run "cd #{basic_root}; ../../../bin/roots js", (err,out, stdout) ->
@@ -206,6 +206,18 @@ describe 'errors', ->
     run "cd #{errors_path}; ../../../bin/roots compile --no-compress", (a,b,stderr) ->
       stderr.should.match /ERROR/
       done()
+
+describe 'dynamic content', ->
+
+  dynamic_path = path.join root, 'sandbox/dynamic'
+
+  before (done) ->
+    run "cd #{dynamic_path}; ../../../bin/roots compile --no-compress", ->
+      done()
+
+  it 'compiles dynamic files', ->
+    fs.existsSync(path.join(dynamic_path, 'public/posts/hello_world.html')).should.be.ok
+    shell.rm '-rf', path.join(dynamic_path, 'public')
 
 # 
 # deploy

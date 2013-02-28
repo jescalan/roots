@@ -26,6 +26,6 @@ exports.locals =
 # If you are working with a client-side js framework that would benefit
 # from precompiled templates, set this variable to the location of a folder
 # that contains your templates. they will be precompiled to public/js/templates.js
-# and made available under window.templates if you load that file.
+# and made available under window.templates if you load the templates.js script.
 
 # exports.templates = 'views/templates'

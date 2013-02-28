@@ -4,7 +4,7 @@
 
 # Files in this list will not be compiled - minimatch supported
 
-exports.ignore_files = ['_*', 'readme*', 'roots-css', '.git', '.gitignore', '.DS_Store']
+exports.ignore_files = ['_*', 'readme*', '.git', '.gitignore', '.DS_Store']
 
 # Layout file config
 # `default` applies to all views. Overrides for specific
@@ -23,4 +23,15 @@ exports.locals =
   title_with_markup: ->
     "<h1 class='title'>#{this.title}</h1>"
 
-# run `roots help` to get help on using the command line tool
+# wouldn't usually recommend changing this, but it makes sense
+# in this particular case.
+exports.folder_config =
+  assets: 'assets'
+  views: 'layouts'
+
+# If you are working with a client-side js framework that would benefit
+# from precompiled templates, set this variable to the location of a folder
+# that contains your templates. they will be precompiled to public/js/templates.js
+# and made available under window.templates if you load the templates.js script.
+
+# exports.templates = 'views/templates'
