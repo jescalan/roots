@@ -229,7 +229,7 @@ describe 'deploy', ->
   before ->
     Deployer = require path.join(root, '../lib/deployer')
     test_adapter = { test: (input)-> return input }
-    deployer = new Deployer(test_adapter, '')
+    deployer = new Deployer(test_adapter, '', '')
     deployer.add_shell_method('test');
 
   it 'handles adapters correctly', ->
