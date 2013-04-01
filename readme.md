@@ -89,7 +89,7 @@ Contributors
 
 I would love to have more contributors, and if you've helped out, you are awesome. I want to give a huge thanks especially to these people:
 
-- [Sam Saccone](https://github.com/samccone): advice, support, and responsable for a good bit of code
+- [Sam Saccone](https://github.com/samccone): advice, support, and responsible for a good bit of code
 
 License
 -------
