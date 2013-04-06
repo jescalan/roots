@@ -1,6 +1,6 @@
 {
   "name": "roots",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "roots is a toolbox for building simple, beautiful, and efficient products for the web",
   "keywords": [
     "front-end",
@@ -10,8 +10,8 @@
     "library",
     "tool"
   ],
-  "homepage": "https://github.com/jenius/roots-cli",
-  "bugs": "https://github.com/jenius/roots-cli/issues",
+  "homepag": "https://roots.cx",
+  "bugs": "https://github.com/jenius/roots/issues",
   "author": "Jeff Escalante",
   "main": "lib",
   "bin": {
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jenius/roots-cli.git"
+    "url": "git://github.com/jenius/roots.git"
   },
   "dependencies": {
     "connect": "2.6.x",
@@ -49,7 +49,7 @@
     "js-yaml": "latest",
     "semver": "latest",
     "faye-websocket": "0.4.x",
-    "tmpl-precompile": "git://github.com/jenius/tmpl-precompile.git"
+    "tmpl-precompile": "latest"
   },
   "devDependencies": {
     "mocha": "latest",
