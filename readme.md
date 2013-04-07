@@ -17,6 +17,8 @@ Roots' main interface is it's command line tool. There are just a couple of main
 `$ roots new project-name`: Creates a new project template in the current directory, called `project-name`. 
   - append `--basic` for straight html, css, and js
   - append `--express` for an express app template with roots integrated
+  - append `--blog` for a sample of how dynamic content works (prerelease)
+  - append `--min` for a template without any comments, if you're a roots veteran
   - To use roots with rails, use the [roots-rails](http://github.com/jenius/roots-rails) ruby gem instead.
 
 `$ roots watch`: The bulk of roots' usefulness is here. This command compiles your project, opens it up in your browser, then continues watching all your files for changes. As soon as you save, roots will recompile the project and immediately refresh the browser. So fresh. 
