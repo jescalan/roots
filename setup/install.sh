@@ -14,6 +14,12 @@ sad_print(){
 # this is the whole script. it's quite simple
 # -------------------------------------------
 
+if [[ $UID != 0 ]]; then
+    echo "Please run this script with sudo:"
+    echo "sudo $0 $*"
+    exit 1
+fi
+
 if [[ -x $(command -v node) && $(node -e 'console.log(process.versions.node);') > 0.8.0 ]]; then
   echo ""
   happy_print 'node is installed and up to date!'
