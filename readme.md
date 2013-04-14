@@ -127,11 +127,9 @@ One thing that I'm particularly bad at is testing. I'll be working hard on this 
 
 ##### To Do
 
-- compile single file on save (not whole project)
-- add railway.js template
-- deploy to custom ftp server (difficult)
+- template for [compoundjs](http://compoundjs.com/)
 - image optimization (this has external dependencies... yech)
-- better testing
+- better tests
 
 Contributors
 ------------
