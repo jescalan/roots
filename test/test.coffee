@@ -7,31 +7,34 @@ run = require('child_process').exec
 root = path.join __dirname
 basic_root = path.join root, 'sandbox/basic'
 
-# 
+global.options =
+  exportDirectory: ".public"
+
+#
 # command line interface
-# 
+#
 
 # can't test watch because the process hangs - the internals of
 # the watch command are tested below in the compiler section though
 
 describe 'command', ->
-  
+
   describe 'compile', -> # ----------------------------------------------------------------
 
     before (done) ->
       run "cd #{basic_root}; ../../../bin/roots compile", done
 
-    it 'should compile files to /public', ->
-      fs.readdirSync(path.join(basic_root, 'public')).should.have.lengthOf(5)
+    it "should compile files to #{global.options.exportDirectory}", ->
+      fs.readdirSync(path.join(basic_root, global.options.exportDirectory)).should.have.lengthOf(5)
 
     it 'should minify all css and javascript', () ->
-      js_content = fs.readFileSync path.join(basic_root, 'public/js/main.js'), 'utf8'
+      js_content = fs.readFileSync path.join(basic_root, "#{global.options.exportDirectory}/js/main.js"), 'utf8'
       js_content.should.not.match /\n/
 
-    it 'should compile all files to public', ->
-      css_content = fs.readFileSync path.join(basic_root, 'public/css/example.css'), 'utf8'
+    it "should compile all files to #{global.options.exportDirectory}", ->
+      css_content = fs.readFileSync path.join(basic_root, "#{global.options.exportDirectory}/css/example.css"), 'utf8'
       css_content.should.not.match /\n/
-      shell.rm '-rf', path.join(basic_root, 'public') 
+      shell.rm '-rf', path.join(basic_root, global.options.exportDirectory)
 
   describe 'new', -> # --------------------------------------------------------------------
 
@@ -109,10 +112,10 @@ describe 'command', ->
         out.should.match /bower/
         done()
 
-# 
+#
 # compiler
-# 
- 
+#
+
 describe 'compiler', ->
 
   compiler = null
@@ -131,8 +134,8 @@ describe 'jade', ->
 
   it 'should compile jade view templates', (done) ->
     run "cd #{jade_path}; ../../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(jade_path, 'public/index.html')).should.be.ok
-      shell.rm '-rf', path.join(jade_path, 'public')
+      fs.existsSync(path.join(jade_path, "#{global.options.exportDirectory}/index.html")).should.be.ok
+      shell.rm '-rf', path.join(jade_path, global.options.exportDirectory)
       done()
 
 describe 'ejs', ->
@@ -141,8 +144,8 @@ describe 'ejs', ->
 
   it 'should compile ejs', (done) ->
     run "cd #{ejs_path}; ../../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(ejs_path, 'public/index.html')).should.be.ok
-      shell.rm '-rf', path.join(ejs_path, 'public')
+      fs.existsSync(path.join(ejs_path, "#{global.options.exportDirectory}/index.html")).should.be.ok
+      shell.rm '-rf', path.join(ejs_path, global.options.exportDirectory)
       done()
 
 describe 'coffeescript', ->
@@ -152,19 +155,19 @@ describe 'coffeescript', ->
 
   it 'should compile coffeescript and requires should work', (done) ->
     run "cd #{coffeescript_path}; ../../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(coffeescript_path, 'public/basic.js')).should.be.ok
-      fs.existsSync(path.join(coffeescript_path, 'public/require.js')).should.be.ok
-      require_content = fs.readFileSync path.join(coffeescript_path, 'public/require.js'), 'utf8'
+      fs.existsSync(path.join(coffeescript_path, "#{global.options.exportDirectory}/basic.js")).should.be.ok
+      fs.existsSync(path.join(coffeescript_path, "#{global.options.exportDirectory}/require.js")).should.be.ok
+      require_content = fs.readFileSync path.join(coffeescript_path, "#{global.options.exportDirectory}/require.js"), 'utf8'
       require_content.should.match /BASIC/
-      shell.rm '-rf', path.join(coffeescript_path, 'public')
+      shell.rm '-rf', path.join(coffeescript_path, global.options.exportDirectory)
       done()
 
   it 'should compile without closures when specified in app.coffee', (done) ->
     run "cd #{coffeescript_path_2}; ../../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(coffeescript_path_2, 'public/testz.js')).should.be.ok
-      require_content = fs.readFileSync path.join(coffeescript_path_2, 'public/testz.js'), 'utf8'
+      fs.existsSync(path.join(coffeescript_path_2, "#{global.options.exportDirectory}/testz.js")).should.be.ok
+      require_content = fs.readFileSync path.join(coffeescript_path_2, "#{global.options.exportDirectory}/testz.js"), 'utf8'
       require_content.should.not.match /function/
-      shell.rm '-rf', path.join(coffeescript_path_2, 'public')
+      shell.rm '-rf', path.join(coffeescript_path_2, global.options.exportDirectory)
       done()
 
 describe 'stylus', ->
@@ -176,27 +179,27 @@ describe 'stylus', ->
       done()
 
   it 'should compile stylus with roots css', ->
-    fs.existsSync(path.join(stylus_path, 'public/basic.css')).should.be.ok
+    fs.existsSync(path.join(stylus_path, "#{global.options.exportDirectory}/basic.css")).should.be.ok
 
   it 'should include the project directory for requires', ->
-    fs.existsSync(path.join(stylus_path, 'public/req.css')).should.be.ok
-    require_content = fs.readFileSync path.join(stylus_path, 'public/req.css'), 'utf8'
+    fs.existsSync(path.join(stylus_path, "#{global.options.exportDirectory}/req.css")).should.be.ok
+    require_content = fs.readFileSync path.join(stylus_path, "#{global.options.exportDirectory}/req.css"), 'utf8'
     require_content.should.match /#000/
-    shell.rm '-rf', path.join(stylus_path, 'public')
+    shell.rm '-rf', path.join(stylus_path, global.options.exportDirectory)
 
 describe 'static files', ->
 
   static_path = path.join root, 'sandbox/static'
-  
+
   before (done) ->
     run "cd #{static_path}; ../../../bin/roots compile --no-compress", ->
       done()
 
   it 'copies static files', ->
-    fs.existsSync(path.join(static_path, 'public/whatever.poop')).should.be.ok
-    require_content = fs.readFileSync path.join(static_path, 'public/whatever.poop'), 'utf8'
+    fs.existsSync(path.join(static_path, "#{global.options.exportDirectory}/whatever.poop")).should.be.ok
+    require_content = fs.readFileSync path.join(static_path, "#{global.options.exportDirectory}/whatever.poop"), 'utf8'
     require_content.should.match /roots dont care/
-    shell.rm '-rf', path.join(static_path, 'public')
+    shell.rm '-rf', path.join(static_path, global.options.exportDirectory)
 
 describe 'errors', ->
 
@@ -216,12 +219,12 @@ describe 'dynamic content', ->
       done()
 
   it 'compiles dynamic files', ->
-    fs.existsSync(path.join(dynamic_path, 'public/posts/hello_world.html')).should.be.ok
-    shell.rm '-rf', path.join(dynamic_path, 'public')
+    fs.existsSync(path.join(dynamic_path, "#{global.options.exportDirectory}/posts/hello_world.html")).should.be.ok
+    shell.rm '-rf', path.join(dynamic_path, global.options.exportDirectory)
 
-# 
+#
 # deploy
-# 
+#
 
 describe 'deploy', ->
   deployer = null
