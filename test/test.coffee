@@ -7,15 +7,15 @@ run = require('child_process').exec
 root = path.join __dirname
 basic_root = path.join root, 'sandbox/basic'
 
-# 
+#
 # command line interface
-# 
+#
 
 # can't test watch because the process hangs - the internals of
 # the watch command are tested below in the compiler section though
 
 describe 'command', ->
-  
+
   describe 'compile', -> # ----------------------------------------------------------------
 
     before (done) ->
@@ -31,7 +31,7 @@ describe 'command', ->
     it 'should compile all files to public', ->
       css_content = fs.readFileSync path.join(basic_root, 'public/css/example.css'), 'utf8'
       css_content.should.not.match /\n/
-      shell.rm '-rf', path.join(basic_root, 'public') 
+      shell.rm '-rf', path.join(basic_root, 'public')
 
   describe 'new', -> # --------------------------------------------------------------------
 
@@ -109,10 +109,10 @@ describe 'command', ->
         out.should.match /bower/
         done()
 
-# 
+#
 # compiler
-# 
- 
+#
+
 describe 'compiler', ->
 
   compiler = null
@@ -187,7 +187,7 @@ describe 'stylus', ->
 describe 'static files', ->
 
   static_path = path.join root, 'sandbox/static'
-  
+
   before (done) ->
     run "cd \"#{static_path}\"; ../../../bin/roots compile --no-compress", ->
       done()
@@ -219,9 +219,9 @@ describe 'dynamic content', ->
     fs.existsSync(path.join(dynamic_path, 'public/posts/hello_world.html')).should.be.ok
     shell.rm '-rf', path.join(dynamic_path, 'public')
 
-# 
+#
 # deploy
-# 
+#
 
 describe 'deploy', ->
   deployer = null
