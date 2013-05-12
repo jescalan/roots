@@ -19,7 +19,7 @@ describe 'command', ->
   describe 'compile', -> # ----------------------------------------------------------------
 
     before (done) ->
-      run "cd #{basic_root}; ../../../bin/roots compile", done
+      run "cd \"#{basic_root}\"; ../../../bin/roots compile", done
 
     it 'should compile files to /public', ->
       fs.readdirSync(path.join(basic_root, 'public')).should.have.lengthOf(5)
@@ -38,7 +38,7 @@ describe 'command', ->
     test_path = path.join(root, 'testproj')
 
     it 'should use the default template if no flags present', (done) ->
-      run "cd #{root}; ../bin/roots new testproj", ->
+      run "cd \"#{root}\"; ../bin/roots new testproj", ->
         fs.existsSync(test_path).should.be.ok
         fs.existsSync(path.join(test_path, 'app.coffee')).should.be.ok
         fs.existsSync(path.join(test_path, 'readme.md')).should.be.ok
@@ -61,7 +61,7 @@ describe 'command', ->
         done()
 
     it 'should use express template if the --express flag is present', (done) ->
-      run "cd #{root}; ../bin/roots new testproj --express", ->
+      run "cd \"#{root}\"; ../bin/roots new testproj --express", ->
         fs.existsSync(test_path).should.be.ok
         fs.existsSync(path.join(test_path, 'app.js')).should.be.ok
         fs.existsSync(path.join(test_path, 'routes')).should.be.ok
@@ -72,7 +72,7 @@ describe 'command', ->
         done()
 
     it 'should use basic template if the --basic flag is present', (done) ->
-      run "cd #{root}; ../bin/roots new testproj --basic", ->
+      run "cd \"#{root}\"; ../bin/roots new testproj --basic", ->
         fs.existsSync(test_path).should.be.ok
         fs.existsSync(path.join(test_path, 'views/index.html')).should.be.ok
         fs.existsSync(path.join(test_path, 'assets/js/main.js')).should.be.ok
@@ -83,13 +83,13 @@ describe 'command', ->
   describe 'plugin', -> # -----------------------------------------------------------------
 
     it 'should create a template inside /plugins on \'generate\'', (done) ->
-      run "cd #{basic_root}; ../../../bin/roots plugin generate", ->
+      run "cd \"#{basic_root}\"; ../../../bin/roots plugin generate", ->
         fs.existsSync(path.join(basic_root, 'plugins/template.coffee')).should.be.ok
         shell.rm '-rf', path.join(basic_root, 'plugins')
         done()
 
     it 'should use the javascript template if called with --js', (done) ->
-      run "cd #{basic_root}; ../../../bin/roots plugin generate --js", ->
+      run "cd \"#{basic_root}\"; ../../../bin/roots plugin generate --js", ->
         fs.existsSync(path.join(basic_root, 'plugins/template.js')).should.be.ok
         shell.rm '-rf', path.join(basic_root, 'plugins')
         done()
@@ -105,7 +105,7 @@ describe 'command', ->
   describe 'js', -> # ---------------------------------------------------------------------
 
     it 'should expose bower\'s interface', (done) ->
-      run "cd #{basic_root}; ../../../bin/roots js", (err,out, stdout) ->
+      run "cd \"#{basic_root}\"; ../../../bin/roots js", (err,out, stdout) ->
         out.should.match /bower/
         done()
 
@@ -130,7 +130,7 @@ describe 'jade', ->
   jade_path = path.join root, 'sandbox/jade'
 
   it 'should compile jade view templates', (done) ->
-    run "cd #{jade_path}; ../../../bin/roots compile --no-compress", ->
+    run "cd \"#{jade_path}\"; ../../../bin/roots compile --no-compress", ->
       fs.existsSync(path.join(jade_path, 'public/index.html')).should.be.ok
       shell.rm '-rf', path.join(jade_path, 'public')
       done()
@@ -140,7 +140,7 @@ describe 'ejs', ->
   ejs_path = path.join root, 'sandbox/ejs'
 
   it 'should compile ejs', (done) ->
-    run "cd #{ejs_path}; ../../../bin/roots compile --no-compress", ->
+    run "cd \"#{ejs_path}\"; ../../../bin/roots compile --no-compress", ->
       fs.existsSync(path.join(ejs_path, 'public/index.html')).should.be.ok
       shell.rm '-rf', path.join(ejs_path, 'public')
       done()
@@ -151,7 +151,7 @@ describe 'coffeescript', ->
   coffeescript_path_2 = path.join root, 'sandbox/coffee-basic'
 
   it 'should compile coffeescript and requires should work', (done) ->
-    run "cd #{coffeescript_path}; ../../../bin/roots compile --no-compress", ->
+    run "cd \"#{coffeescript_path}\"; ../../../bin/roots compile --no-compress", ->
       fs.existsSync(path.join(coffeescript_path, 'public/basic.js')).should.be.ok
       fs.existsSync(path.join(coffeescript_path, 'public/require.js')).should.be.ok
       require_content = fs.readFileSync path.join(coffeescript_path, 'public/require.js'), 'utf8'
@@ -160,7 +160,7 @@ describe 'coffeescript', ->
       done()
 
   it 'should compile without closures when specified in app.coffee', (done) ->
-    run "cd #{coffeescript_path_2}; ../../../bin/roots compile --no-compress", ->
+    run "cd \"#{coffeescript_path_2}\"; ../../../bin/roots compile --no-compress", ->
       fs.existsSync(path.join(coffeescript_path_2, 'public/testz.js')).should.be.ok
       require_content = fs.readFileSync path.join(coffeescript_path_2, 'public/testz.js'), 'utf8'
       require_content.should.not.match /function/
@@ -172,7 +172,7 @@ describe 'stylus', ->
   stylus_path = path.join root, 'sandbox/stylus'
 
   before (done) ->
-    run "cd #{stylus_path}; ../../../bin/roots compile --no-compress", ->
+    run "cd \"#{stylus_path}\"; ../../../bin/roots compile --no-compress", ->
       done()
 
   it 'should compile stylus with roots css', ->
@@ -189,7 +189,7 @@ describe 'static files', ->
   static_path = path.join root, 'sandbox/static'
   
   before (done) ->
-    run "cd #{static_path}; ../../../bin/roots compile --no-compress", ->
+    run "cd \"#{static_path}\"; ../../../bin/roots compile --no-compress", ->
       done()
 
   it 'copies static files', ->
@@ -203,7 +203,7 @@ describe 'errors', ->
   errors_path = path.join root, 'sandbox/errors'
 
   it 'notifies you if theres an error', (done) ->
-    run "cd #{errors_path}; ../../../bin/roots compile --no-compress", (a,b,stderr) ->
+    run "cd \"#{errors_path}\"; ../../../bin/roots compile --no-compress", (a,b,stderr) ->
       stderr.should.match /ERROR/
       done()
 
@@ -212,7 +212,7 @@ describe 'dynamic content', ->
   dynamic_path = path.join root, 'sandbox/dynamic'
 
   before (done) ->
-    run "cd #{dynamic_path}; ../../../bin/roots compile --no-compress", ->
+    run "cd \"#{dynamic_path}\"; ../../../bin/roots compile --no-compress", ->
       done()
 
   it 'compiles dynamic files', ->
