@@ -63,7 +63,7 @@ describe 'command', ->
     it 'should use express template if the --express flag is present', (done) ->
       run "cd \"#{root}\"; ../bin/roots new testproj --express", ->
         fs.existsSync(test_path).should.be.ok
-        fs.existsSync(path.join(test_path, 'app.js')).should.be.ok
+        fs.existsSync(path.join(test_path, 'app.coffee')).should.be.ok
         fs.existsSync(path.join(test_path, 'routes')).should.be.ok
         fs.existsSync(path.join(test_path, 'assets')).should.be.ok
         fs.existsSync(path.join(test_path, 'views')).should.be.ok
