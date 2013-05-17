@@ -9,10 +9,10 @@ yaml_parser = require './yaml_parser'
 
 module.exports = class CompileHelper
 
-  constructor: (@file) ->
+  constructor: (@file, strip) ->
     options = global.options
 
-    @export_path = output_path(@file)
+    @export_path = output_path(@file, strip)
     @extension = path.extname(@file).slice(1)
     @target_extension = path.extname(@export_path).slice(1)
     @file_contents = fs.readFileSync(@file, 'utf8')
