@@ -128,11 +128,18 @@ describe 'compiler', ->
 describe 'jade', ->
 
   jade_path = path.join root, 'sandbox/jade'
+  jade_path_2 = path.join root, 'sandbox/jade'
 
   it 'should compile jade view templates', (done) ->
     run "cd \"#{jade_path}\"; ../../../bin/roots compile --no-compress", ->
       fs.existsSync(path.join(jade_path, 'public/index.html')).should.be.ok
       shell.rm '-rf', path.join(jade_path, 'public')
+      done()
+
+  it 'should compile templates with no layout', (done) ->
+    run "cd #{jade_path_2}; ../../../bin/roots compile --no-compress", ->
+      fs.existsSync(path.join(jade_path_2, 'public/index.html')).should.be.ok
+      shell.rm '-rf', path.join(jade_path_2, 'public')
       done()
 
 describe 'ejs', ->
