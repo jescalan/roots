@@ -1,5 +1,6 @@
-js = ["http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"]
+require.config
+  paths:
+    jquery: '//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min'
 
-require js, ->
-  $ ->
-    console.log 'hello jquery'
+require ['jquery'], ($) ->
+  console.log 'jquery loaded'
