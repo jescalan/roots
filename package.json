@@ -49,7 +49,7 @@
     "semver": "1.1.x",
     "faye-websocket": "0.4.x",
     "fresher": "0.0.x",
-    "tmpl-precompile": "0.3.x"
+    "tmpl-precompile": "git+https://github.com/jenius/tmpl-precompile.git"
   },
   "devDependencies": {
     "mocha": "latest",
