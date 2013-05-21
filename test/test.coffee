@@ -226,7 +226,22 @@ describe 'dynamic content', ->
     fs.existsSync(path.join(dynamic_path, 'public/posts/hello_world.html')).should.be.ok
     shell.rm '-rf', path.join(dynamic_path, 'public')
 
-#
+
+describe 'precompiled templates', ->
+
+  precompile_path = path.join root, 'sandbox/precompile'
+
+  before (done) ->
+    run "cd #{precompile_path}; ../../../bin/roots compile --no-compress", ->
+      done()
+
+  it 'precompiles templates', ->
+    fs.existsSync(path.join(precompile_path, 'public/js/templates.js')).should.be.ok
+    require_content = fs.readFileSync path.join(precompile_path, 'public/js/templates.js'), 'utf8'
+    require_content.should.match(/\<p\>hello world\<\/p\>/)
+    shell.rm '-rf', path.join(precompile_path, 'public')
+
+# 
 # deploy
 #
 
