@@ -128,7 +128,7 @@ describe 'compiler', ->
 describe 'jade', ->
 
   jade_path = path.join root, 'sandbox/jade'
-  jade_path_2 = path.join root, 'sandbox/jade'
+  jade_path_2 = path.join root, 'sandbox/no-layout'
 
   it 'should compile jade view templates', (done) ->
     run "cd \"#{jade_path}\"; ../../../bin/roots compile --no-compress", ->
