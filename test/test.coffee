@@ -53,7 +53,6 @@ describe 'command', ->
         fs.existsSync(path.join(test_path, 'assets/js')).should.be.ok
         fs.existsSync(path.join(test_path, 'assets/js/main.coffee')).should.be.ok
         fs.existsSync(path.join(test_path, 'assets/js/_helper.coffee')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/js/pie.htc')).should.be.ok
         fs.existsSync(path.join(test_path, 'assets/js/require.js')).should.be.ok
         fs.existsSync(path.join(test_path, 'assets/img')).should.be.ok
         fs.existsSync(path.join(test_path, 'assets/img/noise.png')).should.be.ok
