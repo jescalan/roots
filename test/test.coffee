@@ -186,6 +186,7 @@ describe 'stylus', ->
 
   it 'should include the project directory for requires', ->
     fs.existsSync(path.join(stylus_path, 'public/req.css')).should.be.ok
+    fs.existsSync(path.join(stylus_path, 'public/nested/all.css')).should.be.ok
     require_content = fs.readFileSync path.join(stylus_path, 'public/req.css'), 'utf8'
     require_content.should.match /#000/
     shell.rm '-rf', path.join(stylus_path, 'public')

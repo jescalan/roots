@@ -1,1 +1,1 @@
-exports.ignore_files = ['partial']
+exports.ignore_files = ['_*']
