@@ -244,6 +244,20 @@ describe 'precompiled templates', ->
     require_content.should.match(/\<p\>hello world\<\/p\>/)
     shell.rm '-rf', path.join(precompile_path, 'public')
 
+describe 'multipass compiles', ->
+
+  multipass_path = path.join root, 'sandbox/multipass'
+
+  before (done) ->
+    run "cd #{multipass_path}; ../../../bin/roots compile --no-compress", ->
+      done()
+
+  it 'will compile a single file multiple times accurately', ->
+    fs.existsSync(path.join(multipass_path, 'public/index.html')).should.be.ok
+    content = fs.readFileSync path.join(multipass_path, 'public/index.html'), 'utf8'
+    content.should.match(/blarg world/)
+    shell.rm '-rf', path.join(multipass_path, 'public')
+
 # 
 # deploy
 #
