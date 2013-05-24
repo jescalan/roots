@@ -224,6 +224,9 @@ describe 'dynamic content', ->
 
   it 'compiles dynamic files', ->
     fs.existsSync(path.join(dynamic_path, 'public/posts/hello_world.html')).should.be.ok
+    content = fs.readFileSync path.join(dynamic_path, 'public/posts/hello_world.html'), 'utf8'
+    content.should.match(/\<h1\>hello world\<\/h1\>/)
+    content.should.match(/This is my first blog post/)
     shell.rm '-rf', path.join(dynamic_path, 'public')
 
 
