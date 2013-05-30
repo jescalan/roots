@@ -14,10 +14,12 @@ basic_root = path.join root, 'sandbox/basic'
 # can't test watch because the process hangs - the internals of
 # the watch command are tested below in the compiler section though
 
+files_exist = (test_path, files) ->
+  for file in files
+    fs.existsSync(path.join(test_path, file)).should.be.ok
+
 describe 'command', ->
-
   describe 'compile', -> # ----------------------------------------------------------------
-
     before (done) ->
       run "cd \"#{basic_root}\"; ../../../bin/roots compile", done
 
@@ -34,53 +36,57 @@ describe 'command', ->
       shell.rm '-rf', path.join(basic_root, 'public')
 
   describe 'new', -> # --------------------------------------------------------------------
-
     test_path = path.join(root, 'testproj')
 
     it 'should use the default template if no flags present', (done) ->
       run "cd \"#{root}\"; ../bin/roots new testproj", ->
-        fs.existsSync(test_path).should.be.ok
-        fs.existsSync(path.join(test_path, 'app.coffee')).should.be.ok
-        fs.existsSync(path.join(test_path, 'readme.md')).should.be.ok
-        fs.existsSync(path.join(test_path, 'views')).should.be.ok
-        fs.existsSync(path.join(test_path, 'views/index.jade')).should.be.ok
-        fs.existsSync(path.join(test_path, 'views/layout.jade')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/favicon.ico')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/css')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/css/_settings.styl')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/css/master.styl')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/js')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/js/main.coffee')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/js/_helper.coffee')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/js/require.js')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/img')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/img/noise.png')).should.be.ok
+        files_exist(test_path,[
+          '/'
+          'app.coffee'
+          'readme.md'
+          'views'
+          'views/index.jade'
+          'views/layout.jade'
+          'assets'
+          'assets/favicon.ico'
+          'assets/css'
+          'assets/css/_settings.styl'
+          'assets/css/master.styl'
+          'assets/js'
+          'assets/js/main.coffee'
+          'assets/js/_helper.coffee'
+          'assets/js/require.js'
+          'assets/img'
+          'assets/img/noise.png'
+        ])
         shell.rm '-rf', path.join(root, 'testproj')
         done()
 
     it 'should use express template if the --express flag is present', (done) ->
       run "cd \"#{root}\"; ../bin/roots new testproj --express", ->
-        fs.existsSync(test_path).should.be.ok
-        fs.existsSync(path.join(test_path, 'app.js')).should.be.ok
-        fs.existsSync(path.join(test_path, 'routes')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets')).should.be.ok
-        fs.existsSync(path.join(test_path, 'views')).should.be.ok
-        fs.existsSync(path.join(test_path, 'public')).should.be.ok
+        files_exist(test_path,[
+          '/'
+          'app.js'
+          'routes'
+          'assets'
+          'views'
+          'public'
+        ])
         shell.rm '-rf', path.join(root, 'testproj')
         done()
 
     it 'should use basic template if the --basic flag is present', (done) ->
       run "cd \"#{root}\"; ../bin/roots new testproj --basic", ->
-        fs.existsSync(test_path).should.be.ok
-        fs.existsSync(path.join(test_path, 'views/index.html')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/js/main.js')).should.be.ok
-        fs.existsSync(path.join(test_path, 'assets/css/example.css')).should.be.ok
+        files_exist(test_path,[
+          '/'
+          'views/index.html'
+          'assets/js/main.js'
+          'assets/css/example.css'
+        ])
         shell.rm '-rf', path.join(root, 'testproj')
         done()
 
   describe 'plugin', -> # -----------------------------------------------------------------
-
     it 'should create a template inside /plugins on \'generate\'', (done) ->
       run "cd \"#{basic_root}\"; ../../../bin/roots plugin generate", ->
         fs.existsSync(path.join(basic_root, 'plugins/template.coffee')).should.be.ok
@@ -94,7 +100,6 @@ describe 'command', ->
         done()
 
   describe 'version', -> # ----------------------------------------------------------------
-
     it 'should output the correct version number for roots', (done) ->
       version = JSON.parse(fs.readFileSync('package.json')).version
       run './bin/roots version', (err,out) ->
@@ -102,18 +107,12 @@ describe 'command', ->
         done()
 
   describe 'js', -> # ---------------------------------------------------------------------
-
     it 'should expose bower\'s interface', (done) ->
       run "cd \"#{basic_root}\"; ../../../bin/roots js", (err,out, stdout) ->
         out.should.match /bower/
         done()
 
-#
-# compiler
-#
-
 describe 'compiler', ->
-
   compiler = null
 
   before ->
@@ -125,7 +124,6 @@ describe 'compiler', ->
     compiler.finish()
 
 describe 'jade', ->
-
   jade_path = path.join root, 'sandbox/jade'
   jade_path_2 = path.join root, 'sandbox/no-layout'
 
@@ -142,7 +140,6 @@ describe 'jade', ->
       done()
 
 describe 'ejs', ->
-
   ejs_path = path.join root, 'sandbox/ejs'
 
   it 'should compile ejs', (done) ->
@@ -152,7 +149,6 @@ describe 'ejs', ->
       done()
 
 describe 'coffeescript', ->
-
   coffeescript_path = path.join root, 'sandbox/coffeescript'
   coffeescript_path_2 = path.join root, 'sandbox/coffee-basic'
 
@@ -174,7 +170,6 @@ describe 'coffeescript', ->
       done()
 
 describe 'stylus', ->
-
   stylus_path = path.join root, 'sandbox/stylus'
 
   before (done) ->
@@ -192,7 +187,6 @@ describe 'stylus', ->
     shell.rm '-rf', path.join(stylus_path, 'public')
 
 describe 'static files', ->
-
   static_path = path.join root, 'sandbox/static'
 
   before (done) ->
@@ -206,7 +200,6 @@ describe 'static files', ->
     shell.rm '-rf', path.join(static_path, 'public')
 
 describe 'errors', ->
-
   errors_path = path.join root, 'sandbox/errors'
 
   it 'notifies you if theres an error', (done) ->
@@ -215,7 +208,6 @@ describe 'errors', ->
       done()
 
 describe 'dynamic content', ->
-
   dynamic_path = path.join root, 'sandbox/dynamic'
 
   before (done) ->
@@ -229,9 +221,7 @@ describe 'dynamic content', ->
     content.should.match(/This is my first blog post/)
     shell.rm '-rf', path.join(dynamic_path, 'public')
 
-
 describe 'precompiled templates', ->
-
   precompile_path = path.join root, 'sandbox/precompile'
 
   before (done) ->
@@ -245,7 +235,6 @@ describe 'precompiled templates', ->
     shell.rm '-rf', path.join(precompile_path, 'public')
 
 describe 'multipass compiles', ->
-
   multipass_path = path.join root, 'sandbox/multipass'
 
   before (done) ->
@@ -257,10 +246,6 @@ describe 'multipass compiles', ->
     content = fs.readFileSync path.join(multipass_path, 'public/index.html'), 'utf8'
     content.should.match(/blarg world/)
     shell.rm '-rf', path.join(multipass_path, 'public')
-
-# 
-# deploy
-#
 
 describe 'deploy', ->
   deployer = null
