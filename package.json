@@ -10,7 +10,7 @@
     "library",
     "tool"
   ],
-  "homepage": "https://roots.cx",
+  "homepage": "http://roots.cx",
   "bugs": "https://github.com/jenius/roots/issues",
   "author": "Jeff Escalante",
   "main": "lib",
