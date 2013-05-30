@@ -12,46 +12,50 @@ compressor = require './utils/compressor'
 module.exports = ->
   global.options.debug.log "precompiling templates", "yellow"
   return false if typeof global.options.templates is "undefined"
-  root = path.join(global.options.templates, "/")
-  output_path = path.normalize("public/js/templates.js")
-  mkdirp.sync path.dirname(output_path)
+  template_dir = path.join process.cwd(), global.options.templates
 
   precompiler = new Precompiler(
-    source: path.normalize(process.cwd() + '/' + root)
-    output: output_path
-    templates: _.map(fs.readdirSync(
-      path.join(process.cwd(), root)),
-      (f) -> path.basename f, ".jade"
+    templates: _.map(
+      fs.readdirSync(template_dir),
+      (f) -> path.join template_dir, f
     )
   )
+
   buf = precompiler.compile()
   buf = compressor buf, 'js'
+
+  # TODO: make output folder dynamic
+  output_path = path.normalize("public/js/templates.js")
+  mkdirp.sync path.dirname(output_path)
   fs.writeFileSync output_path, buf
 
 
 class Precompiler
+  ###*
+   * deals with setting up the variables for options
+   * @param {Object} options = {} an object holding all the options to be
+     passed to the compiler. 'templates' must be specified.
+  ###
   constructor: (options = {}) ->
     defaults =
+      include_helpers: true
       inline: false
       debug: false
       namespace: "templates"
-      source: ''
-      output: ''
-      templates: undefined
+      templates: undefined # an array of template filenames
 
     _.extend @, defaults, options
 
-  ###
-  compile()
-  Description: Flow control and execution for the compilation
+  ###*
+   * loop through all the templates specified, compile them, and add a wrapper
+   * @return {String} the source of a JS object which holds all the templates
   ###
   compile: ->
-    buf = []
-    buf.push """
+    buf = ["""
     (function(){
       window.#{@namespace} = window.#{@namespace} || {};
-      #{@helpers() if @helpers isnt false and @inline isnt true}
-    """
+      #{@helpers() if @include_helpers isnt false and @inline isnt true}
+    """]
 
     for template in @templates
       buf.push @compileTemplate(template).toString()
@@ -59,41 +63,37 @@ class Precompiler
     buf.push '})();'
     return buf.join ''
 
+  ###*
+   * compile individual templates
+   * @param {String} template the full filename & path of the template to be compiled
+   * @return {String} source of the template function
   ###
-  compileTemplate()
-  Description: Compiles individual templates and returns them to compile()
-  ###
-  compileTemplate : (template) ->
-    templateNamespace = template.replace(/\//g, '.') # Replaces '/' with '.'
-    sourceFile = @source + template + '.jade'
-    data = fs.readFileSync(sourceFile, 'utf8')
+  compileTemplate: (template) ->
+    templateNamespace = path.basename(template, '.jade').replace(/\//g, '.') # Replaces '/' with '.'
+    data = fs.readFileSync(template, 'utf8')
+    data = jade.compile(data, { compileDebug: @debug || false, inline: @inline || false, client: true })
+    return "#{@namespace}.#{templateNamespace} = #{data};\n"
 
-    "#{@namespace}.#{templateNamespace} = #{jade.compile(data, { compileDebug: @debug || false, inline: @inline || false, client: true })};\n"
-
-  ###
-  helpers()
-  Description: Gets Jade's helpers and combines them into string
+  ###*
+   * Gets Jade's helpers and combines them into string
+   * @return {String} source of Jade's helpers
   ###
   helpers: ->
-    # Get Jade helpers
-    attrs = jade.runtime.attrs.toString().replace(/exports\./g,'')
-    escape = jade.runtime.escape.toString()
-    rethrow = jade.runtime.rethrow.toString()
+    obj = [
+      jade.runtime.attrs.toString().replace(/exports\./g,''),
+      jade.runtime.escape.toString()
+    ]
 
     if @debug
-      obj = '
-        var jade = {
-          attrs: attrs,
-          escape: escape,
-          rethrow: rethrow
-        };\n
-      '
-      [attrs, escape, rethrow, obj].join('\n')
-    else
-      obj = '
-        var jade = {
-          attrs: attrs,
-          escape: escape
-        };\n
-      '
-      [attrs, escape, obj].join('\n')
+      obj.push jade.runtime.rethrow.toString()
+
+    obj.push ["""
+    var jade = {
+      attrs: attrs,
+      escape: escape #{
+        if @debug then ',\n  rethrow: rethrow' else ''
+      }
+    };
+    """]
+
+    return obj.join('\n')
