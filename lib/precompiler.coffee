@@ -1,17 +1,17 @@
 jade = require "jade"
 fs = require "fs"
-util = require "util"
 path = require "path"
 _ = require "underscore"
 mkdirp = require "mkdirp"
 compressor = require './utils/compressor'
 
-# @api private
-# precompiles jade templates to javascript functions
-# then writes them to a file.
+###*
+ * compile jade templates into JS functions for use on the client-side, and
+   save it to a specified file
+###
 module.exports = ->
-  global.options.debug.log "precompiling templates", "yellow"
-  return false if typeof global.options.templates is "undefined"
+  global.options.debug.log 'precompiling templates', 'yellow'
+  return false if not global.options.templates?
   template_dir = path.join process.cwd(), global.options.templates
 
   precompiler = new Precompiler(
@@ -25,7 +25,7 @@ module.exports = ->
   buf = compressor buf, 'js'
 
   # TODO: make output folder dynamic
-  output_path = path.normalize("public/js/templates.js")
+  output_path = path.normalize('public/js/templates.js')
   mkdirp.sync path.dirname(output_path)
   fs.writeFileSync output_path, buf
 
@@ -35,13 +35,14 @@ class Precompiler
    * deals with setting up the variables for options
    * @param {Object} options = {} an object holding all the options to be
      passed to the compiler. 'templates' must be specified.
+   * @constructor
   ###
   constructor: (options = {}) ->
     defaults =
       include_helpers: true
       inline: false
       debug: false
-      namespace: "templates"
+      namespace: 'templates'
       templates: undefined # an array of template filenames
 
     _.extend @, defaults, options
@@ -49,6 +50,7 @@ class Precompiler
   ###*
    * loop through all the templates specified, compile them, and add a wrapper
    * @return {String} the source of a JS object which holds all the templates
+   * @public
   ###
   compile: ->
     buf = ["""
@@ -67,6 +69,7 @@ class Precompiler
    * compile individual templates
    * @param {String} template the full filename & path of the template to be compiled
    * @return {String} source of the template function
+   * @private
   ###
   compileTemplate: (template) ->
     templateNamespace = path.basename(template, '.jade').replace(/\//g, '.') # Replaces '/' with '.'
@@ -77,23 +80,24 @@ class Precompiler
   ###*
    * Gets Jade's helpers and combines them into string
    * @return {String} source of Jade's helpers
+   * @private
   ###
   helpers: ->
-    obj = [
+    buf = [
       jade.runtime.attrs.toString().replace(/exports\./g,''),
       jade.runtime.escape.toString()
     ]
 
     if @debug
-      obj.push jade.runtime.rethrow.toString()
+      buf.push jade.runtime.rethrow.toString()
 
-    obj.push ["""
+    buf.push """
     var jade = {
       attrs: attrs,
       escape: escape #{
         if @debug then ',\n  rethrow: rethrow' else ''
       }
     };
-    """]
+    """
 
-    return obj.join('\n')
+    return buf.join('\n')
