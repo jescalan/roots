@@ -48,8 +48,7 @@
     "js-yaml": "2.0.x",
     "semver": "1.1.x",
     "faye-websocket": "0.6.x",
-    "fresher": "0.0.x",
-    "tmpl-precompile": "git+https://github.com/jenius/tmpl-precompile.git"
+    "fresher": "0.0.x"
   },
   "devDependencies": {
     "mocha": "latest",
