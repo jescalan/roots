@@ -10,11 +10,11 @@ file_helper = require './utils/file_helper'
 
 class Compiler extends EventEmitter
   finish: ->
-    @emit "finished"
+    @emit 'finished'
 
   compile: (file, cb) ->
     matching_adapters = get_adapters_by_extension(
-      path.basename(file).split(".").slice(1)
+      path.basename(file).split('.').slice(1)
     )
     fh = file_helper(file)
     matching_adapters.forEach (adapter, i) ->
@@ -25,7 +25,7 @@ class Compiler extends EventEmitter
         fh.set_layout()
 
       adapter.compile fh, (err, compiled) ->
-        return @emit("error", err) if err
+        return @emit('error', err) if err
 
         pass_through = ->
           fh.contents = compiled
@@ -38,7 +38,7 @@ class Compiler extends EventEmitter
           if fh.layout_path
             compile_into_layout fh, adapter, compiled, (compiled_with_layout) ->
               write compiled_with_layout
-          else if typeof compiled is "function"
+          else if typeof compiled is 'function'
             write compiled(fh.locals())
           else
             write compiled
@@ -52,21 +52,21 @@ class Compiler extends EventEmitter
     # TODO: Run the file copy operations as async (ncp)
     destination = output_path(file)
     extname = path.extname(file).slice(1)
-    types = ["html", "css", "js"]
+    types = ['html', 'css', 'js']
     if types.indexOf(extname) > 0
-      write_content = fs.readFileSync(file, "utf8")
+      write_content = fs.readFileSync(file, 'utf8')
       if global.options.compress
         write_content = compress(write_content, extname)
       fs.writeFileSync destination, write_content
     else
-      shell.cp "-f", file, destination
-    options.debug.log "copied " + file.replace(process.cwd(), "")
+      shell.cp '-f', file, destination
+    options.debug.log 'copied ' + file.replace(process.cwd(), '')
     cb()
 
 
 module.exports = Compiler
 
-plugin_path = path.join(process.cwd() + "/plugins")
+plugin_path = path.join(process.cwd() + '/plugins')
 plugins = fs.existsSync(plugin_path) and shell.ls(plugin_path)
 
 # @api private
@@ -84,8 +84,8 @@ compile_into_layout = (fh, adapter, compiled, cb) ->
     path: fh.layout_path
     contents: fh.layout_contents
 
-  if typeof compiled isnt "function"
-    console.log "html compilers must output a function"
+  if typeof compiled isnt 'function'
+    console.log 'html compilers must output a function'
 
   adapter.compile file_mock, (err, layout) ->
     page = compiled(fh.locals())
