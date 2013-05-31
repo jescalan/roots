@@ -48,6 +48,7 @@
     "js-yaml": "2.0.x",
     "semver": "1.1.x",
     "faye-websocket": "0.6.x",
+    "transformers": "2.x.x",
     "fresher": "0.0.x"
   },
   "devDependencies": {
