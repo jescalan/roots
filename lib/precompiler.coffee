@@ -24,7 +24,7 @@ module.exports = ->
   buf = compressor buf, 'js'
 
   # TODO: make output path configurable
-  output_path = path.normalize('public/js/templates.js')
+  output_path = path.normalize("#{options.output_folder}/js/templates.js")
   mkdirp.sync path.dirname(output_path)
   fs.writeFileSync output_path, buf
 
