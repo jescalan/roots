@@ -17,8 +17,8 @@ Roots' main interface is it's command line tool. There are just a couple of main
 `$ roots new project-name`: Creates a new project template in the current directory, called `project-name`. 
   - append `--basic` for straight html, css, and js
   - append `--express` for an express app template with roots integrated
-  - append `--blog` for a sample of how dynamic content works (prerelease)
-  - append `--min` for a template without any comments, if you're a roots veteran
+  - append `--blog` for a sample of how dynamic content works
+  - append `--min` for a template for roots veterans (no comments, jade layouts)
   - To use roots with rails, use the [roots-rails](http://github.com/jenius/roots-rails) ruby gem instead.
 
 `$ roots watch`: The bulk of roots' usefulness is here. This command compiles your project, opens it up in your browser, then continues watching all your files for changes. As soon as you save, roots will recompile the project and immediately refresh the browser. So fresh. 
@@ -49,13 +49,14 @@ Features
 - intelligently minifies html, css, and js on deploy
 - efficient client-side js management through [bower](http://twitter.github.com/bower/) and [require.js](http://requirejs.org/)
 - easy to extend with a simple and well-documented plugin interface
-- automatically precompiles jade templates for use in client-side MVCs like backbone _(coming soon)_
-- use dynamic content to create collections, blogs, etc. _(coming soon)_
+- automatically precompiles jade templates for use in client-side MVCs like backbone
+- use dynamic content to create collections, blogs, etc.
+- compile a single file multiple times by adding another extension
 
-CSS Library
+Axis CSS
 -----------
 
-Roots ships with an awesome feature-rich css library built on top of stylus. This library lives [in it's own repo](http://github.com/jenius/roots-css), and the documentation for it [can be found here](http://roots.cx/css).
+Roots ships with an awesome feature-rich css library built on top of stylus. This library lives [in it's own repo](http://github.com/jenius/axis), and the documentation for it [can be found here](http://roots.cx/axis).
 
 Client Side JS
 --------------
@@ -73,7 +74,7 @@ There are a lot of great open-source packages registered with bower. Check them 
 Plugins
 -------
 
-Roots can easily be extended with new compilers on a per-project basis. See the [documentation for plugins](http://roots.cx#plugins) for more info.
+Roots can easily be extended with new compilers on a per-project basis. See the [documentation for plugins](http://roots.cx/docs#plugins) for more info.
 
 Precompiled Templates
 ---------------------
@@ -84,22 +85,22 @@ Roots can precompile specific templates and make them available in your views. T
 
 - Put a jade file inside that folder. This will be your template, so create it as you'd like.
 
-- When you compile your project, it will not create a file called `templates.js` inside your `js` folder. Load this file on to your page either directly or using require.js.
+- When you compile your project, it will create a file called `templates.js` inside your `js` folder. Load this file on to your page either directly or using require.js.
 
-- You should now have access to a global variable called `templates` -- this is an object that holds each of your precompiled templates as javascript functions. The key will be the filename, and the value will be a function that when executed will generate html. If you have any variables in the template, pass in a single object that holds the variable names as keys and variables values as values.
+- You should now have access to a global variable called `templates` -- this is an object that holds each of your precompiled templates as javascript functions. The key will be the filename, and the value will be a function that when executed will generate html. If you have any variables in the template, execute the function passing in a single object that holds the variable names and values.
 
-- If this is confusing, feel free to reach out to me personally. There will soon be a tutorial video stepping through this process, but I don't have it up yet on the roots homepage :smile:
+- If this is confusing, check out [this tutorial video](http://www.youtube.com/watch?v=_lPLVd0UsdI)
 
 Dynamic Content
 ---------------
 
-The most recent addition to roots will allow you to create dynamic content, much like jekyll, but a little cleaner and more flexible. The addition of dynamic content to roots makes it suitable for any website that doesn't need user accounts and logins. I think this is awesome because it widens the breadth of projects which you can create as a static site. And static sites are awesome because they are simple and fast as hell. Here's a short walkthrough of how to use dynamic content - I'll use a blog as an example:
+In roots, you can work with dynamic content much like jekyll, but a little cleaner and more flexible. The addition of dynamic content to roots makes it suitable for any website that doesn't need user accounts and logins. I think this is awesome because it widens the breadth of projects which you can create as a static site. And static sites are awesome because they are simple and fast as hell. Here's a short walkthrough of how to use dynamic content - I'll use a blog as an example:
 
 - Create a folder at the root of the project called the name of your collection. Since I'm making a blog here, I'm going to call it "posts".
 
 - Inside this folder, create a new jade file and name it whatever you want. This is your first blog post, whoo :tada:
 
-- Dyanmic files are defined by [yaml front matter](https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter), exactly like jekyll. To make this file dynamic, add a front matter block, like this for example:
+- Dynamic files are defined by [yaml front matter](https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter), exactly like jekyll. To make this file dynamic, add a front matter block, like this for example:
 
 ```yaml
 ---    
@@ -118,28 +119,29 @@ date: 7/9/2013
 
 - If you run `roots new whatever --blog`, I have a template set up that already has all the boilerplate set up, if you want to test it real quick.
 
+- See the [docs for dynamic content](http://roots.cx/docs#dynamic) for more help!
+
+Multipass Compiles
+------------------
+
+Want to compile a a single file for two different languages? No worries, just add a second (or third) extension to the file. As long as the two language parsers don't conflict, it will compile out cleanly. Feel free to write a [plugin](http://roots.cx/docs#plugins) to handle any other language you please.
+
 The Future
 ----------
 
-Let it be known that this is my first large project with node.js - I'm no expert. I definitely still have plenty to learn, and if you have any advice about how to improve the code or structure of this project, it is more than welcome - feel free to [email me](http://jenius.me/#!/contact), put in a pull request, or file an issue and I'd be happy to take a look : )
-
-One thing that I'm particularly bad at is testing. I'll be working hard on this in the coming months, but if anyone would like to help out with testing particularly, that would be incredible. Below, I keep track of what's on my list to implement next.
-
-##### To Do
-
-- template for [compoundjs](http://compoundjs.com/)
-- image optimization (this has external dependencies... yech)
-- better tests
+See the [issues](issues) for discussion of upcoming features!
 
 Contributors
 ------------
 
 I would love to have more contributors, and if you've helped out, you are awesome. I want to give a huge thanks especially to these people:
 
-- [Sam Saccone](https://github.com/samccone): advice, support, and responsible for a good bit of code
+- [Sam Saccone](https://github.com/samccone): trolling, support, and responsible for a good bit of code
+- [Sean Lang](https://github.com/slang800): great suggestions, frequent pull requests, and I wish I was half as smart when I was his age
+- [Everyone else](contributors): because I <3 you guys
 
-License
--------
+License (MIT)
+-------------
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
