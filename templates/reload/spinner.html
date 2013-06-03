@@ -1,0 +1,159 @@
+<style>
+  
+  #roots-load-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #1e1e1e;
+    border-radius: 7px;
+    padding: 2px;
+    display: none;
+  }
+
+  #roots-compile-loader {
+    position:relative;
+    width:30px;
+    height:30px;
+    -moz-transform:scale(0.6);
+    -webkit-transform:scale(0.6);
+    -ms-transform:scale(0.6);
+    -o-transform:scale(0.6);
+    transform:scale(0.6);
+  }
+
+  #roots-compile-loader > div {
+    position:absolute;
+    background-color:#1e1e1e;
+    height:5px;
+    width:5px;
+    -moz-border-radius:3px;
+    -moz-animation-name:roots_loader_fade;
+    -moz-animation-duration:0.88s;
+    -moz-animation-iteration-count:infinite;
+    -moz-animation-direction:linear;
+    -webkit-border-radius:3px;
+    -webkit-animation-name:roots_loader_fade;
+    -webkit-animation-duration:0.88s;
+    -webkit-animation-iteration-count:infinite;
+    -webkit-animation-direction:linear;
+    -ms-border-radius:3px;
+    -ms-animation-name:roots_loader_fade;
+    -ms-animation-duration:0.88s;
+    -ms-animation-iteration-count:infinite;
+    -ms-animation-direction:linear;
+    -o-border-radius:3px;
+    -o-animation-name:roots_loader_fade;
+    -o-animation-duration:0.88s;
+    -o-animation-iteration-count:infinite;
+    -o-animation-direction:linear;
+    border-radius:3px;
+    animation-name:roots_loader_fade;
+    animation-duration:0.88s;
+    animation-iteration-count:infinite;
+    animation-direction:linear;
+  }
+
+  #roots-compile-loader > #l1{
+    left:0;
+    top:12px;
+    -moz-animation-delay:0.33s;
+    -webkit-animation-delay:0.33s;
+    -ms-animation-delay:0.33s;
+    -o-animation-delay:0.33s;
+    animation-delay:0.33s;
+  }
+
+  #roots-compile-loader > #l2{
+    left:4px;
+    top:4px;
+    -moz-animation-delay:0.44s;
+    -webkit-animation-delay:0.44s;
+    -ms-animation-delay:0.44s;
+    -o-animation-delay:0.44s;
+    animation-delay:0.44s;
+  }
+
+  #roots-compile-loader > #l3{
+    left:12px;
+    top:0;
+    -moz-animation-delay:0.55s;
+    -webkit-animation-delay:0.55s;
+    -ms-animation-delay:0.55s;
+    -o-animation-delay:0.55s;
+    animation-delay:0.55s;
+  }
+
+  #roots-compile-loader > #l4{
+    right:4px;
+    top:4px;
+    -moz-animation-delay:0.66s;
+    -webkit-animation-delay:0.66s;
+    -ms-animation-delay:0.66s;
+    -o-animation-delay:0.66s;
+    animation-delay:0.66s;
+  }
+
+  #roots-compile-loader > #l5{
+    right:0;
+    top:12px;
+    -moz-animation-delay:0.77s;
+    -webkit-animation-delay:0.77s;
+    -ms-animation-delay:0.77s;
+    -o-animation-delay:0.77s;
+    animation-delay:0.77s;
+  }
+
+  #roots-compile-loader > #l6{
+    right:4px;
+    bottom:4px;
+    -moz-animation-delay:0.88s;
+    -webkit-animation-delay:0.88s;
+    -ms-animation-delay:0.88s;
+    -o-animation-delay:0.88s;
+    animation-delay:0.88s;
+  }
+
+  #roots-compile-loader > #l7{
+    left:12px;
+    bottom:0;
+    -moz-animation-delay:0.99s;
+    -webkit-animation-delay:0.99s;
+    -ms-animation-delay:0.99s;
+    -o-animation-delay:0.99s;
+    animation-delay:0.99s;
+  }
+
+  #roots-compile-loader > #l8{
+    left:4px;
+    bottom:4px;
+    -moz-animation-delay:1.1s;
+    -webkit-animation-delay:1.1s;
+    -ms-animation-delay:1.1s;
+    -o-animation-delay:1.1s;
+    animation-delay:1.1s;
+  }
+
+  @-webkit-keyframes roots_loader_fade{
+    0% { background-color:#FFFFFF }
+    100% { background-color:#1e1e1e }
+  }
+
+  @keyframes roots_loader_fade{
+    0% { background-color:#FFFFFF }
+    100% { background-color:#1e1e1e }
+  }
+
+</style>
+
+<div id='roots-load-container'>
+  <div id="roots-compile-loader">
+    <div id="l1"></div>
+    <div id="l2"></div>
+    <div id="l3"></div>
+    <div id="l4"></div>
+    <div id="l5"></div>
+    <div id="l6"></div>
+    <div id="l7"></div>
+    <div id="l8"></div>
+  </div>
+</div>
