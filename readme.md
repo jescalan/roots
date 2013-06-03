@@ -129,7 +129,7 @@ Want to compile a a single file for two different languages? No worries, just ad
 The Future
 ----------
 
-See the [issues](issues) for discussion of upcoming features!
+See the [issues](https://github.com/jenius/roots/issues) for discussion of upcoming features!
 
 Contributors
 ------------
@@ -137,8 +137,8 @@ Contributors
 I would love to have more contributors, and if you've helped out, you are awesome. I want to give a huge thanks especially to these people:
 
 - [Sam Saccone](https://github.com/samccone): trolling, support, and responsible for a good bit of code
-- [Sean Lang](https://github.com/slang800): great suggestions, frequent pull requests, and I wish I was half as smart when I was his age
-- [Everyone else](contributors): because I <3 you guys
+- [Sean Lang](https://github.com/slang800): great suggestions, frequent pull requests, essentially a genius
+- [Everyone else](https://github.com/jenius/roots/contributors): because I <3 you guys
 
 License (MIT)
 -------------
