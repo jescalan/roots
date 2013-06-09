@@ -1,6 +1,6 @@
 {
   "name": "roots",
-  "version": "1.3.6-2",
+  "version": "1.3.6-3",
   "description": "roots is a toolbox for building simple, beautiful, and efficient products for the web",
   "keywords": [
     "front-end",
@@ -36,7 +36,7 @@
     "coffee-script": "1.6.x",
     "clean-css": "1.0.x",
     "uglify-js": "1.3.x",
-    "rimraf": "2.0.x",
+    "rimraf": "2.1.x",
     "bower": "0.9.x",
     "async": "0.2.x",
     "roots-css": "latest",
@@ -45,7 +45,7 @@
     "q": "0.9.x",
     "minimatch": "0.2.x",
     "ftp": "0.3.x",
-    "js-yaml": "2.0.x",
+    "js-yaml": "2.1.x",
     "semver": "1.1.x",
     "faye-websocket": "0.6.x",
     "fresher": "0.0.x"
