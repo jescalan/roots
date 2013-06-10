@@ -3,6 +3,7 @@
 A light, super fast, and intuitive build system meant for rapid advanced front end development.
 
 [![Build Status](https://travis-ci.org/jenius/roots.png?branch=master)](https://travis-ci.org/jenius/roots)
+[![Dependency Status](https://david-dm.org/jenius/roots.png)](https://david-dm.org/jenius/roots)
 
 Installation
 ------------
