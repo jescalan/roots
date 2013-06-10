@@ -17,15 +17,16 @@ class Compiler extends EventEmitter
       path.basename(file).split('.').slice(1)
     )
     fh = file_helper(file)
-    matching_adapters.forEach (adapter, i) ->
+    matching_adapters.forEach (adapter, i) =>
       intermediate = (matching_adapters.length - i - 1 > 0)
 
       unless intermediate
         fh.parse_dynamic_content()
         fh.set_layout()
 
-      adapter.compile fh, (err, compiled) ->
-        return @emit('error', err) if err
+      adapter.compile fh, (err, compiled) =>
+        if err
+          return @emit('error', err)
 
         pass_through = ->
           fh.contents = compiled
