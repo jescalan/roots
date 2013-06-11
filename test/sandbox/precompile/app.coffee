@@ -1,2 +1,2 @@
-exports.ignore_files = ['_*']
-exports.templates = 'templates'
+ignore_files = ['_*']
+templates = 'templates'

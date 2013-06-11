@@ -2,7 +2,7 @@
 
 var argv = process.argv.slice(2),
     commands = require('../lib/commands'),
-    configure_options = require('../lib/utils/configure_options');
+    configure_options = require('../lib/config_parser');
 
 if (typeof argv[0] === "undefined") {
   commands.help.execute();

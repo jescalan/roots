@@ -1,2 +1,2 @@
-exports.layouts = 
+layouts:
   default: 'layout.jade'

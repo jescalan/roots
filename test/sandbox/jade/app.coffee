@@ -1,9 +1,5 @@
-# ----------------------------------------
-# Project Configuration
-# ----------------------------------------
-
-exports.layouts =
+layouts:
   default: 'layout.jade'
 
-exports.locals =
+locals:
   test: 'value'
