@@ -28,7 +28,7 @@
     "monocle": "0.1.45",
     "readdirp": "0.2.x",
     "mkdirp": "0.3.x",
-    "stylus": "0.x.x",
+    "stylus": "0.32.x",
     "jade": "0.30.x",
     "snockets": "1.3.x",
     "marked": "0.2.x",
