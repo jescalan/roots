@@ -1,9 +1,5 @@
-# ----------------------------------------
-# Project Configuration
-# ----------------------------------------
-
-exports.layouts =
+layouts:
   default: 'layout.ejs'
 
-exports.locals =
+locals:
   test: 'value'

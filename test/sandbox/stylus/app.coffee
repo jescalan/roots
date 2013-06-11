@@ -1,1 +1,1 @@
-exports.ignore_files = ['_*']
+ignore_files: ['_*']

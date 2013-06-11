@@ -1,1 +1,1 @@
-exports.coffeescript_bare = true
+coffeescript_bare: true
