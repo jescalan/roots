@@ -1,2 +1,2 @@
-ignore_files = ['_*']
-templates = 'templates'
+ignore_files: ['_*']
+templates: 'templates'
