@@ -9,9 +9,20 @@ _ = require 'underscore'
 file_helper = require './utils/file_helper'
 
 class Compiler extends EventEmitter
+  ###*
+   * Emits an event to notify listeners that everything is compiled
+   * @return {undefined}
+   * @fires Compiler#finished
+  ###
   finish: ->
     @emit 'finished'
 
+  ###*
+   * [compile description]
+   * @param {[type]} file [description]
+   * @param {Compiler~doneCallback} cb
+   * @return {[type]} [description]
+  ###
   compile: (file, cb) ->
     matching_adapters = get_adapters_by_extension(
       path.basename(file).split('.').slice(1)
@@ -49,6 +60,12 @@ class Compiler extends EventEmitter
         else
           return write_file()
 
+  ###*
+   * [copy description]
+   * @param {[type]} file [description]
+   * @param {Compiler~doneCallback} cb
+   * @return {[type]} [description]
+  ###
   copy: (file, cb) ->
     # TODO: Run the file copy operations as async (ncp)
     destination = output_path(file)
@@ -64,13 +81,23 @@ class Compiler extends EventEmitter
     options.debug.log 'copied ' + file.replace(process.cwd(), '')
     cb()
 
+###*
+ * Called when the function that the callback was passed to is done
+ * @callback Compiler~doneCallback
+###
 
 module.exports = Compiler
 
 plugin_path = path.join(process.cwd() + '/plugins')
 plugins = fs.existsSync(plugin_path) and shell.ls(plugin_path)
 
-# @api private
+
+###*
+ * [get_adapters_by_extension description]
+ * @param {[type]} extensions [description]
+ * @return {[type]} [description]
+ * @private
+###
 get_adapters_by_extension = (extensions) ->
   matching_adapters = []
   extensions.reverse().forEach (ext) ->
@@ -80,6 +107,14 @@ get_adapters_by_extension = (extensions) ->
 
   return matching_adapters
 
+###*
+ * [compile_into_layout description]
+ * @param {[type]} fh [description]
+ * @param {[type]} adapter [description]
+ * @param {[type]} compiled [description]
+ * @param {Function} cb [description]
+ * @return {[type]} [description]
+###
 compile_into_layout = (fh, adapter, compiled, cb) ->
   file_mock =
     path: fh.layout_path
