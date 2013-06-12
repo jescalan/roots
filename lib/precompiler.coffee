@@ -3,6 +3,7 @@ fs = require "fs"
 path = require "path"
 _ = require "underscore"
 mkdirp = require "mkdirp"
+minimatch = require "minimatch"
 compressor = require './utils/compressor'
 
 # compile jade templates into JS functions for use on the client-side, and
@@ -12,10 +13,17 @@ module.exports = ->
   global.options.debug.log 'precompiling templates', 'yellow'
   return false if not global.options.templates?
   template_dir = path.join process.cwd(), global.options.templates
+  files = fs.readdirSync(template_dir)
+
+  # make sure to skip ignored files
+  ignores = []
+  files.map (f) ->
+    options.ignore_files.forEach (i) ->
+      ignores.push(f) if minimatch(f, i.slice(1))
 
   precompiler = new Precompiler(
     templates: _.map(
-      fs.readdirSync(template_dir),
+      _.difference(files, ignores),
       (f) -> path.join template_dir, f
     )
   )
