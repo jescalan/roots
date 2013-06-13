@@ -9,7 +9,7 @@ package_manager: bower
 
 # for use with `roots new`
 # `roots new example` will use `default`
-# `roots new example --shopify` will use `shopify`
+# `roots new example --min` will use `min`
 templates: 
   default: default
   min: min
