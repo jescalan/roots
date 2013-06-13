@@ -29,7 +29,7 @@
     "readdirp": "0.2.x",
     "mkdirp": "0.3.x",
     "stylus": "0.32.x",
-    "jade": "0.30.x",
+    "jade": "0.31.x",
     "snockets": "1.3.x",
     "marked": "0.2.x",
     "ejs": "0.8.x",
