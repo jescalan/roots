@@ -3,6 +3,7 @@ path = require 'path'
 fs = require 'fs'
 colors = require 'colors'
 shell = require 'shelljs'
+config = require '../lib/global_config'
 run = require('child_process').exec
 root = path.join __dirname
 basic_root = path.join root, 'sandbox/basic'
@@ -106,10 +107,12 @@ describe 'command', ->
         out.replace(/\n/, '').should.eql(version)
         done()
 
-  describe 'js', -> # ---------------------------------------------------------------------
-    it 'should expose bower\'s interface', (done) ->
-      run "cd \"#{basic_root}\"; ../../../bin/roots js", (err,out, stdout) ->
-        out.should.match /bower/
+  describe 'pkg', -> # ---------------------------------------------------------------------
+    it 'should expose the correct package manager\'s interface', (done) ->
+      pkg_mgr = config.get().package_manager
+      run "cd \"#{basic_root}\"; ../../../bin/roots pkg", (err,out, stdout) ->
+        out.should.match /cli-js/ if (pkg_mgr == 'cdnjs')
+        out.should.match /bower/ if (pkg_mgr == 'bower')
         done()
 
 describe 'compiler', ->
@@ -205,6 +208,7 @@ describe 'errors', ->
   it 'notifies you if theres an error', (done) ->
     run "cd \"#{errors_path}\"; ../../../bin/roots compile --no-compress", (a,b,stderr) ->
       stderr.should.match /ERROR/
+      shell.rm '-rf', path.join(errors_path, 'public')
       done()
 
 describe 'dynamic content', ->
