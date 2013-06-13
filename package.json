@@ -48,7 +48,9 @@
     "js-yaml": "2.1.x",
     "semver": "1.1.x",
     "faye-websocket": "0.6.x",
-    "fresher": "0.0.x"
+    "fresher": "0.0.x",
+    "cli-js": "0.0.x",
+    "copy-paste": "0.0.7"
   },
   "devDependencies": {
     "mocha": "latest",
