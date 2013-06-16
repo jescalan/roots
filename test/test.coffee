@@ -5,8 +5,9 @@ colors = require 'colors'
 shell = require 'shelljs'
 config = require '../lib/global_config'
 run = require('child_process').exec
-root = path.join __dirname
-basic_root = path.join root, 'sandbox/basic'
+
+root = __dirname
+basic_root = path.join root, 'basic'
 
 #
 # command line interface
@@ -20,9 +21,11 @@ files_exist = (test_path, files) ->
     fs.existsSync(path.join(test_path, file)).should.be.ok
 
 describe 'command', ->
-  describe 'compile', -> # ----------------------------------------------------------------
+
+  describe 'compile', ->
+
     before (done) ->
-      run "cd \"#{basic_root}\"; ../../../bin/roots compile", done
+      run "cd \"#{basic_root}\"; ../../bin/roots compile", done
 
     it 'should compile files to /public', ->
       fs.readdirSync(path.join(basic_root, 'public')).should.have.lengthOf(5)
@@ -36,7 +39,7 @@ describe 'command', ->
       css_content.should.not.match /\n/
       shell.rm '-rf', path.join(basic_root, 'public')
 
-  describe 'new', -> # --------------------------------------------------------------------
+  describe 'new', ->
     test_path = path.join(root, 'testproj')
 
     it 'should use the default template if no flags present', (done) ->
@@ -87,30 +90,33 @@ describe 'command', ->
         shell.rm '-rf', path.join(root, 'testproj')
         done()
 
-  describe 'plugin', -> # -----------------------------------------------------------------
+  describe 'plugin', ->
+
     it 'should create a template inside /plugins on \'generate\'', (done) ->
-      run "cd \"#{basic_root}\"; ../../../bin/roots plugin generate", ->
+      run "cd \"#{basic_root}\"; ../../bin/roots plugin generate", ->
         fs.existsSync(path.join(basic_root, 'plugins/template.coffee')).should.be.ok
         shell.rm '-rf', path.join(basic_root, 'plugins')
         done()
 
     it 'should use the javascript template if called with --js', (done) ->
-      run "cd \"#{basic_root}\"; ../../../bin/roots plugin generate --js", ->
+      run "cd \"#{basic_root}\"; ../../bin/roots plugin generate --js", ->
         fs.existsSync(path.join(basic_root, 'plugins/template.js')).should.be.ok
         shell.rm '-rf', path.join(basic_root, 'plugins')
         done()
 
-  describe 'version', -> # ----------------------------------------------------------------
+  describe 'version', ->
+
     it 'should output the correct version number for roots', (done) ->
       version = JSON.parse(fs.readFileSync('package.json')).version
       run './bin/roots version', (err,out) ->
         out.replace(/\n/, '').should.eql(version)
         done()
 
-  describe 'pkg', -> # ---------------------------------------------------------------------
+  describe 'pkg', ->
+
     it 'should expose the correct package manager\'s interface', (done) ->
       pkg_mgr = config.get().package_manager
-      run "cd \"#{basic_root}\"; ../../../bin/roots pkg", (err,out, stdout) ->
+      run "cd \"#{basic_root}\"; ../../bin/roots pkg", (err,out, stdout) ->
         out.should.match /cli-js/ if (pkg_mgr == 'cdnjs')
         out.should.match /bower/ if (pkg_mgr == 'bower')
         done()
@@ -127,129 +133,129 @@ describe 'compiler', ->
     compiler.finish()
 
 describe 'jade', ->
-  jade_path = path.join root, 'sandbox/jade'
-  jade_path_2 = path.join root, 'sandbox/no-layout'
+  test_path = path.join root, './jade'
+  test_path_2 = path.join root, './no-layout'
 
   it 'should compile jade view templates', (done) ->
-    run "cd \"#{jade_path}\"; ../../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(jade_path, 'public/index.html')).should.be.ok
-      shell.rm '-rf', path.join(jade_path, 'public')
+    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
+      fs.existsSync(path.join(test_path, 'public/index.html')).should.be.ok
+      shell.rm '-rf', path.join(test_path, 'public')
       done()
 
   it 'should compile templates with no layout', (done) ->
-    run "cd #{jade_path_2}; ../../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(jade_path_2, 'public/index.html')).should.be.ok
-      shell.rm '-rf', path.join(jade_path_2, 'public')
+    run "cd #{test_path_2}; ../../bin/roots compile --no-compress", ->
+      fs.existsSync(path.join(test_path_2, 'public/index.html')).should.be.ok
+      shell.rm '-rf', path.join(test_path_2, 'public')
       done()
 
 describe 'ejs', ->
-  ejs_path = path.join root, 'sandbox/ejs'
+  test_path = path.join root, './ejs'
 
   it 'should compile ejs', (done) ->
-    run "cd \"#{ejs_path}\"; ../../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(ejs_path, 'public/index.html')).should.be.ok
-      shell.rm '-rf', path.join(ejs_path, 'public')
+    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
+      fs.existsSync(path.join(test_path, 'public/index.html')).should.be.ok
+      shell.rm '-rf', path.join(test_path, 'public')
       done()
 
 describe 'coffeescript', ->
-  coffeescript_path = path.join root, 'sandbox/coffeescript'
-  coffeescript_path_2 = path.join root, 'sandbox/coffee-basic'
+  test_path = path.join root, './coffeescript'
+  test_path_2 = path.join root, './coffee-basic'
 
   it 'should compile coffeescript and requires should work', (done) ->
-    run "cd \"#{coffeescript_path}\"; ../../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(coffeescript_path, 'public/basic.js')).should.be.ok
-      fs.existsSync(path.join(coffeescript_path, 'public/require.js')).should.be.ok
-      require_content = fs.readFileSync path.join(coffeescript_path, 'public/require.js'), 'utf8'
+    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
+      fs.existsSync(path.join(test_path, 'public/basic.js')).should.be.ok
+      fs.existsSync(path.join(test_path, 'public/require.js')).should.be.ok
+      require_content = fs.readFileSync path.join(test_path, 'public/require.js'), 'utf8'
       require_content.should.match /BASIC/
-      shell.rm '-rf', path.join(coffeescript_path, 'public')
+      shell.rm '-rf', path.join(test_path, 'public')
       done()
 
   it 'should compile without closures when specified in app.coffee', (done) ->
-    run "cd \"#{coffeescript_path_2}\"; ../../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(coffeescript_path_2, 'public/testz.js')).should.be.ok
-      require_content = fs.readFileSync path.join(coffeescript_path_2, 'public/testz.js'), 'utf8'
+    run "cd \"#{test_path_2}\"; ../../bin/roots compile --no-compress", ->
+      fs.existsSync(path.join(test_path_2, 'public/testz.js')).should.be.ok
+      require_content = fs.readFileSync path.join(test_path_2, 'public/testz.js'), 'utf8'
       require_content.should.not.match /function/
-      shell.rm '-rf', path.join(coffeescript_path_2, 'public')
+      shell.rm '-rf', path.join(test_path_2, 'public')
       done()
 
 describe 'stylus', ->
-  stylus_path = path.join root, 'sandbox/stylus'
+  test_path = path.join root, './stylus'
 
   before (done) ->
-    run "cd \"#{stylus_path}\"; ../../../bin/roots compile --no-compress", ->
+    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
       done()
 
   it 'should compile stylus with roots css', ->
-    fs.existsSync(path.join(stylus_path, 'public/basic.css')).should.be.ok
+    fs.existsSync(path.join(test_path, 'public/basic.css')).should.be.ok
 
   it 'should include the project directory for requires', ->
-    fs.existsSync(path.join(stylus_path, 'public/req.css')).should.be.ok
-    fs.existsSync(path.join(stylus_path, 'public/nested/all.css')).should.be.ok
-    require_content = fs.readFileSync path.join(stylus_path, 'public/req.css'), 'utf8'
+    fs.existsSync(path.join(test_path, 'public/req.css')).should.be.ok
+    fs.existsSync(path.join(test_path, 'public/nested/all.css')).should.be.ok
+    require_content = fs.readFileSync path.join(test_path, 'public/req.css'), 'utf8'
     require_content.should.match /#000/
-    shell.rm '-rf', path.join(stylus_path, 'public')
+    shell.rm '-rf', path.join(test_path, 'public')
 
 describe 'static files', ->
-  static_path = path.join root, 'sandbox/static'
+  test_path = path.join root, './static'
 
   before (done) ->
-    run "cd \"#{static_path}\"; ../../../bin/roots compile --no-compress", ->
+    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
       done()
 
   it 'copies static files', ->
-    fs.existsSync(path.join(static_path, 'public/whatever.poop')).should.be.ok
-    require_content = fs.readFileSync path.join(static_path, 'public/whatever.poop'), 'utf8'
+    fs.existsSync(path.join(test_path, 'public/whatever.poop')).should.be.ok
+    require_content = fs.readFileSync path.join(test_path, 'public/whatever.poop'), 'utf8'
     require_content.should.match /roots dont care/
-    shell.rm '-rf', path.join(static_path, 'public')
+    shell.rm '-rf', path.join(test_path, 'public')
 
 describe 'errors', ->
-  errors_path = path.join root, 'sandbox/errors'
+  test_path = path.join root, './errors'
 
   it 'notifies you if theres an error', (done) ->
-    run "cd \"#{errors_path}\"; ../../../bin/roots compile --no-compress", (a,b,stderr) ->
+    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", (a,b,stderr) ->
       stderr.should.match /ERROR/
-      shell.rm '-rf', path.join(errors_path, 'public')
+      shell.rm '-rf', path.join(test_path, 'public')
       done()
 
 describe 'dynamic content', ->
-  dynamic_path = path.join root, 'sandbox/dynamic'
+  test_path = path.join root, './dynamic'
 
   before (done) ->
-    run "cd \"#{dynamic_path}\"; ../../../bin/roots compile --no-compress", ->
+    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
       done()
 
   it 'compiles dynamic files', ->
-    fs.existsSync(path.join(dynamic_path, 'public/posts/hello_world.html')).should.be.ok
-    content = fs.readFileSync path.join(dynamic_path, 'public/posts/hello_world.html'), 'utf8'
+    fs.existsSync(path.join(test_path, 'public/posts/hello_world.html')).should.be.ok
+    content = fs.readFileSync path.join(test_path, 'public/posts/hello_world.html'), 'utf8'
     content.should.match(/\<h1\>hello world\<\/h1\>/)
     content.should.match(/This is my first blog post/)
-    shell.rm '-rf', path.join(dynamic_path, 'public')
+    shell.rm '-rf', path.join(test_path, 'public')
 
 describe 'precompiled templates', ->
-  precompile_path = path.join root, 'sandbox/precompile'
+  test_path = path.join root, './precompile'
 
   before (done) ->
-    run "cd #{precompile_path}; ../../../bin/roots compile --no-compress", ->
+    run "cd #{test_path}; ../../bin/roots compile --no-compress", ->
       done()
 
   it 'precompiles templates', ->
-    fs.existsSync(path.join(precompile_path, 'public/js/templates.js')).should.be.ok
-    require_content = fs.readFileSync path.join(precompile_path, 'public/js/templates.js'), 'utf8'
+    fs.existsSync(path.join(test_path, 'public/js/templates.js')).should.be.ok
+    require_content = fs.readFileSync path.join(test_path, 'public/js/templates.js'), 'utf8'
     require_content.should.match(/\<p\>hello world\<\/p\>/)
-    shell.rm '-rf', path.join(precompile_path, 'public')
+    shell.rm '-rf', path.join(test_path, 'public')
 
 describe 'multipass compiles', ->
-  multipass_path = path.join root, 'sandbox/multipass'
+  test_path = path.join root, './multipass'
 
   before (done) ->
-    run "cd #{multipass_path}; ../../../bin/roots compile --no-compress", ->
+    run "cd #{test_path}; ../../bin/roots compile --no-compress", ->
       done()
 
   it 'will compile a single file multiple times accurately', ->
-    fs.existsSync(path.join(multipass_path, 'public/index.html')).should.be.ok
-    content = fs.readFileSync path.join(multipass_path, 'public/index.html'), 'utf8'
+    fs.existsSync(path.join(test_path, 'public/index.html')).should.be.ok
+    content = fs.readFileSync path.join(test_path, 'public/index.html'), 'utf8'
     content.should.match(/blarg world/)
-    shell.rm '-rf', path.join(multipass_path, 'public')
+    shell.rm '-rf', path.join(test_path, 'public')
 
 describe 'deploy', ->
   deployer = null
