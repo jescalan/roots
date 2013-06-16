@@ -1,0 +1,12 @@
+{
+  "package_manager": "bower",
+  "templates": {
+    "default": "default",
+    "min": "min",
+    "basic": "basic",
+    "blog": "blog",
+    "ejs": "ejs",
+    "express": "express",
+    "min": "min"
+  }
+}
