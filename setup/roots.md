@@ -42,4 +42,3 @@ Full docs can be found at http://roots.cx
 ## AUTHOR
 
 Jeff Escalante (http://jenius.me) and contributors
-
