@@ -25,11 +25,11 @@
     "connect": "2.7.x",
     "colors": "0.6.x",
     "open": "0.0.x",
-    "monocle": "0.1.45",
+    "monocle": "0.1.x",
     "readdirp": "0.2.x",
     "mkdirp": "0.3.x",
     "stylus": "0.32.x",
-    "jade": "0.30.x",
+    "jade": "0.31.x",
     "snockets": "1.3.x",
     "marked": "0.2.x",
     "ejs": "0.8.x",
@@ -39,7 +39,7 @@
     "rimraf": "2.1.x",
     "bower": "0.9.x",
     "async": "0.2.x",
-    "roots-css": "latest",
+    "axis-css": "0.0.x",
     "underscore": "1.4.x",
     "shelljs": "0.1.x",
     "q": "0.9.x",
@@ -48,7 +48,7 @@
     "js-yaml": "2.1.x",
     "semver": "1.1.x",
     "faye-websocket": "0.6.x",
-    "fresher": "0.0.x"
+    "update-notifier": "~0.1.3"
   },
   "devDependencies": {
     "mocha": "latest",

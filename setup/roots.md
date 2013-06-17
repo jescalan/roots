@@ -23,9 +23,6 @@ The following commands are available:
   * `deploy`, `<name>`    
   configure, compile, commit, and deploy your project to heroku
 
-  * `update`    
-  upgrade to the latest version of roots
-
   * `version`    
   print the version of the current roots install
 
@@ -42,4 +39,3 @@ Full docs can be found at http://roots.cx
 ## AUTHOR
 
 Jeff Escalante (http://jenius.me) and contributors
-
