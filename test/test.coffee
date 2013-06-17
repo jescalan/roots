@@ -121,6 +121,22 @@ describe 'command', ->
         out.should.match /bower/ if (pkg_mgr == 'bower')
         done()
 
+    it 'should load custom templates correctly', (done) ->
+
+      test_repo = 'https://github.com/jenius/cli-js.git'
+      test_name = 'test'
+      test_path = path.join(root, 'testproj')
+      tmpl_path = path.join(root, '../templates/new', test_name)
+
+      run "./bin/roots template add test #{test_repo}", ->
+        run "cd #{root}; ../bin/roots new testproj --#{test_name}", (err) ->
+          fs.existsSync(test_path).should.be.ok
+          fs.existsSync(path.join(test_path, 'package.json')).should.be.ok
+          shell.rm('-rf', test_path)
+          shell.rm('-rf', tmpl_path)
+          config.remove('templates', 'test')
+          done()
+
 describe 'compiler', ->
   compiler = null
 
