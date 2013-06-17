@@ -23,9 +23,6 @@ The following commands are available:
   * `deploy`, `<name>`    
   configure, compile, commit, and deploy your project to heroku
 
-  * `update`    
-  upgrade to the latest version of roots
-
   * `version`    
   print the version of the current roots install
 
