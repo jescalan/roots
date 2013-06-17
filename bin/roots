@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 
+// check for a new version
+var notifier = require('update-notifier')({packagePath: '../package.json'});
+if (notifier.update){
+  notifier.notify();
+}
+
 var argv = process.argv.slice(2),
     commands = require('../lib/commands'),
     configure_options = require('../lib/utils/configure_options');
