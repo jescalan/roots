@@ -1,0 +1,1 @@
+coffeescript_bare: true
