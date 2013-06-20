@@ -46,7 +46,7 @@
     "minimatch": "0.2.x",
     "ftp": "0.3.x",
     "js-yaml": "2.1.x",
-    "semver": "1.1.x",
+    "semver": "2.0.x",
     "faye-websocket": "0.6.x",
     "copy-paste": "0.0.x",
     "cli-js": "0.0.x",
