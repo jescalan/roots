@@ -37,7 +37,7 @@ class Compiler extends EventEmitter
     fh = new FileHelper(file)
     matching_adapters.forEach (adapter, i) =>
       intermediate = (matching_adapters.length - i - 1 > 0)
-      
+
       # front matter stays intact until the last compile pass
       unless intermediate
         fh.parse_dynamic_content()
