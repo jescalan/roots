@@ -1,0 +1,91 @@
+roots(1) -- a toolkit for quickly building beautiful websites
+=============================================================
+
+## SYNOPSIS
+
+`roots new <name>` --<template>   
+`roots template <command>`    
+`roots compile`  --no-compress    
+`roots watch`    
+`roots deploy` <name> --<service>      
+`roots version`    
+`roots pkg` <command>    
+`roots plugin` <command>   
+
+## DESCRIPTION
+
+Roots exposes a variety of commands for creating, managing, compiling, and deploying websites. Commands are listed and documented below.
+
+[github repo](https://github.com/jenius/roots)
+
+## NEW
+
+  `new`, `<name>`, --<template>    
+  create a new roots project called <name>.
+
+  templates:    
+    - default (jade, stylus, coffeescript) - default    
+    - ejs (ejs, stylus, coffeescript)    
+    - min (default stack, no comments and uses jade layouts)    
+    - basic (html, css, javascript, no layouts)    
+    - blog (blog example optimized for dynamic content)    
+
+## TEMPLATE
+
+  `template`, `<command>`    
+  manage roots project templates.
+
+  commands:    
+    - add, <name> <git-url> (git clone will download the template)    
+    - remove, <name> (be careful with this)    
+    - default, <name> (sets a template to be the default for roots new)    
+
+## COMPILE
+
+  `compile`, --<no-compress>    
+  compile, compress, and minify the project to `public`, adding the option <no-compress> will bypass the compression.
+
+## WATCH
+
+  `watch`    
+  watch your project and compile/reload whenever a file is saved. does not work for roots-express or roots-rails.
+
+## DEPLOY
+
+  `deploy`, <name>, --<service>    
+  configure, compile, commit, and deploy your project. <name> optional for heroku.
+
+    services:    
+      - heroku - default    
+      - nodejitsu    
+      - gh-pages   
+
+## VERSION
+
+  `version`    
+  print the version of the current roots install.
+
+## PKG
+
+  `pkg`, `<command>`    
+  exposes a package manager's interface. type `roots pkg` to display the package manager's options. any command given after `pkg` is delegated to the package manager.
+
+  package managers:  
+
+    - bower (http://bower.io) - default    
+    - cdnjs (https://github.com/jenius/cli-js)    
+
+  you can change your package manager via the `~/.rootsrc` file.
+
+## PLUGIN
+
+  `plugin`, `<command>`    
+  manages plugins (user-generated roots compilers).
+
+  commands:    
+    - generate --js (optional, generates a javascript template rather than coffeescript)    
+    - install <username>/<repo> (must provide a username/repo on github)
+
+## DOCUMENTATION
+
+Full docs can be found at http://roots.cx
