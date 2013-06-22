@@ -294,3 +294,10 @@ describe 'deploy', ->
     deployer.commit_files.should.exist
     deployer.create_project.should.exist
     deployer.push_code.should.exist
+
+# this will eventually be moved out to it's own package
+describe 'git', ->
+  Git = require '../lib/utils/git'
+
+  it 'initializes correctly', ->
+    git = new Git

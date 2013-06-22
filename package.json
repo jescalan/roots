@@ -50,7 +50,8 @@
     "faye-websocket": "0.6.x",
     "copy-paste": "0.0.x",
     "cli-js": "0.0.x",
-    "update-notifier": "~0.1.3"
+    "update-notifier": "~0.1.3",
+    "gift": "0.0.x"
   },
   "devDependencies": {
     "mocha": "latest",
