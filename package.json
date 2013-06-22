@@ -36,7 +36,6 @@
     "coffee-script": "1.6.x",
     "clean-css": "1.0.x",
     "uglify-js": "2.3.x",
-    "rimraf": "2.1.x",
     "bower": "0.9.x",
     "async": "0.2.x",
     "axis-css": "0.0.x",
