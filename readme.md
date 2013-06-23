@@ -16,15 +16,15 @@ Usage
 
 Once you have roots installed, you can use the command line to wrangle your project. You must be at least somewhat familiar with the command line to be able to use roots. All the possible command and options are explained clearly on the man page below:
 
-- [See the man page for command line options](http://roots.cx/docs/man.html)    
-- [See http://roots.cx for all other documentation](http://roots.cx)
+- [See the man page for command line options](http://roots.cx/docs/man.html)     
 
 Getting Started
 ---------------
 
 Any roots tutorials and resources deemed appropriate by the core team will be listed below:
 
-- [official roots tutorials](http://roos.cx#tutorials) - walkthroughs of roots' major functionality
+- [official roots tutorials](http://roots.cx#tutorials) - walkthroughs of roots' major functionality    
+- [official roots documentation](http://roots.cx/docs) - documentation for major roots features and functionality
 
 Documentation
 -------------
