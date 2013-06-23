@@ -16,7 +16,8 @@ Usage
 
 Once you have roots installed, you can use the command line to wrangle your project. You must be at least somewhat familiar with the command line to be able to use roots. All the possible command and options are explained clearly on the man page below:
 
-[See the man page for command line options](http://roots.cx/docs/man.html)
+- [See the man page for command line options](http://roots.cx/docs/man.html)    
+- [See http://roots.cx for all other documentation](http://roots.cx)
 
 Getting Started
 ---------------
