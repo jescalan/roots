@@ -1,0 +1,4 @@
+ul#posts
+  - each post in sort(site.posts, { by: 'date' })
+    li
+      a(href="#{post.url}")= post.title

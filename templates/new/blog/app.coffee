@@ -17,11 +17,5 @@ locals:
   title_with_markup: ->
     "<h1 class='title'>#{this.title}</h1>"
 
-# Wouldn't usually recommend changing this, but it makes sense
-# in this particular case.
-folder_config:
-  assets: 'assets'
-  views: 'layouts'
-
 # Precompiled template path, see http://roots.cx/docs/#precompile
 # templates: 'views/templates'

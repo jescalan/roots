@@ -10,8 +10,13 @@ html
     
     link(rel='stylesheet', href='/css/master.css')
   body
-    h1= post.title
-    != content
+    header
+      h1 my awesome blog
+
+    #posts
+      h2= post.title
+      != content
+      a(href='/') &laquo; back to index
 
   //- add other scripts through require.js, not here
   script(data-main="js/main", src="js/require.js")

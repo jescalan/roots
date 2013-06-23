@@ -6,11 +6,15 @@ html
     meta(name='description', content='description of your site')
     meta(name='author', content= "author of the site")
 
-    title welcome to roots!
+    title= title
     
     link(rel='stylesheet', href='css/master.css')
   body
-    != content
+    header
+      h1 my awesome blog
+      
+    #main
+      != content
 
   //- add other scripts through require.js, not here
   script(data-main="js/main", src="js/require.js")
