@@ -64,7 +64,7 @@ I would love to have more contributors, and if you've helped out, you are awesom
 
 - [Sam Saccone](https://github.com/samccone)
 - [Sean Lang](https://github.com/slang800)
-- [Declan DeWet](https://github.com/declandewet)
+- [Declan de Wet](https://github.com/declandewet)
 - [Everyone else](https://github.com/jenius/roots/contributors)
 
 We are very open to new people getting involved and contributing. Come chat with us on IRC at freenode/#roots-dev if this seems like your kind of jam.
