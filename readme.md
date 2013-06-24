@@ -1,9 +1,18 @@
-# Roots
-[![NPM version](https://badge.fury.io/js/roots.png)](http://badge.fury.io/js/roots)
-[![Build Status](https://travis-ci.org/jenius/roots.png?branch=master)](https://travis-ci.org/jenius/roots)
-[![Dependency Status](https://david-dm.org/jenius/roots.png)](https://david-dm.org/jenius/roots)
+<p align="center"><a><img src="http://cl.ly/PqFy/logo.png" /></a></p>
 
-A light, super fast, and intuitive build system made for front end development and web-app building.
+<p align="center">
+  <a title='NPM version' href="http://badge.fury.io/js/roots">
+    <img src='https://badge.fury.io/js/roots.png' />
+  </a>
+  <a title='Build Status' href="https://travis-ci.org/jenius/roots">
+    <img src='https://travis-ci.org/jenius/roots.png?branch=master' />
+  </a>
+  <a title='Dependency Status' href="https://david-dm.org/jenius/roots">
+    <img src='https://david-dm.org/jenius/roots.png' />
+  </a>
+</p>
+
+A light, super fast, and intuitive static build system made for front end development and building web apps.
 
 <p align="center"><a><img src="https://raw.github.com/slang800/psychic-ninja/master/terminal.png"/></a></p>
 
@@ -62,7 +71,7 @@ We are very open to new people getting involved and contributing. Come chat with
 
 Coding Style
 ------------
-To keep a consistant coding style in the project, we're going with [Felix's Node.js Style Guide](http://nodeguide.com/style.html) for JS and [Polar Mobile's guide](https://github.com/polarmobile/coffeescript-style-guide) for CoffeeScript. Both of these are pretty standard guides. For documenting in the code, we're using [JSDoc](http://usejsdoc.org/).
+To keep a consistant coding style in the project, we're going with [Felix's Node.js Style Guide](http://nodeguide.com/style.html) for JS and [Polar Mobile's guide](https://github.com/polarmobile/coffeescript-style-guide) for CoffeeScript, but it should be noted that much of this project uses under_scores rather than camelCase for naming. Both of these are pretty standard guides. For documenting in the code, we're using [JSDoc](http://usejsdoc.org/).
 
 License (MIT)
 -------------
