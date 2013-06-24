@@ -5,7 +5,7 @@
 
 A light, super fast, and intuitive build system made for front end development and web-app building.
 
-<p align="center"><img src="https://raw.github.com/slang800/psychic-ninja/master/terminal.png"/></p>
+<p align="center"><a><img src="https://raw.github.com/slang800/psychic-ninja/master/terminal.png"/></a></p>
 
 Installation
 ------------
