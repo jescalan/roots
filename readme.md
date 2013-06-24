@@ -1,10 +1,11 @@
 # Roots
-
-A light, super fast, and intuitive build system made for front end development and web-app building.
-
 [![NPM version](https://badge.fury.io/js/roots.png)](http://badge.fury.io/js/roots)
 [![Build Status](https://travis-ci.org/jenius/roots.png?branch=master)](https://travis-ci.org/jenius/roots)
 [![Dependency Status](https://david-dm.org/jenius/roots.png)](https://david-dm.org/jenius/roots)
+
+A light, super fast, and intuitive build system made for front end development and web-app building.
+
+<p align="center"><img src="https://raw.github.com/slang800/psychic-ninja/master/terminal.png"/></p>
 
 Installation
 ------------
