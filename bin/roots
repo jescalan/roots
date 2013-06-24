@@ -8,6 +8,7 @@ var args = require('optimist')
 var notifier = require('update-notifier')({ packagePath: '../package.json' });
 notifier.update && notifier.notify();
 
+
 var argv = process.argv.slice(2),
     commands = require('../lib/commands'),
     configure_options = require('../lib/config_parser');
@@ -20,7 +21,7 @@ if (args._.length < 1 && !args.version) {
   if (typeof current_command == "undefined") return commands.help.execute();
 
   if (current_command.needs_config) {
-    configure_options(function(){ current_command.execute(args); });
+    configure_options(args, function(){ current_command.execute(args); });
   } else {
     current_command.execute(args);
   }
