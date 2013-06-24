@@ -1,25 +1,27 @@
 #!/usr/bin/env node
 
+var args = require('optimist')
+            .alias('v', 'version')
+            .argv;
+
 // check for a new version
-var notifier = require('update-notifier')({packagePath: '../package.json'});
-if (notifier.update){
-  notifier.notify();
-}
+var notifier = require('update-notifier')({ packagePath: '../package.json' });
+notifier.update && notifier.notify();
 
 var argv = process.argv.slice(2),
     commands = require('../lib/commands'),
     configure_options = require('../lib/config_parser');
 
-if (typeof argv[0] === "undefined") {
+if (args._.length < 1 && !args.version) {
   commands.help.execute();
 } else {
-  var current_command = commands[argv[0]];
-  if (argv[0] == '-v' || argv[0] == '--version') return commands.version.execute();
+  var current_command = commands[args._[0]];
+  if (args.version) return commands.version.execute();
   if (typeof current_command == "undefined") return commands.help.execute();
 
   if (current_command.needs_config) {
-    configure_options(function(){ current_command.execute(argv.slice(1)); });
+    configure_options(function(){ current_command.execute(args); });
   } else {
-    current_command.execute(argv.slice(1));
+    current_command.execute(args);
   }
 }
