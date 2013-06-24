@@ -1,6 +1,6 @@
 # Roots
 
-A light, super fast, and intuitive build system meant for rapid advanced front end development.
+A light, super fast, and intuitive build system made for front end development and web-app building.
 
 [![NPM version](https://badge.fury.io/js/roots.png)](http://badge.fury.io/js/roots)
 [![Build Status](https://travis-ci.org/jenius/roots.png?branch=master)](https://travis-ci.org/jenius/roots)
@@ -21,7 +21,7 @@ Once you have roots installed, you can use the command line to wrangle your proj
 Getting Started
 ---------------
 
-Any roots tutorials and resources deemed appropriate by the core team will be listed below:
+All roots tutorials and resources that are recommended by the core team are listed below:
 
 - [official roots tutorials](http://roots.cx#tutorials) - walkthroughs of roots' major functionality    
 - [official roots documentation](http://roots.cx/docs) - documentation for major roots features and functionality
@@ -45,7 +45,7 @@ If you are confused and/or having trouble, one of the solutions below will almos
 The Future
 ----------
 
-See the [issues](https://github.com/jenius/roots/issues) for discussion of upcoming features and additions. Roots is very actively developed and is moving forward at a rapid pace. Our goal is to push static sites as far as they can possibly go, and we're well on the way.
+See the [issues](https://github.com/jenius/roots/issues) for discussion of upcoming features and additions. Roots is very actively developed and is moving forward at a rapid pace. Our goal is to push static sites and "single page apps" as far as they can possibly go, and we're well on the way.
 
 Contributors
 ------------
@@ -58,6 +58,10 @@ I would love to have more contributors, and if you've helped out, you are awesom
 - [Everyone else](https://github.com/jenius/roots/contributors)
 
 We are very open to new people getting involved and contributing. Come chat with us on IRC at freenode/#roots-dev if this seems like your kind of jam.
+
+Coding Style
+------------
+To keep a consistant coding style in the project, we're going with [Felix's Node.js Style Guide](http://nodeguide.com/style.html) for JS and [Polar Mobile's guide](https://github.com/polarmobile/coffeescript-style-guide) for CoffeeScript. Both of these are pretty standard guides.
 
 License (MIT)
 -------------
