@@ -1,10 +1,18 @@
-# Roots
+<p align="center"><a><img src="http://cl.ly/PqFy/logo.png" /></a></p>
 
-A light, super fast, and intuitive build system meant for rapid advanced front end development.
+<p align="center">
+  <a title='NPM version' href="http://badge.fury.io/js/roots">
+    <img src='https://badge.fury.io/js/roots.png' />
+  </a>
+  <a title='Build Status' href="https://travis-ci.org/jenius/roots">
+    <img src='https://travis-ci.org/jenius/roots.png?branch=master' />
+  </a>
+  <a title='Dependency Status' href="https://david-dm.org/jenius/roots">
+    <img src='https://david-dm.org/jenius/roots.png' />
+  </a>
+</p>
 
-[![NPM version](https://badge.fury.io/js/roots.png)](http://badge.fury.io/js/roots)
-[![Build Status](https://travis-ci.org/jenius/roots.png?branch=master)](https://travis-ci.org/jenius/roots)
-[![Dependency Status](https://david-dm.org/jenius/roots.png)](https://david-dm.org/jenius/roots)
+A light, super fast, and intuitive static build system made for front end development and building web apps.
 
 Installation
 ------------
@@ -14,14 +22,14 @@ Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm i
 Usage
 -----
 
-Once you have roots installed, you can use the command line to wrangle your project. You must be at least somewhat familiar with the command line to be able to use roots. All the possible command and options are explained clearly on the man page below:
+Once you have roots installed, you can use the command line to wrangle your project. You must be at least somewhat familiar with the command line to be able to use roots. All the possible commands and options are explained clearly on the [man page](http://roots.cx/docs/man.html).
 
-- [See the man page for command line options](http://roots.cx/docs/man.html)     
+<p align="center"><a><img src="https://raw.github.com/slang800/psychic-ninja/master/terminal.png"/></a></p>
 
 Getting Started
 ---------------
 
-Any roots tutorials and resources deemed appropriate by the core team will be listed below:
+All roots tutorials and resources that are recommended by the core team are listed below:
 
 - [official roots tutorials](http://roots.cx#tutorials) - walkthroughs of roots' major functionality    
 - [official roots documentation](http://roots.cx/docs) - documentation for major roots features and functionality
@@ -45,7 +53,7 @@ If you are confused and/or having trouble, one of the solutions below will almos
 The Future
 ----------
 
-See the [issues](https://github.com/jenius/roots/issues) for discussion of upcoming features and additions. Roots is very actively developed and is moving forward at a rapid pace. Our goal is to push static sites as far as they can possibly go, and we're well on the way.
+See the [issues](https://github.com/jenius/roots/issues) for discussion of upcoming features and additions. Roots is very actively developed and is moving forward at a rapid pace. Our goal is to push static sites and "single page apps" as far as they can possibly go, and we're well on the way.
 
 Contributors
 ------------
@@ -58,6 +66,10 @@ I would love to have more contributors, and if you've helped out, you are awesom
 - [Everyone else](https://github.com/jenius/roots/contributors)
 
 We are very open to new people getting involved and contributing. Come chat with us on IRC at freenode/#roots-dev if this seems like your kind of jam.
+
+Coding Style
+------------
+To keep a consistant coding style in the project, we're going with [Felix's Node.js Style Guide](http://nodeguide.com/style.html) for JS and [Polar Mobile's guide](https://github.com/polarmobile/coffeescript-style-guide) for CoffeeScript, but it should be noted that much of this project uses under_scores rather than camelCase for naming. Both of these are pretty standard guides. For documenting in the code, we're using [JSDoc](http://usejsdoc.org/).
 
 License (MIT)
 -------------
