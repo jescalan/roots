@@ -14,8 +14,6 @@
 
 A light, super fast, and intuitive static build system made for front end development and building web apps.
 
-<p align="center"><a><img src="https://raw.github.com/slang800/psychic-ninja/master/terminal.png"/></a></p>
-
 Installation
 ------------
 
@@ -26,7 +24,9 @@ Usage
 
 Once you have roots installed, you can use the command line to wrangle your project. You must be at least somewhat familiar with the command line to be able to use roots. All the possible command and options are explained clearly on the man page below:
 
-- [See the man page for command line options](http://roots.cx/docs/man.html)     
+- [See the man page for command line options](http://roots.cx/docs/man.html)
+
+<p align="center"><a><img src="https://raw.github.com/slang800/psychic-ninja/master/terminal.png"/></a></p>
 
 Getting Started
 ---------------
