@@ -62,7 +62,7 @@ We are very open to new people getting involved and contributing. Come chat with
 
 Coding Style
 ------------
-To keep a consistant coding style in the project, we're going with [Felix's Node.js Style Guide](http://nodeguide.com/style.html) for JS and [Polar Mobile's guide](https://github.com/polarmobile/coffeescript-style-guide) for CoffeeScript. Both of these are pretty standard guides.
+To keep a consistant coding style in the project, we're going with [Felix's Node.js Style Guide](http://nodeguide.com/style.html) for JS and [Polar Mobile's guide](https://github.com/polarmobile/coffeescript-style-guide) for CoffeeScript. Both of these are pretty standard guides. For documenting in the code, we're using [JSDoc](http://usejsdoc.org/).
 
 License (MIT)
 -------------
