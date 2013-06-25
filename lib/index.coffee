@@ -1,23 +1,35 @@
-colors = require("colors")
-async = require("async")
-shell = require("shelljs")
-path = require("path")
-fs = require("fs")
-_ = require("underscore")
-readdirp = require("readdirp")
-minimatch = require("minimatch")
-Q = require("q")
-deferred = Q.defer()
-add_error_messages = require("./utils/add_error_messages")
-output_path = require("./utils/output_path")
-yaml_parser = require("./utils/yaml_parser")
-precompile_templates = require("./precompiler")
-Compiler = require("./compiler")
+#colors = require("colors")
+#async = require("async")
+#shell = require("shelljs")
+#path = require("path")
+#fs = require("fs")
+#_ = require("underscore")
+#readdirp = require("readdirp")
+#minimatch = require("minimatch")
+#Q = require("q")
+#deferred = Q.defer()
+#add_error_messages = require("./utils/add_error_messages")
+#output_path = require("./utils/output_path")
+#yaml_parser = require("./utils/yaml_parser")
+#precompile_templates = require("./precompiler")
+#Compiler = require("./compiler")
+
+Print = require './print'
+Project = require './project'
+
+print = new Print()
+project = new Project(process.cwd())
+
+module.exports =
+  print: print
+  project: project
+
 
 # initialization and error handling
-compiler = new Compiler()
-_.bindAll compiler
+#compiler = new Compiler()
+#_.bindAll compiler
 
+###
 compiler.on "error", (err) ->
   console.log "\u0007" # bell sound
   console.error "\n\n------------ ERROR ------------\n\n".red + err.stack + "\n"
@@ -75,7 +87,9 @@ analyze = (root) ->
   is_compiled = (file) ->
     global.options.compiled_extensions.indexOf(path.extname(file).slice(1)) >= 0
   is_template = (file) ->
-    minimatch file, "**/" + global.options.templates + "/*"
+###
+    #minimatch file, "**/" + global.options.templates + "/*"
+###
   global.options.debug.log "analyzing project", "yellow"
   ast =
     folders: {}
@@ -119,3 +133,4 @@ create_folders = (ast) ->
   Q.fcall ->
     ast
 
+###
