@@ -38,12 +38,12 @@ module.exports = ->
 
 
 class Precompiler
-  
+
   # deals with setting up the variables for options
   # @param {Object} options = {} an object holding all the options to be
   # passed to the compiler. 'templates' must be specified.
   # @constructor
-  
+
   constructor: (options = {}) ->
     defaults =
       include_helpers: true
@@ -54,11 +54,11 @@ class Precompiler
 
     _.extend @, defaults, options
 
-  
+
   # loop through all the templates specified, compile them, and add a wrapper
   # @return {String} the source of a JS object which holds all the templates
   # @public
-  
+
   compile: ->
     buf = ["""
     (function(){
@@ -72,27 +72,35 @@ class Precompiler
     buf.push '})();'
     return buf.join ''
 
-  
+
   # compile individual templates
   # @param {String} template the full filename & path of the template to be compiled
   # @return {String} source of the template function
   # @private
-  
+
   compileTemplate: (template) ->
     templateNamespace = path.basename(template, '.jade').replace(/\//g, '.') # Replaces '/' with '.'
     data = fs.readFileSync(template, 'utf8')
     data = jade.compile(data, { compileDebug: @debug || false, inline: @inline || false, client: true })
     return "#{@namespace}.#{templateNamespace} = #{data};\n"
 
-  
+
   # Gets Jade's helpers and combines them into string
   # @return {String} source of Jade's helpers
   # @private
-  
+
   helpers: ->
+
+    # jade has a few extra helpers that aren't exported
+    # we should probably figure out a way to pull all of runtime.js
+    nulls = `function nulls(val) { return val != null && val !== '' }`
+    joinClasses = `function joinClasses(val) { return Array.isArray(val) ? val.map(joinClasses).filter(nulls).join(' ') : val; }`
+
     buf = [
       jade.runtime.attrs.toString().replace(/exports\./g,''),
-      jade.runtime.escape.toString()
+      jade.runtime.escape.toString(),
+      nulls.toString(),
+      joinClasses.toString()
     ]
 
     buf.push jade.runtime.rethrow.toString() if @debug
