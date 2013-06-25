@@ -6,7 +6,7 @@ adapters = require('./adapters')
 compress = require('./utils/compressor')
 output_path = require('./utils/output_path')
 _ = require('underscore')
-FileHelper = require('./utils/file_helper')
+Asset = require('./asset')
 
 class Compiler extends EventEmitter
   ###*
