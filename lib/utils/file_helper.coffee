@@ -4,7 +4,7 @@ _ = require("underscore")
 output_path = require("./output_path")
 yaml_parser = require("./yaml_parser")
 
-class FileHelper
+class Asset
   ###*
    * [constructor description]
    * @param {[type]} file [description]
@@ -20,8 +20,15 @@ class FileHelper
     @target_extension = path.basename(@export_path).split('.')[1]
     return
 
+  ###*
+   * An array of all Assets that rely on this Asset. These are the files that
+     need to be recompiled when this one is modified.
+   * @type {Array}
+  ###
+  dependants: []
+
   toString: ->
-    # more useful than [object Object]
+    # more useful than `[object Object]`
     return @path
 
   ###*
@@ -116,7 +123,6 @@ class FileHelper
    * @public
   ###
   write: () ->
-    
     # if dynamic and no layout, don't write
     if @dynamic_locals and not @dynamic_locals.layout
       
@@ -133,4 +139,4 @@ class FileHelper
     fs.writeFileSync @export_path, @contents
     global.options.debug.log "compiled " + @path.replace(process.cwd(), "")
 
-module.exports = FileHelper
+module.exports = Asset
