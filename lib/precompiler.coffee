@@ -13,13 +13,13 @@ module.exports = ->
   global.options.debug.log 'precompiling templates', 'yellow'
   return false if not global.options.templates?
   template_dir = path.join process.cwd(), global.options.templates
-  files = fs.readdirSync(template_dir)
+  #files = fs.readdirSync(template_dir)
 
-  # make sure to skip ignored files
-  ignores = []
-  files.map (f) ->
-    options.ignore_files.forEach (i) ->
-      ignores.push(f) if minimatch(f, i.slice(1))
+  ## make sure to skip ignored files
+  #ignores = []
+  #files.map (f) ->
+  #  options.ignore_files.forEach (i) ->
+  #    ignores.push(f) if minimatch(f, i.slice(1))
 
   precompiler = new Precompiler(
     templates: _.map(
