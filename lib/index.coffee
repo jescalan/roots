@@ -52,7 +52,7 @@ analyze = (root) ->
       fileFilter: global.options.ignore_files
 
     readdirp options, (err, res) ->
-      console.error err  if err
+      console.error err if err
       
       # populate folders
       ast.folders = _.pluck(res.directories, "fullPath")
@@ -60,10 +60,9 @@ analyze = (root) ->
       # populate compiled and copied files
       res.files.forEach (file) ->
         parse_file file.fullPath
-
       deferred.resolve ast
-
     deferred.promise
+
   parse_file = (file) ->
     if yaml_parser.detect(file)
       ast.dynamic_files.push file
