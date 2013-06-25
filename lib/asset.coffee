@@ -1,8 +1,8 @@
 path = require("path")
 fs = require("fs")
 _ = require("underscore")
-output_path = require("./output_path")
-yaml_parser = require("./yaml_parser")
+output_path = require("./utils/output_path")
+yaml_parser = require("./utils/yaml_parser")
 
 class Asset
   ###*
