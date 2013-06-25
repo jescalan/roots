@@ -20,6 +20,10 @@ class FileHelper
     @target_extension = path.basename(@export_path).split('.')[1]
     return
 
+  toString: ->
+    # more useful than [object Object]
+    return @path
+
   ###*
    * [parse_dynamic_content description]
    * @return {[type]} [description]
