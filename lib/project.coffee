@@ -3,6 +3,7 @@ _ = require 'underscore'
 path = require 'path'
 recursive_readdir = require 'recursive-readdir'
 roots = require './index'
+Asset = require './asset'
 
 
 class Project
@@ -31,12 +32,6 @@ class Project
    * @type {Boolean}
   ###
   debug: false
-
-  ###*
-   * all of the files in the project that we're watching
-   * @type {Array}
-  ###
-  assets: []
 
   ###*
    * The path to the root of the project.
@@ -117,5 +112,19 @@ class Project
 
       cb()
     )
+
+  ###*
+   * all of the files in the project that we're watching
+   * @type {Array}
+  ###
+  assets: []
+
+  ###*
+   * Right now, this function just loads all the files in the project that
+     aren't being ignored. But when asset graph is working, it will just load
+     the layout files. And then all other files will be detected from there.
+   * @type {[type]}
+  ###
+  get_inital_files: ()
 
 module.exports = Project

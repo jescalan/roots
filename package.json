@@ -26,6 +26,7 @@
     "colors": "0.6.x",
     "open": "0.0.x",
     "monocle": "1.1.x",
+    "recursive-readdir": "0.0.1",
     "readdirp": "0.3.x",
     "mkdirp": "0.3.x",
     "stylus": "0.34.x",

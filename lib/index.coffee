@@ -25,17 +25,15 @@ module.exports =
   project: project
 
 
-# initialization and error handling
-#compiler = new Compiler()
-#_.bindAll compiler
+###
+ initialization and error handling
+compiler = new Compiler()
+_.bindAll compiler
 
 ###
-compiler.on "error", (err) ->
-  console.log "\u0007" # bell sound
-  console.error "\n\n------------ ERROR ------------\n\n".red + err.stack + "\n"
-  add_error_messages.call this, err, @finish
 
 
+###
 # @api public
 # Given a root (folder or file), compile with roots and output to /public
 exports.compile_project = (root, done) ->
@@ -44,7 +42,7 @@ exports.compile_project = (root, done) ->
     done()
 
   process.stdout.write "compiling... ".grey
-  global.options.debug.log ""
+  print.debug ""
   analyze(root).then(create_folders).then(compile).then(precompile_templates).then compiler.finish, (err) ->
     compiler.emit "error", err
 
@@ -57,11 +55,11 @@ analyze = (root) ->
     # clear the dynamic locals first
     global.options.locals.site = null
     
-    # read through the current project and organize the files
-    options =
-      root: root
-      directoryFilter: global.options.ignore_folders
-      fileFilter: global.options.ignore_files
+#    # read through the current project and organize the files
+#    options =
+#      root: root
+#      directoryFilter: global.options.ignore_folders
+#      fileFilter: global.options.ignore_files
 
     readdirp options, (err, res) ->
       console.error err if err
@@ -90,7 +88,7 @@ analyze = (root) ->
 ###
     #minimatch file, "**/" + global.options.templates + "/*"
 ###
-  global.options.debug.log "analyzing project", "yellow"
+  print.debug "analyzing project", "yellow"
   ast =
     folders: {}
     compiled_files: []
@@ -114,7 +112,7 @@ compile = (ast) ->
     async.map ast.compiled_files, compiler.compile, cb
   copy_static_files = (cb) ->
     async.map ast.static_files, compiler.copy, cb
-  global.options.debug.log "compiling and copying files", "yellow"
+  print.debug "compiling and copying files", "yellow"
   async.map ast.dynamic_files, compiler.compile, (err1) ->
     async.parallel [compile_files, copy_static_files], (err2) ->
       deferred.reject err  if err1 or err2
@@ -125,11 +123,11 @@ compile = (ast) ->
 # @api private
 # create the folder structure for the project
 create_folders = (ast) ->
-  global.options.debug.log "creating folders", "yellow"
+  print.debug "creating folders", "yellow"
   shell.mkdir "-p", path.join(process.cwd(), options.output_folder)
   for key of ast.folders
     shell.mkdir "-p", output_path(ast.folders[key])
-    global.options.debug.log "created " + ast.folders[key].replace(process.cwd(), "")
+    print.debug "created " + ast.folders[key].replace(process.cwd(), "")
   Q.fcall ->
     ast
 

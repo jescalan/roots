@@ -57,11 +57,11 @@ module.exports = (args, cb) ->
     extensions.push adapters[key].settings.file_type
 
   # make sure all layout files are ignored
-  opts.ignore_files = opts.ignore_files or []
-  opts.layouts = opts.layouts or {}
+  #opts.ignore_files = opts.ignore_files or []
+  #opts.layouts = opts.layouts or {}
 
-  for key of opts.layouts
-    opts.ignore_files.push opts.layouts[key]
+  #for key of opts.layouts
+  #  opts.ignore_files.push opts.layouts[key]
 
   # add plugins, and public folders to the folder ignores
   opts.ignore_folders = opts.ignore_folders or []
@@ -84,16 +84,16 @@ module.exports = (args, cb) ->
       '!' + pat.toString().replace(/\//g, '')
 
   # format the file/folder ignore patterns
-  opts.ignore_files = format_ignores(opts.ignore_files)
-  opts.ignore_folders = format_ignores(opts.ignore_folders)
-  opts.watcher_ignore_folders = format_ignores(opts.watcher_ignore_folders)
-  opts.watcher_ignore_files = format_ignores(opts.watcher_ignore_files)
+  #opts.ignore_files = format_ignores(opts.ignore_files)
+  #opts.ignore_folders = format_ignores(opts.ignore_folders)
+  #opts.watcher_ignore_folders = format_ignores(opts.watcher_ignore_folders)
+  #opts.watcher_ignore_files = format_ignores(opts.watcher_ignore_files)
 
-  opts.debug = status: (opts.debug or args.debug)
+  #opts.debug = status: (opts.debug or args.debug)
 
-  opts.debug.log = (data, color) ->
-    color = 'grey' unless color
-    @status and console.log(data[color])
+  #opts.debug.log = (data, color) ->
+  #  color = 'grey' unless color
+  #  @status and console.log(data[color])
 
   
   # finish it up!

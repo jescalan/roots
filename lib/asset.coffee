@@ -3,11 +3,13 @@ fs = require("fs")
 _ = require("underscore")
 output_path = require("./utils/output_path")
 yaml_parser = require("./utils/yaml_parser")
+roots = require './roots'
+EventEmitter = require('events').EventEmitter
 
-class Asset
+class Asset extends EventEmitter
   ###*
    * [constructor description]
-   * @param {[type]} file [description]
+   * @param {String} file [description]
    * @return {undefined}
    * @constructor
   ###
@@ -29,7 +31,15 @@ class Asset
 
   toString: ->
     # more useful than `[object Object]`
-    return @path
+    return @path.replace process.cwd(), ''
+
+  ###*
+   * Compiles the asset to Asset.output_path.
+   * @return {[type]} [description]
+  ###
+  compile: ->
+    roots.print.debug "compiled #{@}"
+    return
 
   ###*
    * [parse_dynamic_content description]
@@ -71,7 +81,7 @@ class Asset
   ###*
    * [set_layout description]
    * @public
-   * @uses set_paths, FileHelper.parse_dynamic_content
+   * @uses set_paths, Asset.parse_dynamic_content
   ###
   set_layout: ->
     # make sure a layout actually has to be set
@@ -118,11 +128,11 @@ class Asset
     locals
 
   ###*
-   * write FileHelper.contents to FileHelper.path
+   * write Asset.contents to Asset.path
    * @return {[type]} [description]
    * @public
   ###
-  write: () ->
+  write: ->
     # if dynamic and no layout, don't write
     if @dynamic_locals and not @dynamic_locals.layout
       
@@ -132,7 +142,7 @@ class Asset
         category[category.length - 1].content = @contents
       
       # don't write the file
-      global.options.debug.log "processed " + @path.replace(process.cwd(), "")
+      roots.print.debug "processed #{@}"
       return false
     
     # write it
