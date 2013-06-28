@@ -18,7 +18,7 @@ Print = require './print'
 Project = require './project'
 
 print = new Print()
-project = new Project(process.cwd())
+project = new Project(roots.project.root_dir)
 
 module.exports =
   print: print
@@ -30,10 +30,6 @@ module.exports =
 compiler = new Compiler()
 _.bindAll compiler
 
-###
-
-
-###
 # @api public
 # Given a root (folder or file), compile with roots and output to /public
 exports.compile_project = (root, done) ->
@@ -124,10 +120,10 @@ compile = (ast) ->
 # create the folder structure for the project
 create_folders = (ast) ->
   print.debug "creating folders", "yellow"
-  shell.mkdir "-p", path.join(process.cwd(), options.output_folder)
+  shell.mkdir "-p", path.join(roots.project.root_dir, options.output_folder)
   for key of ast.folders
     shell.mkdir "-p", output_path(ast.folders[key])
-    print.debug "created " + ast.folders[key].replace(process.cwd(), "")
+    print.debug "created " + ast.folders[key].replace(roots.project.root_dir, "")
   Q.fcall ->
     ast
 

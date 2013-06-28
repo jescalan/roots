@@ -7,6 +7,7 @@ compress = require('./utils/compressor')
 output_path = require('./utils/output_path')
 _ = require('underscore')
 Asset = require('./asset')
+roots = require('./index')
 
 class Compiler extends EventEmitter
   ###*
@@ -34,7 +35,7 @@ class Compiler extends EventEmitter
     matching_adapters = get_adapters_by_extension(
       path.basename(file).split('.').slice(1)
     )
-    fh = new FileHelper(file)
+    fh = new Asset(file)
     matching_adapters.forEach (adapter, i) =>
       intermediate = (matching_adapters.length - i - 1 > 0)
 
@@ -86,10 +87,10 @@ class Compiler extends EventEmitter
     else if @mode is 'dev'
       # symlink in development mode
       fs.existsSync(destination) or fs.symlinkSync(file, destination)
-      options.debug.log "symlinked #{file.replace(process.cwd(), '')}"
+      options.debug.log "symlinked #{file.replace(roots.project.root_dir, '')}"
     else
       shell.cp '-f', file, destination
-      options.debug.log "copied #{file.replace(process.cwd(), '')}"
+      options.debug.log "copied #{file.replace(roots.project.root_dir, '')}"
     cb()
 
   ###*
@@ -118,7 +119,7 @@ module.exports = Compiler
 
 # @api private
 
-plugin_path = path.join(process.cwd() + '/plugins')
+plugin_path = path.join(roots.project.root_dir + '/plugins')
 plugins = fs.existsSync(plugin_path) and shell.ls(plugin_path)
 
 ###*

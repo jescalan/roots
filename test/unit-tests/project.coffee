@@ -1,7 +1,7 @@
 should = require 'should'
 path = require 'path'
-roots = require('../../lib/index')
-Project = require('../../lib/project')
+roots = require '../../lib/index'
+Project = require '../../lib/project'
 root = __dirname
 
 project = undefined

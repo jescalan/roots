@@ -20,7 +20,7 @@ class Deployer
   # A couple functions that are the same across all adapters (currently)
 
   compile_project: (cb) ->
-    roots.compile_project process.cwd(), ->
+    roots.compile_project roots.project.root_dir, ->
       cb()
 
   commit_files: (cb) ->

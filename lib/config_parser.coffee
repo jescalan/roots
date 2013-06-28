@@ -4,6 +4,7 @@ shell = require 'shelljs'
 adapters = require './adapters'
 colors = require 'colors'
 coffee = require 'coffee-script'
+roots = require '../index'
 
 ###*
  * Config Parser - Parses the app.coffee file in a roots project, adds and
@@ -16,7 +17,7 @@ coffee = require 'coffee-script'
 module.exports = (args, cb) ->
   # pull the app config file
   opts = undefined
-  config_path = path.join(process.cwd() + '/app.coffee')
+  config_path = path.join(roots.project.root_dir + '/app.coffee')
   contents = (if fs.existsSync(config_path) then fs.readFileSync(config_path, 'utf8') else '{}')
 
   # fallback for old roots versions

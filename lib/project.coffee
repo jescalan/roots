@@ -5,7 +5,6 @@ recursive_readdir = require 'recursive-readdir'
 roots = require './index'
 Asset = require './asset'
 
-
 class Project
   ###*
    * Sets the root_dir and takes a config object and merges it into the
@@ -26,6 +25,13 @@ class Project
       layout_files,
     )
     return
+
+  ###*
+   * either 'build' or 'dev'
+   * @type {String}
+   * @public
+  ###
+  mode: 'build'
 
   ###*
    * debug mode
