@@ -1,7 +1,6 @@
 path = require 'path'
 fs = require 'fs'
 _ = require 'underscore'
-output_path = require './utils/output_path'
 yaml_parser = require './utils/yaml_parser'
 roots = require './roots'
 EventEmitter = require('events').EventEmitter
@@ -19,9 +18,13 @@ class Asset extends EventEmitter
     @path = file
     @contents = fs.readFileSync(@path, 'utf8')
 
-
     @setOutputPath()
     @addWatcher()
+    
+    @on 'compile error', (err) ->
+      roots.print.error err
+      add_error_messages.call @, err, @finish
+
     roots.print.debug "setup Asset: #{@}"
     return
 
@@ -86,8 +89,6 @@ class Asset extends EventEmitter
   ###*
    * Is one of:
    * uncompiled: hasn't been compiled
-   * copied: was copied to Project.public_dir and doesn't need to be
-     recompiled unless the Asset itself is modified.
    * symlinked: was symlinked to Project.public_dir and doesn't need to be
      recompiled even if the file is modified.
    * compiled: some transformation was applied while being compiled, and when
@@ -103,9 +104,16 @@ class Asset extends EventEmitter
   ###
   compile: ->
     if @status is 'symlinked'
-      return #
+      return # we don't need to do anything if it's symlinked
 
-    roots.print.debug "#{@status} #{@}"
+    if @mode is 'dev' and @adapters.length is 0
+      # symlink in development mode
+      fs.symlinkSync(file, destination)
+      roots.print.debug "symlinked #{@}"
+
+    # compiling code
+
+    roots.print.debug "compiled #{@}"
     return
 
   ###*
