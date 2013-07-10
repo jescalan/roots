@@ -1,9 +1,9 @@
-jade = require "jade"
-fs = require "fs"
-path = require "path"
-_ = require "underscore"
-mkdirp = require "mkdirp"
-minimatch = require "minimatch"
+jade = require 'jade'
+fs = require 'fs'
+path = require 'path'
+_ = require 'underscore'
+mkdirp = require 'mkdirp'
+minimatch = require 'minimatch'
 compressor = require './utils/compressor'
 
 # compile jade templates into JS functions for use on the client-side, and
