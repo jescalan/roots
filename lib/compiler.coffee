@@ -131,7 +131,8 @@ get_adapters_by_extension = (extensions) ->
   matching_adapters = []
   extensions.reverse().forEach (ext) =>
     for key of adapters
-      matching_adapters.push adapters[key]  if adapters[key].settings.file_type is ext
+      if adapters[key].settings.file_type is ext
+        matching_adapters.push adapters[key]
 
   matching_adapters
 

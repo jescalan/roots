@@ -1,7 +1,6 @@
-transformer = require('transformers')['coffee-script']
 _ = require 'underscore'
 
-#snockets is temporary
+#snockets is temporary, this will be replaced with transformers
 Snockets = require 'snockets'
 snockets = new Snockets()
 
@@ -30,6 +29,4 @@ exports.compile = (file, options={}, cb) ->
     
   cb(error, compiled)
 
-
-  #transformer.render file.contents, options, cb
   return
