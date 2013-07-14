@@ -13,12 +13,11 @@
 #yaml_parser = require("./utils/yaml_parser")
 #precompile_templates = require("./precompiler")
 #Compiler = require("./compiler")
-
 Print = require './print'
 Project = require './project'
 
 print = new Print()
-project = new Project(roots.project.root_dir)
+project = new Project(process.cwd())
 
 module.exports =
   print: print

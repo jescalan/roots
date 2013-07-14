@@ -134,9 +134,9 @@ plugins = fs.existsSync(plugin_path) and shell.ls(plugin_path)
 get_adapters_by_extension = (extensions) ->
   matching_adapters = []
   extensions.reverse().forEach (ext) =>
-    for key of adapters
-      if adapters[key].settings.file_type is ext
-        matching_adapters.push adapters[key]
+    for adapter of adapters
+      if adapter.settings.file_type is ext
+        matching_adapters.push adapter
 
   matching_adapters
 

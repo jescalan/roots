@@ -2,9 +2,8 @@ path = require 'path'
 fs = require 'fs'
 _ = require 'underscore'
 yaml_parser = require './utils/yaml_parser'
-roots = require './roots'
+roots = require './index'
 EventEmitter = require('events').EventEmitter
-adapters = require("./adapters")
 
 class Asset extends EventEmitter
   ###*
@@ -14,6 +13,7 @@ class Asset extends EventEmitter
    * @constructor
   ###
   constructor: (file) ->
+    adapters = require("./adapters") # blah! deps
     # set paths
     @path = file
     @contents = fs.readFileSync(@path, 'utf8')

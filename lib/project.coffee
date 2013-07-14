@@ -75,7 +75,7 @@ class Project
    * @type {Object}
   ###
   locals:
-    livereload = '' # livereload won't render anything unless in watch mode
+    livereload: '' # livereload won't render anything unless in watch mode
 
   ###*
    * [layouts description]
@@ -109,7 +109,7 @@ class Project
   ###
   build_ignore_files: (cb) ->
     recursive_readdir(@root_dir, (err, files) =>
-      console.error err if err
+      if err then console.error err
       for i in [0...files.length]
         files[i] = '/' + path.relative(@root_dir, files[i])
 
@@ -131,6 +131,7 @@ class Project
      the layout files. And then all other files will be detected from there.
    * @type {[type]}
   ###
-  get_inital_files: ()
+  get_inital_files: () ->
+    return
 
 module.exports = Project
