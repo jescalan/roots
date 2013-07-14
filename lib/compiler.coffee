@@ -11,11 +11,15 @@ roots = require('./index')
 
 class Compiler extends EventEmitter
   ###*
-   * either 'build' or 'dev'
-   * @type {String}
-   * @public
+   * [constructor description]
+   * @return {undefined}
+   * @constructor
   ###
-  mode: 'build'
+  constructor: ->
+    @on 'error', (err) ->
+      print.error err
+      add_error_messages.call @, err, @finish
+    return
 
   ###*
    * Emits an event to notify listeners that everything is compiled
@@ -73,7 +77,7 @@ class Compiler extends EventEmitter
    * @param {[type]} file [description]
    * @param {Compiler~doneCallback} cb
    * @return {[type]} [description]
-   * @uses Compiler.mode
+   * @uses Project.mode
   ###
   copy: (file, cb) ->
     # TODO: Run the file copy operations as async (ncp)
@@ -97,7 +101,6 @@ class Compiler extends EventEmitter
    * [compile_into_layout description]
    * @param {[type]} fh [description]
    * @param {[type]} adapter [description]
-   * @param {[type]} compiled [description]
    * @param {Function} cb [description]
    * @return {[type]} [description]
   ###
