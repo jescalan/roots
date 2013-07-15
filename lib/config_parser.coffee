@@ -17,7 +17,7 @@ roots = require '../index'
 module.exports = (args, cb) ->
   # pull the app config file
   opts = undefined
-  config_path = path.join(roots.project.root_dir + '/app.coffee')
+  config_path = path.join(roots.project.rootDir + '/app.coffee')
   contents = (if fs.existsSync(config_path) then fs.readFileSync(config_path, 'utf8') else '{}')
 
   # fallback for old roots versions
@@ -58,11 +58,11 @@ module.exports = (args, cb) ->
     extensions.push adapters[key].settings.file_type
 
   # make sure all layout files are ignored
-  #opts.ignore_files = opts.ignore_files or []
+  #opts.ignoreFiles = opts.ignoreFiles or []
   #opts.layouts = opts.layouts or {}
 
   #for key of opts.layouts
-  #  opts.ignore_files.push opts.layouts[key]
+  #  opts.ignoreFiles.push opts.layouts[key]
 
   # add plugins, and public folders to the folder ignores
   opts.ignore_folders = opts.ignore_folders or []
@@ -75,20 +75,20 @@ module.exports = (args, cb) ->
 
   # configure the base watcher ignores
   opts.watcher_ignore_folders = opts.watcher_ignore_folders or []
-  opts.watcher_ignore_files = opts.watcher_ignore_files or []
+  opts.watcher_ignoreFiles = opts.watcher_ignoreFiles or []
   
   opts.watcher_ignore_folders = opts.watcher_ignore_folders.concat(['components', 'plugins', '.git', opts.output_folder])
-  opts.watcher_ignore_files = opts.watcher_ignore_files.concat(['.DS_Store'])
+  opts.watcher_ignoreFiles = opts.watcher_ignoreFiles.concat(['.DS_Store'])
 
   format_ignores = (ary) ->
     ary.map (pat) ->
       '!' + pat.toString().replace(/\//g, '')
 
   # format the file/folder ignore patterns
-  #opts.ignore_files = format_ignores(opts.ignore_files)
+  #opts.ignoreFiles = format_ignores(opts.ignoreFiles)
   #opts.ignore_folders = format_ignores(opts.ignore_folders)
   #opts.watcher_ignore_folders = format_ignores(opts.watcher_ignore_folders)
-  #opts.watcher_ignore_files = format_ignores(opts.watcher_ignore_files)
+  #opts.watcher_ignoreFiles = format_ignores(opts.watcher_ignoreFiles)
 
   #opts.debug = status: (opts.debug or args.debug)
 

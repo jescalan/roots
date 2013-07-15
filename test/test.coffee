@@ -13,7 +13,7 @@ root = __dirname
 #
 
 require './unit-tests/project'
-###
+
 #
 # command line interface
 #
@@ -332,4 +332,3 @@ describe 'deploy', ->
     deployer.commit_files.should.exist
     deployer.create_project.should.exist
     deployer.push_code.should.exist
-###

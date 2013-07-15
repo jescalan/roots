@@ -4,33 +4,50 @@ WebSocket = require 'faye-websocket'
 path = require 'path'
 http = require 'http'
 open = require 'open'
-sockets = []
+roots = require './index'
 
-exports.start = (directory) ->
-  port = process.env.PORT or 1111
-  serve_dir = (if global.options then path.join(directory, options.output_folder) else directory)
-  app = connect().use(connect.static(serve_dir))
-  app.use connect.logger('dev')  if global.options and global.options.debug.status
-  console.log ("server started on port #{port}").green
-  server = http.createServer(app).listen(port)
-  open 'http://localhost:' + port
-  server.addListener 'upgrade', (request, socket, head) ->
-    ws = new WebSocket(request, socket, head)
-    ws.onopen = ->
-      ws.send 'connected'
+class Server
+  constructor: (port, openBrowser=true) ->
+    @port = port
 
-    sockets.push ws
+    app = connect().use(connect.static(roots.project.publicDir))
+    app.use connect.logger(@logger)
 
-exports.compiling = ->
-  if global.options.no_livereload
-    sockets.forEach (socket) ->
-      socket.send 'compiling'
-      socket.onopen = null
+    @server = http.createServer(app).listen(@port)
+    @server.addListener 'upgrade', (request, socket, head) ->
+      ws = new WebSocket(request, socket, head)
+      ws.onopen = ->
+        ws.send 'connected'
 
-exports.reload = ->
-  if global.options.no_livereload
-    return sockets.forEach((socket) ->
-      socket.send 'reload'
-      socket.onopen = null
-    )
-  sockets = []
+      @sockets.push ws
+
+    roots.print.log "server started on port #{@port}", 'green'
+    if openBrowser then open "http://localhost:#{port}"
+
+    roots.project.on 'compiling', -> @compiling
+    roots.project.on 'reload', -> @reload
+
+  sockets: []
+
+  port: 0
+
+  server: undefined
+
+  logger: (req, res) ->
+    roots.print.debug res
+
+  compiling: ->
+    if not roots.project.livereload_enabled
+      @sockets.forEach (socket) ->
+        socket.send 'compiling'
+        socket.onopen = null
+
+  reload: ->
+    if not roots.project.livereload_enabled
+      return @sockets.forEach((socket) ->
+        socket.send 'reload'
+        socket.onopen = null
+      )
+    @sockets = []
+
+module.exports = Server

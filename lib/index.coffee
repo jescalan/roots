@@ -1,4 +1,3 @@
-#colors = require("colors")
 #async = require("async")
 #shell = require("shelljs")
 #path = require("path")
@@ -9,24 +8,32 @@
 #Q = require("q")
 #deferred = Q.defer()
 #add_error_messages = require("./utils/add_error_messages")
-#output_path = require("./utils/output_path")
 #yaml_parser = require("./utils/yaml_parser")
 #precompile_templates = require("./precompiler")
-#Compiler = require("./compiler")
+
 Print = require './print'
+exports.print = new Print()
+console.log 'print'
+
 Project = require './project'
+exports.project = new Project(process.cwd())
+console.log 'project'
 
-print = new Print()
-project = new Project(process.cwd())
+Server = require './server'
+exports.server = new Server(process.env.PORT or 1111, false)
+console.log 'server'
 
-module.exports =
-  print: print
-  project: project
+Compiler = require './compiler' # temporary
+exports.compiler = new Compiler() # temporary
+console.log 'compiler'
+
+exports.project.getInitalFiles(->
+  exports.print.log exports.project.assets
+)
 
 
 ###
  initialization and error handling
-compiler = new Compiler()
 _.bindAll compiler
 
 # @api public
@@ -54,7 +61,7 @@ analyze = (root) ->
 #    options =
 #      root: root
 #      directoryFilter: global.options.ignore_folders
-#      fileFilter: global.options.ignore_files
+#      fileFilter: global.options.ignoreFiles
 
     readdirp options, (err, res) ->
       console.error err if err
@@ -119,10 +126,10 @@ compile = (ast) ->
 # create the folder structure for the project
 create_folders = (ast) ->
   print.debug "creating folders", "yellow"
-  shell.mkdir "-p", path.join(roots.project.root_dir, options.output_folder)
+  shell.mkdir "-p", path.join(roots.project.rootDir, options.output_folder)
   for key of ast.folders
     shell.mkdir "-p", output_path(ast.folders[key])
-    print.debug "created " + ast.folders[key].replace(roots.project.root_dir, "")
+    print.debug "created " + ast.folders[key].replace(roots.project.rootDir, "")
   Q.fcall ->
     ast
 

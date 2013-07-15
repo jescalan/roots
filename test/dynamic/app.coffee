@@ -1,4 +1,4 @@
-ignore_files: ['_*', 'readme*', '.git', '.gitignore', '.DS_Store']
+ignoreFiles: ['_*', 'readme*', '.git', '.gitignore', '.DS_Store']
 
 layouts:
   default: 'layout.jade'

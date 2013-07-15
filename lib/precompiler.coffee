@@ -13,13 +13,13 @@ roots = require './index'
 module.exports = ->
   roots.print.debug 'precompiling templates', 'yellow'
   return false if not global.options.templates?
-  template_dir = path.join roots.project.root_dir, global.options.templates
+  template_dir = path.join roots.project.rootDir, global.options.templates
   #files = fs.readdirSync(template_dir)
 
   ## make sure to skip ignored files
   #ignores = []
   #files.map (f) ->
-  #  options.ignore_files.forEach (i) ->
+  #  options.ignoreFiles.forEach (i) ->
   #    ignores.push(f) if minimatch(f, i.slice(1))
 
   precompiler = new Precompiler(

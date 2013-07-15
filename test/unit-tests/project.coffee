@@ -8,18 +8,18 @@ project = undefined
 config = {}
 
 describe 'class Project', ->
-  root_dir = path.join root, '../basic'
+  rootDir = path.join root, '../basic'
 
   it 'should accept a config object', ->
-    project = new Project(root_dir, config)
+    project = new Project(rootDir, config)
 
   it 'should have proper defaults', ->
-    project.public_dir.should.eql '/public'
-    project.root_dir.should.not.eql ''
+    project.publicDir.should.eql '/public'
+    project.rootDir.should.not.eql ''
 
-  it 'build_ignore_files() should work', (done) ->
-    project.build_ignore_files(->
-      project.ignore_files.should.eql [
+  it 'buildIgnoreFiles() should work', (done) ->
+    project.buildIgnoreFiles(->
+      project.ignoreFiles.should.eql [
         '/app.coffee'
       ]
       done()

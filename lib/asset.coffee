@@ -8,12 +8,13 @@ EventEmitter = require('events').EventEmitter
 class Asset extends EventEmitter
   ###*
    * [constructor description]
-   * @param {String} file [description]
+   * @param {String} file The full path to the Asset. 
    * @return {undefined}
    * @constructor
   ###
   constructor: (file) ->
     adapters = require("./adapters") # blah! deps
+
     # set paths
     @path = file
     @contents = fs.readFileSync(@path, 'utf8')
@@ -29,25 +30,39 @@ class Asset extends EventEmitter
     return
 
   ###*
+   * the full path to the source file
+   * @type {String}
+   * @private
+  ###
+  path: ''
+
+  ###*
+   * the full path to the file that is being served by the server
+   * @type {String}
+   * @private
+  ###
+  compiledPath: ''
+
+  ###*
    * Sets Asset.relativePath, Asset.outputPath (the path that this Asset will
      compile to), Asset.outputExtension, and Asset.extension.
    * @uses Asset.path
   ###
   setPaths: ->
-    @relativePath = @path.replace roots.project.root_dir, ''
+    @relativePath = @path.replace roots.project.rootDir, ''
     @extension = path.basename(file).split('.')[1] # this should take the *first* extension only
     
     # dump views/assets to public
     # I'm worried about the second replace call...
     @outputPath = path.join(
-      file.replace(roots.project.root_dir, roots.project.public_dir)
+      file.replace(roots.project.rootDir, roots.project.publicDir)
     ).replace(
-      new RegExp("#{roots.project.views_dir}|#{roots.project.assets_dir}"), ''
+      new RegExp("#{roots.project.viewsDir}|#{roots.project.assetsDir}"), ''
     )
     
     # swap extension if needed
     @outputPath = @outputPath.replace(new RegExp("\\.#{extension}.*"), '.' + adapters[extension].settings.target)  if adapters[extension]
-    @outputPath = path.join roots.project.root_dir, @outputPath
+    @outputPath = path.join roots.project.rootDir, @outputPath
 
     @outputExtension = path.basename(@outputPath).split('.')[1]
 
@@ -89,7 +104,7 @@ class Asset extends EventEmitter
   ###*
    * Is one of:
    * uncompiled: hasn't been compiled
-   * symlinked: was symlinked to Project.public_dir and doesn't need to be
+   * symlinked: was symlinked to Project.publicDir and doesn't need to be
      recompiled even if the file is modified.
    * compiled: some transformation was applied while being compiled, and when
      this Asset, or one of its dependencies is modified, it must be recompiled
@@ -127,7 +142,7 @@ class Asset extends EventEmitter
     if front_matter_string
       
       # set up variables
-      @category_name = @path.replace(roots.project.root_dir, "").split(path.sep)[1]
+      @category_name = @path.replace(roots.project.rootDir, "").split(path.sep)[1]
       options.locals.site ?= {}
       options.locals.site[@category_name] ?= []
       @dynamic_locals = {}
@@ -143,7 +158,7 @@ class Asset extends EventEmitter
       if front_matter.layout
         @layout_path = path.resolve(path.dirname(@path), front_matter.layout)
         @layout_contents = fs.readFileSync(@layout_path, 'utf8')
-        @dynamic_locals.url = @path.replace(roots.project.root_dir, '').replace(/\..*$/, '.html')
+        @dynamic_locals.url = @path.replace(roots.project.rootDir, '').replace(/\..*$/, '.html')
       
       # add to global locals (hah)
       options.locals.site[@category_name].push @dynamic_locals
@@ -175,7 +190,7 @@ class Asset extends EventEmitter
       if not layout? then return false
       
       # set the layout path and contents
-      @layout_path = path.join(roots.project.root_dir, options.folder_config.views, layout)
+      @layout_path = path.join(roots.project.rootDir, options.folder_config.views, layout)
       @layout_contents = fs.readFileSync(@layout_path, "utf8")
     else
       false

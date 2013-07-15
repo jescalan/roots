@@ -91,10 +91,10 @@ class Compiler extends EventEmitter
     else if @mode is 'dev'
       # symlink in development mode
       fs.existsSync(destination) or fs.symlinkSync(file, destination)
-      options.debug.log "symlinked #{file.replace(roots.project.root_dir, '')}"
+      options.debug.log "symlinked #{file.replace(roots.project.rootDir, '')}"
     else
       shell.cp '-f', file, destination
-      options.debug.log "copied #{file.replace(roots.project.root_dir, '')}"
+      options.debug.log "copied #{file.replace(roots.project.rootDir, '')}"
     cb()
 
   ###*
@@ -122,7 +122,7 @@ module.exports = Compiler
 
 # @api private
 
-plugin_path = path.join(roots.project.root_dir + '/plugins')
+plugin_path = path.join(roots.project.rootDir + '/plugins')
 plugins = fs.existsSync(plugin_path) and shell.ls(plugin_path)
 
 ###*

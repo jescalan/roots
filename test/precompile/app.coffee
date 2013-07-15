@@ -1,2 +1,2 @@
-ignore_files: ['_*']
+ignoreFiles: ['_*']
 templates: 'templates'

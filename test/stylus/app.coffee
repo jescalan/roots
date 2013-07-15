@@ -1,1 +1,1 @@
-ignore_files: ['_*']
+ignoreFiles: ['_*']

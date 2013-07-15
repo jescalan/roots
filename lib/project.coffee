@@ -2,26 +2,27 @@ minimatch = require 'minimatch'
 _ = require 'underscore'
 path = require 'path'
 recursive_readdir = require 'recursive-readdir'
+EventEmitter = require('events').EventEmitter
 roots = require './index'
 Asset = require './asset'
 
-class Project
+class Project extends EventEmitter
   ###*
-   * Sets the root_dir and takes a config object and merges it into the
+   * Sets the rootDir and takes a config object and merges it into the
      Project config.
    * @constructor
-   * @param {String} root_dir
+   * @param {String} rootDir
    * @param {Object} config
   ###
-  constructor: (root_dir, config={}) ->
-    @root_dir = root_dir
+  constructor: (rootDir, config={}) ->
+    @rootDir = rootDir
 
     layout_files = (key for key of @layouts)
 
     #add ignore patterns from the config too!
     @ignore_patterns = _.union(
       @ignore_patterns,
-      ["#{@public_dir}/**"],
+      ["#{@publicDir}/**"],
       layout_files,
     )
     return
@@ -43,32 +44,34 @@ class Project
    * The path to the root of the project.
    * @type {String}
   ###
-  root_dir: ''
+  rootDir: ''
 
   ###*
-   * where the compiled files go
+   * where the compiled files go relative to Project.rootDir.
    * @type {String}
   ###
-  public_dir: '/public'
+  publicDir: './public'
 
   ###*
-   * where the templates that compile into HTML go.
+   * where the templates that compile into HTML go relative to
+     Project.rootDir.
    * @type {String}
   ###
-  views_dir: '/views'
+  viewsDir: './views'
 
   ###*
-   * Where all images, scripts, styles, and other resources go.
+   * Where all images, scripts, styles, and other resources go relative to
+     Project.rootDir.
    * @type {String}
   ###
-  assets_dir: '/assets'
+  assetsDir: './assets'
 
   ###*
    * Where the file holding the precompiled templates goes, relative to
-     Project.public_dir
+     Project.publicDir
    * @type {String}
   ###
-  precompiled_template_output: '/js/templates.js'
+  precompiled_template_output: './js/templates.js'
 
   ###*
    * the variables that get passed to all templates as locals
@@ -78,6 +81,12 @@ class Project
     livereload: '' # livereload won't render anything unless in watch mode
 
   ###*
+   * if livereload is enabled
+   * @type {Boolean}
+  ###
+  livereload_enabled: true
+
+  ###*
    * [layouts description]
    * @type {Object}
   ###
@@ -85,7 +94,7 @@ class Project
 
   ###*
    * A list of minimatch patterns that match files which will not be compiled.
-     Patterns are matched against the path relative to Project.root_dir.
+     Patterns are matched against the path relative to Project.rootDir.
    * @type {Array}
    * @deprecated Once Asset Graph is fully functional, this will not be needed
      and will be removed
@@ -99,22 +108,22 @@ class Project
    * @deprecated Once Asset Graph is fully functional, this will not be needed
      and will be removed
   ###
-  ignore_files: ['/app.coffee']
+  ignoreFiles: ['/app.coffee']
 
   ###*
    * Using Project.ignore_patterns, determine what files in the project must
-     be ignored and put them in Project.ignore_files. This function will need to be re-run whenever a file is added, but since it's deprecated, it's not worth optimizing
+     be ignored and put them in Project.ignoreFiles. This function will need to be re-run whenever a file is added, but since it's deprecated, it's not worth optimizing
    * @deprecated Once Asset Graph is fully functional, this will not be needed
      and will be removed
   ###
-  build_ignore_files: (cb) ->
-    recursive_readdir(@root_dir, (err, files) =>
-      if err then console.error err
+  buildIgnoreFiles: (cb) ->
+    recursive_readdir(@rootDir, (err, files) =>
+      if err then roots.print.error err
       for i in [0...files.length]
-        files[i] = '/' + path.relative(@root_dir, files[i])
+        files[i] = '/' + path.relative(@rootDir, files[i])
 
       @ignore_patterns.forEach (pattern) =>
-        @ignore_files = _.union @ignore_files, minimatch.match(files, pattern, {})
+        @ignoreFiles = _.union @ignoreFiles, minimatch.match(files, pattern, {})
 
       cb()
     )
@@ -129,9 +138,24 @@ class Project
    * Right now, this function just loads all the files in the project that
      aren't being ignored. But when asset graph is working, it will just load
      the layout files. And then all other files will be detected from there.
-   * @type {[type]}
   ###
-  get_inital_files: () ->
-    return
+  getInitalFiles: (cb) =>
+    recursive_readdir(@rootDir, (err, files) =>
+      if err then roots.print.error err
+      for file in files
+        @addAsset file
+
+      cb()
+    )
+
+  ###*
+   * add an Asset to the project
+   * @param {String} path The full path to the Asset.
+  ###
+  addAsset: (path) ->
+    if path in ignoreFiles
+      throw "Asset (#{path}) is supposed to be ignored."
+    else
+      @assets.push new Asset(path)
 
 module.exports = Project

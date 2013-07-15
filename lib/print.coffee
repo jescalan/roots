@@ -1,8 +1,9 @@
+colors = require 'colors'
 roots = require './index'
 
 class Print
-  log: (text) ->
-    console.log text
+  log: (text, color='') ->
+    console.log text[color]
 
   debug: (text, color='grey') ->
     if not roots.project.debug then return
