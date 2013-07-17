@@ -14,7 +14,7 @@ describe 'class Project', ->
     project = new Project(rootDir, config)
 
   it 'should have proper defaults', ->
-    project.publicDir.should.eql '/public'
+    project.path('public').should.eql './public' # broken
     project.rootDir.should.not.eql ''
 
   it 'buildIgnoreFiles() should work', (done) ->

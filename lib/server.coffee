@@ -10,7 +10,7 @@ class Server
   constructor: (port, openBrowser=true) ->
     @port = port
 
-    app = connect().use(connect.static(roots.project.publicDir))
+    app = connect().use(connect.static(roots.project.path('public')))
     app.use connect.logger(@logger)
 
     @server = http.createServer(app).listen(@port)

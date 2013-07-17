@@ -22,7 +22,7 @@ class Project extends EventEmitter
     #add ignore patterns from the config too!
     @ignore_patterns = _.union(
       @ignore_patterns,
-      ["#{@publicDir}/**"],
+      ["#{@path('public')}/**"],
       layout_files,
     )
     return
@@ -47,31 +47,53 @@ class Project extends EventEmitter
   rootDir: ''
 
   ###*
-   * where the compiled files go relative to Project.rootDir.
-   * @type {String}
+   * A set of important directories, as paths (or functions that make paths)
+     relative to Project.rootDir
+   * @type {Object}
+   * @private
   ###
-  publicDir: './public'
+  dirs:
+    ###*
+     * where the compiled files go.
+     * @type {String}
+    ###
+    public: './public'
+
+    ###*
+     * Where the file holding the precompiled templates goes, relative to
+       Project.path('public')
+     * @return {String} The relative path to the precompiled_template_output
+    ###
+    precompiled_template_output: -> "#{@['public']}/js/templates.js"
+
+    ###*
+     * where the templates that compile into HTML go.
+     * @type {String}
+    ###
+    views: './views'
+
+    ###*
+     * Where all images, scripts, styles, and other resources go.
+     * @type {String}
+    ###
+    assets: './assets'
+
+    ###*
+     * where plugins are stored
+     * @type {String}
+    ###
+    plugins: './plugins'
 
   ###*
-   * where the templates that compile into HTML go relative to
-     Project.rootDir.
-   * @type {String}
+   * get the full path to a directory
+   * @uses Project.dirs [description]
   ###
-  viewsDir: './views'
+  path: (dir) ->
+    path.join(
+      @rootDir,
+      (if typeof @dirs[dir] is 'function' then @dirs[dir]() else @dirs[dir])
+    )
 
-  ###*
-   * Where all images, scripts, styles, and other resources go relative to
-     Project.rootDir.
-   * @type {String}
-  ###
-  assetsDir: './assets'
-
-  ###*
-   * Where the file holding the precompiled templates goes, relative to
-     Project.publicDir
-   * @type {String}
-  ###
-  precompiled_template_output: './js/templates.js'
 
   ###*
    * the variables that get passed to all templates as locals

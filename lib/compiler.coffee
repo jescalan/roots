@@ -1,13 +1,13 @@
-path = require('path')
-fs = require('fs')
-shell = require('shelljs')
+path = require 'path'
+fs = require 'fs'
+shell = require 'shelljs'
 EventEmitter = require('events').EventEmitter
-adapters = require('./adapters')
-compress = require('./utils/compressor')
-output_path = require('./utils/output_path')
-_ = require('underscore')
-Asset = require('./asset')
-roots = require('./index')
+adapters = require './adapters'
+compress = require './utils/compressor'
+output_path = require './utils/output_path'
+_ = require 'underscore'
+Asset = require './asset'
+roots = require './index'
 
 class Compiler extends EventEmitter
   ###*

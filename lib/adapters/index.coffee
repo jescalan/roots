@@ -11,13 +11,22 @@ module.exports =
   coffee: require './coffee'
   styl: require './styl'
 
+console.log roots
 
 # load any extra plugins
-plugin_path = path.join(roots.project.rootDir + "/plugins")
-plugins = fs.existsSync(plugin_path) and shell.ls(plugin_path)
+plugins = fs.existsSync() and shell.ls(roots.project.path('plugins'))
+
 plugins and plugins.forEach((plugin) ->
   if plugin.match(/.+\.(?:js|coffee)$/)
-    compiler = require(path.join(plugin_path, plugin))
+    compiler = require(path.join(roots.project.path('plugins'), plugin))
     name = path.basename(compiler.settings.file_type)
-    module.exports[name] = compiler  if compiler.settings and compiler.compile
+    if compiler.settings and compiler.compile
+      module.exports[name] = compiler
+)
+recursive_readdir(roots.project.path('plugins'), (err, files) =>
+  if err then roots.print.error err
+  for file in files
+    @addAsset file
+
+  cb()
 )

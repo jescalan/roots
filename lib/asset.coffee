@@ -55,9 +55,9 @@ class Asset extends EventEmitter
     # dump views/assets to public
     # I'm worried about the second replace call...
     @outputPath = path.join(
-      file.replace(roots.project.rootDir, roots.project.publicDir)
+      file.replace(roots.project.rootDir, roots.project.path('public'))
     ).replace(
-      new RegExp("#{roots.project.viewsDir}|#{roots.project.assetsDir}"), ''
+      new RegExp("#{roots.project.path 'views'}|#{roots.project.path 'assets'}"), ''
     )
     
     # swap extension if needed
@@ -104,7 +104,7 @@ class Asset extends EventEmitter
   ###*
    * Is one of:
    * uncompiled: hasn't been compiled
-   * symlinked: was symlinked to Project.publicDir and doesn't need to be
+   * symlinked: was symlinked to Project.path('public') and doesn't need to be
      recompiled even if the file is modified.
    * compiled: some transformation was applied while being compiled, and when
      this Asset, or one of its dependencies is modified, it must be recompiled

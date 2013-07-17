@@ -18,6 +18,7 @@ console.log 'print'
 Project = require './project'
 exports.project = new Project(process.cwd())
 console.log 'project'
+console.log exports.project.path 'precompiled_template_output'
 
 Server = require './server'
 exports.server = new Server(process.env.PORT or 1111, false)
