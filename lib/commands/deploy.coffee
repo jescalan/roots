@@ -19,14 +19,26 @@ _deploy = (args) ->
   
   # set name if present
   name = ""
-  name = opts[0]  if opts.length > 0
+  if args._.length > 1 then name = args._[1]
   
   # deploy it!
+  deploy_steps = [
+    'check_install_status'
+    'check_credentials'
+    'compile_project'
+    'add_config_files'
+    'commit_files'
+    'create_project'
+    'push_code'
+  ]
+
   d = new Deployer(adapter, name)
-  _.bindAll d
-  deploy_steps = [d.check_install_status, d.check_credentials, d.compile_project, d.add_config_files, d.commit_files, d.create_project, d.push_code]
+  _.bindAll.apply(this, [d].concat(deploy_steps))
+
+  deploy_functions = deploy_steps.map((s) -> d[s])
+
   async.series deploy_steps, (err) ->
-    return console.error(err)  if err
+    if err then return console.error(err)
     console.log "done!".green
 
 
