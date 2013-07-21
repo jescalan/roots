@@ -5,7 +5,7 @@ exports.settings =
   file_type: 'blarg'
   target: ''
 
-exports.compile = (file, callback) ->
+exports.compile = (file, options, callback) ->
   error = false
   compiled_contents = null
 

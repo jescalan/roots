@@ -1,25 +1,26 @@
-jade = require "jade"
-fs = require "fs"
-path = require "path"
-_ = require "underscore"
-mkdirp = require "mkdirp"
-minimatch = require "minimatch"
+jade = require 'jade'
+fs = require 'fs'
+path = require 'path'
+_ = require 'underscore'
+mkdirp = require 'mkdirp'
+minimatch = require 'minimatch'
 compressor = require './utils/compressor'
+roots = require './index'
 
 # compile jade templates into JS functions for use on the client-side, and
 # save it to a specified file
 
 module.exports = ->
-  global.options.debug.log 'precompiling templates', 'yellow'
+  roots.print.debug 'precompiling templates', 'yellow'
   return false if not global.options.templates?
-  template_dir = path.join process.cwd(), global.options.templates
-  files = fs.readdirSync(template_dir)
+  template_dir = path.join roots.project.rootDir, global.options.templates
+  #files = fs.readdirSync(template_dir)
 
-  # make sure to skip ignored files
-  ignores = []
-  files.map (f) ->
-    options.ignore_files.forEach (i) ->
-      ignores.push(f) if minimatch(f, i.slice(1))
+  ## make sure to skip ignored files
+  #ignores = []
+  #files.map (f) ->
+  #  options.ignoreFiles.forEach (i) ->
+  #    ignores.push(f) if minimatch(f, i.slice(1))
 
   precompiler = new Precompiler(
     templates: _.map(
@@ -90,7 +91,6 @@ class Precompiler
   # @private
 
   helpers: ->
-
     # jade has a few extra helpers that aren't exported
     # we should probably figure out a way to pull all of runtime.js
     nulls = `function nulls(val) { return val != null && val !== '' }`
