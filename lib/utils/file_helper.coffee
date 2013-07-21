@@ -127,7 +127,6 @@ class FileHelper
     
     # write it
     fs.writeFileSync @export_path, @contents
-    console.log "wrote: " + @export_path
     global.options.debug.log "compiled " + @path.replace(process.cwd(), "")
 
 module.exports = FileHelper
