@@ -1,7 +1,7 @@
 minimatch = require 'minimatch'
 _ = require 'underscore'
 path = require 'path'
-recursive_readdir = require 'recursive-readdir'
+recursiveReaddir = require 'recursive-readdir'
 EventEmitter = require('events').EventEmitter
 roots = require './index'
 Asset = require './asset'
@@ -17,13 +17,13 @@ class Project extends EventEmitter
   constructor: (rootDir, config={}) ->
     @rootDir = rootDir
 
-    layout_files = (key for key of @layouts)
+    layoutFiles = (key for key of @layouts)
 
     #add ignore patterns from the config too!
-    @ignore_patterns = _.union(
-      @ignore_patterns,
+    @ignorePatterns = _.union(
+      @ignorePatterns,
       ["#{@path('public')}/**"],
-      layout_files,
+      layoutFiles,
     )
     return
 
@@ -62,9 +62,9 @@ class Project extends EventEmitter
     ###*
      * Where the file holding the precompiled templates goes, relative to
        Project.path('public')
-     * @return {String} The relative path to the precompiled_template_output
+     * @return {String} The relative path to the precompiledTemplateOutput
     ###
-    precompiled_template_output: -> "#{@['public']}/js/templates.js"
+    precompiledTemplateOutput: -> "#{@['public']}/js/templates.js"
 
     ###*
      * where the templates that compile into HTML go.
@@ -106,7 +106,7 @@ class Project extends EventEmitter
    * if livereload is enabled
    * @type {Boolean}
   ###
-  livereload_enabled: true
+  livereloadEnabled: true
 
   ###*
    * [layouts description]
@@ -121,11 +121,11 @@ class Project extends EventEmitter
    * @deprecated Once Asset Graph is fully functional, this will not be needed
      and will be removed
   ###
-  ignore_patterns: []
+  ignorePatterns: []
 
   ###*
    * A list of files that will not be compiled. This is partly generated from
-     Project.ignore_patterns, and partly from manually appended files.
+     Project.ignorePatterns, and partly from manually appended files.
    * @type {Array}
    * @deprecated Once Asset Graph is fully functional, this will not be needed
      and will be removed
@@ -133,18 +133,18 @@ class Project extends EventEmitter
   ignoreFiles: ['/app.coffee']
 
   ###*
-   * Using Project.ignore_patterns, determine what files in the project must
+   * Using Project.ignorePatterns, determine what files in the project must
      be ignored and put them in Project.ignoreFiles. This function will need to be re-run whenever a file is added, but since it's deprecated, it's not worth optimizing
    * @deprecated Once Asset Graph is fully functional, this will not be needed
      and will be removed
   ###
   buildIgnoreFiles: (cb) ->
-    recursive_readdir(@rootDir, (err, files) =>
+    recursiveReaddir(@rootDir, (err, files) =>
       if err then roots.print.error err
       for i in [0...files.length]
         files[i] = '/' + path.relative(@rootDir, files[i])
 
-      @ignore_patterns.forEach (pattern) =>
+      @ignorePatterns.forEach (pattern) =>
         @ignoreFiles = _.union @ignoreFiles, minimatch.match(files, pattern, {})
 
       cb()
@@ -162,7 +162,7 @@ class Project extends EventEmitter
      the layout files. And then all other files will be detected from there.
   ###
   getInitalFiles: (cb) =>
-    recursive_readdir(@rootDir, (err, files) =>
+    recursiveReaddir(@rootDir, (err, files) =>
       if err then roots.print.error err
       for file in files
         @addAsset file

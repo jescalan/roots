@@ -16,12 +16,6 @@ module.exports = ->
   template_dir = path.join roots.project.rootDir, global.options.templates
   #files = fs.readdirSync(template_dir)
 
-  ## make sure to skip ignored files
-  #ignores = []
-  #files.map (f) ->
-  #  options.ignoreFiles.forEach (i) ->
-  #    ignores.push(f) if minimatch(f, i.slice(1))
-
   precompiler = new Precompiler(
     templates: _.map(
       _.difference(files, ignores),

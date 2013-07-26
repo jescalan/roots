@@ -13,20 +13,43 @@
 
 Print = require './print'
 exports.print = new Print()
-console.log 'print'
 
 Project = require './project'
 exports.project = new Project(process.cwd())
-console.log 'project'
-console.log exports.project.path 'precompiled_template_output'
+
+Adapters = require './adapters'
+exports.adapters = new Adapters()
+
+# load in all the core adapters
+for adapter in ['jade', 'ejs', 'coffee', 'styl']
+  RequiredAdapter = require("./adapters/#{adapter}")
+  exports.adapters.registerAdapter(
+    new RequiredAdapter()
+  )
+
+# load any extra plugins
+plugins = fs.existsSync() and shell.ls(roots.project.path('plugins'))
+
+plugins and plugins.forEach((plugin) ->
+  if plugin.match(/.+\.(?:js|coffee)$/)
+    compiler = require(path.join(roots.project.path('plugins'), plugin))
+    name = path.basename(compiler.settings.file_type)
+    if compiler.settings and compiler.compile
+      module.exports[name] = compiler
+)
+recursiveReaddir(roots.project.path('plugins'), (err, files) =>
+  if err then roots.print.error err
+  for file in files
+    @addAsset file
+
+  cb()
+)
 
 Server = require './server'
 exports.server = new Server(process.env.PORT or 1111, false)
-console.log 'server'
 
 Compiler = require './compiler' # temporary
 exports.compiler = new Compiler() # temporary
-console.log 'compiler'
 
 exports.project.getInitalFiles(->
   exports.print.log exports.project.assets
