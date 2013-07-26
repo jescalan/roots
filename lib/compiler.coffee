@@ -85,7 +85,9 @@ class Compiler extends EventEmitter
       fs.writeFileSync destination, write_content
     else if @mode is 'dev'
       # symlink in development mode
-      fs.existsSync(destination) or fs.symlinkSync(file, destination)
+      unless fs.existsSync(destination)
+        fs.symlinkSync(path.relative(path.dirname(destination), file), destination)
+
       options.debug.log "symlinked #{file.replace(process.cwd(), '')}"
     else
       shell.cp '-f', file, destination
