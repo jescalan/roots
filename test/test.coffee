@@ -240,12 +240,23 @@ describe 'dynamic content', ->
     run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
       done()
 
-  it 'compiles dynamic files', ->
+  after ->
+    shell.rm '-rf', path.join(test_path, 'public')
+
+  it 'compiles into single post templates', ->
     fs.existsSync(path.join(test_path, 'public/posts/hello_world.html')).should.be.ok
     content = fs.readFileSync path.join(test_path, 'public/posts/hello_world.html'), 'utf8'
     content.should.match(/\<h1\>hello world\<\/h1\>/)
     content.should.match(/This is my first blog post/)
-    shell.rm '-rf', path.join(test_path, 'public')
+
+  it 'makes front matter available as locals', ->
+    fs.existsSync(path.join(test_path, 'public/index.html')).should.be.ok
+    content = fs.readFileSync path.join(test_path, 'public/index.html'), 'utf8'
+    content.should.match(/\<a href="\/posts\/hello_world.html"\>hello world\<\/a\>/)
+
+  it 'exposes compiled content as site.post.contents', ->
+    content = fs.readFileSync path.join(test_path, 'public/index.html'), 'utf8'
+    content.should.match(/\<p\>This is my first blog post.*\<\/p\>/)
 
 describe 'precompiled templates', ->
   test_path = path.join root, './precompile'

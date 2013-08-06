@@ -1,4 +1,5 @@
 h1 my new blog
 - each post in site.posts
   a(href="#{post.url}")= post.title
+  != post.contents
   br
