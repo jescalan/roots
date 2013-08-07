@@ -32,7 +32,7 @@ class FileHelper
     if front_matter_string
       
       # set up variables
-      @category_name = @path.replace(roots.project.rootDir, "").split(path.sep)[1]
+      @category_name = @path.replace(roots.project.rootDir, '').split(path.sep)[1]
       options.locals.site ?= {}
       options.locals.site[@category_name] ?= []
       @dynamic_locals = {}
@@ -48,13 +48,13 @@ class FileHelper
       if front_matter.layout
         @layout_path = path.resolve(path.dirname(@path), front_matter.layout)
         @layout_contents = fs.readFileSync(@layout_path, "utf8")
-        @dynamic_locals.url = @path.replace(roots.project.rootDir, "").replace(/\..*$/, ".html")
+        @dynamic_locals.url = @path.replace(roots.project.rootDir, '').replace(/\..*$/, ".html")
       
       # add to global locals (hah)
       options.locals.site[@category_name].push @dynamic_locals
       
       # remove the front matter
-      @contents = @contents.replace(front_matter_string[0], "")
+      @contents = @contents.replace(front_matter_string[0], '')
     else
       false
 
@@ -80,7 +80,7 @@ class FileHelper
       if not layout? then return false
       
       # set the layout path and contents
-      @layout_path = path.join(roots.project.rootDir, options.folder_config.views, layout)
+      @layout_path = path.join(roots.project.path('views'), layout)
       @layout_contents = fs.readFileSync(@layout_path, "utf8")
     else
       false
@@ -118,16 +118,16 @@ class FileHelper
     if @dynamic_locals and not @dynamic_locals.layout
       
       # if dynamic with content, add the compiled content to the locals
-      if @contents isnt ""
+      if @contents isnt ''
         category = options.locals.site[@category_name]
         category[category.length - 1].content = @contents
       
       # don't write the file
-      roots.print.debug "processed " + @path.replace(roots.project.rootDir, "")
+      roots.print.debug "processed " + @path.replace(roots.project.rootDir, '')
       return false
     
     # write it
     fs.writeFileSync @export_path, @contents
-    roots.print.debug "compiled " + @path.replace(roots.project.rootDir, "")
+    roots.print.debug "compiled " + @path.replace(roots.project.rootDir, '')
 
 module.exports = FileHelper
