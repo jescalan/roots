@@ -1,6 +1,7 @@
 path = require("path")
 fs = require("fs")
 _ = require("underscore")
+roots = require("../index")
 output_path = require("./output_path")
 yaml_parser = require("./yaml_parser")
 
@@ -122,11 +123,11 @@ class FileHelper
         category[category.length - 1].content = @contents
       
       # don't write the file
-      global.options.debug.log "processed " + @path.replace(process.cwd(), "")
+      roots.print.debug "processed " + @path.replace(process.cwd(), "")
       return false
     
     # write it
     fs.writeFileSync @export_path, @contents
-    global.options.debug.log "compiled " + @path.replace(process.cwd(), "")
+    roots.print.debug "compiled " + @path.replace(process.cwd(), "")
 
 module.exports = FileHelper
