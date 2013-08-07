@@ -92,10 +92,10 @@ class Compiler extends EventEmitter
           path.relative(path.dirname(destination), file), destination
         )
 
-      roots.print.debug "symlinked #{file.replace(process.cwd(), '')}"
+      roots.print.debug "symlinked #{file.replace(roots.project.rootDir, '')}"
     else
       shell.cp '-f', file, destination
-      roots.print.debug "copied #{file.replace(process.cwd(), '')}"
+      roots.print.debug "copied #{file.replace(roots.project.rootDir, '')}"
     cb()
 
   ###*
@@ -124,7 +124,7 @@ module.exports = Compiler
 
 # @api private
 
-plugin_path = path.join(process.cwd() + '/plugins')
+plugin_path = path.join(roots.project.rootDir + '/plugins')
 plugins = fs.existsSync(plugin_path) and shell.ls(plugin_path)
 
 ###*
