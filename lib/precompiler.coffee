@@ -4,13 +4,14 @@ path = require 'path'
 _ = require 'underscore'
 mkdirp = require 'mkdirp'
 minimatch = require 'minimatch'
+roots = require './index'
 compressor = require './utils/compressor'
 
 # compile jade templates into JS functions for use on the client-side, and
 # save it to a specified file
 
 module.exports = ->
-  global.options.debug.log 'precompiling templates', 'yellow'
+  roots.print.debug 'precompiling templates', 'yellow'
   return false if not global.options.templates?
   template_dir = path.join process.cwd(), global.options.templates
   files = fs.readdirSync(template_dir)

@@ -155,8 +155,8 @@ describe 'compiler', ->
   compiler = null
 
   before ->
-    Compiler = require path.join(root, '../lib/compiler')
-    compiler = new Compiler()
+    roots = require path.join(root, '../lib/index')
+    compiler = roots.compiler
 
   it 'eventemitter should be hooked up properly', (done) ->
     compiler.on 'finished', -> done()
