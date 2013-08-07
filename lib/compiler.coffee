@@ -12,13 +12,6 @@ roots = require './index'
 
 class Compiler extends EventEmitter
   ###*
-   * either 'build' or 'dev'
-   * @type {String}
-   * @public
-  ###
-  mode: 'build'
-
-  ###*
    * Emits an event to notify listeners that everything is compiled
    * @return {undefined}
    * @fires Compiler#finished
@@ -74,7 +67,7 @@ class Compiler extends EventEmitter
    * @param {[type]} file [description]
    * @param {Compiler~doneCallback} cb
    * @return {[type]} [description]
-   * @uses Compiler.mode
+   * @uses Project.mode
   ###
   copy: (file, cb) ->
     # TODO: Run the file copy operations as async (ncp)
@@ -85,7 +78,7 @@ class Compiler extends EventEmitter
       write_content = fs.readFileSync(file, 'utf8')
       write_content = compress(write_content, extname)
       fs.writeFileSync destination, write_content
-    else if @mode is 'dev'
+    else if roots.project.mode is 'dev'
       # symlink in development mode
       unless fs.existsSync(destination)
         fs.symlinkSync(
