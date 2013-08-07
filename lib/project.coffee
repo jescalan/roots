@@ -133,8 +133,10 @@ class Project extends EventEmitter
   ignoreFiles: ['/app.coffee']
 
   ###*
-   * Using Project.ignorePatterns, determine what files in the project must
-     be ignored and put them in Project.ignoreFiles. This function will need to be re-run whenever a file is added, but since it's deprecated, it's not worth optimizing
+   * Using Project.ignorePatterns, determine what files in the project must be
+     ignored and put them in Project.ignoreFiles. This function will need to
+     be re-run whenever a file is added, but since it's deprecated, it's not
+     worth optimizing
    * @deprecated Once Asset Graph is fully functional, this will not be needed
      and will be removed
   ###
@@ -171,7 +173,7 @@ class Project extends EventEmitter
     )
 
   ###*
-   * add an Asset to the project
+   * Add an Asset to the project
    * @param {String} path The full path to the Asset.
   ###
   addAsset: (path) ->
