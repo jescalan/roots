@@ -13,7 +13,7 @@ compressor = require './utils/compressor'
 module.exports = ->
   roots.print.debug 'precompiling templates', 'yellow'
   return false if not global.options.templates?
-  template_dir = path.join process.cwd(), global.options.templates
+  template_dir = path.join roots.project.rootDir, global.options.templates
   files = fs.readdirSync(template_dir)
 
   # make sure to skip ignored files
