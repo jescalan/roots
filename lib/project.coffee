@@ -46,8 +46,7 @@ class Project extends EventEmitter
     public: './public'
 
     ###*
-     * Where the file holding the precompiled templates goes, relative to
-       Project.path('public')
+     * Where the file holding the precompiled templates goes.
      * @return {String} The relative path to the precompiledTemplateOutput
     ###
     precompiledTemplateOutput: -> "#{@['public']}/js/templates.js"
@@ -63,6 +62,12 @@ class Project extends EventEmitter
      * @type {String}
     ###
     assets: './assets'
+
+    ###*
+     * Where the components installed via bower go.
+     * @return {String} The relative path to the precompiledTemplateOutput
+    ###
+    components: -> "#{@['assets']}/components"
 
     ###*
      * Where plugins are stored

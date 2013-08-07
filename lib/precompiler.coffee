@@ -32,8 +32,7 @@ module.exports = ->
   buf = precompiler.compile()
   buf = compressor buf, 'js'
 
-  # TODO: make output path configurable
-  output_path = path.normalize("#{options.output_folder}/js/templates.js")
+  output_path = roots.project.path 'precompiledTemplateOutput'
   mkdirp.sync path.dirname(output_path)
   fs.writeFileSync output_path, buf
 

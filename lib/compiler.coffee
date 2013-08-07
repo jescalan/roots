@@ -124,7 +124,7 @@ module.exports = Compiler
 
 # @api private
 
-plugin_path = path.join(roots.project.rootDir + '/plugins')
+plugin_path = roots.project.path('plugins')
 plugins = fs.existsSync(plugin_path) and shell.ls(plugin_path)
 
 ###*
