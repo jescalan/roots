@@ -1,12 +1,14 @@
-path = require('path')
-fs = require('fs')
-shell = require('shelljs')
+path = require 'path'
+fs = require 'fs'
+shell = require 'shelljs'
 EventEmitter = require('events').EventEmitter
-adapters = require('./adapters')
-compress = require('./utils/compressor')
-output_path = require('./utils/output_path')
-_ = require('underscore')
-FileHelper = require('./utils/file_helper')
+_ = require 'underscore'
+
+adapters = require './adapters'
+compress = require './utils/compressor'
+output_path = require './utils/output_path'
+FileHelper = require './utils/file_helper'
+roots = require './index'
 
 class Compiler extends EventEmitter
   ###*
@@ -86,12 +88,14 @@ class Compiler extends EventEmitter
     else if @mode is 'dev'
       # symlink in development mode
       unless fs.existsSync(destination)
-        fs.symlinkSync(path.relative(path.dirname(destination), file), destination)
+        fs.symlinkSync(
+          path.relative(path.dirname(destination), file), destination
+        )
 
-      options.debug.log "symlinked #{file.replace(process.cwd(), '')}"
+      roots.print.debug "symlinked #{file.replace(process.cwd(), '')}"
     else
       shell.cp '-f', file, destination
-      options.debug.log "copied #{file.replace(process.cwd(), '')}"
+      roots.print.debug "copied #{file.replace(process.cwd(), '')}"
     cb()
 
   ###*
