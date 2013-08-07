@@ -23,3 +23,5 @@ class Adapter
 	 * @return {[type]} [description]
 	###
 	compile: (file, options={}, cb) -> return
+
+module.exports = Adapter

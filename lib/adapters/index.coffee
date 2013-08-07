@@ -1,8 +1,3 @@
-require "coffee-script"
-path = require 'path'
-fs = require 'fs'
-shell = require 'shelljs'
-roots = require './index'
 
 class Adapters
   ###*

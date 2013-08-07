@@ -1,15 +1,34 @@
 transformer = require('transformers')['jade']
 _ = require 'underscore'
+Adapter = require './adapter'
 
-exports.settings =
-  file_type: 'jade'
-  target: 'html'
+class Jade extends Adapter
+  ###*
+   * An array of formats that this Adapter can take.
+   * @type {Array}
+  ###
+  inputFormats: ['jade']
 
-exports.compile = (file, options={}, cb) ->
-  _.defaults(options,
-    minify: global.options.compress
-    filename: file.path
-  )
+  ###*
+   * The format that the Adapter spits out
+   * @type {String}
+  ###
+  outputFormat: 'html'
 
-  transformer.render(file.contents, options, cb)
-  return
+  ###*
+   * The function that will be called to compile the Asset.
+   * @param {[type]} file [description]
+   * @param {[type]} options={} [description]
+   * @param {Function} cb [description]
+   * @return {[type]} [description]
+  ###
+  compile: (file, options={}, cb) ->
+    _.defaults(options,
+      minify: global.options.compress
+      filename: file.path
+    )
+
+    transformer.render(file.contents, options, cb)
+    return
+
+module.exports = Adapter
