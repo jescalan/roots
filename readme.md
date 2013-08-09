@@ -39,7 +39,7 @@ Documentation
 
 All documentation can be found on [http://roots.cx](http://roots.cx).    
 If you are looking for roots docs, see [http://roots.cx/docs](http://roots.cx).    
-If you are after the docs for the css library, [axis](https://github.com/jenius/axis), see [http://roots.cx/axis](http://roots.cx).
+If you are after the docs for the css library, [axis](https://github.com/jenius/axis), see [http://roots.cx/axis](http://roots.cx/axis).
 
 Help
 ----
