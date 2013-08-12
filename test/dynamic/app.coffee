@@ -8,6 +8,4 @@ locals:
   title_with_markup: ->
     "<h1 class='title'>#{this.title}</h1>"
 
-folder_config:
-  assets: 'assets'
-  views: 'layouts'
+views_folder: 'layouts'
