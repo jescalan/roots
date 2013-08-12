@@ -162,6 +162,16 @@ describe 'compiler', ->
     compiler.on 'finished', -> done()
     compiler.finish()
 
+describe 'config options', ->
+
+  it 'old and new formatted app.coffee files should work'
+  it 'output folder should be configurable'
+  it 'views directory should be configurable'
+  it 'assets directory should be configurable'
+  it 'should ignore layout files, plugins, public, and app.coffee'
+  it 'should correctly ignore files'
+  it 'should correctly ignore folders'
+
 describe 'jade', ->
   test_path = path.join root, './jade'
   test_path_2 = path.join root, './no-layout'
