@@ -30,29 +30,29 @@ class FileHelper
   parse_dynamic_content: ->
     front_matter_string = yaml_parser.match(@contents)
     if front_matter_string
-      
+
       # set up variables
       @category_name = @path.replace(roots.project.rootDir, '').split(path.sep)[1]
       options.locals.site ?= {}
       options.locals.site[@category_name] ?= []
       @dynamic_locals = {}
-      
+
       # load variables from front matter
       front_matter = yaml_parser.parse(@contents,
         filename: @file
       )
       for k of front_matter
         @dynamic_locals[k] = front_matter[k]
-      
+
       # if layout is present, set the layout and single post url
       if front_matter.layout
         @layout_path = path.resolve(path.dirname(@path), front_matter.layout)
         @layout_contents = fs.readFileSync(@layout_path, "utf8")
         @dynamic_locals.url = @path.replace(roots.project.rootDir, '').replace(/\..*$/, ".html")
-      
+
       # add to global locals (hah)
       options.locals.site[@category_name].push @dynamic_locals
-      
+
       # remove the front matter
       @contents = @contents.replace(front_matter_string[0], '')
     else
@@ -67,18 +67,18 @@ class FileHelper
     # make sure a layout actually has to be set
     layouts_set = Object.keys(global.options.layouts).length > 0
     if layouts_set and not @dynamic_locals
-      
+
       # pull the default layout initially
       layout = options.layouts.default
       rel_file = path.relative(options.folder_config.views, @path)
-      
+
       # if there's a custom override, use that instead
       for key of options.layouts
         layout = options.layouts[key] if key is rel_file
 
       # no match
       if not layout? then return false
-      
+
       # set the layout path and contents
       @layout_path = path.join(roots.project.path('views'), layout)
       @layout_contents = fs.readFileSync(@layout_path, "utf8")
@@ -93,14 +93,14 @@ class FileHelper
   ###
   locals: (extra) ->
     locals = _.clone(global.options.locals)
-    
+
     # add path variable
     locals.path = @export_path
-    
+
     # add any extra locals
     for key of extra
       locals[key] = extra[key]
-    
+
     # add dynamic locals if needed
     if @dynamic_locals
       locals.post = @dynamic_locals
@@ -112,20 +112,23 @@ class FileHelper
    * @return {[type]} [description]
    * @public
   ###
-  write: () ->
-    
+  write: (content) ->
+
+    # if content is passed in, write that
+    @contents = content if content
+
     # if dynamic and no layout, don't write
     if @dynamic_locals and not @dynamic_locals.layout
-      
+
       # if dynamic with content, add the compiled content to the locals
       if @contents isnt ''
         category = options.locals.site[@category_name]
         category[category.length - 1].content = @contents
-      
+
       # don't write the file
       roots.print.debug "processed " + @path.replace(roots.project.rootDir, '')
       return false
-    
+
     # write it
     fs.writeFileSync @export_path, @contents
     roots.print.debug "compiled " + @path.replace(roots.project.rootDir, '')
