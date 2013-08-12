@@ -44,6 +44,16 @@ class Project extends EventEmitter
      * @type {String}
     ###
     public: './public'
+    ###*
+     * Where views and layouts live
+     * @type {String}
+    ###
+    views: './views'
+    ###*
+     * Where project assets (css, js, img, etc) go
+     * @type {String}
+    ###
+    assets: './assets'
 
     ###*
      * Where the file holding the precompiled templates goes.

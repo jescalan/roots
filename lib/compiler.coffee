@@ -45,7 +45,7 @@ class Compiler extends EventEmitter
 
       # put in work (https://cloudup.com/cNORDD98uFh)
       adapter.compile fh, fh.locals(), (err, compiled) =>
-        return @emit 'error', err if err
+        return @emit('error', err) if err
         fh.contents = compiled
         return if intermediate
 
@@ -110,8 +110,8 @@ compile_into_layout = (fh, adapter, cb) ->
 
 process_layout = (fh, adapter, cb) ->
   fh.set_layout() if fh.target_extension is 'html'
-  if fh.layout_path
-    return compile_into_layout(fh, adapter, cb)
+  fh.set_dynamic_locals() if !!fh.category_name
+  return compile_into_layout(fh, adapter, cb) if fh.layout_path
   cb(fh.contents)
 
 ###*

@@ -50,40 +50,44 @@ class FileHelper
         @layout_contents = fs.readFileSync(@layout_path, "utf8")
         @dynamic_locals.url = @path.replace(roots.project.rootDir, '').replace(/\..*$/, ".html")
 
-      # add to global locals (hah)
-      options.locals.site[@category_name].push @dynamic_locals
-
       # remove the front matter
       @contents = @contents.replace(front_matter_string[0], '')
     else
       false
 
   ###*
-   * [set_layout description]
+   * Sets the layout path and contents properties
    * @public
    * @uses set_paths, FileHelper.parse_dynamic_content
   ###
   set_layout: ->
+
     # make sure a layout actually has to be set
-    layouts_set = Object.keys(global.options.layouts).length > 0
-    if layouts_set and not @dynamic_locals
+    layouts_set = Object.keys(options.layouts).length > 0
+    return false if @dynamic_locals || !layouts_set
 
-      # pull the default layout initially
-      layout = options.layouts.default
-      rel_file = path.relative(options.folder_config.views, @path)
+    # pull the default layout initially
+    layout = options.layouts.default
+    rel_file = path.relative(roots.project.dirs.views, @path)
 
-      # if there's a custom override, use that instead
-      for key of options.layouts
-        layout = options.layouts[key] if key is rel_file
+    # if there's a custom override, use that instead
+    layout = options.layouts[key] for key of options.layouts if key is rel_file
 
-      # no match
-      if not layout? then return false
+    # no match
+    return false if not layout?
 
-      # set the layout path and contents
-      @layout_path = path.join(roots.project.path('views'), layout)
-      @layout_contents = fs.readFileSync(@layout_path, "utf8")
-    else
-      false
+    # set the layout path and contents
+    @layout_path = path.join(roots.project.path('views'), layout)
+    @layout_contents = fs.readFileSync(@layout_path, "utf8")
+
+  ###*
+   * Push the front matter variables and content for dynamic content
+   * as locals so they are available in html templates
+   * @param {String} contents - compiled contents
+  ###
+  set_dynamic_locals: ->
+    @dynamic_locals.contents = @contents
+    options.locals.site[@category_name].push(@dynamic_locals)
 
   ###*
    * [locals description]
