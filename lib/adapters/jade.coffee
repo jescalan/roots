@@ -1,3 +1,4 @@
+roots = require '../index'
 transformer = require('transformers')['jade']
 _ = require 'underscore'
 roots = require '../index'
