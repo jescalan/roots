@@ -61,14 +61,13 @@ class FileHelper
    * @uses set_paths, FileHelper.parse_dynamic_content
   ###
   set_layout: ->
-
     # make sure a layout actually has to be set
     layouts_set = Object.keys(roots.project.layouts).length > 0
     return false if @dynamic_locals || !layouts_set
 
     # pull the default layout initially
-    layout = roots.project.layouts.default
-    rel_file = path.relative(roots.project.dirs.views, @path)
+    layout = roots.project.cfg 'layouts.default'
+    rel_file = path.relative(roots.project.path('views'), @path)
 
     # if there's a custom override, use that instead
     layout = roots.project.layouts[key] for key of roots.project.layouts if key is rel_file
