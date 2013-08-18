@@ -33,8 +33,8 @@ class FileHelper
 
       # set up variables
       @category_name = @path.replace(roots.project.rootDir, '').split(path.sep)[1]
-      options.locals.site ?= {}
-      options.locals.site[@category_name] ?= []
+      roots.project.locals.site ?= {}
+      roots.project.locals.site[@category_name] ?= []
       @dynamic_locals = {}
 
       # load variables from front matter
@@ -63,15 +63,15 @@ class FileHelper
   set_layout: ->
 
     # make sure a layout actually has to be set
-    layouts_set = Object.keys(options.layouts).length > 0
+    layouts_set = Object.keys(roots.project.layouts).length > 0
     return false if @dynamic_locals || !layouts_set
 
     # pull the default layout initially
-    layout = options.layouts.default
+    layout = roots.project.layouts.default
     rel_file = path.relative(roots.project.dirs.views, @path)
 
     # if there's a custom override, use that instead
-    layout = options.layouts[key] for key of options.layouts if key is rel_file
+    layout = roots.project.layouts[key] for key of roots.project.layouts if key is rel_file
 
     # no match
     return false if not layout?
@@ -87,7 +87,7 @@ class FileHelper
   ###
   set_dynamic_locals: ->
     @dynamic_locals.contents = @contents
-    options.locals.site[@category_name].push(@dynamic_locals)
+    roots.project.locals.site[@category_name].push(@dynamic_locals)
 
   ###*
    * [locals description]
@@ -96,7 +96,7 @@ class FileHelper
    * @public
   ###
   locals: (extra) ->
-    locals = _.clone(global.options.locals)
+    locals = _.clone(roots.project.locals)
 
     # add path variable
     locals.path = @export_path
@@ -126,7 +126,7 @@ class FileHelper
 
       # if dynamic with content, add the compiled content to the locals
       if @contents isnt ''
-        category = options.locals.site[@category_name]
+        category = roots.project.locals.site[@category_name]
         category[category.length - 1].content = @contents
 
       # don't write the file
