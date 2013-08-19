@@ -58,8 +58,7 @@ class Project extends EventEmitter
    * The variables that get passed to all templates as locals
    * @type {Object}
   ###
-  locals:
-    livereload: '' # livereload won't render anything unless in watch mode
+  locals: {}
 
   ###*
    * If livereload is enabled
