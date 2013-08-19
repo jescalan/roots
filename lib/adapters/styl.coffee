@@ -9,8 +9,8 @@ exports.settings =
 
 exports.compile = (file, options={}, cb) ->
   _.defaults(options,
-    minify: roots.project.cfg 'compress'
-    inline: roots.project.cfg 'compress'
+    minify: roots.project.conf 'compress'
+    inline: roots.project.conf 'compress'
     filename: file.path
     use: [axis]
   )

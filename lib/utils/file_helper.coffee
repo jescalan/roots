@@ -66,7 +66,7 @@ class FileHelper
     return false if @dynamic_locals || !layouts_set
 
     # pull the default layout initially
-    layout = roots.project.cfg 'layouts.default'
+    layout = roots.project.conf 'layouts.default'
     rel_file = path.relative(roots.project.path('views'), @path)
 
     # if there's a custom override, use that instead
