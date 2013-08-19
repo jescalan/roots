@@ -151,6 +151,15 @@ describe 'command', ->
       remove test_path
       remove tmpl_path
 
+  describe 'clean', ->
+    basic_root = path.join(root, 'basic')
+
+    it 'should remove public directory', (done) ->
+      run "cd #{basic_root}; ../../bin/roots compile", ->
+        run "cd #{basic_root}; ../../bin/roots clean", (err) ->
+          fs.existsSync(path.join(basic_root, 'public')).should.be.false
+          done()
+
 describe 'compiler', ->
   compiler = null
 
