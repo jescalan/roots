@@ -1,3 +1,4 @@
+roots = require '../index'
 _ = require 'underscore'
 
 #snockets is temporary, this will be replaced with transformers
@@ -12,7 +13,7 @@ exports.compile = (file, options={}, cb) ->
   _.defaults(options,
     header: false
     bare: global.options.coffeescript_bare
-    minify: global.options.compress
+    minify: roots.project.cfg 'compress'
     filename: file.path
     async: false # for snockets
   )
