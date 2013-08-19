@@ -41,12 +41,6 @@
   ol.man-decor li.tc {text-align:center;letter-spacing:4px}
   ol.man-decor li.tr {text-align:right;float:right}
   </style>
-  <style type='text/css' media='all'>
-  /* style: toc */
-  .man-navigation {display:block !important;position:fixed;top:0;left:113ex;height:100%;width:100%;padding:48px 0 0 0;border-left:1px solid #dbdbdb;background:#eee}
-  .man-navigation a,.man-navigation a:hover,.man-navigation a:link,.man-navigation a:visited {display:block;margin:0;padding:5px 2px 5px 30px;color:#999;text-decoration:none}
-  .man-navigation a:hover {color:#111;text-decoration:underline}
-  </style>
 </head>
 <!--
   The following styles are deprecated and will be removed at some point:
@@ -67,6 +61,7 @@
     <a href="#COMPILE">COMPILE</a>
     <a href="#WATCH">WATCH</a>
     <a href="#DEPLOY">DEPLOY</a>
+    <a href="#CLEAN">CLEAN</a>
     <a href="#VERSION">VERSION</a>
     <a href="#PKG">PKG</a>
     <a href="#PLUGIN">PLUGIN</a>
@@ -90,7 +85,8 @@
 <code>roots template &lt;command></code>  <br />
 <code>roots compile</code>  --no-compress  <br />
 <code>roots watch</code>  <br />
-<code>roots deploy</code> <var>name</var> --<var>service</var>    <br />
+<code>roots deploy</code> <var>name</var> --<var>service</var><br />
+<code>roots clean</code>  <br />
 <code>roots version</code>  <br />
 <code>roots pkg</code> <var>command</var>  <br />
 <code>roots plugin</code> <var>command</var></p>
@@ -148,6 +144,11 @@
   - gh-pages   
 </code></pre>
 
+<h2 id="CLEAN">CLEAN</h2>
+
+<p>  <code>clean</code>
+  remove the compiled files.</p>
+
 <h2 id="VERSION">VERSION</h2>
 
 <p>  <code>version</code>  <br />
@@ -184,7 +185,7 @@
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'></li>
-    <li class='tc'>June 2013</li>
+    <li class='tc'>August 2013</li>
     <li class='tr'>roots(1)</li>
   </ol>
 
