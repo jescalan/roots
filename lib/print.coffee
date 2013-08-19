@@ -118,7 +118,6 @@ class BrowserPrinter
     @msgQueue = []
 
   reload: =>
-    console.log 'reload triggered'
     return if not roots.project.cfg 'livereloadEnabled'
     @sendMsg func: 'reload'
     @sockets = [] # close all the sockets
