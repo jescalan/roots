@@ -27,7 +27,7 @@ class Project extends EventEmitter
    * @return {Object} Whatever the configuration variable is, or if that was a
      function: what it returned.
   ###
-  cfg: (keystring) ->
+  conf: (keystring) ->
     val = @
     for key in keystring.split '.'
       thisArg = val
@@ -128,7 +128,7 @@ class Project extends EventEmitter
   path: (dir) ->
     path.join(
       @rootDir,
-      @cfg "dirs.#{dir}"
+      @conf "dirs.#{dir}"
     )
 
 module.exports = Project

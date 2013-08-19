@@ -110,7 +110,7 @@ class BrowserPrinter
       socket.onopen = null
 
   compiling: =>
-    return if not roots.project.cfg 'livereloadEnabled'
+    return if not roots.project.conf 'livereloadEnabled'
     @sendMsg func: 'compiling'
 
     # clear the message queue, if there are errors they will be added during
@@ -118,7 +118,7 @@ class BrowserPrinter
     @msgQueue = []
 
   reload: =>
-    return if not roots.project.cfg 'livereloadEnabled'
+    return if not roots.project.conf 'livereloadEnabled'
     @sendMsg func: 'reload'
     @sockets = [] # close all the sockets
 
