@@ -53,7 +53,8 @@
     "optimist": "0.6.x",
     "nib": "1.0.x",
     "prettyjson": "0.8.x",
-    "aws-sdk": "1.5.0"
+    "aws-sdk": "1.5.x",
+    "mime": "1.2.x"
   },
   "devDependencies": {
     "mocha": "latest",
