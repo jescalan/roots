@@ -22,7 +22,7 @@
     "url": "git://github.com/jenius/roots.git"
   },
   "dependencies": {
-    "connect": "2.8.x",
+    "connect": "2.9.x",
     "colors": "0.6.x",
     "open": "0.0.x",
     "monocle": "1.1.x",
@@ -34,7 +34,7 @@
     "marked": "0.2.x",
     "ejs": "0.8.x",
     "coffee-script": "1.6.x",
-    "clean-css": "1.0.x",
+    "clean-css": "1.1.x",
     "uglify-js": "2.3.x",
     "bower": "1.2.x",
     "async": "0.2.x",
@@ -45,7 +45,7 @@
     "minimatch": "0.2.x",
     "ftp": "0.3.x",
     "js-yaml": "2.1.x",
-    "semver": "2.0.x",
+    "semver": "2.1.x",
     "faye-websocket": "0.6.x",
     "copy-paste": "0.0.x",
     "cli-js": "0.0.x",
