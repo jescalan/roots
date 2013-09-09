@@ -6,6 +6,7 @@
   border-radius: 7px;
   padding: 2px;
   opacity: .8;
+  z-index: 999;
 }
 
 #roots-compile-loader {
