@@ -1,3 +1,4 @@
+roots = require '../index'
 transformer = require('transformers')['ejs']
 _ = require 'underscore'
 
@@ -7,7 +8,7 @@ exports.settings =
 
 exports.compile = (file, options={}, cb) ->
   _.defaults(options,
-    minify: global.options.compress
+    minify: roots.project.conf 'compress'
     filename: file.path
   )
 
