@@ -40,7 +40,7 @@
     "async": "0.2.x",
     "axis-css": "0.0.x",
     "underscore": "1.5.x",
-    "shelljs": "0.1.x",
+    "shelljs": "0.2.x",
     "q": "0.9.x",
     "minimatch": "0.2.x",
     "ftp": "0.3.x",
