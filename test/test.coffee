@@ -51,7 +51,7 @@ describe 'command', ->
     it 'should compile all files to public', ->
       css_content = fs.readFileSync path.join(basic_root, 'public/css/example.css'), 'utf8'
       css_content.should.not.match /\n/
-    
+
     after ->
       remove path.join(basic_root, 'public')
 
@@ -281,7 +281,7 @@ describe 'dynamic content', ->
     run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
       done()
 
-  it 'compiles dynamic files', ->
+  it 'compiles into single post templates', ->
     files_exist test_path, [
       'public/posts/hello_world.html'
       'public/posts/second_post.html'

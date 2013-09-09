@@ -69,7 +69,7 @@ class Compiler extends EventEmitter
 
     if roots.project.mode == 'dev'
       symlink_file(file, destination) unless fs.existsSync(destination)
-    else if compressed_extensions.indexOf(extname) > 0 && global.options.compress
+    else if compressed_extensions.indexOf(extname) > 0 && roots.project.conf('compress')
       compress_and_copy_file(file, destination)
     else
       copy_file(file, destination)

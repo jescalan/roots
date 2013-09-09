@@ -1,6 +1,6 @@
+roots = require '../index'
 transformer = require('transformers')['jade']
 _ = require 'underscore'
-roots = require '../index'
 
 exports.settings =
   file_type: 'jade'
@@ -8,7 +8,7 @@ exports.settings =
 
 exports.compile = (file, options={}, cb) ->
   _.defaults(options,
-    pretty: (if roots.project.mode == 'build' then false else true)
+    pretty: (if roots.project.conf('mode') == 'build' then false else true)
     filename: file.path
   )
 
