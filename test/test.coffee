@@ -174,9 +174,9 @@ describe 'compiler', ->
 describe 'ignores', ->
 
   before (done) ->
-    @ignores_path = path.join root, './ignores'
-    @exists = (f) -> fs.existsSync(path.join(@ignores_path, f))
-    run "cd \"#{@ignores_path}\"; ../../bin/roots compile --no-compress", done
+    @path = path.join root, './ignores'
+    @exists = (f) -> fs.existsSync(path.join(@path, f))
+    run "cd \"#{@path}\"; ../../bin/roots compile --no-compress", done
 
   it 'should ignore plugins, public, and app.coffee', ->
     @exists('public/index.html').should.be.ok
@@ -190,13 +190,28 @@ describe 'ignores', ->
   it 'should correctly ignore folders from app.coffee', ->
     @exists('public/nobody_loves_me/waaaaah.html').should.not.be.ok
 
-  after -> remove path.join(@ignores_path, 'public')
+  after -> remove path.join(@path, 'public')
 
 describe 'config options', ->
-  it 'old and new formatted app.coffee files should work'
-  it 'output folder should be configurable'
-  it 'views directory should be configurable'
-  it 'assets directory should be configurable'
+
+  before (done) ->
+    @path = path.join root, './config'
+    @exists = (f) -> fs.existsSync(path.join(@path, f))
+    run "cd \"#{@path}\"; ../../bin/roots compile --no-compress", done
+
+  # If the old-formatted config file doesn't work, all these tests
+  # will fail. So this is also an implicit test for that.
+
+  it 'output folder should be configurable', ->
+    @exists('snargles/index.html').should.be.ok
+
+  it 'views directory should be configurable', ->
+    @exists('snargles/foo.html').should.be.ok
+
+  it 'assets directory should be configurable', ->
+    @exists('snargles/bar.css').should.be.ok
+
+  after -> remove path.join(@path, 'public')
 
 describe 'jade', ->
   test_path = path.join root, './jade'
