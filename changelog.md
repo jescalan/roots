@@ -3,6 +3,14 @@ Roots Changelog
 
 Beginning with version `2.0.0`, we will be maintaining a changelog to show what changes have been implemented each release. We hope that this will help roots users to stay informed about the updates being made and avoid breakage when a major or minor version bump occurs.
 
+### 2.1.0
+(not yet released)
+- huge internal rewrite, more modular, more coffeescript, better test coverage
+- on compile, css is processed by [autoprefixer](https://github.com/ai/autoprefixer)
+- livereload tag no longer necessary, this happens internally (whoo!)
+- upgrade on all dependencies to the latest versions
+- **[BREAKING]** update to plugins, `compile` now takes three arguments, `file`, `options`, and `callback`. To fix, just add the `options` param on any plugin's `compile` function.
+
 ### 2.0.6
 (released 09/25/2013)
 - fix permissions error with roots custom templates
