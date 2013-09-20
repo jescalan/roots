@@ -1,0 +1,15 @@
+h1 This is some really nasty nesting
+
+h2 regular posts
+ul
+  - each post in site.posts
+    p= post.title
+    != post.contents
+    a(href=post.url)
+
+h2 code posts
+ul
+  - each post in site.posts.code
+    p= post.title
+    != post.contents
+    a(href=post.url)

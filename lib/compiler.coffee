@@ -110,7 +110,7 @@ compile_into_layout = (fh, adapter, cb) ->
 
 process_layout = (fh, adapter, cb) ->
   fh.set_layout() if fh.target_extension is 'html'
-  fh.set_dynamic_locals() if !!fh.category_name
+  fh.set_dynamic_locals() if !!fh.dynamic_locals
   return compile_into_layout(fh, adapter, cb) if fh.layout_path
   cb(fh.contents)
 
