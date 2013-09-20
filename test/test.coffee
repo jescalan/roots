@@ -334,6 +334,33 @@ describe 'dynamic content', ->
   after ->
     remove path.join(test_path, 'public')
 
+describe 'nested dynamic content', ->
+
+  before (done) ->
+    @path = path.join root, './dynamic_complex'
+    @exists = (f) -> fs.existsSync(path.join(@path, f))
+    @contents = (f) -> fs.readFileSync(path.join(@path, f))
+    run "cd \"#{@path}\"; ../../bin/roots compile --no-compress", done
+
+  it 'compiles nested dynamic content', ->
+    @exists('public/posts/code/bar.html').should.be.ok
+    @exists('public/posts/code/quuz.html').should.be.ok
+    @exists('public/posts/baz.html').should.be.ok
+    @contents('public/posts/code/bar.html').should.match /blarg world/
+    @contents('public/posts/code/quuz.html').should.match /blarg\!/
+
+  it 'adds nested dynamic content correctly to locals', ->
+    @contents('public/index.html').should.match /my name is blarg/
+    @contents('public/index.html').should.match /foo/
+    @contents('public/index.html').should.match /blarg world/
+    @contents('public/index.html').should.match /quuuuuuux homie/
+
+  it 'correctly links nested dynamic content with \'url\'', ->
+    @contents('public/index.html').should.match /href="\/posts\/code\/bar\.html"/
+    @contents('public/index.html').should.match /href="\/posts\/baz\.html"/
+
+  after -> remove path.join(@path, 'public')
+
 describe 'precompiled templates', ->
   test_path = path.join root, './precompile'
 

@@ -32,9 +32,6 @@ class FileHelper
     if front_matter_string
 
       # set up variables
-      @category_name = @path.replace(roots.project.rootDir, '').split(path.sep)[1]
-      roots.project.locals.site ?= {}
-      roots.project.locals.site[@category_name] ?= []
       @dynamic_locals = {}
 
       # load variables from front matter
@@ -88,7 +85,20 @@ class FileHelper
 
   set_dynamic_locals: ->
     @dynamic_locals.contents = @contents
-    roots.project.locals.site[@category_name].push(@dynamic_locals)
+    
+    # get an array of folder the content is nested in
+    nested_folders = @path.replace(roots.project.rootDir,'').split(path.sep)
+    nested_folders.pop()
+    nested_folders.shift()
+
+    # make sure all folders are represented on the site object in locals
+    roots.project.locals.site ?= {}
+    tmp = roots.project.locals.site
+
+    for folder, i in nested_folders
+      tmp[folder] ?= []
+      if i == nested_folders.length-1 then tmp[folder].push(@dynamic_locals)
+      @local_pointer = tmp = tmp[folder]
 
   ###*
    * [locals description]
@@ -128,8 +138,7 @@ class FileHelper
 
       # if dynamic with content, add the compiled content to the locals
       if @contents isnt ''
-        category = roots.project.locals.site[@category_name]
-        category[category.length - 1].content = @contents
+        @local_pointer[@local_pointer.length - 1].contents = @contents
 
       # don't write the file
       roots.print.debug "processed " + @path.replace(roots.project.rootDir, '')
