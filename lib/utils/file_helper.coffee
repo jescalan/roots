@@ -6,14 +6,14 @@ output_path = require("./output_path")
 yaml_parser = require("./yaml_parser")
 
 class FileHelper
+
   ###*
    * [constructor description]
-   * @param {[type]} file [description]
-   * @return {undefined}
+   * @param {string} file - path to a file
    * @constructor
   ###
+
   constructor: (file) ->
-    # set paths
     @path = file
     @contents = fs.readFileSync(file, 'utf8')
     @export_path = output_path(file)
@@ -23,10 +23,10 @@ class FileHelper
 
   ###*
    * [parse_dynamic_content description]
-   * @return {[type]} [description]
    * @public
    * @uses set_paths
   ###
+
   parse_dynamic_content: ->
     front_matter_string = yaml_parser.match(@contents)
     if front_matter_string
@@ -60,6 +60,7 @@ class FileHelper
    * @public
    * @uses set_paths, FileHelper.parse_dynamic_content
   ###
+
   set_layout: ->
     # make sure a layout actually has to be set
     layouts_set = Object.keys(roots.project.layouts).length > 0
@@ -84,16 +85,18 @@ class FileHelper
    * as locals so they are available in html templates
    * @param {String} contents - compiled contents
   ###
+
   set_dynamic_locals: ->
     @dynamic_locals.contents = @contents
     roots.project.locals.site[@category_name].push(@dynamic_locals)
 
   ###*
    * [locals description]
-   * @param {[type]} extra [description]
-   * @return {[type]} [description]
+   * @param {Object} extra - any extra properties to be added to locals
+   * @return {Object} - modified locals object
    * @public
   ###
+
   locals: (extra) ->
     locals = _.clone(roots.project.locals)
 
@@ -112,11 +115,11 @@ class FileHelper
 
   ###*
    * write FileHelper.contents to FileHelper.path
-   * @return {[type]} [description]
+   * @return {string} content - string of content to write
    * @public
   ###
-  write: (content) ->
 
+  write: (content) ->
     # if content is passed in, write that
     @contents = content if content
 
