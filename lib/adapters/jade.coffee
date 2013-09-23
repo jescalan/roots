@@ -9,7 +9,7 @@ exports.settings =
 
 exports.compile = (file, options={}, cb) ->
   _.defaults(options,
-    pretty: (if roots.project.mode == 'build' then false else true)
+    pretty: !roots.project.conf('compress')
     filename: file.path
   )
 

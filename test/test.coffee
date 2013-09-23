@@ -211,7 +211,7 @@ describe 'config options', ->
   it 'assets directory should be configurable', ->
     @exists('snargles/bar.css').should.be.ok
 
-  after -> remove path.join(@path, 'public')
+  after -> remove path.join(@path, 'snargles')
 
 describe 'jade', ->
   test_path = path.join root, './jade'
