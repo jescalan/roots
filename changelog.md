@@ -3,6 +3,10 @@ Roots Changelog
 
 Beginning with version `2.0.0`, we will be maintaining a changelog to show what changes have been implemented each release. We hope that this will help roots users to stay informed about the updates being made and avoid breakage when a major or minor version bump occurs.
 
+### 2.0.6
+(released 09/25/2013)
+- fix permissions error with roots custom templates
+
 ### 2.0.5
 (released 08/15/2013)
 - github pages deployer is now very reliable
