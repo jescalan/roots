@@ -3,6 +3,10 @@ Contributing to Roots
 
 Hello there! First of all, thanks for being interested in roots and helping out. We all think you are awesome, and by contributing to open source projects, you are making the world a better place. That being said, there are a few ways to make the process of contributing code to roots smoother, detailed below:
 
+### Filing Issues
+
+If you are opening an issue about a bug, make sure that you include clear steps for how we can reproduce the problem. If we can't reproduce it, we can't fix it. If you are suggesting a feature, make sure your explanation is clear and detailed.
+
 ### Testing
 
 Roots is constantly evolving, and to ensure that things are secure and working for everyone, we need to have tests. If you are adding a new feature, please make sure to add a test for it.
