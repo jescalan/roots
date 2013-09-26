@@ -50,7 +50,7 @@ class Compiler extends EventEmitter
         return if intermediate
 
         # on the final pass, compile into layout if needed and write
-        process_layout fh, adapter, (contents) ->
+        process_layout.call @, fh, adapter, (contents) ->
           fh.write(contents)
           cb()
 
@@ -111,7 +111,7 @@ compile_into_layout = (fh, adapter, cb) ->
 process_layout = (fh, adapter, cb) ->
   fh.set_layout() if fh.target_extension is 'html'
   fh.set_dynamic_locals() if !!fh.dynamic_locals
-  return compile_into_layout(fh, adapter, cb) if fh.layout_path
+  return compile_into_layout.call(@, fh, adapter, cb) if fh.layout_path
   cb(fh.contents)
 
 ###*
