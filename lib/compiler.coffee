@@ -3,6 +3,8 @@ fs = require 'fs'
 shell = require 'shelljs'
 EventEmitter = require('events').EventEmitter
 _ = require 'underscore'
+Q = require 'q'
+async = require 'async'
 
 adapters = require './adapters'
 compress = require './utils/compressor'
@@ -10,7 +12,27 @@ output_path = require './utils/output_path'
 FileHelper = require './utils/file_helper'
 roots = require './index'
 
+class DynamicContentExtension
+
+  compile_hook: (deferred) ->
+    intermediate = (@adapters.length - @index - 1 > 0)
+    @fh.parse_dynamic_content() unless intermediate
+    deferred.resolve()
+
+class LayoutsExtension
+
+  after_hook: (deferred) ->
+    if !(@adapters.length - @index - 1 > 0)
+      process_layout.call @, @fh, @adapter, (contents) =>
+        @fh.write(contents)
+        deferred.resolve()
+
 class Compiler extends EventEmitter
+
+  # decorator pattern
+  # http://coffeescriptcookbook.com/chapters/design_patterns/decorator
+  constructor: ->
+    @extensions = [new DynamicContentExtension, new LayoutsExtension]
 
   ###*
    * Emits an event to notify listeners that everything is compiled
@@ -20,6 +42,47 @@ class Compiler extends EventEmitter
   finish: ->
     @emit 'finished'
 
+  # register an extension
+  
+  register: (ext) ->
+    @extensions.push(ext)
+
+  ###*
+   * Provides extensions with hooks into the compile process
+   * @param  {String} name - name of the hook
+   * @param {Object} ctx - compile context
+   * @description
+   * Goes through each extension, calls the function with `ctx` as its
+   * context, each hook returns a possibly modified instance of the context,
+   * and that is passed to the next function as it's context. this way, each
+   * function not only has access to the local context, but also has the
+   * opportunity to modify it going forward.
+   * 
+   * Finally, the context is passed out through the deferred handler and
+   * flows through to the rest of the compile process.
+  ###
+
+  hook: (name, ctx) ->
+    deferred = Q.defer()
+    
+    fn = (m,ext,cb) =>
+      @hook_single(ext, name, ctx)
+        .then (nm) -> cb(null, nm || m)
+
+    async.inject @extensions, ctx, fn, (err, res) ->
+      if err then return deferred.reject(err)
+      deferred.resolve(res)
+
+    return deferred.promise
+
+  hook_single: (ext, name, ctx) ->
+    deferred = Q.defer()
+
+    hook = ext["#{name}_hook"]
+    if hook then hook.call(ctx, deferred) else deferred.resolve()
+    
+    return deferred.promise
+
   ###*
    * Compiles a given file. Figures out how to compile based on extension, and
    * can handle multipass compiles if a file has multiple extensions.
@@ -28,31 +91,86 @@ class Compiler extends EventEmitter
   ###
 
   compile: (file, cb) ->
-    fh = new FileHelper(file)
 
-    # grab a compile adapter for each extension on the file
-    extensions = path.basename(file).split('.').slice(1)
-    matching_adapters = get_adapters_by_extension(extensions)
+    # local context is consistent even though compile is being called
+    # on multiple files, as rapidly as possible.
+    # 
+    # - `fh` is the file helper, an object that contains a good amount of
+    # useful information about a file, like it's full path, contents, etc.
+    # - `index` is used to track what number of compile passes have been
+    # taken on a file, since roots can compile a single file multiple times.
+    
+    ctx =
+      fh: new FileHelper(file)
+      index: 1
 
-    # compile once for each adapter
-    matching_adapters.forEach (adapter, i) =>
+    # the 'hook' method allows extensions to be incorporated into the
+    # roots compile process. for maximum flexibility, extensions can
+    # edit the context in any way, multiple extensions can be called
+    # on the same hook, and any extension can run sync or async.
+    # see `hook` above for further explanation
 
-      # if true, this is not the last compile pass
-      intermediate = (matching_adapters.length - i - 1 > 0)
+    @hook('before', ctx)
+      .then(@compile_each.bind(@))
+      .catch (err) -> @emit('error', err)
+      .done(cb)
 
-      # front matter stays intact until the last compile pass
-      fh.parse_dynamic_content() unless intermediate
+  compile_each: (ctx) ->
+    deferred = Q.defer()
 
-      # put in work (https://cloudup.com/cNORDD98uFh)
-      adapter.compile fh, fh.locals(), (err, compiled) =>
-        return @emit('error', err) if err
-        fh.contents = compiled
-        return if intermediate
+    # before the file is compiled, roots determines which compile
+    # adapters are needed to compile it correctly. it does this by
+    # reading through the file extensions. since roots can compile a
+    # single file multiple times, adapters is an array.
+    ctx.adapters = get_adapters_by_extension(path.basename(ctx.fh.path).split('.').slice(1))
 
-        # on the final pass, compile into layout if needed and write
-        process_layout.call @, fh, adapter, (contents) ->
-          fh.write(contents)
-          cb()
+    # for each adapter, compile the file's contents
+    # (move to `setup_compile` method below for further explanation)
+    
+    # this should be wrapped as a pattern
+    # also that `null` should be actual error handling
+    fn = (m, adapter, cb) ->
+      @setup_compile(m, adapter)
+        .then (nm) ->
+          cb(null, nm)
+
+    async.inject ctx.adapters, ctx, fn.bind(@), (err, res) ->
+      if err then return deferred.reject(err)
+      deferred.resolve(res)
+
+    return deferred.promise
+
+  # this method represents a single compile pass on a file. since roots
+  # can handle multipass compilation, this could be called more than once.
+  
+  setup_compile: (ctx, adapter) ->
+    deferred = Q.defer()
+
+    # make the adapter configurable by extensions
+    # and bump the index once for each compile pass.
+    ctx.adapter = adapter
+    ctx.index++
+
+    @hook('compile', ctx)
+      .then(@compile_single.bind(@))
+      .then(deferred.resolve)
+
+    return deferred.promise
+
+  compile_single: (ctx) ->
+    deferred = Q.defer()
+
+    # put in work (https://cloudup.com/cNORDD98uFh)
+    ctx.adapter.compile ctx.fh, ctx.fh.locals(), (err, compiled) =>
+      if err then return deferred.reject(err)
+
+      ctx.compiled_content = compiled
+      ctx.fh.contents = compiled
+
+      @hook('after', ctx)
+        .then(deferred.resolve)
+
+    return deferred.promise
 
   ###*
    * Copies a file into the output folder. Symlinks in dev mode.

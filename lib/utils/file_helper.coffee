@@ -15,6 +15,7 @@ class FileHelper
 
   constructor: (file) ->
     @path = file
+    @relative_path = @path.replace(process.cwd(),'')
     @contents = fs.readFileSync(file, 'utf8')
     @export_path = output_path(file)
     @extension = path.basename(@path).split('.')[1]
