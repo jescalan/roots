@@ -17,7 +17,7 @@ class DynamicContentExtension
   compile_hook: (deferred) ->
     intermediate = (@adapters.length - @index - 1 > 0)
     @fh.parse_dynamic_content() unless intermediate
-    deferred.resolve()
+    deferred.resolve(@)
 
 class LayoutsExtension
 
@@ -25,7 +25,7 @@ class LayoutsExtension
     if !(@adapters.length - @index - 1 > 0)
       process_layout.call @, @fh, @adapter, (contents) =>
         @fh.write(contents)
-        deferred.resolve()
+        deferred.resolve(@)
 
 class Compiler extends EventEmitter
 
@@ -67,7 +67,8 @@ class Compiler extends EventEmitter
     
     fn = (m,ext,cb) =>
       @hook_single(ext, name, ctx)
-        .then (nm) -> cb(null, nm || m)
+        .catch((err) -> cb(err, null))
+        .then((nm) -> cb(null, nm))
 
     async.inject @extensions, ctx, fn, (err, res) ->
       if err then return deferred.reject(err)
@@ -79,8 +80,11 @@ class Compiler extends EventEmitter
     deferred = Q.defer()
 
     hook = ext["#{name}_hook"]
-    if hook then hook.call(ctx, deferred) else deferred.resolve()
-    
+    if hook
+      hook.call(ctx, deferred)
+    else
+      deferred.resolve(ctx)
+
     return deferred.promise
 
   ###*
@@ -112,7 +116,7 @@ class Compiler extends EventEmitter
 
     @hook('before', ctx)
       .then(@compile_each.bind(@))
-      .catch (err) -> @emit('error', err)
+      .catch((err) => @emit('error', err))
       .done(cb)
 
   compile_each: (ctx) ->
@@ -131,8 +135,8 @@ class Compiler extends EventEmitter
     # also that `null` should be actual error handling
     fn = (m, adapter, cb) ->
       @setup_compile(m, adapter)
-        .then (nm) ->
-          cb(null, nm)
+        .catch((err) -> cb(err, null))
+        .then((nm) -> cb(null, nm))
 
     async.inject ctx.adapters, ctx, fn.bind(@), (err, res) ->
       if err then return deferred.reject(err)
@@ -153,7 +157,8 @@ class Compiler extends EventEmitter
 
     @hook('compile', ctx)
       .then(@compile_single.bind(@))
-      .then(deferred.resolve)
+      .catch(deferred.reject)
+      .done(deferred.resolve)
 
     return deferred.promise
 
@@ -168,7 +173,8 @@ class Compiler extends EventEmitter
       ctx.fh.contents = compiled
 
       @hook('after', ctx)
-        .then(deferred.resolve)
+        .fail(deferred.reject)
+        .done(deferred.resolve)
 
     return deferred.promise
 
