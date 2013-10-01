@@ -6,26 +6,16 @@ _ = require 'underscore'
 Q = require 'q'
 async = require 'async'
 
+# roots utils
 adapters = require './adapters'
 compress = require './utils/compressor'
 output_path = require './utils/output_path'
 FileHelper = require './utils/file_helper'
 roots = require './index'
 
-class DynamicContentExtension
-
-  compile_hook: (deferred) ->
-    intermediate = (@adapters.length - @index - 1 > 0)
-    @fh.parse_dynamic_content() unless intermediate
-    deferred.resolve(@)
-
-class LayoutsExtension
-
-  after_hook: (deferred) ->
-    if !(@adapters.length - @index - 1 > 0)
-      process_layout.call @, @fh, @adapter, (contents) =>
-        @fh.write(contents)
-        deferred.resolve(@)
+# roots extensions
+DynamicContentExtension = require './extensions/dynamic_content'
+LayoutsExtension = require './extensions/layouts'
 
 class Compiler extends EventEmitter
 
@@ -80,10 +70,7 @@ class Compiler extends EventEmitter
     deferred = Q.defer()
 
     hook = ext["#{name}_hook"]
-    if hook
-      hook.call(ctx, deferred)
-    else
-      deferred.resolve(ctx)
+    if hook then hook.call(ctx, deferred) else deferred.resolve(ctx)
 
     return deferred.promise
 
@@ -205,38 +192,6 @@ module.exports = Compiler
 #
 # @api private
 #
-
-###*
- * Compliles a given file into it's layout.
- * @param {FileHelper} fh - file helper for a given file
- * @param {Adapter} adapter - adapter that can be used to compile the given file
- * @param {Function} cb - callback when finished
- * @private
-###
-
-compile_into_layout = (fh, adapter, cb) ->
-  layout_file =
-    contents: fh.layout_contents
-    path: fh.layout_path
-
-  adapter.compile layout_file, fh.locals(content: fh.contents), (err, layout) =>
-    if err then return @emit('error', err)
-    cb(layout)
-
-###*
- * If necessary, sets up layout information and compiles content into
- * it's template. Returns the content ready to write.
- * @param  {FileHelper} fh - FileHelper instance
- * @param  {Adapter} adapter - Adapter needed to compile
- * @return {string} content to write
- * @private
-###
-
-process_layout = (fh, adapter, cb) ->
-  fh.set_layout() if fh.target_extension is 'html'
-  fh.set_dynamic_locals() if !!fh.dynamic_locals
-  return compile_into_layout.call(@, fh, adapter, cb) if fh.layout_path
-  cb(fh.contents)
 
 ###*
  * Given a list of file extensions, return matching adapters that will
