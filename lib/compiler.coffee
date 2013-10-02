@@ -24,6 +24,8 @@ class Compiler extends EventEmitter
   constructor: ->
     @extensions = [new DynamicContentExtension, new LayoutsExtension]
 
+  register: (ext) -> @extensions.push(ext)
+
   ###*
    * Emits an event to notify listeners that everything is compiled
    * @fires Compiler#finished
@@ -31,11 +33,6 @@ class Compiler extends EventEmitter
 
   finish: ->
     @emit 'finished'
-
-  # register an extension
-  
-  register: (ext) ->
-    @extensions.push(ext)
 
   ###*
    * Provides extensions with hooks into the compile process
@@ -54,6 +51,8 @@ class Compiler extends EventEmitter
 
   hook: (name, ctx) ->
     deferred = Q.defer()
+
+    # console.log ctx.adapter if name == 'compile'
     
     fn = (m,ext,cb) =>
       @hook_single(ext, name, ctx)
@@ -93,7 +92,7 @@ class Compiler extends EventEmitter
     
     ctx =
       fh: new FileHelper(file)
-      index: 1
+      index: 0
 
     # the 'hook' method allows extensions to be incorporated into the
     # roots compile process. for maximum flexibility, extensions can
@@ -156,14 +155,18 @@ class Compiler extends EventEmitter
     ctx.adapter.compile ctx.fh, ctx.fh.locals(), (err, compiled) =>
       if err then return deferred.reject(err)
 
-      ctx.compiled_content = compiled
       ctx.fh.contents = compiled
 
       @hook('after', ctx)
-        .fail(deferred.reject)
+        .then(@write_file)
+        .catch(deferred.reject)
         .done(deferred.resolve)
 
     return deferred.promise
+
+  write_file: (ctx) ->
+    ctx.fh.write(ctx.contents)
+    return ctx
 
   ###*
    * Copies a file into the output folder. Symlinks in dev mode.

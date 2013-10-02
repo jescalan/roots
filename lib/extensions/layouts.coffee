@@ -3,7 +3,7 @@ class LayoutsExtension
   after_hook: (deferred) ->
     if !(@adapters.length - @index - 1 > 0)
       process_layout.call @, @fh, @adapter, (contents) =>
-        @fh.write(contents)
+        @fh.contents = contents
         deferred.resolve(@)
 
   ###*
