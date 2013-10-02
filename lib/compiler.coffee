@@ -69,7 +69,11 @@ class Compiler extends EventEmitter
     deferred = Q.defer()
 
     hook = ext["#{name}_hook"]
-    if hook then hook.call(ctx, deferred) else deferred.resolve(ctx)
+
+    try
+      if hook then hook.call(ctx, deferred) else deferred.resolve(ctx)
+    catch err
+      deferred.reject(err)
 
     return deferred.promise
 
@@ -118,7 +122,6 @@ class Compiler extends EventEmitter
     # (move to `setup_compile` method below for further explanation)
     
     # this should be wrapped as a pattern
-    # also that `null` should be actual error handling
     fn = (m, adapter, cb) ->
       @setup_compile(m, adapter)
         .catch((err) -> cb(err, null))
