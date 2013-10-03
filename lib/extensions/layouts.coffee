@@ -14,8 +14,9 @@ class LayoutsExtension
       deferred.resolve(@)
 
   ###*
-   * Push the front matter variables and content for dynamic content
-   * as locals so they are available in html templates
+   * Provides compatibility with the Dynamic Content extension.
+   * Pushes the front matter variables and content for dynamic content
+   * as locals so they are available in html templates.
    * @private
   ###
 
@@ -64,6 +65,7 @@ class LayoutsExtension
    * compiles a file into its layout
    * @private
   ###
+
   compile_into_layout = (cb) ->
     layout_file = { contents: @fh.layout_contents, path: @fh.layout_path }
     @adapter.compile layout_file, @fh.locals(content: @fh.contents), (err, layout) =>
@@ -74,6 +76,7 @@ class LayoutsExtension
    * sets up a file to be compiled into its layout
    * @private
   ###
+
   process_layout = (cb) ->
     set_layout.call(@fh) if @fh.target_extension is 'html'
     set_dynamic_locals.call(@fh) if !!@fh.dynamic_locals

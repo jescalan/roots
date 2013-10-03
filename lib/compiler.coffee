@@ -52,8 +52,6 @@ class Compiler extends EventEmitter
   hook: (name, ctx) ->
     deferred = Q.defer()
 
-    # console.log ctx.adapter if name == 'compile'
-    
     fn = (m,ext,cb) =>
       @hook_single(ext, name, ctx)
         .catch((err) -> cb(err, null))

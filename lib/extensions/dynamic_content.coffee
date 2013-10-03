@@ -12,6 +12,7 @@ class DynamicContentExtension
 
   parse_dynamic_content = ->
 
+    # parse front matter
     front_matter_string = yaml_parser.match(@contents)
     if !front_matter_string then return false
 
@@ -20,11 +21,11 @@ class DynamicContentExtension
 
     # load variables from front matter
     front_matter = yaml_parser.parse(@contents, filename: @path)
-
     for k of front_matter
       @dynamic_locals[k] = front_matter[k]
 
     # if layout is present, set the layout and single post url
+    # this provides integration with the layouts extension
     if front_matter.layout
       @layout_path = path.resolve(path.dirname(@path), front_matter.layout)
       @layout_contents = fs.readFileSync(@layout_path, "utf8")
