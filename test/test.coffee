@@ -339,7 +339,7 @@ describe 'nested dynamic content', ->
   before (done) ->
     @path = path.join root, './dynamic_complex'
     @exists = (f) -> fs.existsSync(path.join(@path, f))
-    @contents = (f) -> fs.readFileSync(path.join(@path, f))
+    @contents = (f) -> fs.readFileSync(path.join(@path, f), 'utf8')
     run "cd \"#{@path}\"; ../../bin/roots compile --no-compress", done
 
   it 'compiles nested dynamic content', ->

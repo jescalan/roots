@@ -15,90 +15,12 @@ class FileHelper
 
   constructor: (file) ->
     @path = file
+    @relative_path = @path.replace(process.cwd(),'')
     @contents = fs.readFileSync(file, 'utf8')
     @export_path = output_path(file)
     @extension = path.basename(@path).split('.')[1]
     @target_extension = path.basename(@export_path).split('.')[1]
     return
-
-  ###*
-   * [parse_dynamic_content description]
-   * @public
-   * @uses set_paths
-  ###
-
-  parse_dynamic_content: ->
-    front_matter_string = yaml_parser.match(@contents)
-    if front_matter_string
-
-      # set up variables
-      @dynamic_locals = {}
-
-      # load variables from front matter
-      front_matter = yaml_parser.parse(@contents,
-        filename: @file
-      )
-      for k of front_matter
-        @dynamic_locals[k] = front_matter[k]
-
-      # if layout is present, set the layout and single post url
-      if front_matter.layout
-        @layout_path = path.resolve(path.dirname(@path), front_matter.layout)
-        @layout_contents = fs.readFileSync(@layout_path, "utf8")
-        @dynamic_locals.url = @path.replace(roots.project.rootDir, '').replace(/\..*$/, ".html")
-
-      # remove the front matter
-      @contents = @contents.replace(front_matter_string[0], '')
-    else
-      false
-
-  ###*
-   * Sets the layout path and contents properties
-   * @public
-   * @uses set_paths, FileHelper.parse_dynamic_content
-  ###
-
-  set_layout: ->
-    # make sure a layout actually has to be set
-    layouts_set = Object.keys(roots.project.layouts).length > 0
-    return false if @dynamic_locals || !layouts_set
-
-    # pull the default layout initially
-    layout = roots.project.conf 'layouts.default'
-    rel_file = path.relative(roots.project.path('views'), @path)
-
-    # if there's a custom override, use that instead
-    layout = roots.project.layouts[key] for key of roots.project.layouts if key is rel_file
-
-    # no match
-    return false if not layout?
-
-    # set the layout path and contents
-    @layout_path = path.join(roots.project.path('views'), layout)
-    @layout_contents = fs.readFileSync(@layout_path, "utf8")
-
-  ###*
-   * Push the front matter variables and content for dynamic content
-   * as locals so they are available in html templates
-   * @param {String} contents - compiled contents
-  ###
-
-  set_dynamic_locals: ->
-    @dynamic_locals.contents = @contents
-    
-    # get an array of folder the content is nested in
-    nested_folders = @path.replace(roots.project.rootDir,'').split(path.sep)
-    nested_folders.pop()
-    nested_folders.shift()
-
-    # make sure all folders are represented on the site object in locals
-    roots.project.locals.site ?= {}
-    tmp = roots.project.locals.site
-
-    for folder, i in nested_folders
-      tmp[folder] ?= []
-      if i == nested_folders.length-1 then tmp[folder].push(@dynamic_locals)
-      @local_pointer = tmp = tmp[folder]
 
   ###*
    * [locals description]
