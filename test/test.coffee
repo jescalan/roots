@@ -22,12 +22,19 @@ files_exist = (test_path, files) ->
       "expected #{path.join(test_path, file)} to exist"
     )
 
+files_do_not_exist = (test_path, files) ->
+  for file in files
+    fs.existsSync(path.join(test_path, file)).should.equal(
+      false,
+      "expected #{path.join(test_path, file)} to not exist"
+    )
+
 remove = (test_path) ->
   shell.rm('-rf', test_path)
 
 describe 'command', ->
   basic_root = path.join root, 'basic'
-  
+
   describe 'compile', ->
     before (done) ->
       run "cd \"#{basic_root}\"; ../../bin/roots compile", done
@@ -51,7 +58,7 @@ describe 'command', ->
     it 'should compile all files to public', ->
       css_content = fs.readFileSync path.join(basic_root, 'public/css/example.css'), 'utf8'
       css_content.should.not.match /\n/
-    
+
     after ->
       remove path.join(basic_root, 'public')
 
@@ -387,6 +394,31 @@ describe 'multipass compiles', ->
     files_exist test_path, ['public/index.html']
     content = fs.readFileSync path.join(test_path, 'public/index.html'), 'utf8'
     content.should.match(/blarg world/)
+
+  after ->
+    remove path.join(test_path, 'public')
+
+describe 'scss', ->
+  test_path = path.join root, './scss'
+
+  before (done) ->
+    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
+      done()
+
+  it 'should compile scss with roots css', ->
+    files_exist test_path, ['public/basic.css']
+    compiledContent = fs.readFileSync path.join(test_path, 'public/basic.css'), 'utf8'
+    expectedContent = fs.readFileSync path.join(test_path, 'public/expected-basic.css'), 'utf8'
+    expectedContent.should.equal compiledContent
+
+  it 'should compile scss with imports', ->
+    files_exist test_path, ['public/imports.css']
+    compiledContent = fs.readFileSync path.join(test_path, 'public/imports.css'), 'utf8'
+    expectedContent = fs.readFileSync path.join(test_path, 'public/expected-imports.css'), 'utf8'
+    expectedContent.should.equal compiledContent
+
+  it 'should not compile scss partials', ->
+    files_do_not_exist test_path, ['public/_cats.css']
 
   after ->
     remove path.join(test_path, 'public')
