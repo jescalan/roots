@@ -208,9 +208,8 @@ module.exports = Compiler
 get_adapters_by_extension = (extensions) ->
   matching_adapters = []
   extensions.reverse().forEach (ext) =>
-    for key of adapters
-      if adapters[key].settings.file_type == ext
-        matching_adapters.push(adapters[key])
+    _.each adapters, (adp) ->
+      matching_adapters.push(adp) if adp.settings.file_type is ext
 
   return matching_adapters
 
