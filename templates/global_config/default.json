@@ -8,5 +8,6 @@
     "ejs": "ejs",
     "express": "express",
     "min": "min"
-  }
+  },
+  "analytics": "true"
 }
