@@ -56,7 +56,8 @@
     "prettyjson": "0.8.x",
     "autoprefixer": "0.8.x",
     "node-sass": "~0.6.6",
-    "express": "3.3.x"
+    "express": "3.3.x",
+    "keen.io": "0.0.3"
   },
   "devDependencies": {
     "mocha": "latest",
