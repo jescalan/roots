@@ -19,6 +19,10 @@ Installation
 
 Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm install roots -g` and you'll be all set.
 
+##### OSX Installs
+* If you encounter problems when installing. Please ensure Xcode and Xcode Command Line Tools are Installed.
+* From Xcode go to Preferences -> Download -> Command Line Tools -> Install to install command line tools.
+
 Usage
 -----
 
