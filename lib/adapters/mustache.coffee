@@ -1,14 +1,13 @@
 roots = require '../index'
-transformer = require('transformers')['jade']
+transformer = require('transformers')['hogan']
 _ = require 'underscore'
 
 exports.settings =
-  file_type: 'jade'
+  file_type: 'mustache'
   target: 'html'
 
 exports.compile = (file, options={}, cb) ->
   _.defaults(options,
-    pretty: !roots.project.conf('compress')
     filename: file.path
   )
 

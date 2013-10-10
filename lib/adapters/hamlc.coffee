@@ -1,15 +1,14 @@
 roots = require '../index'
-transformer = require('transformers')['jade']
+transformer = require('transformers')['haml-coffee']
 _ = require 'underscore'
 
 exports.settings =
-  file_type: 'jade'
+  file_type: 'hamlc'
   target: 'html'
 
 exports.compile = (file, options={}, cb) ->
   _.defaults(options,
-    pretty: !roots.project.conf('compress')
-    filename: file.path
+    uglify: roots.project.conf('compress')
   )
 
   transformer.render(file.contents, options, cb)

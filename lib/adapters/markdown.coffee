@@ -1,14 +1,13 @@
 roots = require '../index'
-transformer = require('transformers')['jade']
+transformer = require('transformers')['markdown']
 _ = require 'underscore'
 
 exports.settings =
-  file_type: 'jade'
+  file_type: 'md'
   target: 'html'
 
 exports.compile = (file, options={}, cb) ->
   _.defaults(options,
-    pretty: !roots.project.conf('compress')
     filename: file.path
   )
 
