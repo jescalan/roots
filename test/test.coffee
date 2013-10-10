@@ -296,6 +296,19 @@ describe 'adapters', ->
 
     after -> remove(@output)
 
+  describe 'markdown', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/markdown')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile markdown', ->
+      should.exist(@output, 'index.html')
+      should.contain_content(@output, 'index.html', /<p>Hello <strong>world<\/strong>/)
+
+    after -> remove(@output)
+
   describe 'coffeescript', ->
 
     before ->
@@ -337,7 +350,6 @@ describe 'adapters', ->
     after -> remove(@output)
 
   describe 'scss', ->
-    test_path = path.join root, './scss'
 
     before (done) ->
       @root = path.join(root, 'compile_adapters/scss')
