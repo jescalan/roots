@@ -231,91 +231,148 @@ describe 'layouts', ->
 # adapters
 # 
 
-describe 'jade', ->
-  
-  before (done) ->
-    @root = path.join(root, 'compile_adapters/jade')
-    @output = path.join(@root, 'public')
-    run_in_dir(@root, 'compile --no-compress', done)
+describe 'adapters', ->
 
-  it 'should compile templates with no layout', ->
-    should.exist(@output, 'index.html')
+  describe 'jade', ->
+    
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/jade')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
 
-  after -> remove(@output)
+    it 'should compile templates with no layout', ->
+      should.exist(@output, 'index.html')
 
-describe 'ejs', ->
+    after -> remove(@output)
 
-  before (done) ->
-    @root = path.join(root, 'compile_adapters/ejs')
-    @output = path.join(@root, 'public')
-    run_in_dir(@root, 'compile --no-compress', done)
+  describe 'ejs', ->
 
-  it 'should compile ejs', ->
-    should.exist(@output, 'index.html')
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/ejs')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
 
-  after -> remove(@output)
+    it 'should compile ejs', ->
+      should.exist(@output, 'index.html')
 
-describe 'coffeescript', ->
+    after -> remove(@output)
 
-  before ->
-    @root1 = path.join(root, 'compile_adapters/coffeescript')
-    @output1 = path.join(@root1, 'public')
-    @root2 = path.join(root, 'compile_adapters/coffee-basic')
-    @output2 = path.join(@root2, 'public')
+  describe 'eco', ->
 
-  it 'should compile coffeescript and requires should work', (done) ->
-    run_in_dir @root1, 'compile --no-compress', =>
-      should.exist(@output1, ['basic.js', 'require.js'])
-      should.contain_content(@output1, 'require.js', /BASIC/)
-      done()
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/eco')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
 
-  it 'should compile without closures when specified in app.coffee', (done) ->
-    run_in_dir @root2, 'compile --no-compress', =>
-      should.exist(@output2, 'testz.js')
-      should.not_contain_content(@output2, 'testz.js', /function/)
-      done()
+    it 'should compile eco', ->
+      should.exist(@output, 'index.html')
+      should.contain_content(@output, 'index.html', /testing eco/)
 
-  after ->
-    remove(@output1)
-    remove(@output2)
+    after -> remove(@output)
 
-describe 'stylus', ->
+  describe 'mustache', ->
 
-  before (done) ->
-    @root = path.join(root, 'compile_adapters/stylus')
-    @output = path.join(@root, 'public')
-    run_in_dir(@root, 'compile --no-compress', done)
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/mustache')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
 
-  it 'should compile stylus with roots css', ->
-    should.exist(@output, 'basic.css')
+    it 'should compile mustache', ->
+      should.exist(@output, 'index.html')
+      should.contain_content(@output, 'index.html', /testing hogan/)
 
-  it 'should include the project directory for requires', ->
-    should.exist(@output, ['req.css', 'nested/all.css'])
-    should.contain_content(@output, 'req.css', /#000/)
+    after -> remove(@output)
 
-  after ->
-    remove(@output)
+  describe 'hamlc', ->
 
-describe 'scss', ->
-  test_path = path.join root, './scss'
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/hamlc')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
 
-  before (done) ->
-    @root = path.join(root, 'compile_adapters/scss')
-    @output = path.join(@root, 'public')
-    run_in_dir(@root, 'compile --no-compress', done)
+    it 'should compile hamlc', ->
+      should.exist(@output, 'index.html')
+      should.contain_content(@output, 'index.html', /testing hamlc/)
 
-  it 'should compile scss with roots css', ->
-    should.exist(@output, 'basic.css')
-    should.match_file(@output, 'basic.css', 'expected-basic.css')
+    after -> remove(@output)
 
-  it 'should compile scss with imports', ->
-    should.exist(@output, 'imports.css')
-    should.match_file(@output, 'imports.css', 'expected-imports.css')
+  describe 'coffeescript', ->
 
-  it 'should not compile scss partials', ->
-    should.not_exist(@output, '_cats.css')
+    before ->
+      @root1 = path.join(root, 'compile_adapters/coffeescript')
+      @output1 = path.join(@root1, 'public')
+      @root2 = path.join(root, 'compile_adapters/coffee-basic')
+      @output2 = path.join(@root2, 'public')
 
-  after -> remove(@output)
+    it 'should compile coffeescript and requires should work', (done) ->
+      run_in_dir @root1, 'compile --no-compress', =>
+        should.exist(@output1, ['basic.js', 'require.js'])
+        should.contain_content(@output1, 'require.js', /BASIC/)
+        done()
+
+    it 'should compile without closures when specified in app.coffee', (done) ->
+      run_in_dir @root2, 'compile --no-compress', =>
+        should.exist(@output2, 'testz.js')
+        should.not_contain_content(@output2, 'testz.js', /function/)
+        done()
+
+    after ->
+      remove(@output1)
+      remove(@output2)
+
+  describe 'stylus', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/stylus')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile stylus with roots css', ->
+      should.exist(@output, 'basic.css')
+
+    it 'should include the project directory for requires', ->
+      should.exist(@output, ['req.css', 'nested/all.css'])
+      should.contain_content(@output, 'req.css', /#000/)
+
+    after -> remove(@output)
+
+  describe 'scss', ->
+    test_path = path.join root, './scss'
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/scss')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile scss with roots css', ->
+      should.exist(@output, 'basic.css')
+      should.match_file(@output, 'basic.css', 'expected-basic.css')
+
+    it 'should compile scss with imports', ->
+      should.exist(@output, 'imports.css')
+      should.match_file(@output, 'imports.css', 'expected-imports.css')
+
+    it 'should not compile scss partials', ->
+      should.not_exist(@output, '_cats.css')
+
+    after -> remove(@output)
+
+  describe 'less', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/less')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile less', ->
+      should.exist(@output, 'test.css')
+      should.match_file(@output, 'test.css', 'test-expected.css')
+
+    after -> remove(@output)
+
+# 
+# misc
+# 
 
 describe 'static files', ->
 
@@ -329,10 +386,6 @@ describe 'static files', ->
     should.contain_content(@output, 'whatever.poop', /roots dont care/)
 
   after -> remove(@output)
-
-# 
-# misc
-# 
 
 describe 'errors', ->
 
