@@ -1,6 +1,7 @@
 should = require 'should'
 path = require 'path'
 fs = require 'fs'
+_ = require 'underscore'
 colors = require 'colors'
 shell = require 'shelljs'
 config = require '../lib/global_config'
@@ -60,7 +61,7 @@ describe 'command', ->
       @output = path.join(root, 'testproj')
 
     it 'should use the template set in global config if no flags present', (done) ->
-      default_tmpl = config.get().templates.default
+      default_tmpl = config.get('templates').default
       run_in_dir root, 'new testproj', =>
         should.match_dir(@output, path.join(root, "../templates/new/#{default_tmpl}"))
         done()
@@ -90,10 +91,10 @@ describe 'command', ->
         should.match_dir(@output, path.join(root, '../templates/new/min'))
         done()
 
-    it 'should use marionette template if the --marionette flag is present', (done) ->
-      run_in_dir root, 'new testproj --marionette', =>
-        should.match_dir(@output, path.join(root, '../templates/new/marionette'))
-        done()
+    # it 'should use marionette template if the --marionette flag is present', (done) ->
+    #   run_in_dir root, 'new testproj --marionette', =>
+    #     should.match_dir(@output, path.join(root, '../templates/new/marionette'))
+    #     done()
 
     it 'should use ejs template if the --ejs flag is present', (done) ->
       run_in_dir root, 'new testproj --ejs', =>
@@ -133,7 +134,7 @@ describe 'command', ->
       @root = path.join(root, 'basic')
 
     it 'should expose the correct package manager\'s interface', (done) ->
-      pkg_mgr = config.get().package_manager
+      pkg_mgr = config.get('package_manager')
 
       run_in_dir @root, 'pkg', (err, out) ->
         if (pkg_mgr == 'cdnjs') then out.should.match /cli-js/
@@ -155,7 +156,7 @@ describe 'command', ->
     after ->
       remove(@output)
       remove(@tmpl_path)
-      config.remove('templates', 'test')
+      config.set('templates', _.omit(config.get('templates'), 'test'))
 
   describe 'clean', ->
 
