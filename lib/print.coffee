@@ -49,8 +49,8 @@ class TerminalPrinter
     console.log '\u0007' # bell sound
     console.error '\n\n------------ ERROR ------------\n\n'.red + err.stack + '\n'
 
-  compiling: =>
-    @log('compiling... ', 'grey')
+  compiling: ->
+    process.stdout.write('compiling... '.grey)
 
   reload: =>
     @log('done!', 'green')
