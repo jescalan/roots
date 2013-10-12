@@ -156,6 +156,7 @@ class Compiler extends EventEmitter
     ctx.adapter.compile ctx.fh, ctx.fh.locals(), (err, compiled) =>
       if err then return deferred.reject(err)
 
+      if roots.project.conf('compress') then compiled = compress(compiled, ctx.fh.target_extension)
       ctx.fh.contents = compiled
 
       @hook('after', ctx)
