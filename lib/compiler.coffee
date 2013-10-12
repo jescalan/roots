@@ -44,7 +44,7 @@ class Compiler extends EventEmitter
    * and that is passed to the next function as it's context. this way, each
    * function not only has access to the local context, but also has the
    * opportunity to modify it going forward.
-   * 
+   *
    * Finally, the context is passed out through the deferred handler and
    * flows through to the rest of the compile process.
   ###
@@ -86,12 +86,12 @@ class Compiler extends EventEmitter
 
     # local context is consistent even though compile is being called
     # on multiple files, as rapidly as possible.
-    # 
+    #
     # - `fh` is the file helper, an object that contains a good amount of
     # useful information about a file, like it's full path, contents, etc.
     # - `index` is used to track what number of compile passes have been
     # taken on a file, since roots can compile a single file multiple times.
-    
+
     ctx =
       fh: new FileHelper(file)
       index: 0
@@ -118,7 +118,7 @@ class Compiler extends EventEmitter
 
     # for each adapter, compile the file's contents
     # (move to `setup_compile` method below for further explanation)
-    
+
     # this should be wrapped as a pattern
     fn = (m, adapter, cb) ->
       @setup_compile(m, adapter)
@@ -133,7 +133,7 @@ class Compiler extends EventEmitter
 
   # this method represents a single compile pass on a file. since roots
   # can handle multipass compilation, this could be called more than once.
-  
+
   setup_compile: (ctx, adapter) ->
     deferred = Q.defer()
 

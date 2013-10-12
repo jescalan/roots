@@ -6,6 +6,7 @@ Beginning with version `2.0.0`, we will be maintaining a changelog to show what 
 ### 2.1.0
 (not yet released)
 - huge internal rewrite, more modular, more coffeescript, better test coverage
+- built-in compilers for [scss](http://sass-lang.com/), [less](http://lesscss.org/), [markdown](http://daringfireball.net/projects/markdown/), [mustache](http://mustache.github.io/mustache.5.html), [haml-coffee](https://github.com/netzpirat/haml-coffee), and [eco](https://github.com/sstephenson/eco).
 - on compile, css is processed by [autoprefixer](https://github.com/ai/autoprefixer)
 - livereload tag no longer necessary, this happens internally (whoo!)
 - deep nested dynamic content has been implemented (see #230)
