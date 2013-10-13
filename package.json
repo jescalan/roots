@@ -62,12 +62,14 @@
     "copy-paste": "0.1.x",
     "prettyjson": "0.9.x",
     "ftp": "0.3.x",
-    "semver": "2.x.x",
+    "semver": "2.1.x",
     "configstore": "0.1.x",
     "osenv": "0.0.x",
     "moment": "2.4.x",
     "underscore.string": "2.x.x",
-    "haml": "0.4.x"
+    "haml": "0.4.x",
+    "findit": "~1.1.0",
+    "jade-graph": "~0.4.x"
   },
   "devDependencies": {
     "mocha": "latest",
