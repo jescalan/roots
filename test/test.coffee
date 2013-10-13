@@ -1,295 +1,498 @@
 should = require 'should'
 path = require 'path'
 fs = require 'fs'
+_ = require 'underscore'
 colors = require 'colors'
 shell = require 'shelljs'
 config = require '../lib/global_config'
 run = require('child_process').exec
 
 root = __dirname
-basic_root = path.join root, 'basic'
+
+# 
+# test helpers
+# 
+
+require('./helpers')(should)
+
+remove = (test_path) ->
+  shell.rm('-rf', test_path)
+
+run_in_dir = (dir, cmd, cb) ->
+  run("cd \"#{dir}\"; #{path.join(path.relative(dir, __dirname), '../bin/roots')} #{cmd}", cb)
 
 #
 # command line interface
 #
-
-# can't test watch because the process hangs - the internals of
-# the watch command are tested below in the compiler section though
-
-files_exist = (test_path, files) ->
-  for file in files
-    fs.existsSync(path.join(test_path, file)).should.be.ok
 
 describe 'command', ->
 
   describe 'compile', ->
 
     before (done) ->
-      run "cd \"#{basic_root}\"; ../../bin/roots compile", done
+      @root = path.join(root, 'basic')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile', done)
 
     it 'should compile files to /public', ->
-      fs.readdirSync(path.join(basic_root, 'public')).should.have.lengthOf(5)
+      should.exist(@output, [
+        'index.html'
+        'favicon.ico'
+        'img/noise.png'
+        'js/main.js'
+        'js/pie.htc'
+        'js/require.js'
+        'css/example.css'
+      ])
 
-    it 'should minify all css and javascript', () ->
-      js_content = fs.readFileSync path.join(basic_root, 'public/js/main.js'), 'utf8'
+    it 'should minify all css and javascript', ->
+      js_content = fs.readFileSync path.join(@root, 'public/js/main.js'), 'utf8'
       js_content.should.not.match /\n/
 
     it 'should compile all files to public', ->
-      css_content = fs.readFileSync path.join(basic_root, 'public/css/example.css'), 'utf8'
+      css_content = fs.readFileSync path.join(@root, 'public/css/example.css'), 'utf8'
       css_content.should.not.match /\n/
-      shell.rm '-rf', path.join(basic_root, 'public')
+
+    after -> remove(path.join(@root, 'public'))
 
   describe 'new', ->
-    test_path = path.join(root, 'testproj')
 
-    it 'should use the default template if no flags present', (done) ->
-      run "cd \"#{root}\"; ../bin/roots new testproj", ->
-        files_exist(test_path,[
-          '/'
-          'app.coffee'
-          'readme.md'
-          'views'
-          'views/index.jade'
-          'views/layout.jade'
-          'assets'
-          'assets/favicon.ico'
-          'assets/css'
-          'assets/css/_settings.styl'
-          'assets/css/master.styl'
-          'assets/js'
-          'assets/js/main.coffee'
-          'assets/js/_helper.coffee'
-          'assets/js/require.js'
-          'assets/img'
-          'assets/img/noise.png'
-        ])
-        shell.rm '-rf', path.join(root, 'testproj')
+    before ->
+      @output = path.join(root, 'testproj')
+
+    it 'should use the template set in global config if no flags present', (done) ->
+      default_tmpl = config.get('templates').default
+      run_in_dir root, 'new testproj', =>
+        should.match_dir(@output, path.join(root, "../templates/new/#{default_tmpl}"))
+        done()
+
+    it 'should use the default template if the --default flag is present', (done) ->
+      run_in_dir root, 'new testproj --default', =>
+        should.match_dir(@output, path.join(root, '../templates/new/default'))
         done()
 
     it 'should use express template if the --express flag is present', (done) ->
-      run "cd \"#{root}\"; ../bin/roots new testproj --express", ->
-        files_exist(test_path,[
-          '/'
-          'app.js'
-          'routes'
-          'assets'
-          'views'
-          'public'
-        ])
-        shell.rm '-rf', path.join(root, 'testproj')
+      run_in_dir root, 'new testproj --express', =>
+        should.match_dir(@output, path.join(root, '../templates/new/express'))
         done()
 
     it 'should use basic template if the --basic flag is present', (done) ->
-      run "cd \"#{root}\"; ../bin/roots new testproj --basic", ->
-        files_exist(test_path,[
-          '/'
-          'views/index.html'
-          'assets/js/main.js'
-          'assets/css/example.css'
-        ])
-        shell.rm '-rf', path.join(root, 'testproj')
+      run_in_dir root, 'new testproj --basic', =>
+        should.match_dir(@output, path.join(root, '../templates/new/basic'))
         done()
+
+    it 'should use blog template if the --blog flag is present', (done) ->
+      run_in_dir root, 'new testproj --blog', =>
+        should.match_dir(@output, path.join(root, '../templates/new/blog'))
+        done()
+
+    it 'should use min template if the --min flag is present', (done) ->
+      run_in_dir root, 'new testproj --min', =>
+        should.match_dir(@output, path.join(root, '../templates/new/min'))
+        done()
+
+    # it 'should use marionette template if the --marionette flag is present', (done) ->
+    #   run_in_dir root, 'new testproj --marionette', =>
+    #     should.match_dir(@output, path.join(root, '../templates/new/marionette'))
+    #     done()
+
+    it 'should use ejs template if the --ejs flag is present', (done) ->
+      run_in_dir root, 'new testproj --ejs', =>
+        should.match_dir(@output, path.join(root, '../templates/new/ejs'))
+        done()
+
+    afterEach -> remove(@output)
 
   describe 'plugin', ->
 
+    before ->
+      @root = path.join(root, 'basic')
+      @output = path.join(@root, 'plugins')
+
     it 'should create a template inside /plugins on \'generate\'', (done) ->
-      run "cd \"#{basic_root}\"; ../../bin/roots plugin generate", ->
-        fs.existsSync(path.join(basic_root, 'plugins/template.coffee')).should.be.ok
-        shell.rm '-rf', path.join(basic_root, 'plugins')
+      run_in_dir @root, 'plugin generate', =>
+        should.exist(@output, 'template.coffee')
         done()
 
     it 'should use the javascript template if called with --js', (done) ->
-      run "cd \"#{basic_root}\"; ../../bin/roots plugin generate --js", ->
-        fs.existsSync(path.join(basic_root, 'plugins/template.js')).should.be.ok
-        shell.rm '-rf', path.join(basic_root, 'plugins')
+      run_in_dir @root, 'plugin generate --js', =>
+        should.exist(@output, 'template.js')
         done()
 
-  describe 'version', ->
+    afterEach -> remove(path.join(@root, 'plugins'))
 
+  describe 'version', ->
     it 'should output the correct version number for roots', (done) ->
       version = JSON.parse(fs.readFileSync('package.json')).version
-      run './bin/roots version', (err,out) ->
+      run_in_dir '.', 'version', (err, out) ->
         out.replace(/\n/, '').should.eql(version)
         done()
 
   describe 'pkg', ->
+    
+    before ->
+      @root = path.join(root, 'basic')
 
     it 'should expose the correct package manager\'s interface', (done) ->
-      pkg_mgr = config.get().package_manager
-      run "cd \"#{basic_root}\"; ../../bin/roots pkg", (err,out, stdout) ->
-        out.should.match /cli-js/ if (pkg_mgr == 'cdnjs')
-        out.should.match /bower/ if (pkg_mgr == 'bower')
+      pkg_mgr = config.get('package_manager')
+
+      run_in_dir @root, 'pkg', (err, out) ->
+        if (pkg_mgr == 'cdnjs') then out.should.match /cli-js/
+        if (pkg_mgr == 'bower') then out.should.match /bower/
         done()
 
+  describe 'template', ->
+
+    before ->
+      @output = path.join(root, 'testproj')
+      @tmpl_path = path.join(root, '../templates/new/test')
+
     it 'should load custom templates correctly', (done) ->
-
-      test_repo = 'https://github.com/jenius/cli-js.git'
-      test_name = 'test'
-      test_path = path.join(root, 'testproj')
-      tmpl_path = path.join(root, '../templates/new', test_name)
-
-      run "./bin/roots template add test #{test_repo}", ->
-        run "cd #{root}; ../bin/roots new testproj --#{test_name}", (err) ->
-          fs.existsSync(test_path).should.be.ok
-          fs.existsSync(path.join(test_path, 'package.json')).should.be.ok
-          shell.rm('-rf', test_path)
-          shell.rm('-rf', tmpl_path)
-          config.remove('templates', 'test')
+      run_in_dir '.', "template add test https://github.com/jenius/cli-js.git", =>
+        run_in_dir root, "new testproj --test", =>
+          should.exist(@output, 'package.json')
           done()
 
-describe 'compiler', ->
-  compiler = null
+    after ->
+      remove(@output)
+      remove(@tmpl_path)
+      config.set('templates', _.omit(config.get('templates'), 'test'))
 
-  before ->
-    Compiler = require path.join(root, '../lib/compiler')
-    compiler = new Compiler()
+  describe 'clean', ->
 
-  it 'eventemitter should be hooked up properly', (done) ->
-    compiler.on 'finished', -> done()
-    compiler.finish()
+    before ->
+      @root = path.join(root, 'basic')
 
-describe 'jade', ->
-  test_path = path.join root, './jade'
-  test_path_2 = path.join root, './no-layout'
+    it 'should remove public directory', (done) ->
+      run_in_dir @root, 'compile', =>
+        should.exist(@root, 'public')
+        run_in_dir @root, 'clean', =>
+          should.not_exist(@root, 'public')
+          done()
 
-  it 'should compile jade view templates', (done) ->
-    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(test_path, 'public/index.html')).should.be.ok
-      shell.rm '-rf', path.join(test_path, 'public')
-      done()
-
-  it 'should compile templates with no layout', (done) ->
-    run "cd #{test_path_2}; ../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(test_path_2, 'public/index.html')).should.be.ok
-      shell.rm '-rf', path.join(test_path_2, 'public')
-      done()
-
-describe 'ejs', ->
-  test_path = path.join root, './ejs'
-
-  it 'should compile ejs', (done) ->
-    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(test_path, 'public/index.html')).should.be.ok
-      shell.rm '-rf', path.join(test_path, 'public')
-      done()
-
-describe 'coffeescript', ->
-  test_path = path.join root, './coffeescript'
-  test_path_2 = path.join root, './coffee-basic'
-
-  it 'should compile coffeescript and requires should work', (done) ->
-    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(test_path, 'public/basic.js')).should.be.ok
-      fs.existsSync(path.join(test_path, 'public/require.js')).should.be.ok
-      require_content = fs.readFileSync path.join(test_path, 'public/require.js'), 'utf8'
-      require_content.should.match /BASIC/
-      shell.rm '-rf', path.join(test_path, 'public')
-      done()
-
-  it 'should compile without closures when specified in app.coffee', (done) ->
-    run "cd \"#{test_path_2}\"; ../../bin/roots compile --no-compress", ->
-      fs.existsSync(path.join(test_path_2, 'public/testz.js')).should.be.ok
-      require_content = fs.readFileSync path.join(test_path_2, 'public/testz.js'), 'utf8'
-      require_content.should.not.match /function/
-      shell.rm '-rf', path.join(test_path_2, 'public')
-      done()
-
-describe 'stylus', ->
-  test_path = path.join root, './stylus'
+describe 'ignores', ->
 
   before (done) ->
-    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
-      done()
+    @root = path.join(root, 'ignores')
+    @output = path.join(@root, 'public')
+    run_in_dir(@root, 'compile --no-compress', done)
 
-  it 'should compile stylus with roots css', ->
-    fs.existsSync(path.join(test_path, 'public/basic.css')).should.be.ok
+  it 'should ignore plugins, public, and app.coffee', ->
+    should.exist(@output, 'index.html')
+    should.not_exist(@output, 'plugins')
+    should.not_exist(@output, 'app.coffee')
+    should.not_exist(@output, 'public')
 
-  it 'should include the project directory for requires', ->
-    fs.existsSync(path.join(test_path, 'public/req.css')).should.be.ok
-    fs.existsSync(path.join(test_path, 'public/nested/all.css')).should.be.ok
-    require_content = fs.readFileSync path.join(test_path, 'public/req.css'), 'utf8'
-    require_content.should.match /#000/
-    shell.rm '-rf', path.join(test_path, 'public')
+  it 'should correctly ignore files from app.coffee', ->
+    should.not_exist(@output, 'ignore_me.html')
+
+  it 'should correctly ignore folders from app.coffee', ->
+    should.not_exist(@output, 'nobody_loves_me/waaaaah.html')
+
+  after -> remove(@output)
+
+describe 'config options', ->
+
+  before (done) ->
+    @root = path.join(root, 'config')
+    @output = path.join(@root, 'snargles')
+    run_in_dir(@root, 'compile --no-compress', done)
+
+  # If the old-formatted config file doesn't work, all these tests
+  # will fail. So this is also an implicit test for that.
+
+  it 'output folder should be configurable', ->
+    should.exist(@output, 'index.html')
+
+  it 'views directory should be configurable', ->
+    should.exist(@output, 'foo.html')
+
+  it 'assets directory should be configurable', ->
+    should.exist(@output, 'bar.css')
+
+  after -> remove(@output)
+
+# 
+# extensions
+# 
+
+describe 'layouts', ->
+
+  before (done) ->
+    @root = path.join(root, 'layouts/no-layout')
+    @output = path.join(@root, 'public')
+    run_in_dir(@root, 'compile --no-compress', done)
+
+  it 'should compile templates with no layout', ->
+    should.exist(@output, 'index.html')
+
+  after -> remove(@output)
+
+# 
+# adapters
+# 
+
+describe 'adapters', ->
+
+  describe 'jade', ->
+    
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/jade')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile templates with no layout', ->
+      should.exist(@output, 'index.html')
+
+    after -> remove(@output)
+
+  describe 'ejs', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/ejs')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile ejs', ->
+      should.exist(@output, 'index.html')
+
+    after -> remove(@output)
+
+  describe 'eco', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/eco')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile eco', ->
+      should.exist(@output, 'index.html')
+      should.contain_content(@output, 'index.html', /testing eco/)
+
+    after -> remove(@output)
+
+  describe 'mustache', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/mustache')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile mustache', ->
+      should.exist(@output, 'index.html')
+      should.contain_content(@output, 'index.html', /testing hogan/)
+
+    after -> remove(@output)
+
+  describe 'hamlc', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/hamlc')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile hamlc', ->
+      should.exist(@output, 'index.html')
+      should.contain_content(@output, 'index.html', /testing hamlc/)
+
+    after -> remove(@output)
+
+  describe 'markdown', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/markdown')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile markdown', ->
+      should.exist(@output, 'index.html')
+      should.contain_content(@output, 'index.html', /<p>Hello <strong>world<\/strong>/)
+
+    after -> remove(@output)
+
+  describe 'coffeescript', ->
+
+    before ->
+      @root1 = path.join(root, 'compile_adapters/coffeescript')
+      @output1 = path.join(@root1, 'public')
+      @root2 = path.join(root, 'compile_adapters/coffee-basic')
+      @output2 = path.join(@root2, 'public')
+
+    it 'should compile coffeescript and requires should work', (done) ->
+      run_in_dir @root1, 'compile --no-compress', =>
+        should.exist(@output1, ['basic.js', 'require.js'])
+        should.contain_content(@output1, 'require.js', /BASIC/)
+        done()
+
+    it 'should compile without closures when specified in app.coffee', (done) ->
+      run_in_dir @root2, 'compile --no-compress', =>
+        should.exist(@output2, 'testz.js')
+        should.not_contain_content(@output2, 'testz.js', /function/)
+        done()
+
+    after ->
+      remove(@output1)
+      remove(@output2)
+
+  describe 'stylus', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/stylus')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile stylus with roots css', ->
+      should.exist(@output, 'basic.css')
+
+    it 'should include the project directory for requires', ->
+      should.exist(@output, ['req.css', 'nested/all.css'])
+      should.contain_content(@output, 'req.css', /#000/)
+
+    after -> remove(@output)
+
+  describe 'scss', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/scss')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile scss with roots css', ->
+      should.exist(@output, 'basic.css')
+      should.match_file(@output, 'basic.css', 'expected-basic.css')
+
+    it 'should compile scss with imports', ->
+      should.exist(@output, 'imports.css')
+      should.match_file(@output, 'imports.css', 'expected-imports.css')
+
+    it 'should not compile scss partials', ->
+      should.not_exist(@output, '_cats.css')
+
+    after -> remove(@output)
+
+  describe 'less', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/less')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile less', ->
+      should.exist(@output, 'test.css')
+      should.match_file(@output, 'test.css', 'test-expected.css')
+
+    after -> remove(@output)
+
+# 
+# misc
+# 
 
 describe 'static files', ->
-  test_path = path.join root, './static'
 
   before (done) ->
-    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
-      done()
+    @root = path.join(root, 'static')
+    @output = path.join(@root, 'public')
+    run_in_dir(@root, 'compile --no-compress', done)
 
   it 'copies static files', ->
-    fs.existsSync(path.join(test_path, 'public/whatever.poop')).should.be.ok
-    require_content = fs.readFileSync path.join(test_path, 'public/whatever.poop'), 'utf8'
-    require_content.should.match /roots dont care/
-    shell.rm '-rf', path.join(test_path, 'public')
+    should.exist(@output, 'whatever.poop')
+    should.contain_content(@output, 'whatever.poop', /roots dont care/)
+
+  after -> remove(@output)
 
 describe 'errors', ->
-  test_path = path.join root, './errors'
+
+  before ->
+    @root = path.join(root, 'errors')
+    @output = path.join(@root, 'public')
 
   it 'notifies you if theres an error', (done) ->
-    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", (a,b,stderr) ->
+    run_in_dir @root, 'compile --no-compress', (err, out, stderr) ->
       stderr.should.match /ERROR/
-      shell.rm '-rf', path.join(test_path, 'public')
       done()
+
+  after -> remove(@output)
 
 describe 'dynamic content', ->
-  test_path = path.join root, './dynamic'
 
   before (done) ->
-    run "cd \"#{test_path}\"; ../../bin/roots compile --no-compress", ->
-      done()
+    @root = path.join(root, 'dynamic_content/basic')
+    @output = path.join(@root, 'public')
+    run_in_dir(@root, 'compile --no-compress', done)
 
-  after ->
-    shell.rm '-rf', path.join(test_path, 'public')
-
-  it 'compiles into single post templates', ->
-    fs.existsSync(path.join(test_path, 'public/posts/hello_world.html')).should.be.ok
-    content = fs.readFileSync path.join(test_path, 'public/posts/hello_world.html'), 'utf8'
-    content.should.match(/\<h1\>hello world\<\/h1\>/)
-    content.should.match(/This is my first blog post/)
+  it 'compiles dynamic files', ->
+    should.exist(@output, ['posts/hello_world.html', 'posts/second_post.html'])
+    should.contain_content(@output, 'posts/hello_world.html', /\<h1\>hello world\<\/h1\>/)
+    should.contain_content(@output, 'posts/hello_world.html', /This is my first blog post/)
 
   it 'makes front matter available as locals', ->
-    fs.existsSync(path.join(test_path, 'public/index.html')).should.be.ok
-    content = fs.readFileSync path.join(test_path, 'public/index.html'), 'utf8'
-    content.should.match(/\<a href="\/posts\/hello_world.html"\>hello world\<\/a\>/)
+    should.exist(@output, 'index.html')
+    should.contain_content(@output, 'index.html', /\<a href="\/posts\/hello_world.html"\>hello world\<\/a\>/)
 
   it 'exposes compiled content as site.post.contents', ->
-    content = fs.readFileSync path.join(test_path, 'public/index.html'), 'utf8'
-    content.should.match(/\<p\>This is my first blog post.*\<\/p\>/)
+    should.contain_content(@output, 'index.html', /\<p\>This is my first blog post.*\<\/p\>/)
+
+  after -> remove(@output)
+
+describe 'nested dynamic content', ->
+
+  before (done) ->
+    @root = path.join(root, 'dynamic_content/complex')
+    @output = path.join(@root, 'public')
+    run_in_dir(@root, 'compile --no-compress', done)
+
+  it 'compiles nested dynamic content', ->
+    should.exist(@output, 'posts/code/bar.html')
+    should.exist(@output, 'posts/code/quuz.html')
+    should.exist(@output, 'posts/baz.html')
+    should.contain_content(@output, 'posts/code/bar.html', /blarg world/) 
+    should.contain_content(@output, 'posts/code/quuz.html', /blarg\!/) 
+
+  it 'adds nested dynamic content correctly to locals', ->
+    should.contain_content(@output, 'index.html', /my name is blarg/)
+    should.contain_content(@output, 'index.html', /foo/)
+    should.contain_content(@output, 'index.html', /blarg world/)
+    should.contain_content(@output, 'index.html', /quuuuuuux homie/)
+
+  it 'correctly links nested dynamic content with \'url\'', ->
+    should.contain_content(@output, 'index.html', /href="\/posts\/code\/bar\.html"/)
+    should.contain_content(@output, 'index.html', /href="\/posts\/baz\.html"/)
+
+  after -> remove(@output)
 
 describe 'precompiled templates', ->
-  test_path = path.join root, './precompile'
 
   before (done) ->
-    run "cd #{test_path}; ../../bin/roots compile --no-compress", ->
-      done()
+    @root = path.join(root, 'precompile')
+    @output = path.join(@root, 'public')
+    run_in_dir(@root, 'compile --no-compress', done)
 
   it 'precompiles templates', ->
-    fs.existsSync(path.join(test_path, 'public/js/templates.js')).should.be.ok
-    require_content = fs.readFileSync path.join(test_path, 'public/js/templates.js'), 'utf8'
-    require_content.should.match(/\<p\>hello world\<\/p\>/)
-    shell.rm '-rf', path.join(test_path, 'public')
+    should.exist(@output, '/js/templates.js')
+    should.contain_content(@output, 'js/templates.js', /\<p\>hello world\<\/p\>/)
+
+  after -> remove(@output)
 
 describe 'multipass compiles', ->
-  test_path = path.join root, './multipass'
 
   before (done) ->
-    run "cd #{test_path}; ../../bin/roots compile --no-compress", ->
-      done()
+    @root = path.join(root, 'multipass')
+    @output = path.join(@root, 'public')
+    run_in_dir(@root, 'compile --no-compress', done)
 
   it 'will compile a single file multiple times accurately', ->
-    fs.existsSync(path.join(test_path, 'public/index.html')).should.be.ok
-    content = fs.readFileSync path.join(test_path, 'public/index.html'), 'utf8'
-    content.should.match(/blarg world/)
-    shell.rm '-rf', path.join(test_path, 'public')
+    should.exist(@output, 'index.html')
+    should.contain_content(@output, 'index.html', /blarg world/)
+
+  after -> remove(@output)
 
 describe 'deploy', ->
   deployer = null
 
   before ->
     Deployer = require path.join(root, '../lib/deployer')
-    test_adapter = { test: (input)-> return input }
+    test_adapter =
+      test: (input)-> return input
     deployer = new Deployer(test_adapter, '')
     deployer.add_shell_method('test');
 
