@@ -62,7 +62,9 @@
     "prettyjson": "0.8.x",
     "ftp": "0.3.x",
     "semver": "2.1.x",
-    "configstore": "0.1.x"
+    "configstore": "0.1.x",
+    "jade-graph": "~0.31.2",
+    "findit": "~1.1.0"
   },
   "devDependencies": {
     "mocha": "latest",
