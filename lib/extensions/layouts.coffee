@@ -18,6 +18,7 @@ class LayoutsExtension
    * Pushes the front matter variables and content for dynamic content
    * as locals so they are available in html templates.
    * @private
+   * @todo this should be in the dynamic content extension
   ###
 
   set_dynamic_locals = ->
@@ -27,6 +28,9 @@ class LayoutsExtension
     nested_folders = @path.replace(roots.project.rootDir,'').split(path.sep)
     nested_folders.pop()
     nested_folders.shift()
+
+    # add path to the locals for tracing
+    @dynamic_locals._categories = nested_folders
 
     # make sure all folders are represented on the site object in locals
     roots.project.locals.site ?= {}
