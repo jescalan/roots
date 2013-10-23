@@ -67,6 +67,12 @@ class Project extends EventEmitter
   livereloadEnabled: true
 
   ###*
+   * If watch should open browser
+   * @type {Boolean}
+  ###
+  open: true
+
+  ###*
    * [layouts description]
    * @type {Object}
   ###
