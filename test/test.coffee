@@ -218,15 +218,36 @@ describe 'config options', ->
 
 describe 'layouts', ->
 
-  before (done) ->
+  before ->
     @root = path.join(root, 'layouts/no-layout')
+    @root2 = path.join(root, 'layouts/backtracked')
+    @root3 = path.join(root, 'layouts/cross-language')
     @output = path.join(@root, 'public')
-    run_in_dir(@root, 'compile --no-compress', done)
+    @output2 = path.join(@root2, 'public')
+    @output3 = path.join(@root3, 'public')
 
-  it 'should compile templates with no layout', ->
-    should.exist(@output, 'index.html')
+  it 'should compile templates with no layout', (done) ->
+    run_in_dir @root, 'compile --no-compress', =>
+      should.exist(@output, 'index.html')
+      done()
 
-  after -> remove(@output)
+  it 'should distinguish between relatively and absolutely resolved layouts', (done) ->
+    run_in_dir @root2, 'compile --no-compress', =>
+      should.exist(@output2, 'level1/level2/test.html')
+      should.contain_content(@output2, 'level1/level2/test.html', /backtracked roots layouts/)
+      done()
+
+  it 'should compile one language into a different language layout', (done) ->
+    run_in_dir @root3, 'compile --no-compress', =>
+      should.exist(@output3, 'index.html')
+      should.contain_content(@output3, 'index.html', /cross-language layout renders/)
+      should.contain_content(@output3, 'index.html', /This is the index page/)
+      done()
+
+  after ->
+    remove(@output)
+    remove(@output2)
+    remove(@output3)
 
 # 
 # adapters

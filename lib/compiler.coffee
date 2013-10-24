@@ -1,3 +1,5 @@
+require 'coffee-script'
+
 path = require 'path'
 fs = require 'fs'
 shell = require 'shelljs'
@@ -7,10 +9,10 @@ Q = require 'q'
 async = require 'async'
 
 # roots utils
-adapters = require './adapters'
 compress = require './utils/compressor'
 output_path = require './utils/output_path'
 FileHelper = require './utils/file_helper'
+adapter_finder = require './utils/adapter_finder'
 roots = require './index'
 
 # roots extensions
@@ -69,7 +71,7 @@ class Compiler extends EventEmitter
     hook = ext["#{name}_hook"]
 
     try
-      if hook then hook.call(ctx, deferred) else deferred.resolve(ctx)
+      if hook then hook(ctx, deferred) else deferred.resolve(ctx)
     catch err
       deferred.reject(err)
 
@@ -114,7 +116,7 @@ class Compiler extends EventEmitter
     # adapters are needed to compile it correctly. it does this by
     # reading through the file extensions. since roots can compile a
     # single file multiple times, adapters is an array.
-    ctx.adapters = get_adapters_by_extension(path.basename(ctx.fh.path).split('.').slice(1))
+    ctx.adapters = adapter_finder(path.basename(ctx.fh.path).split('.').slice(1))
 
     # for each adapter, compile the file's contents
     # (move to `setup_compile` method below for further explanation)
@@ -197,22 +199,6 @@ module.exports = Compiler
 #
 # @api private
 #
-
-###*
- * Given a list of file extensions, return matching adapters that will
- * compile a file with the extensions provided
- * @param {array} extensions - array of strings listing extensions, no dot.
- * @return {array} array of adapters that can be used to compile the file
- * @private
-###
-
-get_adapters_by_extension = (extensions) ->
-  matching_adapters = []
-  extensions.reverse().forEach (ext) =>
-    _.each adapters, (adp) ->
-      matching_adapters.push(adp) if adp.settings.file_type is ext
-
-  return matching_adapters
 
 ###*
  * Symlinks a given file to the given destination

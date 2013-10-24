@@ -1,59 +1,69 @@
+require 'coffee-script'
+
 roots = require '../index'
 path = require 'path'
 fs = require 'fs'
+adapter_finder = require '../utils/adapter_finder'
 
 class LayoutsExtension
 
-  after_hook: (deferred) ->
+  after_hook: (ctx, deferred) ->
     # only process layout on the last compile pass
-    if @adapters.length > @index then return deferred.resolve(@)
+    if ctx.adapters.length > ctx.index then return deferred.resolve(ctx)
 
-    process_layout.call @, (err, contents) =>
+    process_layout ctx, (err, contents) =>
       if err then return deferred.reject(err)
-      @fh.contents = contents
-      deferred.resolve(@)
+      ctx.fh.contents = contents
+      deferred.resolve(ctx)
 
   ###*
-   * Provides compatibility with the Dynamic Content extension.
-   * Pushes the front matter variables and content for dynamic content
-   * as locals so they are available in html templates.
-   * @private
-   * @todo this should be in the dynamic content extension
+   * given a layout path, sets up appropriate locals on the
+   * context object
+   * @param {Object} fh - file helper object
+   * @param {String} layout - path to the layout
+   * @param {Boolean} resolved - is the layout resolved from the
+   *                             view path, or set absolutely?
+   * @public
   ###
 
-  set_dynamic_locals = ->
-    @dynamic_locals.contents = @contents
-    
-    # get an array of folder the content is nested in
-    nested_folders = @path.replace(roots.project.rootDir,'').split(path.sep)
-    nested_folders.pop()
-    nested_folders.shift()
+  set_layout_locals = (fh, layout, resolved) ->
 
-    # add path to the locals for tracing
-    @dynamic_locals._categories = nested_folders
+    if resolved
+      fh.layout_path = path.resolve(path.dirname(fh.path), layout)
+    else
+      fh.layout_path = path.join(roots.project.rootDir, roots.project.dirs.views, layout)
 
-    # make sure all folders are represented on the site object in locals
-    roots.project.locals.site ?= {}
-    tmp = roots.project.locals.site
+    fh.layout_contents = fs.readFileSync(fh.layout_path, "utf8")
+    fh.layout_adapters = adapter_finder(path.basename(fh.layout_path).split('.').slice(1))
 
-    for folder, i in nested_folders
-      tmp[folder] ?= []
-      if i == nested_folders.length-1 then tmp[folder].push(@dynamic_locals)
-      @local_pointer = tmp = tmp[folder]
-  
+  set_layout_locals: set_layout_locals
+
+  ###*
+   * sets up a file to be compiled into its layout
+   * @private
+  ###
+
+  process_layout = (ctx, cb) ->
+    # why does this not work when required at the top?!
+    DynamicContentExtension = require './dynamic_content'
+    set_layout(ctx.fh) if ctx.fh.target_extension is 'html'
+    (new DynamicContentExtension).set_dynamic_locals(ctx.fh) if !!ctx.fh.dynamic_locals
+    return compile_into_layout(ctx, cb) if ctx.fh.layout_path
+    cb(null, ctx.fh.contents)
+
   ###*
    * Sets the layout path and contents properties
    * @private
   ###
 
-  set_layout = ->
+  set_layout = (fh) ->
     # make sure a layout actually has to be set
     layouts_set = Object.keys(roots.project.layouts).length > 0
-    if @dynamic_locals || !layouts_set then return false 
+    if fh.dynamic_locals || !layouts_set then return false 
 
     # pull the default layout initially
     layout = roots.project.conf 'layouts.default'
-    rel_file = path.relative(roots.project.path('views'), @path)
+    rel_file = path.relative(roots.project.path('views'), fh.path)
 
     # if there's a custom override, use that instead
     layout = roots.project.layouts[key] for key of roots.project.layouts if key is rel_file
@@ -61,30 +71,18 @@ class LayoutsExtension
     # no match
     if not layout? then return false
 
-    # set the layout path and contents
-    @layout_path = path.join(roots.project.path('views'), layout)
-    @layout_contents = fs.readFileSync(@layout_path, "utf8")
+    # set the layout path, adapter, and contents
+    set_layout_locals(fh, layout)
 
   ###*
    * compiles a file into its layout
    * @private
   ###
 
-  compile_into_layout = (cb) ->
-    layout_file = { contents: @fh.layout_contents, path: @fh.layout_path }
-    @adapter.compile layout_file, @fh.locals(content: @fh.contents), (err, layout) =>
+  compile_into_layout = (ctx, cb) ->
+    layout_file = { contents: ctx.fh.layout_contents, path: ctx.fh.layout_path }
+    ctx.fh.layout_adapters[0].compile layout_file, ctx.fh.locals(content: ctx.fh.contents), (err, layout) =>
       if err then return cb(err, null)
       cb(null, layout)
-
-  ###*
-   * sets up a file to be compiled into its layout
-   * @private
-  ###
-
-  process_layout = (cb) ->
-    set_layout.call(@fh) if @fh.target_extension is 'html'
-    set_dynamic_locals.call(@fh) if !!@fh.dynamic_locals
-    return compile_into_layout.call(@, cb) if @fh.layout_path
-    cb(null, @fh.contents)
 
 module.exports = LayoutsExtension
