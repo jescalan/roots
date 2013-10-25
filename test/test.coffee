@@ -507,6 +507,20 @@ describe 'multipass compiles', ->
 
   after -> remove(@output)
 
+
+describe 'multiextension compiles', ->
+
+  before (done) ->
+    @root = path.join(root, 'multiextension')
+    @output = path.join(@root, 'public')
+    run_in_dir(@root, 'compile --no-compress', done)
+
+  it 'will compile a single file with multiple extensions', ->
+    should.exist(@output, 'product.essay.liquid')
+    should.contain_content(@output, 'product.essay.liquid', /blarg world/)
+
+  after -> remove(@output)  
+
 describe 'deploy', ->
   deployer = null
 
