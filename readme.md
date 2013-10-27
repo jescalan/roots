@@ -23,6 +23,10 @@ Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm i
 * If you encounter problems when installing. Please ensure Xcode and Xcode Command Line Tools are Installed.
 * From Xcode go to Preferences -> Download -> Command Line Tools -> Install to install command line tools.
 
+##### Windows Installs
+* If you encounter problems when installing. Please ensure Python and Visual C++ runtime executables are installed.
+* You can install Windows Visual C++ components by doing any of the following: Installing Visual Studio 2005 or above, installing the .NET framework or manually adding it to your system PATH if it already exists on your machine.
+
 Usage
 -----
 
@@ -35,14 +39,14 @@ Getting Started
 
 All roots tutorials and resources that are recommended by the core team are listed below:
 
-- [official roots tutorials](http://roots.cx#tutorials) - walkthroughs of roots' major functionality    
+- [official roots tutorials](http://roots.cx#tutorials) - walkthroughs of roots' major functionality
 - [official roots documentation](http://roots.cx/docs) - documentation for major roots features and functionality
 
 Documentation
 -------------
 
-All documentation can be found on [http://roots.cx](http://roots.cx).    
-If you are looking for roots docs, see [http://roots.cx/docs](http://roots.cx).    
+All documentation can be found on [http://roots.cx](http://roots.cx).
+If you are looking for roots docs, see [http://roots.cx/docs](http://roots.cx).
 If you are after the docs for the css library, [axis](https://github.com/jenius/axis), see [http://roots.cx/axis](http://roots.cx/axis).
 
 Help
