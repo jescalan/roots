@@ -23,7 +23,7 @@ class DynamicContentExtension
 
   set_dynamic_locals: (ctx) ->
     ctx.dynamic_locals.contents = ctx.contents
-    
+
     # get an array of folder the content is nested in
     nested_folders = ctx.path.replace(roots.project.rootDir,'').split(path.sep)
     nested_folders.pop()
@@ -65,7 +65,7 @@ class DynamicContentExtension
     # this provides integration with the layouts extension
     if front_matter.layout
       (new LayoutsExtension).set_layout_locals(fh, front_matter.layout, true)
-      fh.dynamic_locals.url = fh.path.replace(roots.project.rootDir, '').replace(/\..*$/, ".html")
+      fh.dynamic_locals.url = fh.path.replace(roots.project.rootDir, '').replace(/\..*$/, ".html").replace(/\\/g, "/")
 
     # remove the front matter
     fh.contents = fh.contents.replace(front_matter_string[0], '')
