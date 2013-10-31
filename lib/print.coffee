@@ -46,6 +46,8 @@ class TerminalPrinter
     @log text, color
 
   error: (err) =>
+    err = new Error(err) if typeof err is "string"
+
     console.log '\u0007' # bell sound
     console.error '\n\n------------ ERROR ------------\n\n'.red + err.stack + '\n'
 
