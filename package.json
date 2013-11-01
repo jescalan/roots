@@ -62,7 +62,8 @@
     "prettyjson": "0.8.x",
     "ftp": "0.3.x",
     "semver": "2.1.x",
-    "configstore": "0.1.x"
+    "configstore": "0.1.x",
+    "osenv": "0.0.x"
   },
   "devDependencies": {
     "mocha": "latest",
