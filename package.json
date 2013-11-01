@@ -62,7 +62,9 @@
     "prettyjson": "0.8.x",
     "ftp": "0.3.x",
     "semver": "2.1.x",
-    "configstore": "0.1.x"
+    "configstore": "0.1.x",
+    "ncp": "~0.4.2",
+    "rimraf": "~2.2.2"
   },
   "devDependencies": {
     "mocha": "latest",
