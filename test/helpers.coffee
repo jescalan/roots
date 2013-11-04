@@ -34,3 +34,8 @@ module.exports = (should) ->
     file_contents = fs.readFileSync(path.join(base, file), 'utf8')
     expected_contents = fs.readFileSync(path.join(base, expected), 'utf8')
     file_contents.should.equal(expected_contents, "expected #{file} contents to match #{expected}")
+
+  should.match_expected = (base, file) ->
+    file_contents = fs.readFileSync(path.join(base, file), 'utf8')
+    expected_contents = fs.readFileSync(path.join(base, '../expected', file), 'utf8')
+    file_contents.should.equal(expected_contents, "expected #{file} contents to match #{expected_contents}")

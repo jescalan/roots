@@ -393,10 +393,8 @@ describe 'adapters', ->
       should.exist(@output, ['req.css', 'nested/all.css'])
       should.contain_content(@output, 'req.css', /#000/)
 
-    # if we're being honest, this isn't really that great of a test.
-    # it could definitely be better. but i'll get to it, promise
     it 'should include custom stylus libs', ->
-      should.contain_content(@output, 'req.css', /-webkit-transition/)
+      should.match_expected(@output, 'autopref.css')
 
     after -> remove(@output)
 
