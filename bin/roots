@@ -8,10 +8,9 @@ var args = require('optimist')
 var notifier = require('update-notifier')({ packagePath: '../package.json' });
 notifier.update && notifier.notify();
 
-
 var argv = process.argv.slice(2),
-    commands = require('../lib/commands'),
-    configure_options = require('../lib/config_parser');
+    configure_options = require('../lib/config_parser'),
+    commands = require('../lib/commands');
 
 if (args._.length < 1 && !args.version) {
   commands.help.execute();

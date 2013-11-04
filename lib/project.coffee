@@ -73,6 +73,14 @@ class Project extends EventEmitter
   open: true
 
   ###*
+   * Make some of the compilers more configurable
+   * @type {Object}
+  ###
+  compiler_options:
+    stylus:
+      plugins: ['axis-css']
+
+  ###*
    * [layouts description]
    * @type {Object}
   ###

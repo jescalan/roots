@@ -1,5 +1,4 @@
 _ = require 'underscore'
-adapters = require '../adapters'
 
 ###*
  * Given a list of file extensions, return matching adapters that will
@@ -10,6 +9,7 @@ adapters = require '../adapters'
 ###
 
 module.exports = (extensions) ->
+  adapters = require '../adapters'
   matching_adapters = []
   extensions.reverse().forEach (ext) =>
     _.each adapters, (adp) ->
