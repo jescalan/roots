@@ -77,9 +77,10 @@ I would love to have more contributors, and if you've helped out, you are awesom
 
 We are very open to new people getting involved and contributing. Come chat with us on IRC at freenode/#roots-dev if this seems like your kind of jam.
 
-Coding Style
+Contributing
 ------------
-To keep a consistant coding style in the project, we're going with [Felix's Node.js Style Guide](http://nodeguide.com/style.html) for JS and [Polar Mobile's guide](https://github.com/polarmobile/coffeescript-style-guide) for CoffeeScript, but it should be noted that much of this project uses under_scores rather than camelCase for naming. Both of these are pretty standard guides. For documenting in the code, we're using [JSDoc](http://usejsdoc.org/).
+
+See the [contribution guide](https://github.com/jenius/roots/blob/master/contributing.md)!
 
 License (MIT)
 -------------

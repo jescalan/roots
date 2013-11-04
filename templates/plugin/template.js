@@ -15,7 +15,7 @@ exports.settings = {
 // Compiles a single file
 // @param {object} file - An object containing lots of information about the file
 // @param {function} callback - Execute when finished. Takes error and output.
-exports.compile = function(file, callback){
+exports.compile = function(file, options, callback){
   var compiled_contents, error = false;
 
   // This is a good way to find out what's in the file object ; )
