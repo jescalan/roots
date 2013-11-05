@@ -43,6 +43,7 @@ class FileHelper
     if @dynamic_locals
       locals.post = @dynamic_locals
       @dynamic_locals.content = extra.yield  if extra and extra.hasOwnProperty("yield")
+
     locals
 
   ###*

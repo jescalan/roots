@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+require('coffee-script')
+
 var args = require('optimist')
             .alias('v', 'version')
             .argv;

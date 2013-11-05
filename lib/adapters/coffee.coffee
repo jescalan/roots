@@ -12,7 +12,7 @@ exports.settings =
 exports.compile = (file, options={}, cb) ->
   _.defaults(options,
     header: false
-    bare: global.options.coffeescript_bare
+    bare: roots.project.compiler_options.coffeescript.bare
     minify: roots.project.conf 'compress'
     filename: file.path
     async: false # for snockets

@@ -1,8 +1,9 @@
+require 'colors'
+
 should = require 'should'
 path = require 'path'
 fs = require 'fs'
 _ = require 'underscore'
-colors = require 'colors'
 shell = require 'shelljs'
 config = require '../lib/global_config'
 run = require('child_process').exec

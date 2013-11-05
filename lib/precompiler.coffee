@@ -12,14 +12,14 @@ compressor = require './utils/compressor'
 
 module.exports = ->
   roots.print.debug 'precompiling templates', 'yellow'
-  return false if not global.options.templates?
-  template_dir = path.join roots.project.rootDir, global.options.templates
+  return false if not roots.project.templates?
+  template_dir = path.join(roots.project.rootDir, roots.project.templates)
   files = fs.readdirSync(template_dir)
 
   # make sure to skip ignored files
   ignores = []
   files.map (f) ->
-    options.ignore_files.forEach (i) ->
+    roots.project.ignore_files.forEach (i) ->
       ignores.push(f) if minimatch(f, i.slice(1))
 
   precompiler = new Precompiler(

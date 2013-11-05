@@ -79,6 +79,8 @@ class Project extends EventEmitter
   compiler_options:
     stylus:
       plugins: ['axis-css']
+    coffeescript:
+      bare: false
 
   ###*
    * [layouts description]

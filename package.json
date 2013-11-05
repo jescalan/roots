@@ -64,7 +64,9 @@
     "semver": "2.1.x",
     "configstore": "0.1.x",
     "osenv": "0.0.x",
-    "dogescript": "1.2.x"
+    "dogescript": "1.2.x",
+    "moment": "2.4.x",
+    "underscore.string": "2.x.x"
   },
   "devDependencies": {
     "mocha": "latest",
