@@ -420,6 +420,19 @@ describe 'adapters', ->
 
     after -> remove(@output)
 
+  describe 'dogescript', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/djs')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile djs', ->
+      should.exist(@output, 'sample.js')
+      should.match_file(@output, 'sample.js', 'expected-sample.js')
+
+    after -> remove(@output)
+
   describe 'less', ->
 
     before (done) ->
