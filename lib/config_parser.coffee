@@ -33,17 +33,15 @@ class ConfigLoader
     @done()
 
   load_file: ->
-    contents = if fs.existsSync(@path) then fs.readFileSync(@path, 'utf8') else '{}'
+    # if there's no app.coffee, set a blank config
+    if not fs.existsSync(@path) then return @config = {}
 
-    if contents.match /exports\./
-      console.warn """
-      You are using a depracated format for your app.coffee file.
-      Please see the documentation for app.coffee formatting at
-      http://roots.cx/docs/xxx
-      """.yellow
-      @config = require(@path);
-    else
-      @config = eval(coffee.compile(contents, { bare: true }))  
+    conf = require(@path)
+
+    # if there are exports, assume a node config file
+    if Object.keys(conf).length > 0 then return @config = conf
+    # if there are no exports, assume a default config file
+    @config = eval(coffee.compile(fs.readFileSync(@path, 'utf8'), { bare: true }))
 
   configure_compilers: ->
     configurable_compilers = ['stylus', 'coffeescript']
