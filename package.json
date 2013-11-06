@@ -72,7 +72,7 @@
     "mocha": "latest",
     "should": "latest"
   },
-  "man": "./setup/man/roots.1",
+  "man": "./man/roots.1",
   "engines": {
     "node": ">=0.8.0"
   },
