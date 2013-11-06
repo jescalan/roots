@@ -54,6 +54,11 @@ class ConfigLoader
       @proj.compiler_options.coffeescript.bare = @config.coffeescript_bare
 
   configure_directories: ->
+    # (deprecated) folder_config object
+    if @config.folder_config
+      @proj.dirs['views'] = @config.folder_config.views || 'views'
+      @proj.dirs['assets'] = @config.folder_config.assets || 'assets'
+
     @proj.dirs['views'] = @config.views_folder || 'views'
     @proj.dirs['assets'] = @config.assets_folder || 'assets'
     @proj.dirs['public'] = @config.output_folder || 'public'
