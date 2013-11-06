@@ -23,6 +23,8 @@ class DynamicContentExtension
 
   set_dynamic_locals: (ctx) ->
     ctx.dynamic_locals.contents = ctx.contents
+    # (deprecated) post.content
+    ctx.dynamic_locals.content = ctx.contents
 
     # get an array of folder the content is nested in
     nested_folders = ctx.path.replace(roots.project.rootDir,'').split(path.sep)
@@ -69,5 +71,7 @@ class DynamicContentExtension
 
     # remove the front matter
     fh.contents = fh.contents.replace(front_matter_string[0], '')
+    # (deprecated) post.content
+    fh.content = fh.contents
 
 module.exports = DynamicContentExtension

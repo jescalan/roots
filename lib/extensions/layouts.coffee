@@ -14,6 +14,8 @@ class LayoutsExtension
     process_layout ctx, (err, contents) =>
       if err then return deferred.reject(err)
       ctx.fh.contents = contents
+      # (deprecated) post.content
+      ctx.fh.content = contents
       deferred.resolve(ctx)
 
   ###*
@@ -80,7 +82,12 @@ class LayoutsExtension
   ###
 
   compile_into_layout = (ctx, cb) ->
-    layout_file = { contents: ctx.fh.layout_contents, path: ctx.fh.layout_path }
+    # (deprecated) post.content
+    layout_file = {
+      contents: ctx.fh.layout_contents,
+      content: ctx.fh.layout_contents,
+      path: ctx.fh.layout_path
+    }
     ctx.fh.layout_adapters[0].compile layout_file, ctx.fh.locals(content: ctx.fh.contents), (err, layout) =>
       if err then return cb(err, null)
       cb(null, layout)
