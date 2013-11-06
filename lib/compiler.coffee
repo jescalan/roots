@@ -5,7 +5,7 @@ fs = require 'fs'
 shell = require 'shelljs'
 EventEmitter = require('events').EventEmitter
 _ = require 'underscore'
-Q = require 'q'
+W = require 'when'
 async = require 'async'
 
 # roots utils
@@ -52,11 +52,11 @@ class Compiler extends EventEmitter
   ###
 
   hook: (name, ctx) ->
-    deferred = Q.defer()
+    deferred = W.defer()
 
     fn = (m,ext,cb) =>
       @hook_single(ext, name, ctx)
-        .catch((err) -> cb(err, null))
+        .otherwise((err) -> cb(err, null))
         .then((nm) -> cb(null, nm))
 
     async.inject @extensions, ctx, fn, (err, res) ->
@@ -66,7 +66,7 @@ class Compiler extends EventEmitter
     return deferred.promise
 
   hook_single: (ext, name, ctx) ->
-    deferred = Q.defer()
+    deferred = W.defer()
 
     hook = ext["#{name}_hook"]
 
@@ -106,11 +106,11 @@ class Compiler extends EventEmitter
 
     @hook('before', ctx)
       .then(@compile_each.bind(@))
-      .catch((err) => @emit('error', err))
-      .done(cb)
+      .otherwise((err) => @emit('error', err))
+      .then(cb)
 
   compile_each: (ctx) ->
-    deferred = Q.defer()
+    deferred = W.defer()
 
     # before the file is compiled, roots determines which compile
     # adapters are needed to compile it correctly. it does this by
@@ -124,7 +124,7 @@ class Compiler extends EventEmitter
     # this should be wrapped as a pattern
     fn = (m, adapter, cb) ->
       @setup_compile(m, adapter)
-        .catch((err) -> cb(err, null))
+        .otherwise((err) -> cb(err, null))
         .then((nm) -> cb(null, nm))
 
     async.inject ctx.adapters, ctx, fn.bind(@), (err, res) ->
@@ -137,7 +137,7 @@ class Compiler extends EventEmitter
   # can handle multipass compilation, this could be called more than once.
 
   setup_compile: (ctx, adapter) ->
-    deferred = Q.defer()
+    deferred = W.defer()
 
     # make the adapter configurable by extensions
     # and bump the index once for each compile pass.
@@ -146,13 +146,13 @@ class Compiler extends EventEmitter
 
     @hook('compile', ctx)
       .then(@compile_single.bind(@))
-      .catch(deferred.reject)
-      .done(deferred.resolve)
+      .otherwise(deferred.reject)
+      .then(deferred.resolve)
 
     return deferred.promise
 
   compile_single: (ctx) ->
-    deferred = Q.defer()
+    deferred = W.defer()
 
     # put in work (https://cloudup.com/cNORDD98uFh)
     ctx.adapter.compile ctx.fh, ctx.fh.locals(), (err, compiled) =>
@@ -163,8 +163,8 @@ class Compiler extends EventEmitter
 
       @hook('after', ctx)
         .then(@write_file)
-        .catch(deferred.reject)
-        .done(deferred.resolve)
+        .otherwise(deferred.reject)
+        .then(deferred.resolve)
 
     return deferred.promise
 
