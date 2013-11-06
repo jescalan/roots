@@ -54,7 +54,7 @@
     "uglify-js": "2.4.x",
     "html-minifier": "0.5.x",
     "axis-css": "0.0.x",
-    "autoprefixer": "0.8.x",
+    "autoprefixer-stylus": "0.0.x",
     "nib": "1.0.x",
     "marked": "0.2.x",
     "bower": "1.2.x",
