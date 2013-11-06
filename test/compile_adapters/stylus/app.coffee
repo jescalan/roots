@@ -1,4 +1,4 @@
-autoprefixer = module.require('./autoprefixer')
+autoprefixer = module.require('autoprefixer-stylus')
 
 module.exports = 
 
