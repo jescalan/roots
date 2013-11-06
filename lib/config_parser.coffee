@@ -66,14 +66,15 @@ class ConfigLoader
   configure_locals: ->
     @config.locals ||= {}
 
-    # view helper bundles
-    view_helpers = @config.view_helpers || ['collection', 'str', 'date', '_']
+    # view helper bundles (available: 'collection', 'str', 'date', '_')
+    view_helpers = @config.view_helpers || []
     for helper in view_helpers
       hpath = path.join(__dirname, 'view_helpers', helper)
       @proj.locals[helper] = require(hpath)
 
     # (deprecated) direct-attached sort helper
-    @proj.locals.sort = @proj.locals.collection.sort
+    collection_helpers = require(path.join(__dirname, 'view_helpers/collection'))
+    @proj.locals.sort = collection_helpers.sort
 
     # load custom locals & layouts
     _.extend(@proj.locals, @config.locals)

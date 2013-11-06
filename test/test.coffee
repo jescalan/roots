@@ -237,6 +237,24 @@ describe 'config options', ->
 
   after -> remove(@output)
 
+describe 'view helpers', ->
+
+  before (done) ->
+    @root = path.join(root, 'view_helpers')
+    @output = path.join(@root, 'public')
+    run_in_dir(@root, 'compile --no-compress', done)
+
+  it 'should expose string helpers', ->
+    should.contain_content(@output, 'index.html', /Wow/)
+
+  it 'should expose underscore helpers', ->
+    should.contain_content(@output, 'index.html', /true/)
+
+  it 'should expose date helpers', ->
+    should.contain_content(@output, 'index.html', /Sunday/)
+
+  after -> remove(@output)
+
 # 
 # extensions
 # 
