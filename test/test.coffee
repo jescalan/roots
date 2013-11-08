@@ -480,6 +480,18 @@ describe 'static files', ->
 
   after -> remove(@output)
 
+describe 'stylus warning errors', ->
+  before ->
+    @root = path.join(root, 'stylus-warning-errors')
+    @output = path.join(@root, 'public')
+
+  it 'notifies you if theres an warning', (done) ->
+    run_in_dir @root, 'compile --no-compress', (err, out, stderr) ->
+      stderr.should.match /ERROR/
+      done()
+
+  after -> remove(@output)
+
 describe 'errors', ->
 
   before ->

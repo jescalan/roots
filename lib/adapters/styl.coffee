@@ -20,5 +20,18 @@ exports.compile = (file, options={}, cb) ->
     use: plugins
   )
 
-  transformer.render(file.contents, options, cb)
+  # patching stylus warnings to actually show like regular errors
+  warnings     = []
+  originalWarn = console.warn;
+  console.warn = (prefix, warning) -> warnings.push(warning)
+
+  transformer.render file.contents, options, (err, res) ->
+    if warnings.length and not err?
+      err = new Error("Stylus Compile Warnings(s) #{warnings.join('\n')}")
+
+    # restore console.warn
+    console.warn = originalWarn
+
+    cb(err, res)
+
   return
