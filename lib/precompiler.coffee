@@ -68,7 +68,7 @@ class Precompiler
       buf.push @compileTemplate(template).toString()
 
     buf.push '})();'
-    return buf.join ''
+    buf.join ''
 
   ###*
    * compile individual templates
@@ -86,7 +86,7 @@ class Precompiler
       data,
       {compileDebug: @debug || false, inline: @inline || false, client: true}
     )
-    return "#{@namespace}['#{templateNamespace}'] = #{data};\n"
+    "#{@namespace}['#{templateNamespace}'] = #{data};\n"
 
   ###*
    * Gets Jade's helpers and combines them into string
@@ -117,4 +117,4 @@ class Precompiler
     };
     """
 
-    return buf.join('\n')
+    buf.join('\n')
