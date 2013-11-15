@@ -10,9 +10,9 @@ run = require('child_process').exec
 
 root = __dirname
 
-# 
+#
 # test helpers
-# 
+#
 
 require('./helpers')(should)
 
@@ -154,7 +154,7 @@ describe 'command', ->
         done()
 
   describe 'pkg', ->
-    
+
     before ->
       @root = path.join(root, 'basic')
 
@@ -255,9 +255,9 @@ describe 'view helpers', ->
 
   after -> remove(@output)
 
-# 
+#
 # extensions
-# 
+#
 
 describe 'layouts', ->
 
@@ -292,14 +292,14 @@ describe 'layouts', ->
     remove(@output2)
     remove(@output3)
 
-# 
+#
 # adapters
-# 
+#
 
 describe 'adapters', ->
 
   describe 'jade', ->
-    
+
     before (done) ->
       @root = path.join(root, 'compile_adapters/jade')
       @output = path.join(@root, 'public')
@@ -463,9 +463,9 @@ describe 'adapters', ->
 
     after -> remove(@output)
 
-# 
+#
 # misc
-# 
+#
 
 describe 'static files', ->
 
@@ -537,8 +537,8 @@ describe 'nested dynamic content', ->
     should.exist(@output, 'posts/code/bar.html')
     should.exist(@output, 'posts/code/quuz.html')
     should.exist(@output, 'posts/baz.html')
-    should.contain_content(@output, 'posts/code/bar.html', /blarg world/) 
-    should.contain_content(@output, 'posts/code/quuz.html', /blarg\!/) 
+    should.contain_content(@output, 'posts/code/bar.html', /blarg world/)
+    should.contain_content(@output, 'posts/code/quuz.html', /blarg\!/)
 
   it 'adds nested dynamic content correctly to locals', ->
     should.contain_content(@output, 'index.html', /my name is blarg/)
@@ -563,7 +563,13 @@ describe 'precompiled templates', ->
     should.exist(@output, '/js/templates.js')
     should.contain_content(@output, 'js/templates.js', /\<p\>hello world\<\/p\>/)
 
-  after -> remove(@output)
+  it 'should compile nested templates', ->
+    should.contain_content(@output, 'js/templates.js', /['pluder\/island']/)
+
+  it 'should compile deeply nested templates', ->
+    should.contain_content(@output, 'js/templates.js', /['pluder\/spoon\/cay']/)
+
+  # after -> remove(@output)
 
 describe 'multipass compiles', ->
 
@@ -590,7 +596,7 @@ describe 'multiextension compiles', ->
     should.exist(@output, 'product.essay.liquid')
     should.contain_content(@output, 'product.essay.liquid', /blarg world/)
 
-  after -> remove(@output)  
+  after -> remove(@output)
 
 describe 'deploy', ->
   deployer = null
