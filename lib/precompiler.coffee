@@ -78,15 +78,15 @@ class Precompiler
    * @private
   ###
   compileTemplate: (template) ->
-    # Replaces '/' with '.'
-    templateNamespace = path.basename(template, '.jade').replace(/\//g, '.')
+    basePath = template.split(path.join(roots.project.rootDir, roots.project.templates)+"/")[1]
+    templateNamespace = basePath.split('.jade')[0]
 
     data = fs.readFileSync(template, 'utf8')
     data = jade.compile(
       data,
       {compileDebug: @debug || false, inline: @inline || false, client: true}
     )
-    return "#{@namespace}.#{templateNamespace} = #{data};\n"
+    return "#{@namespace}['#{templateNamespace}'] = #{data};\n"
 
   ###*
    * Gets Jade's helpers and combines them into string
