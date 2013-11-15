@@ -1,0 +1,6 @@
+.test {
+  color: #ff0000;
+}
+.test:hover {
+  foo: bar;
+}
