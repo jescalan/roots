@@ -1,12 +1,13 @@
 {
   "package_manager": "bower",
+  "default_template": "default",
   "templates": {
-    "default": "default",
-    "min": "min",
-    "basic": "basic",
-    "blog": "blog",
-    "ejs": "ejs",
-    "express": "express",
-    "min": "min"
+    "default": "https://github.com/roots-dev/roots-template-default.git",
+    "min": "https://github.com/roots-dev/roots-template-min.git",
+    "basic": "https://github.com/roots-dev/roots-template-basic.git",
+    "blog": "https://github.com/roots-dev/roots-template-blog.git",
+    "ejs": "https://github.com/roots-dev/roots-template-ejs.git",
+    "express": "https://github.com/roots-dev/roots-template-express.git",
+    "marionette": "https://github.com/roots-dev/roots-template-marionette.git"
   }
 }
