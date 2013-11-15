@@ -437,6 +437,19 @@ describe 'adapters', ->
 
     after -> remove(@output)
 
+  describe 'haml', ->
+
+    before (done) ->
+      @root = path.join(root, 'compile_adapters/haml')
+      @output = path.join(@root, 'public')
+      run_in_dir(@root, 'compile --no-compress', done)
+
+    it 'should compile haml', ->
+      should.exist(@output, 'sample.html')
+      should.match_file(@output, 'sample.html', 'expected-sample.html')
+
+    after -> remove(@output)
+
   describe 'dogescript', ->
 
     before (done) ->

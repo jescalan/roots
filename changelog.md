@@ -14,10 +14,10 @@ Beginning with version `2.0.0`, we will be maintaining a changelog to show what 
 
 ##### Features
 
-* * * 
+* * *
 
 - huge internal rewrite, more modular, more coffeescript, way better test coverage
-- built-in compilers for [scss](http://sass-lang.com/), [less](http://lesscss.org/), [markdown](http://daringfireball.net/projects/markdown/), [mustache](http://mustache.github.io/mustache.5.html), [haml-coffee](https://github.com/netzpirat/haml-coffee), and [eco](https://github.com/sstephenson/eco).
+- built-in compilers for [scss](http://sass-lang.com/), [less](http://lesscss.org/), [markdown](http://daringfireball.net/projects/markdown/), [mustache](http://mustache.github.io/mustache.5.html), [haml-coffee](https://github.com/netzpirat/haml-coffee), [eco](https://github.com/sstephenson/eco), and [haml](https://github.com/creationix/haml-js)
 - built-in compiler for [dogescript](http://zachbruggeman.me/dogescript/). Yes this deserves its own line.
 - on compile, css is processed by [autoprefixer](https://github.com/ai/autoprefixer)
 - layout language is no longer connected to view language. So you can compile a markdown view into a jade layout, for example.
@@ -63,7 +63,7 @@ Beginning with version `2.0.0`, we will be maintaining a changelog to show what 
 (released 06/24/2013)
 - patch a bug in precompiled templates
 
-### 2.0.0 
+### 2.0.0
 (released 06/24/2013)
 
 - new app.coffee format, no longer uses `exports`, see [this example](https://github.com/jenius/roots/blob/master/templates/new/default/app.coffee)
