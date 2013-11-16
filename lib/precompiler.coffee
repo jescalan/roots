@@ -4,6 +4,7 @@ path = require 'path'
 _ = require 'underscore'
 mkdirp = require 'mkdirp'
 minimatch = require 'minimatch'
+readdirp = require 'readdirp'
 roots = require './index'
 compressor = require './utils/compressor'
 
@@ -14,27 +15,23 @@ module.exports = ->
   roots.print.debug 'precompiling templates', 'yellow'
   return false if not roots.project.templates?
   template_dir = path.join(roots.project.rootDir, roots.project.templates)
-  files = fs.readdirSync(template_dir)
 
-  # make sure to skip ignored files
-  ignores = []
-  files.map (f) ->
-    roots.project.ignore_files.forEach (i) ->
-      ignores.push(f) if minimatch(f, i.slice(1))
+  options =
+    root: template_dir
+    directoryFilter: roots.project.ignore_folders
+    fileFilter: roots.project.ignore_files
 
-  precompiler = new Precompiler(
-    templates: _.map(
-      _.difference(files, ignores),
-      (f) -> path.join template_dir, f
+  readdirp options, (err, res) ->
+    precompiler = new Precompiler(
+      templates: _.map(res.files, (f) -> f.fullPath)
     )
-  )
 
-  buf = precompiler.compile()
-  buf = compressor buf, 'js'
+    buf = precompiler.compile()
+    buf = compressor buf, 'js'
 
-  output_path = roots.project.path 'precompiledTemplateOutput'
-  mkdirp.sync path.dirname(output_path)
-  fs.writeFileSync output_path, buf
+    output_path = roots.project.path 'precompiledTemplateOutput'
+    mkdirp.sync path.dirname(output_path)
+    fs.writeFileSync output_path, buf
 
 
 class Precompiler
@@ -71,7 +68,7 @@ class Precompiler
       buf.push @compileTemplate(template).toString()
 
     buf.push '})();'
-    return buf.join ''
+    buf.join ''
 
   ###*
    * compile individual templates
@@ -81,15 +78,15 @@ class Precompiler
    * @private
   ###
   compileTemplate: (template) ->
-    # Replaces '/' with '.'
-    templateNamespace = path.basename(template, '.jade').replace(/\//g, '.')
+    basePath = template.split(path.join(roots.project.rootDir, roots.project.templates)+"/")[1]
+    templateNamespace = basePath.split('.jade')[0]
 
     data = fs.readFileSync(template, 'utf8')
     data = jade.compile(
       data,
       {compileDebug: @debug || false, inline: @inline || false, client: true}
     )
-    return "#{@namespace}.#{templateNamespace} = #{data};\n"
+    "#{@namespace}['#{templateNamespace}'] = #{data};\n"
 
   ###*
    * Gets Jade's helpers and combines them into string
@@ -120,4 +117,4 @@ class Precompiler
     };
     """
 
-    return buf.join('\n')
+    buf.join('\n')
