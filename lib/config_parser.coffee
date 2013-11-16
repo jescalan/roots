@@ -115,7 +115,7 @@ class ConfigLoader
     # set up default watcher ignores
     @config.watcher_ignore_folders = _.union(
       @config.watcher_ignore_folders,
-      ['components', 'plugins', '.git', @proj.dirs['public']]
+      ['plugins', '.git', @proj.dirs['public']]
     )
 
     @config.watcher_ignore_files = _.union(
