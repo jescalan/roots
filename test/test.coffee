@@ -126,6 +126,12 @@ describe 'command', ->
         should.exist(root, 'testproj/app.coffee')
         done()
 
+    it 'should copy the .gitignore over fom the basic template', (done) ->
+      run_in_dir root, 'new testproj --ejs', (err, out) =>
+        should.not.exist(err)
+        should.exist(root, '.gitignore')
+        done()
+
     afterEach -> remove(@output)
 
   describe 'plugin', ->
