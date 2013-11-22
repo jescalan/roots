@@ -1,5 +1,6 @@
 roots = require '../index'
-_ = require 'underscore'
+_     = require 'underscore'
+fs    = require 'fs'
 
 #snockets is temporary, this will be replaced with transformers
 Snockets = require 'snockets'
@@ -8,6 +9,17 @@ snockets = new Snockets()
 exports.settings =
   file_type: 'coffee'
   target: 'js'
+
+error_formatter = (error, file) ->
+  return error unless error
+
+  new Error "
+  \n\nFile: #{file.relative_path}
+  \nLine\n
+  #{error.location.first_line}| #{error.message} \n
+  \n
+  #{fs.readFileSync(file.path, 'utf8').split("\n")[error.location.first_line]}\n
+  #{new Array(error.location.first_column).join(' ') + '^'}\n\n"
 
 exports.compile = (file, options={}, cb) ->
   _.defaults(options,
@@ -27,7 +39,7 @@ exports.compile = (file, options={}, cb) ->
     compiled = snockets.getConcatenation file.path, options
   catch err
     error = err
-    
-  cb(error, compiled)
+
+  cb(error_formatter(error, file), compiled)
 
   return
