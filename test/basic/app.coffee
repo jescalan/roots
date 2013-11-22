@@ -8,4 +8,4 @@ layouts:
 locals:
   title: 'Welcome to Roots!'
   title_with_markup: ->
-    "<h1 class='title'>#{this.title}</h1>"
+    "<h1 class='title'>Welcome to Roots!</h1>"

@@ -14,7 +14,7 @@ exports.settings =
 # Compiles a single file
 # @param {object} file - An object containing lots of information about the file
 # @param {function} callback - Execute when finished. Takes error and output.
-exports.compile = (file, callback) ->
+exports.compile = (file, options, callback) ->
   error = false
   compiled_contents = null
 
