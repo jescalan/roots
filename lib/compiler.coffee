@@ -107,7 +107,7 @@ class Compiler extends EventEmitter
     @hook('before', ctx)
       .then(@compile_each.bind(@))
       .otherwise((err) => @emit('error', err))
-      .then(cb)
+      .then -> cb()
 
   compile_each: (ctx) ->
     deferred = W.defer()
