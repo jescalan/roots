@@ -1,0 +1,2 @@
+locals:
+  title: 'testing eco'

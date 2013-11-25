@@ -3,6 +3,40 @@ Roots Changelog
 
 Beginning with version `2.0.0`, we will be maintaining a changelog to show what changes have been implemented each release. We hope that this will help roots users to stay informed about the updates being made and avoid breakage when a major or minor version bump occurs.
 
+### 2.1.0
+(not yet released)
+
+##### Breaking
+
+* * *
+
+- Update to plugins, `compile` now takes three arguments, `file`, `options`, and `callback`. To fix, just add the `options` param on any plugin's `compile` function. This is a super edge case which is why we didn't bump the major version.
+
+##### Features
+
+* * *
+
+- huge internal rewrite, more modular, more coffeescript, way better test coverage
+- built-in compilers for [scss](http://sass-lang.com/), [less](http://lesscss.org/), [markdown](http://daringfireball.net/projects/markdown/), [mustache](http://mustache.github.io/mustache.5.html), [haml-coffee](https://github.com/netzpirat/haml-coffee), [eco](https://github.com/sstephenson/eco), and [haml](https://github.com/creationix/haml-js)
+- built-in compiler for [dogescript](http://zachbruggeman.me/dogescript/). Yes this deserves its own line.
+- on compile, css is processed by [autoprefixer](https://github.com/ai/autoprefixer)
+- layout language is no longer connected to view language. So you can compile a markdown view into a jade layout, for example.
+- livereload tag no longer necessary, this happens internally (whoo!).
+- deep nested dynamic content has been implemented (see #230).
+- upgrade on all dependencies to the latest versions (other than axis which is massively breaking so we're waiting for the next major version).
+- view helpers now available, roots ships with [underscore](http://underscorejs.org/), [underscore.string](https://github.com/epeli/underscore.string), and [moment.js](http://momentjs.com/) available by default.
+- some compiler options have been opened up to be modified via `app.coffee`. See the [docs for compiler options](#).
+- default templates updated more frequently, easier to load in custom templates.
+- `--no-open` option added to roots watch to prevent browser window from opening
+
+##### Fixes
+
+* * *
+
+- the roots man page which previously went missing is now back
+- there should be no further permissions errors when creating new projects
+- error catching and handling improved
+
 ### 2.0.6
 (released 09/25/2013)
 - fix permissions error with roots custom templates
@@ -29,7 +63,7 @@ Beginning with version `2.0.0`, we will be maintaining a changelog to show what 
 (released 06/24/2013)
 - patch a bug in precompiled templates
 
-### 2.0.0 
+### 2.0.0
 (released 06/24/2013)
 
 - new app.coffee format, no longer uses `exports`, see [this example](https://github.com/jenius/roots/blob/master/templates/new/default/app.coffee)
