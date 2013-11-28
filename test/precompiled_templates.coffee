@@ -33,3 +33,12 @@ describe 'precompiled templates', ->
 
   it 'should compile deeply nested templates', ->
     should.contain_content(@output, 'js/templates.js', /['pluder\/spoon\/cay']/)
+
+describe 'precompiled templates empty cases', ->
+  it 'should not fail when there is no template folder', (done) ->
+    @root = path.join(root, 'precompile')
+    @output = path.join(@root, 'public')
+    fs.renameSync(path.join(@root, '/templates'), path.join(@root, '/templates_tmp'))
+    run_in_dir @root, 'compile --no-compress', =>
+      fs.renameSync(path.join(@root, '/templates_tmp'), path.join(@root, '/templates'))
+      done()

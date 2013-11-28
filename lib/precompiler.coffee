@@ -16,6 +16,8 @@ module.exports = ->
   return false if not roots.project.templates?
   template_dir = path.join(roots.project.rootDir, roots.project.templates)
 
+  return false unless fs.existsSync(template_dir)
+
   options =
     root: template_dir
     directoryFilter: roots.project.ignore_folders
