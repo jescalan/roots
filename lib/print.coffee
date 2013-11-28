@@ -65,6 +65,11 @@ exports.TerminalPrinter = TerminalPrinter
 ###
 class BrowserPrinter
   constructor: ->
+    roots.print.on 'error', @error
+    roots.print.on 'compiling', @compiling
+    roots.print.on 'reload', @reload
+
+  start: ->
     roots.server.server.on 'upgrade', (request, socket, body) =>
       if WebSocket.isWebSocket(request)
         ws = new WebSocket(request, socket, body)
@@ -74,10 +79,6 @@ class BrowserPrinter
             @sendMsg msg
 
         @sockets.push ws
-
-    roots.print.on 'error', @error
-    roots.print.on 'compiling', @compiling
-    roots.print.on 'reload', @reload
 
   ###*
    * All the open sockets.
