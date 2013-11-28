@@ -493,25 +493,6 @@ describe 'nested dynamic content', ->
 
   after -> remove(@output)
 
-describe 'precompiled templates', ->
-
-  before (done) ->
-    @root = path.join(root, 'precompile')
-    @output = path.join(@root, 'public')
-    run_in_dir(@root, 'compile --no-compress', done)
-
-  it 'precompiles templates', ->
-    should.exist(@output, '/js/templates.js')
-    should.contain_content(@output, 'js/templates.js', /\<p\>hello world\<\/p\>/)
-
-  it 'should compile nested templates', ->
-    should.contain_content(@output, 'js/templates.js', /['pluder\/island']/)
-
-  it 'should compile deeply nested templates', ->
-    should.contain_content(@output, 'js/templates.js', /['pluder\/spoon\/cay']/)
-
-  # after -> remove(@output)
-
 describe 'multipass compiles', ->
 
   before (done) ->
