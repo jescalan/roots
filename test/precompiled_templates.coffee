@@ -42,3 +42,13 @@ describe 'precompiled templates empty cases', ->
     run_in_dir @root, 'compile --no-compress', =>
       fs.renameSync(path.join(@root, '/templates_tmp'), path.join(@root, '/templates'))
       done()
+
+  it 'should not fail when the templates folder is empty', (done) ->
+    @root = path.join(root, 'precompile')
+    @output = path.join(@root, 'public')
+    fs.renameSync(path.join(@root, '/templates'), path.join(@root, '/templates_tmp'))
+    fs.mkdirSync(path.join(@root, '/templates'))
+    run_in_dir @root, 'compile --no-compress', =>
+      remove(path.join(@root, '/templates'))
+      fs.renameSync(path.join(@root, '/templates_tmp'), path.join(@root, '/templates'))
+      done()
