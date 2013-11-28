@@ -13,13 +13,21 @@ exports.settings =
 error_formatter = (error, file) ->
   return error unless error
 
-  new Error "
-  \n\nFile: #{file.relative_path}
-  \nLine\n
-  #{error.location.first_line}| #{error.message} \n
-  \n
-  #{fs.readFileSync(file.path, 'utf8').split("\n")[error.location.first_line]}\n
-  #{new Array(error.location.first_column).join(' ') + '^'}\n\n"
+  # this is from a coffeescript compile issue
+  if (error.location?)
+    new Error "
+    \n\nFile: #{file.relative_path}
+    \nLine\n
+    #{error.location.first_line}| #{error.message} \n
+    \n
+    #{fs.readFileSync(file.path, 'utf8').split("\n")[error.location.first_line]}\n
+    #{new Array(error.location.first_column).join(' ') + '^'}\n\n"
+  # to handle generic errors
+  else
+    new Error "
+    \n\nFile: #{file.relative_path}
+    \n#{error.message}
+    \n\n"
 
 exports.compile = (file, options={}, cb) ->
   _.defaults(options,
