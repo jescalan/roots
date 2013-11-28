@@ -22,6 +22,8 @@ module.exports = class BrowserPrinter
           for msg in @msgQueue
             @sendMsg msg
 
+          @msgQueue = []
+
         @sockets.push ws
 
   ###*
