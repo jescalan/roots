@@ -3,95 +3,155 @@ roots(1) -- a toolkit for quickly building beautiful websites
 
 ## SYNOPSIS
 
-`roots new <name>` --<template>   
-`roots template <command>`    
-`roots compile`  --no-compress    
-`roots watch`    
-`roots deploy` <name> --<service>  
-`roots clean`    
-`roots version`    
-`roots pkg` <command>    
-`roots plugin` <command>   
+`roots new <name>` [ --<template> ]<br>
+`roots template` <command><br>
+`roots compile` [ `--no-compress` ]<br>
+`roots watch` [ --no-open ]<br>
+`roots deploy` [ <name> ] [ --<service> ]<br>
+`roots clean`<br>
+`roots` `version`|`-v`<br>
+`roots pkg` [ <command> ]<br>
+`roots plugin` <command>
 
 ## DESCRIPTION
 
-Roots exposes a variety of commands for creating, managing, compiling, and deploying websites. Commands are listed and documented below.
+Roots exposes a variety of commands for creating, managing, compiling, and
+deploying websites. Commands are listed and documented below.
 
-[github repo](https://github.com/jenius/roots)
+[GitHub repo](https://github.com/jenius/roots)
 
 ## NEW
 
-  `new`, `<name>`, --<template>    
-  create a new roots project called <name>.
+`roots new <name>` [ --<template> ]
 
-  templates:    
-    - default (jade, stylus, coffeescript) - default    
-    - ejs (ejs, stylus, coffeescript)    
-    - min (default stack, no comments and uses jade layouts)    
-    - basic (html, css, javascript, no layouts)    
-    - blog (blog example optimized for dynamic content)    
+Create a new roots project called <name>.
+
+templates:
+
+  - `default`:
+    jade, stylus, and coffeescript (default stack)
+  - `ejs`:
+    ejs, stylus, and coffeescript
+  - `min`:
+    default stack but with no comments and it uses jade layouts
+  - `basic`:
+    html, css, javascript, no layouts
+  - `blog`:
+    blog example optimized for dynamic content
 
 ## TEMPLATE
 
-  `template`, `<command>`    
-  manage roots project templates.
+`roots template` <command>
 
-  commands:    
-    - add, <name> <git-url> (git clone will download the template)    
-    - remove, <name> (be careful with this)    
-    - default, <name> (sets a template to be the default for roots new)    
+Manage roots project templates.
+
+commands:
+
+  - `add` <name> <git-url>:
+    Git clone will download the template.
+  - `remove` <name>:
+    Be careful with this.
+  - `default` <name>:
+    Sets a template to be the default for roots new.
 
 ## COMPILE
 
-  `compile`, --<no-compress>    
-  compile, compress, and minify the project to `public`, adding the option <no-compress> will bypass the compression.
+`roots compile` [ `--no-compress` ]
+
+Compile, compress, and minify the project to `public`.
+
+  - `--no-compress`:
+    Bypass the compression step.
 
 ## WATCH
 
-  `watch`    
-  watch your project and compile/reload whenever a file is saved. does not work for roots-express or roots-rails.
+`roots watch` [ --no-open ]
+
+Watch your project and compile/reload whenever a file is saved. Does
+not work for roots-express or roots-rails.
+
+  - `--no-open`:
+    Don't open a new browser window.
+
 
 ## DEPLOY
 
-  `deploy`, <name>, --<service>    
-  configure, compile, commit, and deploy your project. <name> optional for heroku.
+`roots deploy` [ <name> ] [ --<service> ]
 
-    services:    
-      - heroku - default    
-      - nodejitsu    
-      - gh-pages   
+Configure, compile, commit, and deploy your project. <name> optional for
+heroku.
+
+services:
+
+  - `heroku`:
+    The default service.
+  - `nodejitsu`:
+    see: [nodejitsu.com](https://www.nodejitsu.com/)
+  - `gh-pages`:
+    Deploy to a git branch labeled "gh-pages". GitHub will automatically host the compiled project at `http://<username>.github.io/<repo name>/`. Be careful because the root of your project will not be at the root of the URL, unlike when you are viewing your project with `roots watch`.
 
 ## CLEAN
 
-  `clean`
-  remove the compiled files.
+`roots clean`
+
+Remove the compiled files.
 
 ## VERSION
 
-  `version`    
-  print the version of the current roots install.
+`roots` `version`|`-v`
+
+Print the version of the current roots install.
 
 ## PKG
 
-  `pkg`, `<command>`    
-  exposes a package manager's interface. type `roots pkg` to display the package manager's options. any command given after `pkg` is delegated to the package manager.
+`roots pkg` [ <command> ]
 
-  package managers:  
+Exposes a package manager's interface. Type `roots pkg` to display the package
+manager's options. any command given after `pkg` is delegated to the package
+manager.
 
-    - bower (http://bower.io) - default    
-    - cdnjs (https://github.com/jenius/cli-js)    
+package managers:
 
-  you can change your package manager via the `~/.rootsrc` file.
+  - `bower`:
+    http://bower.io (default)
+  - `cdnjs`:
+    https://github.com/jenius/cli-js
+
+bower commands:
+
+  - `list`:
+    List the components you have installed in the current project.
+  - `search` <query>:
+    Search for components.
+  - `install` <name>:
+    Install a component.
+  - `uninstall` <name>:
+    Uninstall a component.
+  - `update` <name>:
+    Update a component to the latest version.
+  - `info` <name>:
+    Get more info about a component.
+
+You can change your package manager via the `~/.rootsrc` file.
 
 ## PLUGIN
 
-  `plugin`, `<command>`    
-  manages plugins (user-generated roots compilers).
+`roots plugin` <command>
 
-  commands:    
-    - generate --js (optional, generates a javascript template rather than coffeescript)    
-    - install <username>/<repo> (must provide a username/repo on github)
+Manages plugins like 3rd party roots compilers.
+
+commands:
+
+  - `generate` --js:
+    optional, generates a javascript template rather than coffeescript
+  - `install` <username>/<repo>:
+    Must provide a username/repo on GitHub.
 
 ## DOCUMENTATION
 
 Full docs can be found at http://roots.cx
+
+## BUGS
+
+Please report bugs at the GitHub repo [issue
+tracker](https://github.com/jenius/roots/issues).
