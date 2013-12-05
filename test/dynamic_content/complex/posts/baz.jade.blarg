@@ -1,8 +1,0 @@
----
-title: 'baz'
-date: '1/1/1970'
-layout: '../layout.jade'
----
-
-:markdown
-  my name is hello

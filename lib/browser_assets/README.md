@@ -1,1 +1,0 @@
-This folder contains assets used by roots in the browser. It's mostly to display errors, and notifications directly in the browser, but there has been talk of tracking page load times and other fancy metrics using client-side scripts. 

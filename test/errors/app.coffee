@@ -1,2 +1,0 @@
-layouts:
-  default: 'layout.jade'

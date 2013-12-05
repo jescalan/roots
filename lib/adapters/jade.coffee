@@ -1,16 +1,8 @@
-roots = require '../index'
-transformer = require('transformers')['jade']
-_ = require 'underscore'
+module.exports =
 
-exports.settings =
-  file_type: 'jade'
-  target: 'html'
+  settings:
+    extensions: ['jade']
+    output: 'html'
 
-exports.compile = (file, options={}, cb) ->
-  _.defaults(options,
-    pretty: !roots.project.conf('compress')
-    filename: file.path
-  )
-
-  transformer.render(file.contents, options, cb)
-  return
+  compile: (f) ->
+    console.log 'compiling jade for ' + f

@@ -1,29 +1,6 @@
 #!/usr/bin/env node
 
-require('coffee-script')
+require('coffee-script');
+require('colors');
 
-var args = require('optimist')
-            .alias('v', 'version')
-            .argv;
-
-// check for a new version
-var notifier = require('update-notifier')({ packagePath: '../package.json' });
-notifier.update && notifier.notify();
-
-var argv = process.argv.slice(2),
-    configure_options = require('../lib/config_parser'),
-    commands = require('../lib/commands');
-
-if (args._.length < 1 && !args.version) {
-  commands.help.execute();
-} else {
-  var current_command = commands[args._[0]];
-  if (args.version) return commands.version.execute();
-  if (typeof current_command == "undefined") return commands.help.execute();
-
-  if (current_command.needs_config) {
-    configure_options(args, function(){ current_command.execute(args); });
-  } else {
-    current_command.execute(args);
-  }
-}
+// cli logic goes here
