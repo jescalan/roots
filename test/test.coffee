@@ -33,7 +33,9 @@ describe 'command', ->
     before (done) ->
       @root = path.join(root, 'basic')
       @output = path.join(@root, 'public')
-      run_in_dir(@root, 'compile', done)
+      run_in_dir @root, 'compile', (err, stdout, stderr) ->
+        (err?).should.equal(false)
+        done()
 
     it 'should compile files to /public', ->
       should.exist(@output, [
@@ -55,6 +57,18 @@ describe 'command', ->
       css_content.should.not.match /\n/
 
     after -> remove(path.join(@root, 'public'))
+
+  describe 'compile with errors', ->
+    before ->
+      @basic_with_error_root = path.join root, 'basic_with_error'
+
+    it 'should give an exit code when compile has an error', (done) ->
+      run_in_dir @basic_with_error_root, 'compile', (err, stdout, stderr) ->
+        (err?).should.equal(true)
+        err.code.should.equal(1)
+        done()
+
+    after -> remove(path.join(@basic_with_error_root, 'public'))
 
   describe 'plugin', ->
 
