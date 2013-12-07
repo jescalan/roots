@@ -18,7 +18,8 @@
     "async": "0.2.x",
     "js-yaml": "2.x.x",
     "when": "2.x.x",
-    "shelljs": "0.2.x"
+    "shelljs": "0.2.x",
+    "accord": "0.0.x"
   },
   "devDependencies": {
     "mocha": "*",

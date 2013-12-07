@@ -1,5 +1,6 @@
 path = require 'path'
 fs = require 'fs'
+accord = require 'accord'
 
 class Config
   constructor: (root) ->
@@ -30,10 +31,12 @@ class Config
     res = {}
     pkg = require(path.join(@root, 'package.json'))
     for dep in Object.keys(pkg.dependencies)
-      # get accord adapter, add second arg to do a local require
-      # if accord.supports(dep) then res[dep] = accord.load(dep)
-      cpath = path.join(__dirname, 'adapters', dep)
-      if fs.existsSync("#{cpath}.coffee") then res[dep] = require(cpath)
+      if accord.supports(dep)
+        try
+          local_compiler = require(path.join(@root, 'node_modules', dep))
+        catch
+          throw new Error("'#{dep}' not found. install with `npm install #{dep} --save`")
+        res[dep] = accord.load(dep, local_compiler)
     res
 
 class Singleton

@@ -47,7 +47,7 @@ class FSParser
     config.get().ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i) -> i).length
 
   compiled = (f) ->
-    exts = _(config.get().compilers).map((i)-> i.settings.extensions).flatten().value()
+    exts = _(config.get().compilers).map((i)-> i.extensions).flatten().value()
     _.contains(exts, path.extname(f).slice(1))
 
 module.exports = FSParser
