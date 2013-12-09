@@ -8,14 +8,15 @@ class Config
   constructor: (@roots) ->
     @output = 'public'
     @dump_dirs = ['views', 'assets']
-    @mode = 'develop'
+    @env = 'development'
     @debug = false
     @live_reload = true
     @open_browser = true
 
     load_config.call(@)
 
-    @ignores = ['package.json', 'app.coffee', 'node_modules/**/*', "#{@output}/**/*"]
+    @ignores ?= []
+    @ignores _.extend(@ignores, ['package.json', 'app.coffee', 'node_modules/**/*', "#{@output}/**/*"])
     @compilers = get_compilers.call(@)
 
   load_config = ->
@@ -56,9 +57,13 @@ class Config
 
 module.exports = Config
 
-# What's Going On Here?
-# ---------------------
+###
 
-# This class holds the global configuration for a roots project. It depends on the main roots
-# class, and is constructed using dependency injection to hold on to a reference to the instance
-# of the main roots class it was constructed under.
+What's Going On Here?
+---------------------
+
+This class holds the global configuration for a roots project. It depends on the main roots class, and is constructed using dependency injection to hold on to a reference to the instance of the main roots class it was constructed under.
+
+Full configuration options are documented in `docs/configuration.md`
+
+###

@@ -15,8 +15,7 @@ class Roots extends EventEmitter
     @config = new Config(@)
     @fs_parser = new FSParser(@)
 
-  # TODO: this should take options like the mode/env etc
-  compile: ->
+  compile: (opts) ->
     @fs_parser.parse()
       .then(create_folders.bind(@))
       .then(process_files.bind(@))
@@ -45,22 +44,15 @@ class Roots extends EventEmitter
 
 module.exports = Roots
 
-# What's Going On Here?
-# ---------------------
+###
 
-# Welcome to the main entry point to roots! Through this very file, all the magic happens.
-# Roots' code is somewhat of a work of art for me, something I strive to make as beautiful
-# as functional, and consequently something I am hardly ever totally happy with because as
-# soon as I learn or improve, I start seeing more details that could be smoothed out.
+What's Going On Here?
+---------------------
 
-# Anyway, let's pick this apart. This file represents roots' API, which really is quite
-# simple - it's mostly comprised of a single `compile` function that does all the work.
-# It is organized as a class for code clarity, but as you can see by quickly browsing
-# through, this particular file does not bank heavily on object orientation, as I don't see
-# a lot of benefits to exposing a raw class as the API. What it exposes instead is an event
-# emitter that fires a few events you can listen for.
+Welcome to the main entry point to roots! Through this very file, all the magic happens.Roots' code is somewhat of a work of art for me, something I strive to make as beautiful as functional, and consequently something I am hardly ever totally happy with because as soon as I learn or improve, I start seeing more details that could be smoothed out.
 
-# There is a pretty compressed chunk of promise logic in the `process_files` method which also
-# merits explaining. What' happening here is that two compile processes are being fired off
-# asynchronously. In the first, the dynamic files are compiled followed by the compiled files.
-# In the second, any static assets are copied over. Both of these fire at once, and once they have both finished, the whole promise returns.
+Anyway, let's pick this apart. This file represents roots' API, which really is quite simple - it's mostly comprised of a single `compile` function that does all the work. It is organized as a class for code clarity, but as you can see by quickly browsing through, this particular file does not bank heavily on object orientation, as I don't see a lot of benefits to exposing a raw class as the API. What it exposes instead is an event emitter that fires a few events you can listen for.
+
+There is a pretty compressed chunk of promise logic in the `process_files` method which also merits explaining. What' happening here is that two compile processes are being fired off asynchronously. In the first, the dynamic files are compiled followed by the compiled files. In the second, any static assets are copied over. Both of these fire at once, and once they have both finished, the whole promise returns.
+
+###
