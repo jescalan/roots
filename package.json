@@ -17,7 +17,6 @@
     "lodash": "2.x.x",
     "js-yaml": "2.x.x",
     "when": "2.x.x",
-    "shelljs": "0.2.x",
     "accord": "0.0.x",
     "mkdirp": "0.3.x"
   },
