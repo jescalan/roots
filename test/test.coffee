@@ -45,5 +45,16 @@ describe 'basic', ->
         should.exist(output, 'tests.html')
         run("rm -rf #{output}", done)
 
+  it 'should ignore specified files', (done) ->
+    p = path.join(test_path, 'ignores')
+    output = path.join(p, 'public')
+
+    new Roots(p).compile()
+      .on('error', done)
+      .on 'done', ->
+        should.not_exist(output, ['ignoreme.html', 'foo'])
+        should.exist(output, 'nested_ignore.html')
+        done()
+
   # remove all test output (this needs to work cross-platform)
   after (done) -> run('rm -rf test/fixtures/**/public', done)

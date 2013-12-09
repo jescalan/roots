@@ -16,7 +16,7 @@ class Config
     load_config.call(@)
 
     @ignores ?= []
-    @ignores _.extend(@ignores, ['package.json', 'app.coffee', 'node_modules/**/*', "#{@output}/**/*"])
+    @ignores = @ignores.concat(['package.json', 'app.coffee', 'node_modules/**/*', "#{@output}/**/*"])
     @compilers = get_compilers.call(@)
 
   load_config = ->
