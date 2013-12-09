@@ -48,7 +48,7 @@ class Config
       if accord.supports(dep)
         try
           local_compiler = require(path.join(@roots.root, 'node_modules', dep))
-        catch
+        catch err
           throw new Error("'#{dep}' not found. install with `npm install #{dep} --save`")
 
         res[dep] = accord.load(dep, local_compiler)

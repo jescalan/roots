@@ -15,7 +15,6 @@
     "readdirp": "0.3.x",
     "minimatch": "0.2.x",
     "lodash": "2.x.x",
-    "async": "0.2.x",
     "js-yaml": "2.x.x",
     "when": "2.x.x",
     "shelljs": "0.2.x",

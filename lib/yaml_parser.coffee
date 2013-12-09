@@ -1,6 +1,7 @@
 fs = require 'fs'
-js_yaml = require 'js-yaml'
 path = require 'path'
+js_yaml = require 'js-yaml'
+W = require 'when'
 
 class YAMLParser
 
@@ -17,11 +18,16 @@ class YAMLParser
     js_yaml.safeLoad(front_matter[1], options)
 
   detect: (file, done) ->
+    deferred = W.defer()
+
     res = false
-    stream = fs.createReadStream(file, { encoding: 'utf-8', start: 0, end: 3 })
-    stream.on('end', -> done(res))
-    stream.on 'data', (data) ->
-      if data.split('\n')[0] == "---\n" then res = true
+    fs.createReadStream(file, { encoding: 'utf-8', start: 0, end: 3 })
+      .on('error', deferred.reject)
+      .on('end', -> deferred.resolve(res))
+      .on 'data', (data) ->
+        if data.split('\n')[0] == "---\n" then res = true
+
+    return deferred.promise
 
 module.exports = new YAMLParser
 

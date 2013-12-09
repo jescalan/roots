@@ -6,7 +6,6 @@ keys = require 'when/keys'
 fs = require 'fs'
 path = require 'path'
 _ = require 'lodash'
-async = require 'async'
 mkdirp = require 'mkdirp'
 
 Config = require './config'
@@ -32,9 +31,7 @@ class Roots extends EventEmitter
   # @api private
 
   create_folders = (ast) ->
-    output = @config.output_path()
-    ast.dirs = _(ast.dirs).uniq().compact().value().map((d) => path.join(output, d))
-    mkdirp.sync(output)
+    mkdirp.sync(@config.output_path())
     W.map(ast.dirs, guard(guard.n(1), nodefn.lift(mkdirp)))
       .catch((err) -> console.error(err))
       .yield(ast)
