@@ -35,5 +35,15 @@ describe 'basic', ->
         should.exist(output, ['foo.html', 'nested/bar.html', 'nested/whatever.blah'])
         done()
 
+  it 'should load a simple app config', (done) ->
+    p = path.join(test_path, 'simple_config')
+    output = path.join(p, 'foobar')
+
+    new Roots(p).compile()
+      .on('error', done)
+      .on 'done', ->
+        should.exist(output, 'tests.html')
+        run("rm -rf #{output}", done)
+
   # remove all test output (this needs to work cross-platform)
   after (done) -> run('rm -rf test/fixtures/**/public', done)

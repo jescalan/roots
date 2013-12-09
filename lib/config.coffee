@@ -1,25 +1,37 @@
 path = require 'path'
 fs = require 'fs'
 accord = require 'accord'
+coffee = require 'coffee-script'
+_ = require 'lodash'
 
 class Config
   constructor: (@roots) ->
-
-    @dirs =
-      output: 'public'
-      views: 'views'
-      assets: 'assets'
-
+    @output = 'public'
+    @dump_dirs = ['views', 'assets']
     @mode = 'develop'
     @debug = false
     @live_reload = true
     @open_browser = true
 
-    @ignores = ['package.json', 'node_modules/**/*', "#{@dirs.output}/**/*"]
+    load_config.call(@)
+
+    @ignores = ['package.json', 'app.coffee', 'node_modules/**/*', "#{@output}/**/*"]
     @compilers = get_compilers.call(@)
 
-  path: (name) ->
-    path.join(@roots.root, @dirs[name])
+  load_config = ->
+    config_path = path.join(@roots.root, 'app')
+    if not fs.existsSync("#{config_path}.coffee") then return
+
+    # if there are exports, assume a node config file
+    # otherwise, assume a default config file
+    conf = require(config_path)
+    if Object.keys(conf).length < 1
+      conf = eval(coffee.compile(fs.readFileSync("#{config_path}.coffee", 'utf8'), { bare: true }))
+
+    @[k] = v for k, v of conf
+
+  output_path: ->
+    path.join(@roots.root, @output)
 
   compress: ->
     @mode == 'develop'

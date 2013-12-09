@@ -31,7 +31,7 @@ class Roots extends EventEmitter
   # @api private
 
   create_folders = (ast) ->
-    output = @config.path('output')
+    output = @config.output_path()
     ast.dirs = _(ast.dirs).uniq().compact().value().map((d) => path.join(output, d))
     mkdirp.sync(output)
     W.map(ast.dirs, guard(guard.n(1), nodefn.lift(mkdirp)))

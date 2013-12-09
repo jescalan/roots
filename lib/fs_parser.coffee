@@ -20,13 +20,13 @@ class FSParser
     if fs.statSync(@roots.root).isDirectory()
       parse_dir.call(@, ast, deferred)
     else
-      parse_file.call(@, ast, deferred)
+      parse_file.call(@, @roots.root, ast, deferred.resolve)
 
     return deferred.promise
 
   # @api private
 
-  # todo: remove async, rely only on when mechanisms
+  # TODO: remove async, rely only on when.js mechanisms
   parse_dir = (ast, d) ->
     queue = async.queue(((f, cb) => parse_file.call(@, f.fullPath, ast, cb)), @concurrency)
 
