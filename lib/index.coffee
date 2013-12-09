@@ -1,40 +1,45 @@
-require './config'
-
 {EventEmitter} = require('events')
 W = require 'when'
 nodefn = require 'when/node/function'
+guard = require 'when/guard'
 keys = require 'when/keys'
 fs = require 'fs'
 path = require 'path'
 _ = require 'lodash'
 async = require 'async'
+mkdirp = require 'mkdirp'
 
+Config = require './config'
 FSParser = require './fs_parser'
 Compiler = require './compiler'
 
 class Roots extends EventEmitter
 
-  compile: (@root) ->
-    config.setup(@root)
+  constructor: (@root) ->
+    @config = new Config(@)
+    @fs_parser = new FSParser(@)
 
-    (new FSParser(@root)).parse()
-    .then(create_folders)
-    .then(process_files.bind(@))
-    # .then(precompile_templates.bind(@))
-    .done (=> @emit('done')), ((err) => @emit('error', err))
+  compile: ->
+    @fs_parser.parse()
+      .then(create_folders.bind(@))
+      .then(process_files.bind(@))
+      # .then(precompile_templates.bind(@))
+      .done (=> @emit('done')), ((err) => @emit('error', err))
 
     return @
 
   # @api private
 
   create_folders = (ast) ->
-    output = config.path('output')
+    output = @config.path('output')
     ast.dirs = _(ast.dirs).uniq().compact().value().map((d) => path.join(output, d))
-    try fs.mkdirSync(output)
-    nodefn.call(async.mapSeries, ast.dirs, fs.mkdir).yield(ast)
+    mkdirp.sync(output)
+    W.map(ast.dirs, guard(guard.n(1), nodefn.lift(mkdirp)))
+      .catch((err) -> console.error(err))
+      .yield(ast)
 
   process_files = (ast) ->
-    compiler = new Compiler(@root)
+    compiler = new Compiler(@)
 
     keys.all
       compile:
@@ -43,7 +48,7 @@ class Roots extends EventEmitter
       copy:
         W.map(ast.static, compiler.copy.bind(compiler))
 
-module.exports = new Roots
+module.exports = Roots
 
 # What's Going On Here?
 # ---------------------

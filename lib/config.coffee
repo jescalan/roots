@@ -3,8 +3,7 @@ fs = require 'fs'
 accord = require 'accord'
 
 class Config
-  constructor: (root) ->
-    @root = path.normalize(root)
+  constructor: (@roots) ->
 
     @dirs =
       output: 'public'
@@ -16,11 +15,11 @@ class Config
     @live_reload = true
     @open_browser = true
 
-    @ignores = ['package.json', 'node_modules/**/*', @dirs.output]
+    @ignores = ['package.json', 'node_modules/**/*', "#{@dirs.output}/**/*"]
     @compilers = get_compilers.call(@)
 
   path: (name) ->
-    path.join(@root, @dirs[name])
+    path.join(@roots.root, @dirs[name])
 
   compress: ->
     @mode == 'develop'
@@ -29,46 +28,25 @@ class Config
 
   get_compilers = ->
     res = {}
-    pkg = require(path.join(@root, 'package.json'))
+    pkg_json_path = path.join(@roots.root, 'package.json')
+    if not fs.existsSync(pkg_json_path) then return res
+
+    pkg = require(pkg_json_path)
     for dep in Object.keys(pkg.dependencies)
       if accord.supports(dep)
         try
-          local_compiler = require(path.join(@root, 'node_modules', dep))
+          local_compiler = require(path.join(@roots.root, 'node_modules', dep))
         catch
           throw new Error("'#{dep}' not found. install with `npm install #{dep} --save`")
+
         res[dep] = accord.load(dep, local_compiler)
     res
 
-class Singleton
-  instance = null
-
-  @setup: (root) ->
-    if instance then throw 'config has already been set up'
-    instance = new Config(root)
-
-  @get: -> instance
-  @path: (name) -> instance.path(name)
-
-  @set: (obj) ->
-    instance[k] = v for k, v of obj
-    return obj
-
-global.config = Singleton
+module.exports = Config
 
 # What's Going On Here?
 # ---------------------
 
-# This class holds the global configuration for a roots project. It is a singleton,
-# meaning that it will always return the same object whenever initialized. It comes
-# with a number of default settings but can also be configured using the `setup` method.
-# Config values can be changed using the `set` method, but be careful.
-
-# This class is placed on the global object to avoid the overhead of having to require
-# the entire index file and all it's dependencies whenever access to the config variables
-# is needed. In a previous refactor we handled config like that, but there was a noticeable
-# slowdown due to the fact that loading the config meant loading every file and dependency
-# in the entire project, which is not necessary when you just need access to the configuration.
-# The config is global, which is why attaching it to the global object is appropriate in this
-# situation, although in general the use of global objects is discouraged. And because it is a
-# singleton which requires initialization before use, it is much easier to track which parts of
-# the program are using or changing it then simply using a raw global object.
+# This class holds the global configuration for a roots project. It depends on the main roots
+# class, and is constructed using dependency injection to hold on to a reference to the instance
+# of the main roots class it was constructed under.

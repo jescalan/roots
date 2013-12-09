@@ -10,14 +10,14 @@ yaml_parser = require './yaml_parser'
 
 class FSParser
 
-  constructor: (@root) ->
+  constructor: (@roots) ->
     @concurrency = 50
 
   parse: ->
     deferred = W.defer()
     ast = { dirs: [], compiled: [], static: [], dynamic: [] }
 
-    if fs.statSync(@root).isDirectory()
+    if fs.statSync(@roots.root).isDirectory()
       parse_dir.call(@, ast, deferred)
     else
       parse_file.call(@, ast, deferred)
@@ -26,28 +26,29 @@ class FSParser
 
   # @api private
 
+  # todo: remove async, rely only on when mechanisms
   parse_dir = (ast, d) ->
-    queue = async.queue(((f, cb) -> parse_file.call({ root: f.fullPath }, ast, cb)), @concurrency)
+    queue = async.queue(((f, cb) => parse_file.call(@, f.fullPath, ast, cb)), @concurrency)
 
-    readdirp(root: @root)
+    readdirp(root: @roots.root)
       .on('end', -> if queue.length() < 1 then d.resolve(ast) else queue.drain = -> d.resolve(ast))
       .on('error', d.reject)
-      .on 'data', (e) ->
-        if ignored(e.path) then return
+      .on 'data', (e) =>
+        if ignored.call(@, e.path) then return
         if e.parentDir.length then ast.dirs.push(e.parentDir)
         queue.push(e)
 
-  parse_file = (ast, done) ->
-    yaml_parser.detect @root, (dynamic) =>
-      cat = if dynamic then 'dynamic' else if compiled(@root) then 'compiled' else 'static'
-      ast[cat].push(@root)
+  parse_file = (file, ast, done) ->
+    yaml_parser.detect file, (dynamic) =>
+      cat = if dynamic then 'dynamic' else if compiled.call(@, file) then 'compiled' else 'static'
+      ast[cat].push(file)
       done(ast)
 
   ignored = (f) ->
-    config.get().ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i) -> i).length
+    @roots.config.ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i) -> i).length
 
   compiled = (f) ->
-    exts = _(config.get().compilers).map((i)-> i.extensions).flatten().value()
+    exts = _(@roots.config.compilers).map((i)-> i.extensions).flatten().value()
     _.contains(exts, path.extname(f).slice(1))
 
 module.exports = FSParser

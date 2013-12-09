@@ -2,28 +2,38 @@ should = require 'should'
 path = require 'path'
 fs = require 'fs'
 test_path = path.join(__dirname, 'fixtures')
-shell = require 'shelljs'
+run = require('child_process').exec
 require('./helpers')(should)
 
-roots = require '../lib'
+Roots = require '../lib'
 
 describe 'basic', ->
 
-  before ->
-    @path = path.join(test_path, 'basic')
-    @output = path.join(@path, 'public')
+  it 'should compile files in nested directories', (done) ->
+    p = path.join(test_path, 'basic')
+    output = path.join(p, 'public')
 
-  it 'should compile', (done) ->
-    roots.compile(@path)
-      .on('error', (err) -> console.error(err))
+    new Roots(p).compile()
+      .on('error', done)
       .on 'done', =>
-        should.exist(@output, '')
-        should.exist(@output, 'index.html')
-        should.exist(@output, 'nested')
-        should.exist(@output, 'nested/foo.html')
-        should.exist(@output, 'nested/double_nested')
-        should.exist(@output, 'nested/double_nested/bar.html')
+        should.exist(output, [
+          'index.html',
+          'nested',
+          'nested/foo.html',
+          'nested/double_nested',
+          'nested/double_nested/bar.html'
+        ])
         done()
 
-  after -> shell.rm('-rf', @output)
+  it 'should copy files in nested directories', (done) ->
+    p = path.join(test_path, 'copy')
+    output = path.join(p, 'public')
 
+    new Roots(p).compile()
+      .on('error', done)
+      .on 'done', ->
+        should.exist(output, ['foo.html', 'nested/bar.html', 'nested/whatever.blah'])
+        done()
+
+  # remove all test output (this needs to work cross-platform)
+  after (done) -> run('rm -rf test/fixtures/**/public', done)
