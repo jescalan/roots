@@ -1,0 +1,2 @@
+jade:
+  pretty: true

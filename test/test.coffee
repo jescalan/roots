@@ -67,5 +67,13 @@ describe 'basic', ->
         should.not_exist(output, ['views', 'assets'])
         done()
 
+  it.skip 'should accept custom compiler options', (done) ->
+    p = path.join(test_path, 'compiler_options')
+    output = path.join(p, 'public')
+
+    new Roots(p).compile()
+      .on('error', done)
+      .on 'done', -> done()
+
   # remove all test output (this needs to work cross-platform)
   after (done) -> run('rm -rf test/fixtures/**/public', done)
