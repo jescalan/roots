@@ -32,7 +32,7 @@ class ParseTask
       .on('error', deferred.reject)
       .on 'data', (f) =>
         if ignored.call(@, f.path) then return
-        if f.parentDir.length then @ast.dirs.push(f.parentDir)
+        if f.parentDir.length then @ast.dirs.push(f.fullParentDir)
         files.push(@parse_file(f.fullPath))
 
     return deferred.promise
@@ -47,7 +47,7 @@ class ParseTask
   # @api private
   
   format_dirs = ->
-    @ast.dirs = _.uniq(@ast.dirs).map((d) => path.join(@roots.config.output_path(), d))
+    @ast.dirs = _.uniq(@ast.dirs).map((d) => @roots.config.out(d))
     @ast
 
   ignored = (f) ->

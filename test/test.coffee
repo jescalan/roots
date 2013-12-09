@@ -56,5 +56,16 @@ describe 'basic', ->
         should.exist(output, 'nested_ignore.html')
         done()
 
+  it 'should dump specified dirs', (done) ->
+    p = path.join(test_path, 'dump_dirs')
+    output = path.join(p, 'public')
+
+    new Roots(p).compile()
+      .on('error', done)
+      .on 'done', ->
+        should.exist(output, ['index.html', 'css/foo.css'])
+        should.not_exist(output, ['views', 'assets'])
+        done()
+
   # remove all test output (this needs to work cross-platform)
   after (done) -> run('rm -rf test/fixtures/**/public', done)

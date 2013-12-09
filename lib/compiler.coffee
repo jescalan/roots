@@ -20,7 +20,7 @@ class Compiler
   copy: (f) ->
     deferred = W.defer()
 
-    output = f.replace(@roots.root, @roots.config.output_path())
+    output = @roots.config.out(f)
     rs = fs.createReadStream(f)
     ws = fs.createWriteStream(output)
     rs.pipe(ws)
@@ -43,9 +43,8 @@ class Compiler
         res = c
     res
 
-  write_file = (filename, content, adapter) ->
-    tmp = filename.replace(@roots.root, @roots.config.output_path())
-    output = tmp.replace(/\..*$/, ".#{adapter.output}")
+  write_file = (f, content, adapter) ->
+    output = @roots.config.out(f, adapter.output)
     fs.writeFileSync(output, content)
 
 module.exports = Compiler

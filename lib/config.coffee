@@ -31,8 +31,19 @@ class Config
 
     @[k] = v for k, v of conf
 
+  # produces the full path to the output folder
   output_path: ->
     path.join(@roots.root, @output)
+
+  # given a file and optional extension, produce the path to the file's destination
+  out: (f, ext) ->
+    relative = f.replace(@roots.root, '')
+    res = relative.slice(1).split(path.sep)
+    if _.contains(@dump_dirs, res[0]) then res.shift()
+    res.unshift(@output_path())
+    res = res.join(path.sep)
+    if ext then res = res.replace(/\..*$/, ".#{ext}")
+    res
 
   compress: ->
     @mode == 'develop'
