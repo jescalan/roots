@@ -14,6 +14,7 @@ class Compiler
     adapter = get_adapter.call(@, f)
 
     adapter.renderFile(f)
+      .tap(=> @roots.emit('compile', f))
       .then((out) => write_file.call(@, f, out, adapter))
 
   copy: (f) ->
@@ -26,7 +27,10 @@ class Compiler
 
     rs.on('error', deferred.reject)
     ws.on('error', deferred.reject)
-    ws.on('close', deferred.resolve)
+
+    ws.on 'close', =>
+      @roots.emit('copy', f)
+      deferred.resolve()
 
     return deferred.promise
 

@@ -19,6 +19,7 @@ class Roots extends EventEmitter
     @config = new Config(@)
     @fs_parser = new FSParser(@)
 
+  # TODO: this should take options like the mode/env etc
   compile: ->
     @fs_parser.parse()
       .then(create_folders.bind(@))
