@@ -13,8 +13,9 @@ class Compiler
 
   compile: (f) ->
     adapter = get_adapter.call(@, f)
+    options = _.extend(@roots.config.locals || {}, @roots.config[adapter.name] || {})
 
-    adapter.renderFile(f, @roots.config[adapter.name])
+    adapter.renderFile(f, options)
       .tap(=> @roots.emit('compile', f))
       .then((out) => write_file.call(@, f, out, adapter))
 

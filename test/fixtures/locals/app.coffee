@@ -1,0 +1,2 @@
+locals:
+  foo: 'bar'

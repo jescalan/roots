@@ -78,5 +78,16 @@ describe 'basic', ->
         should.match_file(output, 'index.html', 'index_expected.html')
         done()
 
+  it 'should use locals', (done) ->
+    p = path.join(test_path, 'locals')
+    output = path.join(p, 'public')
+
+    new Roots(p).compile()
+      .on('error', done)
+      .on 'done', ->
+        should.exist(output, 'index.html')
+        should.match_file(output, 'index.html', 'index_expected.html')
+        done()
+
   # remove all test output (this needs to work cross-platform)
   after (done) -> run('rm -rf test/fixtures/**/public', done)

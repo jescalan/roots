@@ -39,7 +39,6 @@ _default: `public`_
 
 #### ignores
 An array containing [minimatch](https://github.com/isaacs/minimatch) strings that represent files or folder you wish to ignore from the compile process. Full globstar syntax supported. Automatically ignores `package.json`, `node_modules`, `app.coffee` and your output directory (wouldn't want to have it recursively compile itself!)    
-_default: `[]`_ 
 
 #### dump_dirs
 Array of directories that will have their contents dumped into the output folder rather than compiling into the folder they are in    
@@ -61,13 +60,19 @@ _default: `true`_
 When enabled, `roots watch` will automatically open a browser to the local server.    
 _default: `true`_
 
+#### locals
+An object that is injected into the options every compiler in use in the project. So for example, if you are using both jade and ejs in a project and some locals to be the same across the two, you don't have to duplicate, just add them to `locals`. If there is a conflict between `locals` and compiler-specific options, the compiler options will win out.
+
+#### before
+Hook function that is run before each compile. Function passes in an instance of the [roots class](../lib/index.coffee), so you have access to everything. Accepts either a single function or an array of functions, which will be run in order. Expects a promise or value to be returned from each function.
+
+#### after
+Same thing as before, but is run after each compile. Surprise surprise.
+
 #### Coming Soon!
-- before
-- after
-- locals
 - layouts
-- watcher_ignores
-- templates
+- watcher ignores
+- precompiled templates
 
 ### Compiler Options
 

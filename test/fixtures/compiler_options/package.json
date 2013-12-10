@@ -1,5 +1,5 @@
 {
-  "name": "test1",
+  "name": "test",
   "dependencies": {
     "jade": "*"
   }
