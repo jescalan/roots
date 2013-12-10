@@ -2,6 +2,7 @@ fs = require 'fs'
 path = require 'path'
 _ = require 'lodash'
 W = require 'when'
+nodefn = require 'when/node/function'
 
 class Compiler
 
@@ -43,10 +44,9 @@ class Compiler
         res = c
     res
 
-  # TODO: really there is no reason this should be sync...
   write_file = (f, content, adapter) ->
     output = @roots.config.out(f, adapter.output)
-    fs.writeFileSync(output, content)
+    nodefn.call(fs.writeFile, output, content)
 
 module.exports = Compiler
 

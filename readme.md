@@ -18,9 +18,28 @@ Roots is completely transparent, and is behind many large websites in production
 
 `npm install roots -g`
 
-### Usage
+### CLI Usage
 
-Coming soon...
+coming soon...
+
+### Public API
+
+Roots v3 has been built from the ground up to have a strong javascript API, which is significantly different from all previous versions of roots. Let's jump right into it with an example:
+
+```js
+var Roots = require('roots');
+
+project1 = new Roots('/path/to/project');
+project1.compile()
+  .on('error', console.error.bind(console))
+  .on('compile', console.log.bind(console))
+  .on('copy', console.log.bind(console))
+  .on('done', console.log.bind(console))
+```
+
+As you can can see here, roots is initialized with a path pointing to the project root. You can also pass a second optional parameter specifying options for the project, which are [documented here](docs/configuration.md). It exposes one function, compile. When compile is run, roots emits a few events which can be seen above. `error` is emitted if there's any sort of error, `compile` and `copy` are emitted when files are compiled and/or copied respectively, and `done` is emitted when the project has finished compiling.
+
+You can have multiple roots projects instantiated at once at a time without conflict, and you can compile a single roots project more than once at a time without conflict.
 
 ### License & Contributing
 
