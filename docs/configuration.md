@@ -64,8 +64,18 @@ _default: `true`_
 #### Coming Soon!
 - before
 - after
-- compiler options
 - locals
 - layouts
 - watcher_ignores
 - templates
+
+### Compiler Options
+
+You can also pass options directly to any compiler through app.coffee. Just add them as an object under the name of the compiler. For example, if you want jade to output non-compressed html:
+
+```
+jade:
+  pretty: true
+```
+
+...that's all it takes. This will work for any compiler you have loaded. For more info on each supported compiler's options, see the [accord docs](https://github.com/jenius/accord/tree/master/docs).
