@@ -4,6 +4,8 @@ nodefn = require 'when/node/function'
 guard = require 'when/guard'
 keys = require 'when/keys'
 mkdirp = require 'mkdirp'
+chokidar = require 'chokidar'
+minimatch = require 'minimatch'
 
 Config = require './config'
 FSParser = require './fs_parser'
@@ -16,12 +18,17 @@ class Roots extends EventEmitter
     @fs_parser = new FSParser(@)
 
   compile: (opts) ->
+    @emit('start')
     @fs_parser.parse()
       .then(create_folders.bind(@))
       .then(process_files.bind(@))
       # .then(precompile_templates.bind(@))
       .done (=> @emit('done')), ((err) => @emit('error', err))
 
+    return @
+
+  watch: ->
+    @compile().once('done', watch_fn.bind(@))
     return @
 
   # @api private
@@ -41,6 +48,16 @@ class Roots extends EventEmitter
         .then(-> W.map(ast.compiled, compiler.compile.bind(compiler)))
       copy:
         W.map(ast.static, compiler.copy.bind(compiler))
+
+  # TODO: move watcher to its own file
+  watch_fn = ->
+    chokidar.watch(@root, { ignoreInitial: true, ignored: ignore_fn.bind(@) })
+      .on('error', (err) => @emit('error', err))
+      .on('change', @compile.bind(@))
+
+  ignore_fn = (p) ->
+    f = p.replace(@root, '').slice(1)
+    @config.ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i)->i).length
 
 module.exports = Roots
 
