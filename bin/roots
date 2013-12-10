@@ -3,4 +3,31 @@
 require('coffee-script');
 require('colors');
 
-// cli logic goes here
+var args = require('optimist').alias('v', 'version').argv,
+    notifier = require('update-notifier')({ packagePath: '../package.json' });
+
+// new version notification
+notifier.update && notifier.notify();
+
+// `roots -v`, `roots --version`, or `roots version`
+if (args.version || args._[0] == 'version')
+  return console.log(notifier.packageFile.version)
+
+// `roots` or `roots help`
+if (!args._.length || args._[0] == 'help')
+  return require('../lib/commands/help').execute()
+
+// let's get into the commands
+var fs = require('fs'),
+    path = require('path');
+
+var cmds = fs.readdirSync(path.join(__dirname, '../lib/commands')).map(function(d){
+  return path.basename(d, '.coffee');
+});
+
+if (cmds.indexOf(args._[0]) > -1) {
+  require('../lib/commands/' + args._[0]).execute(args)
+} else {
+  console.log('! command not found'.red)
+  require('../lib/commands/help').execute()
+}
