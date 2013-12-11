@@ -9,8 +9,20 @@ exports.execute = (args)->
   project = new Roots(dir)
 
   process.stdout.write('compiling... '.grey)
-  
-  project.watch()
-    .on('start', -> process.stdout.write('compiling... '.grey))
-    .on('error', console.error.bind(console))
-    .on('done', -> process.stdout.write('done!\n'.green))
+
+  w = project.watch()
+
+  w.on 'start', onStart
+  w.on 'error', onError
+  w.on 'done', onDone
+
+  w
+
+onError = (err) ->
+  process.stdout.write JSON.stringify(err).red
+
+onStart = ->
+  process.stdout.write 'compiling... '.grey
+
+onDone = ->
+  process.stdout.write 'done!\n'.green
