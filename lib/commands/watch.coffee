@@ -2,6 +2,7 @@ require 'colors'
 open = require 'open'
 path = require 'path'
 Roots = require '../'
+Server = require '../local_server'
 chokidar = require 'chokidar'
 minimatch = require 'minimatch'
 
@@ -10,6 +11,7 @@ exports.execute = (args)->
   project = new Roots(dir)
 
   process.stdout.write('compiling... '.grey)
+  (new Server(dir)).start()
 
   w = project.watch()
 
