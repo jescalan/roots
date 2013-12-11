@@ -21,7 +21,8 @@
     "mkdirp": "0.3.x",
     "optimist": "0.6.x",
     "update-notifier": "0.1.x",
-    "chokidar": "0.8.x"
+    "chokidar": "0.8.x",
+    "open": "0.0.4"
   },
   "devDependencies": {
     "mocha": "*",
