@@ -29,8 +29,10 @@ class Watcher
         cb()
 
     setTimeout =>
-      fs.appendFileSync(path.join(@root, file), ' ')
-    , 205 # paul miller, if you ever see this, you are absurd.
+      p = path.join(@root, file)
+      fs.appendFileSync(p, ' ')
+      fs.writeFileSync(p, fs.readFileSync(p, 'utf8').trim())
+    , 800 # paul miller, if you ever see this, wtf
 
   stat_file: (file) ->
     fs.statSync(path.join(@output, file)).mtime.getTime()
@@ -50,4 +52,4 @@ describe 'watcher', ->
       clearTimeout(timer)
       done(true)
 
-
+  after (done) -> run('rm -rf test/fixtures/**/public', done)

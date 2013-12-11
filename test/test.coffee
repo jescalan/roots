@@ -89,5 +89,16 @@ describe 'basic', ->
         should.match_file(output, 'index.html', 'index_expected.html')
         done()
 
+  it 'should run before and after hooks', (done) ->
+    p = path.join(test_path, 'hooks')
+    output = path.join(p, 'public')
+
+    new Roots(p).compile()
+      .on('error', done)
+      .on 'done', ->
+        should.exist(output, 'before.txt')
+        should.exist(output, 'after.txt')
+        run("rm -rf #{path.join(p, 'before.txt')}", done)
+
   # remove all test output (this needs to work cross-platform)
   after (done) -> run('rm -rf test/fixtures/**/public', done)

@@ -18,11 +18,12 @@ class Roots extends EventEmitter
     @fs_parser = new FSParser(@)
 
   compile: (opts) ->
-    @emit('start')
-    @fs_parser.parse()
+    before_hook.call(@)
+      .then(@fs_parser.parse.bind(@fs_parser))
       .then(create_folders.bind(@))
       .then(process_files.bind(@))
       # .then(precompile_templates.bind(@))
+      .then(after_hook.bind(@))
       .done (=> @emit('done')), ((err) => @emit('error', err))
 
     return @
@@ -32,6 +33,14 @@ class Roots extends EventEmitter
     return @
 
   # @api private
+  
+  before_hook = (ast) ->
+    if not @config.before then return W.resolve(ast)
+    nodefn.call(@config.before.bind(@))
+
+  after_hook = (ast) ->
+    if not @config.after then return
+    nodefn.call(@config.after.bind(@))
 
   create_folders = (ast) ->
     mkdirp.sync(@config.output_path())
@@ -49,7 +58,6 @@ class Roots extends EventEmitter
       copy:
         W.map(ast.static, compiler.copy.bind(compiler))
 
-  # TODO: move watcher to its own file
   watch_fn = ->
     chokidar.watch(@root, { ignoreInitial: true, ignored: ignore_fn.bind(@) })
       .on('error', (err) => @emit('error', err))
