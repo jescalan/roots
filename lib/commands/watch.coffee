@@ -1,4 +1,5 @@
 require 'colors'
+open = require 'open'
 path = require 'path'
 Roots = require '../'
 chokidar = require 'chokidar'
@@ -25,4 +26,5 @@ onStart = ->
   process.stdout.write 'compiling... '.grey
 
 onDone = ->
+  open 'http://localhost:1111/'
   process.stdout.write 'done!\n'.green
