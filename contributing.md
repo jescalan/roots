@@ -22,3 +22,9 @@ To keep a consistant coding style in the project, we're going with [Felix's Node
 It's ok if you start out with a bunch of experimentation and your commit log isn't totally clean, but before any pull requests are accepted, we like to have a nice clean commit log. That means [well-written and clear commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html) and commits that each do something significant, rather than being typo or bug fixes.
 
 If you submit a pull request that doesn't have a clean commit log, we will ask you to clean it up before we accept. This means being familiar with rebasing - if you are not, [this guide](https://help.github.com/articles/interactive-rebase) by github should help you to get started, and feel free to ask us anything, we are happy to help.
+
+### Getting Money
+
+We are kind and generous here at roots HQ, and would love to thank anyone who makes a contribution to roots. We therefore have pledged to send 1 - 5 [dogecoins](http://dogecoin.com/) per merged pull request to any contributors. Please note that the estimated value of a dogecoin is currently $100, so that means you'll theoretically be recieving between $100 and $500 per successful PR. There is no limit to how many pull requests you can claim a bounty on, so more contributions == more money. Documentation of you making it rain with your newfound riches is always appreciated.
+
+To claim the bounty, just leave your dogecoin wallet address in a comment on the closed PR.

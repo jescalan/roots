@@ -45,3 +45,4 @@ You can have multiple roots projects instantiated at once at a time without conf
 
 - Details on the license [can be found here](license.md)
 - Details on running tests and contributing [can be found here](contributing.md)
+- Details on how to get super rich from contributing to roots [can be found here](contributing.md#getting-money)
