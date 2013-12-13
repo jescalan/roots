@@ -18,6 +18,7 @@ exports.execute = (args)->
   w.on 'start', onStart
   w.on 'error', onError
   w.on 'done', onDone
+  w.once 'done', -> open "http://localhost:#{process.env.port || 1111}/"
 
   w
 
@@ -28,5 +29,4 @@ onStart = ->
   process.stdout.write 'compiling... '.grey
 
 onDone = ->
-  open "http://localhost:#{process.env.port || 1111}/"
   process.stdout.write 'done!\n'.green
