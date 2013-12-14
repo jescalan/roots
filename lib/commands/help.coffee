@@ -9,8 +9,8 @@ exports.execute = ->
     document_option(
       name: 'new'
       required: ['name']
-      optional: ['dir']
-      description: 'Creates a new roots project called [name] in [dir]. If [dir] is not provided, project is created in the current directory.'
+      optional: ['dir', '--template-name']
+      description: 'Creates a new roots project called [name] in [dir]. If [dir] is not provided, project is created in the current directory. The [--template-name] option lets you choose to initialize with an installed template.'
     ) +
 
     document_option(
