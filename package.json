@@ -23,7 +23,7 @@
     "update-notifier": "0.1.x",
     "chokidar": "0.8.x",
     "open": "0.0.4",
-    "connect": "~2.11.2"
+    "connect": "2.x.x"
   },
   "devDependencies": {
     "mocha": "*",
