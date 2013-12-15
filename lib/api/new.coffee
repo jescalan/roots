@@ -10,19 +10,24 @@ class New extends EventEmitter
   constructor: (@roots) ->
     @base_url = 'https://github.com/roots-dev/base.git'
 
-  exec: (name, p) ->
-    @path = p
+  exec: (opts) ->
+    @path = opts.path || throw new Error('missing path')
+    @template = opts.template || 'base'
+    @options = opts.options
+
     if sprout.list().length < 1
       nodefn.call(sprout.add, 'base', @base_url)
         .tap(=> @emit('template:base_added'))
-        .then(=> init.call(@, name))
+        .then(=> init.call(@))
     else
-      init.call(@, name)
+      init.call(@)
+
+    return @
 
   # @api private
 
-  init = (name) ->
-    nodefn.call(sprout.init, name, @path)
+  init = ->
+    nodefn.call(sprout.init, @template, @path, @options)
       .tap(=> @emit('template:created'))
       .then(=> if has_deps.call(@) then install_deps.call(@))
       .catch((err) => @emit('error', err))

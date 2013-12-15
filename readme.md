@@ -52,6 +52,7 @@ var Roots = require('roots'),
 var new_cmd = Roots.new({
   path: path.join(__dirname, 'example-project'),   // directory can not yet exist
   template: 'base',                                // optional - defaults to 'base'
+  options: { description: 'foobar' }               // optional - options to pass to template
   done: function(project) { console.log(project) } // optional - returns Roots instance
 });
 
@@ -60,6 +61,7 @@ new_cmd
   .on('template:created')    // created the project template
   .on('deps:installing')     // found a package.json, ran `npm install`
   .on('deps:finished')       // finished installing deps
+  .on('error')               // an error occurred, passes error
   .on('done')                // everything finished
 ```
 

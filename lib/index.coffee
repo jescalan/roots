@@ -8,9 +8,9 @@ class Roots extends EventEmitter
     if not fs.existsSync(@root) then throw new Error("path does not exist")
     @config = new Config(@)
 
-  @new: (name, p, cb) ->
+  @new: (opts) ->
     n = new (require('./api/new'))(@)
-    n.exec(name, p).on('done', (root) => if cb then cb(new @(root)))
+    n.exec(opts).on('done', (root) => if opts.done then opts.done(new @(root)))
     return n
 
   compile: ->

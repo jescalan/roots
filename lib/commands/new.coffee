@@ -9,11 +9,11 @@ exports.execute = (args) ->
   tpl_name = k for k of args when k != '_' && k != '$0'
   tpl_name ?= 'base'
 
-  Roots.new(tpl_name, proj_path)
+  Roots.new(path: proj_path, template: tpl_name)
     .on('template:created', ->
-      console.log "new project created at #{proj_path.replace(process.cwd(), '')}"
+      console.log "new project created at #{proj_path.replace(process.cwd(), '').slice(1)}".green
       console.log "(using #{name} template)".grey
     )
-    .on('deps:installing', -> process.stdout.write '\ninstalling dependencies...'.grey)
-    .on('deps:finished', -> process.stdout.write ' done!\n'.green)
+    .on('deps:installing', -> process.stdout.write '\ninstalling dependencies... '.grey)
+    .on('deps:finished', -> process.stdout.write 'done!\n'.green)
     .on('error', console.error.bind(console))

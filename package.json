@@ -30,7 +30,9 @@
     "mocha": "*",
     "should": "*",
     "gulp": "3.x.x",
-    "gulp-coffee": "1.x.x"
+    "gulp-coffee": "1.x.x",
+    "glob": "3.x.x",
+    "rimraf": "2.x.x"
   },
   "scripts": {
     "test": "mocha",
