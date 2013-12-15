@@ -3,9 +3,22 @@ path = require 'path'
 fs = require 'fs'
 test_path = path.join(__dirname, 'fixtures')
 run = require('child_process').exec
+W = require 'when'
+nodefn = require 'when/node/function'
 require('./helpers')(should)
 
 Roots = require '../lib'
+
+# make sure all tests with deps have them installed
+before (done) ->
+  tasks = []
+  for d in fs.readdirSync(path.join(__dirname, 'fixtures'))
+    p = path.join(__dirname, 'fixtures', d)
+    if not fs.existsSync(path.join(p, 'package.json')) then continue
+    if fs.existsSync(path.join(p, 'node_modules')) then continue
+    console.log "installing deps for #{d}"
+    tasks.push nodefn.call(run, "cd #{p}; npm install")
+  W.all(tasks, -> done())
 
 describe 'basic', ->
 
