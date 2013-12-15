@@ -7,7 +7,7 @@ require('./helpers')(should)
 
 Roots = require '../lib'
 
-class Watcher 
+class Watcher
   constructor: (@root) ->
     @output = path.join(@root, 'public')
 
@@ -16,7 +16,7 @@ class Watcher
     first_compile = => initalStamp = @stat_file(output)
 
     @compile_and_change_file src, first_compile, (err) =>
-      if err then cb(err)
+      if err then return cb(err)
       initalStamp.should.be[comp](@stat_file(output))
       cb()
 
@@ -51,5 +51,3 @@ describe 'watcher', ->
     @watcher.compile_and_change_file 'package.json', (->), (err) ->
       clearTimeout(timer)
       done(true)
-
-  after (done) -> run('rm -rf test/fixtures/**/public', done)

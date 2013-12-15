@@ -113,5 +113,5 @@ describe 'basic', ->
         should.exist(output, 'after.txt')
         run("rm -rf #{path.join(p, 'before.txt')}", done)
 
-  # remove all test output (this needs to work cross-platform)
-  after (done) -> run('rm -rf test/fixtures/**/public', done)
+# remove all test output (this needs to work cross-platform)
+after (done) -> run('rm -rf test/fixtures/**/public', done)
