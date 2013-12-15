@@ -18,6 +18,7 @@ class Roots extends EventEmitter
     @fs_parser = new FSParser(@)
 
   compile: (opts) ->
+    @emit('start')
     before_hook.call(@)
       .then(@fs_parser.parse.bind(@fs_parser))
       .then(create_folders.bind(@))
