@@ -33,7 +33,7 @@ class Roots extends EventEmitter
     return @
 
   # @api private
-  
+
   before_hook = (ast) ->
     if not @config.before then return W.resolve(ast)
     nodefn.call(@config.before.bind(@))

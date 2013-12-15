@@ -27,7 +27,7 @@ class ParseTask
     deferred = W.defer()
     files = []
 
-    readdirp(root: dir)
+    readdirp(root: dir, directoryFilter: ['!.git', '!node_modules'])
       .on('end', => deferred.resolve(W.all(files).then(format_dirs.bind(@))))
       .on('error', deferred.reject)
       .on 'data', (f) =>
@@ -45,7 +45,7 @@ class ParseTask
       ).yield(@ast)
 
   # @api private
-  
+
   format_dirs = ->
     @ast.dirs = _.uniq(@ast.dirs).map((d) => @roots.config.out(d))
     @ast
