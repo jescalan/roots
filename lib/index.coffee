@@ -1,9 +1,11 @@
 {EventEmitter} = require('events')
+fs = require 'fs'
 Config = require './config'
 
 class Roots extends EventEmitter
 
   constructor: (@root) ->
+    if not fs.existsSync(@root) then throw new Error("path does not exist")
     @config = new Config(@)
 
   @new: (name, p, cb) ->
