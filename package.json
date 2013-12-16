@@ -1,7 +1,8 @@
 {
   "name": "roots",
-  "version": "3.0.0",
+  "version": "3.0.0-rc.1",
   "author": "Jeff Escalante <hello@jenius.me>",
+  "contributors": ["Sam Saccone <sam@samx.it>"],
   "description": "simple, flexible, and powerful static site compiler",
   "main": "index.js",
   "license": "MIT",
@@ -9,10 +10,12 @@
     "type": "git",
     "url": "https://github.com/jenius/roots"
   },
-  "bin": {
-    "roots": "bin/roots"
+  "directories": {
+    "lib": "lib",
+    "bin": "bin",
+    "man": "man",
+    "doc": "doc"
   },
-  "man": "./man/roots.1",
   "preferGlobal": true,
   "dependencies": {
     "coffee-script": "1.x.x",
