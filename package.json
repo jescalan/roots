@@ -9,6 +9,9 @@
     "type": "git",
     "url": "https://github.com/jenius/roots"
   },
+  "bin": {
+    "roots": "bin/roots"
+  },
   "dependencies": {
     "coffee-script": "1.x.x",
     "colors": "0.6.x",
