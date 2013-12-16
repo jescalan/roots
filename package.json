@@ -2,7 +2,7 @@
   "name": "roots",
   "version": "3.0.0",
   "author": "Jeff Escalante <hello@jenius.me>",
-  "description": "roots rebooted",
+  "description": "simple, flexible, and powerful static site compiler",
   "main": "index.js",
   "license": "MIT",
   "repository": {
