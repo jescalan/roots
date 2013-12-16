@@ -1,8 +1,7 @@
 should = require 'should'
 path = require 'path'
 fs = require 'fs'
-test_path = path.join(__dirname, 'fixtures')
-run = require('child_process').exec
+test_path = path.join(__dirname, 'fixtures/compile')
 require('./helpers')(should)
 
 Roots = require '../lib'
@@ -32,12 +31,12 @@ class Watcher
       p = path.join(@root, file)
       fs.appendFileSync(p, ' ')
       fs.writeFileSync(p, fs.readFileSync(p, 'utf8').trim())
-    , 800 # paul miller, if you ever see this, wtf
+    , 1000
 
   stat_file: (file) ->
     fs.statSync(path.join(@output, file)).mtime.getTime()
 
-describe 'watcher', ->
+describe 'watch', ->
 
   before ->
     @watcher = new Watcher(path.join(test_path, 'basic'))

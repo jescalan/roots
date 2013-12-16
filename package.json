@@ -1,14 +1,22 @@
 {
   "name": "roots",
-  "version": "3.0.0",
+  "version": "3.0.0-rc.1",
   "author": "Jeff Escalante <hello@jenius.me>",
-  "description": "roots rebooted",
+  "contributors": ["Sam Saccone <sam@samx.it>"],
+  "description": "simple, flexible, and powerful static site compiler",
   "main": "index.js",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/jenius/roots"
   },
+  "directories": {
+    "lib": "lib",
+    "bin": "bin",
+    "man": "man",
+    "doc": "doc"
+  },
+  "preferGlobal": true,
   "dependencies": {
     "coffee-script": "1.x.x",
     "colors": "0.6.x",
@@ -23,17 +31,23 @@
     "update-notifier": "0.1.x",
     "chokidar": "0.8.x",
     "open": "0.0.4",
-    "connect": "2.x.x"
+    "connect": "2.x.x",
+    "sprout": "0.0.x"
   },
   "devDependencies": {
     "mocha": "*",
     "should": "*",
     "gulp": "3.x.x",
-    "gulp-coffee": "1.x.x"
+    "gulp-coffee": "1.x.x",
+    "glob": "3.x.x",
+    "rimraf": "2.x.x"
   },
   "scripts": {
     "test": "mocha",
     "prepublish": "mv lib/ src; gulp build",
     "postpublish": "rm -rf lib; mv src/ lib"
+  },
+  "engines": {
+    "node": ">=0.10.0"
   }
 }
