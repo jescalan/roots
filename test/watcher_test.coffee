@@ -31,7 +31,7 @@ class Watcher
       p = path.join(@root, file)
       fs.appendFileSync(p, ' ')
       fs.writeFileSync(p, fs.readFileSync(p, 'utf8').trim())
-    , 800 # paul miller, if you ever see this, wtf
+    , 1000
 
   stat_file: (file) ->
     fs.statSync(path.join(@output, file)).mtime.getTime()
