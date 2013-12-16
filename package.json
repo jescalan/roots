@@ -12,6 +12,8 @@
   "bin": {
     "roots": "bin/roots"
   },
+  "man": "./man/roots.1",
+  "preferGlobal": true,
   "dependencies": {
     "coffee-script": "1.x.x",
     "colors": "0.6.x",
@@ -41,5 +43,8 @@
     "test": "mocha",
     "prepublish": "mv lib/ src; gulp build",
     "postpublish": "rm -rf lib; mv src/ lib"
+  },
+  "engines": {
+    "node": ">=0.10.0"
   }
 }
