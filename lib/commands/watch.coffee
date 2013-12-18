@@ -1,7 +1,7 @@
 require 'colors'
-open = require 'open'
-path = require 'path'
-Roots = require '../'
+open   = require 'open'
+path   = require 'path'
+Roots  = require '../'
 Server = require '../local_server'
 
 exports.execute = (args)->

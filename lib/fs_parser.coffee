@@ -1,9 +1,9 @@
-fs = require 'fs'
-path = require 'path'
-W = require 'when'
-readdirp = require 'readdirp'
-_ = require 'lodash'
-minimatch = require 'minimatch'
+fs          = require 'fs'
+path        = require 'path'
+W           = require 'when'
+readdirp    = require 'readdirp'
+_           = require 'lodash'
+minimatch   = require 'minimatch'
 yaml_parser = require './yaml_parser'
 
 class FSParser

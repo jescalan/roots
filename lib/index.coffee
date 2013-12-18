@@ -1,6 +1,6 @@
 {EventEmitter} = require('events')
-fs = require 'fs'
-Config = require './config'
+fs             = require 'fs'
+Config         = require './config'
 
 class Roots extends EventEmitter
 
@@ -12,6 +12,8 @@ class Roots extends EventEmitter
     n = new (require('./api/new'))(@)
     n.exec(opts).on('done', (root) => if opts.done then opts.done(new @(root)))
     return n
+
+  @template: require('./api/template')
 
   compile: ->
     (new (require('./api/compile'))(@)).exec()

@@ -1,7 +1,7 @@
-fs = require 'fs'
-path = require 'path'
-_ = require 'lodash'
-W = require 'when'
+fs     = require 'fs'
+path   = require 'path'
+_      = require 'lodash'
+W      = require 'when'
 nodefn = require 'when/node/function'
 
 class Compiler

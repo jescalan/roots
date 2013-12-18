@@ -1,7 +1,7 @@
-fs = require 'fs'
-path = require 'path'
+fs      = require 'fs'
+path    = require 'path'
 js_yaml = require 'js-yaml'
-W = require 'when'
+W       = require 'when'
 
 class YAMLParser
 

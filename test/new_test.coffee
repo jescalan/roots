@@ -13,17 +13,17 @@ describe 'new', ->
   it 'should throw if not given a path', ->
     (-> Roots.new()).should.throw
 
-  it 'should create a project with the base template, emit all events, and return a roots instance from the callback', (done) ->
+  it 'should create a project with the base tpl, emit all events, and return a roots instance from the callback', (done) ->
     p = path.join(test_path, 'testing')
 
     events = 0
     increment = -> ++events
 
     finish = (err) ->
+      if err then return done(err)
       events.should.be.above(2)
       rimraf.sync(p)
-      # roots.template.remove('sprout', -> done(err))
-      done(err)
+      Roots.template.remove('base').done((-> done()), done)
 
     Roots.new(
       path: p

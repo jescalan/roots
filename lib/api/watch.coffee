@@ -1,4 +1,4 @@
-chokidar = require 'chokidar'
+chokidar  = require 'chokidar'
 minimatch = require 'minimatch'
 
 class Watcher
