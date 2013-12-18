@@ -4,6 +4,7 @@ fs             = require 'fs'
 exec           = require('child_process').exec
 nodefn         = require 'when/node/function'
 sprout         = require 'sprout'
+global_config  = require '../global_config'
 
 class New extends EventEmitter
 
@@ -12,7 +13,7 @@ class New extends EventEmitter
 
   exec: (opts) ->
     @path = opts.path || throw new Error('missing path')
-    @template = opts.template || 'base'
+    @template = opts.template || global_config().get('default_template')
     @options = opts.options
 
     if sprout.list().length < 1
