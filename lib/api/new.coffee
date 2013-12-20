@@ -32,8 +32,7 @@ class New extends EventEmitter
     sprout.init(template: @template, path: @path, options: @options)
       .tap(=> @emit('template:created'))
       .then(=> if has_deps.call(@) then install_deps.call(@))
-      .catch((err) => @emit('error', err))
-      .tap(=> @emit('done', @path))
+      .done((=> @emit('done', @path)), ((err) => @emit('error', err)))
 
   has_deps = ->
     fs.existsSync(path.join(@path, 'package.json'))
