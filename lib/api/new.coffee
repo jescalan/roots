@@ -17,6 +17,7 @@ class New extends EventEmitter
     @options = opts.options
 
     if sprout.list().length < 1
+      # TODO: make this 'roots-base'
       sprout.add(name: 'base', url: @base_url)
         .catch((err) => @emit('error', err))
         .tap(=> @emit('template:base_added'))

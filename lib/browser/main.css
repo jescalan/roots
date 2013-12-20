@@ -1,0 +1,139 @@
+#roots-load-container {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: #1e1e1e;
+  border-radius: 7px;
+  padding: 2px;
+  opacity: .8;
+  z-index: 999;
+}
+
+#roots-compile-loader {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  -webkit-transform: scale(0.6);
+  transform: scale(0.6);
+}
+
+#roots-compile-loader > div {
+  position: absolute;
+  background-color: #1e1e1e;
+  height: 5px;
+  width: 5px;
+  border-radius: 3px;
+  -webkit-animation: 0.88s roots_loader_fade infinite linear;
+  animation: 0.88s roots_loader_fade infinite linear;
+}
+
+#roots-compile-loader > #l1 {
+  left: 0;
+  top: 12px;
+  -webkit-animation-delay: 0.33s;
+  animation-delay: 0.33s;
+}
+
+#roots-compile-loader > #l2 {
+  left: 4px;
+  top: 4px;
+  -webkit-animation-delay: 0.44s;
+  animation-delay: 0.44s;
+}
+
+#roots-compile-loader > #l3 {
+  left: 12px;
+  top: 0;
+  -webkit-animation-delay: 0.55s;
+  animation-delay: 0.55s;
+}
+
+#roots-compile-loader > #l4 {
+  right: 4px;
+  top: 4px;
+  -webkit-animation-delay: 0.66s;
+  animation-delay: 0.66s;
+}
+
+#roots-compile-loader > #l5 {
+  right: 0;
+  top: 12px;
+  -webkit-animation-delay: 0.77s;
+  animation-delay: 0.77s;
+}
+
+#roots-compile-loader > #l6 {
+  right: 4px;
+  bottom: 4px;
+  -webkit-animation-delay: 0.88s;
+  animation-delay: 0.88s;
+}
+
+#roots-compile-loader > #l7 {
+  left: 12px;
+  bottom: 0;
+  -webkit-animation-delay: 0.99s;
+  animation-delay: 0.99s;
+}
+
+#roots-compile-loader > #l8 {
+  left: 4px;
+  bottom: 4px;
+  -webkit-animation-delay: 1.1s;
+  animation-delay: 1.1s;
+}
+
+@-webkit-keyframes roots_loader_fade {
+  0% {
+    background-color: #FFFFFF;
+  }
+
+  100% {
+    background-color: #1e1e1e;
+  }
+}
+
+@keyframes roots_loader_fade {
+  0% {
+    background-color: #FFFFFF;
+  }
+
+  100% {
+    background-color: #1e1e1e;
+  }
+}
+
+#roots-error {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  box-pack: center;
+  justify-content: center;
+  flex-pack: center;
+  z-index: 999;
+}
+
+#roots-error pre {
+  color: white;
+  background: #F27258;
+  border-radius: 5px;
+  font-size: 13px;
+  padding: 19px;
+  border: 5px solid #C93D05;
+}
+
+#roots-error span {
+  display: block;
+  text-align: center;
+  font-size: 1.7em;
+  margin-bottom: 19px;
+  font-weight: bold;
+}

@@ -1,54 +1,64 @@
-nodefn  = require 'when/node/function'
-http    = require 'http'
-connect = require 'connect'
+path      = require 'path'
+nodefn    = require 'when/node/function'
+http      = require 'http'
+connect   = require 'connect'
+injector  = require 'injector_js'
+util      = require 'util'
+WebSocket = require 'faye-websocket'
 
 module.exports = class
-  constructor: (@root) ->
+  constructor: (@roots, @dir) ->
+
+  sockets: []
 
   start: (port) ->
-    app     = connect()
-    app.use(@reloadInjector).use(connect.static(@root + "/public"))
+    app = connect()
+
+    if @roots.config.env == 'development' then inject_development_js.call(@, app)
+    app.use(connect.static(@roots.config.output_path()))
+
     @server = http.createServer(app)
+    if @roots.config.env == 'development' then initialize_websockets.call(@)
+
     nodefn.call(@server.listen.bind(@server), port).yield(@server)
 
   close: ->
     @server.close()
     delete @server
 
-  reloadInjector: (req, res, next) =>
-    w         = res.write
-    e         = res.end
-    injected  = false
+  send_msg: (k, v) ->
+    sock.send(JSON.stringify(type: k, data: v)) for sock in @sockets
 
-    res.write = (buffer, encoding) =>
-      res.write = w
-      if buffer?
-        string = buffer.toString(encoding)
-        if ~string.indexOf('<body>')
-          @injectLocalScript(string, encoding, res)
-          return injected = true
+  reload: -> @send_msg('reload')
+  compiling: -> @send_msg('compiling')
+  show_error: (err) -> @send_msg('error', err)
 
-        return res.write(buffer, encoding)
-      true
+  # @api private
 
-    res.end = (string, encoding) ->
-      res.end = e
-      res.setHeader('content-length', Buffer.byteLength(res.data, encoding)) if injected
-      res.end res.data, encoding
+  inject_development_js = (app) ->
+    app.use(injector content:
+      "<!-- roots development configuration -->
+      <script>var __livereload = #{@roots.config.live_reload};</script>
+      <script src='__roots__/main.js'></script>"
+    )
+    app.use('/__roots__', connect.static(path.resolve(__dirname, 'browser')))
 
-    next()
-
-  injectLocalScript: (string, encoding, res) ->
-    res.data = (res.data || '') + string.replace(/<\/body>/, (w) -> "<script>console.log('hello from the server');</script> #{w}")
+  initialize_websockets = ->
+    @server.on 'upgrade', (req, socket, body) =>
+      if WebSocket.isWebSocket(req)
+        ws = new WebSocket(req, socket, body)
+        ws.on('open', => @sockets.push(ws))
 
 ###
 
 What is this all about?
 --------------------
+
 * Creates a simple static web server that serves up the public compiled dir
 * The constructor allows you to pass any root directoy
 * Exposes two public API methods
   * start - returns a promise
   * stop - sync
+* 'Start' injects some javascript at the bottom of the page for livereload if in development
 
 ###

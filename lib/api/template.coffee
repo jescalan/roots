@@ -4,7 +4,7 @@ W             = require 'when'
 global_config = require '../global_config'
 fs            = require 'fs'
 
-exports.add = sprout.add
+exports.add = sprout.add # TODO: prepend all templates with "roots-"
 exports.remove = sprout.remove
 exports.list = sprout.list
 
@@ -43,4 +43,4 @@ remove_roots_config = (deferred) ->
     .then(-> fs.unlinkSync(global_config().path))
     .yield('config and templates reset')
     .done(deferred.resolve, deferred.reject)
-  
+

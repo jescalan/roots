@@ -35,7 +35,9 @@
     "open": "0.0.4",
     "connect": "2.x.x",
     "sprout": "0.0.x",
-    "configstore": "0.1.x"
+    "configstore": "0.1.x",
+    "injector_js": "0.1.x",
+    "faye-websocket": "0.7.x"
   },
   "devDependencies": {
     "mocha": "*",
