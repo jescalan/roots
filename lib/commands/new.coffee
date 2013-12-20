@@ -1,5 +1,5 @@
 require 'colors'
-path = require 'path'
+path  = require 'path'
 Roots = require '../'
 
 exports.execute = (args) ->

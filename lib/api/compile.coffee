@@ -1,7 +1,7 @@
-W = require 'when'
+W      = require 'when'
 nodefn = require 'when/node/function'
-guard = require 'when/guard'
-keys = require 'when/keys'
+guard  = require 'when/guard'
+keys   = require 'when/keys'
 mkdirp = require 'mkdirp'
 
 FSParser = require '../fs_parser'

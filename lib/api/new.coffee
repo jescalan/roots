@@ -1,9 +1,10 @@
-path = require 'path'
-fs = require 'fs'
+path           = require 'path'
+fs             = require 'fs'
 {EventEmitter} = require('events')
-exec = require('child_process').exec
-nodefn = require 'when/node/function'
-sprout = require 'sprout'
+exec           = require('child_process').exec
+nodefn         = require 'when/node/function'
+sprout         = require 'sprout'
+global_config  = require '../global_config'
 
 class New extends EventEmitter
 
@@ -12,11 +13,12 @@ class New extends EventEmitter
 
   exec: (opts) ->
     @path = opts.path || throw new Error('missing path')
-    @template = opts.template || 'base'
+    @template = opts.template || global_config().get('default_template')
     @options = opts.options
 
     if sprout.list().length < 1
-      nodefn.call(sprout.add, 'base', @base_url)
+      sprout.add(name: 'base', url: @base_url)
+        .catch((err) => @emit('error', err))
         .tap(=> @emit('template:base_added'))
         .then(=> init.call(@))
     else
@@ -27,11 +29,10 @@ class New extends EventEmitter
   # @api private
 
   init = ->
-    nodefn.call(sprout.init, @template, @path, @options)
+    sprout.init(template: @template, path: @path, options: @options)
       .tap(=> @emit('template:created'))
       .then(=> if has_deps.call(@) then install_deps.call(@))
-      .catch((err) => @emit('error', err))
-      .tap(=> @emit('done', @path))
+      .done((=> @emit('done', @path)), ((err) => @emit('error', err)))
 
   has_deps = ->
     fs.existsSync(path.join(@path, 'package.json'))

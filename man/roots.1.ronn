@@ -4,7 +4,7 @@ roots(1) -- a toolkit for quickly building beautiful websites
 ## SYNOPSIS
 
 `roots new <name>` --<template>   
-`roots template <command>`    
+`roots tpl <command>`    
 `roots compile`  --no-compress    
 `roots watch`    
 `roots deploy` <name> --<service>  
@@ -31,9 +31,9 @@ Roots exposes a variety of commands for creating, managing, compiling, and deplo
     - basic (html, css, javascript, no layouts)    
     - blog (blog example optimized for dynamic content)    
 
-## TEMPLATE
+## TPL
 
-  `template`, `<command>`    
+  `tpl`, `<command>`    
   manage roots project templates.
 
   commands:    

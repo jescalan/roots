@@ -2,7 +2,9 @@
   "name": "roots",
   "version": "3.0.0-rc.1",
   "author": "Jeff Escalante <hello@jenius.me>",
-  "contributors": ["Sam Saccone <sam@samx.it>"],
+  "contributors": [
+    "Sam Saccone <sam@samx.it>"
+  ],
   "description": "simple, flexible, and powerful static site compiler",
   "main": "index.js",
   "license": "MIT",
@@ -32,7 +34,8 @@
     "chokidar": "0.8.x",
     "open": "0.0.4",
     "connect": "2.x.x",
-    "sprout": "0.0.x"
+    "sprout": "0.0.x",
+    "configstore": "0.1.x"
   },
   "devDependencies": {
     "mocha": "*",

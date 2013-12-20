@@ -1,8 +1,8 @@
-path = require 'path'
-fs = require 'fs'
+path   = require 'path'
+fs     = require 'fs'
 accord = require 'accord'
 coffee = require 'coffee-script'
-_ = require 'lodash'
+_      = require 'lodash'
 
 class Config
   constructor: (@roots) ->
