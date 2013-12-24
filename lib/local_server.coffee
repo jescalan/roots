@@ -2,7 +2,7 @@ path      = require 'path'
 nodefn    = require 'when/node/function'
 http      = require 'http'
 connect   = require 'connect'
-injector  = require 'injector_js'
+injector  = require 'infector'
 util      = require 'util'
 WebSocket = require 'faye-websocket'
 
