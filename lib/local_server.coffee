@@ -2,7 +2,7 @@ path      = require 'path'
 nodefn    = require 'when/node/function'
 http      = require 'http'
 connect   = require 'connect'
-injector  = require 'infector'
+infestor  = require 'infestor'
 util      = require 'util'
 WebSocket = require 'faye-websocket'
 
@@ -36,7 +36,7 @@ module.exports = class
   # @api private
 
   inject_development_js = (app) ->
-    app.use(injector content:
+    app.use(infestor content:
       "<!-- roots development configuration -->
       <script>var __livereload = #{@roots.config.live_reload};</script>
       <script src='__roots__/main.js'></script>"

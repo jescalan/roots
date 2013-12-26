@@ -36,21 +36,17 @@
     "connect": "2.x.x",
     "sprout": "0.0.x",
     "configstore": "0.1.x",
-    "infector": "0.2.x",
+    "infestor": "0.1.x",
     "faye-websocket": "0.7.x"
   },
   "devDependencies": {
     "mocha": "*",
     "should": "*",
-    "gulp": "3.x.x",
-    "gulp-coffee": "1.x.x",
     "glob": "3.x.x",
     "rimraf": "2.x.x"
   },
   "scripts": {
-    "test": "mocha",
-    "prepublish": "mv lib/ src; gulp build",
-    "postpublish": "rm -rf lib; mv src/ lib"
+    "test": "mocha"
   },
   "engines": {
     "node": ">=0.10.0"
