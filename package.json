@@ -25,7 +25,7 @@
     "readdirp": "0.3.x",
     "minimatch": "0.2.x",
     "lodash": "2.x.x",
-    "js-yaml": "2.x.x",
+    "js-yaml": "3.x.x",
     "when": "2.x.x",
     "accord": "0.0.x",
     "mkdirp": "0.3.x",
