@@ -28,8 +28,9 @@ exports.execute = (args)->
   w
 
 on_error = (server, err) ->
-  process.stdout.write JSON.stringify(err).red
-  server.show_error(err)
+  console.error "\n\nERROR\n-----\n".red
+  console.error err.stack
+  server.show_error(err.stack)
 
 on_start = (server) ->
   process.stdout.write 'compiling... '.grey
