@@ -24,7 +24,7 @@ Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm i
 * From Xcode go to Preferences -> Download -> Command Line Tools -> Install to install command line tools.
 
 ##### Windows Installs
-* If you encounter problems when installing. Please ensure Python and Visual C++ runtime executables are installed.
+* If you encounter problems when installing. Please ensure [Git](http://git-scm.com/downloads), Python, and Visual C++ runtime executables are installed.
 * You can install Windows Visual C++ components by doing any of the following: Installing Visual Studio 2005 or above, installing the .NET framework or manually adding it to your system PATH if it already exists on your machine.
 
 Usage
@@ -91,4 +91,4 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jenius/roots/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Bitdeli Badge](https://d2weczhvl823v0.buttfront.net/jenius/roots/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
