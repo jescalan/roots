@@ -41,6 +41,12 @@
   ol.man-decor li.tc {text-align:center;letter-spacing:4px}
   ol.man-decor li.tr {text-align:right;float:right}
   </style>
+  <style type='text/css' media='all'>
+  /* style: toc */
+  .man-navigation {display:block !important;position:fixed;top:0;left:113ex;height:100%;width:100%;padding:48px 0 0 0;border-left:1px solid #dbdbdb;background:#eee}
+  .man-navigation a,.man-navigation a:hover,.man-navigation a:link,.man-navigation a:visited {display:block;margin:0;padding:5px 2px 5px 30px;color:#999;text-decoration:none}
+  .man-navigation a:hover {color:#111;text-decoration:underline}
+  </style>
 </head>
 <!--
   The following styles are deprecated and will be removed at some point:
@@ -66,6 +72,7 @@
     <a href="#PKG">PKG</a>
     <a href="#PLUGIN">PLUGIN</a>
     <a href="#DOCUMENTATION">DOCUMENTATION</a>
+    <a href="#BUGS">BUGS</a>
   </div>
 
   <ol class='man-decor man-head man head'>
@@ -81,111 +88,163 @@
 
 <h2 id="SYNOPSIS">SYNOPSIS</h2>
 
-<p><code>roots new &lt;name></code> --<var>template</var> <br />
-<code>roots template &lt;command></code>  <br />
-<code>roots compile</code>  --no-compress  <br />
-<code>roots watch</code>  <br />
-<code>roots deploy</code> <var>name</var> --<var>service</var><br />
-<code>roots clean</code>  <br />
-<code>roots version</code>  <br />
-<code>roots pkg</code> <var>command</var>  <br />
+<p><code>roots new &lt;name></code> [ --<var>template</var> ]<br />
+<code>roots template</code> <var>command</var><br />
+<code>roots compile</code> [ <code>--no-compress</code> ]<br />
+<code>roots watch</code> [ --no-open ]<br />
+<code>roots deploy</code> [ <var>name</var> ] [ --<var>service</var> ]<br />
+<code>roots clean</code><br />
+<code>roots</code> <code>version</code>|<code>-v</code><br />
+<code>roots pkg</code> [ <var>command</var> ]<br />
 <code>roots plugin</code> <var>command</var></p>
 
 <h2 id="DESCRIPTION">DESCRIPTION</h2>
 
-<p>Roots exposes a variety of commands for creating, managing, compiling, and deploying websites. Commands are listed and documented below.</p>
+<p>Roots exposes a variety of commands for creating, managing, compiling, and
+deploying websites. Commands are listed and documented below.</p>
 
-<p><a href="https://github.com/jenius/roots">github repo</a></p>
+<p><a href="https://github.com/jenius/roots">GitHub repo</a></p>
 
 <h2 id="NEW">NEW</h2>
 
-<p>  <code>new</code>, <code>&lt;name></code>, --<var>template</var>  <br />
-  create a new roots project called <var>name</var>.</p>
+<p><code>roots new &lt;name></code> [ --<var>template</var> ]</p>
 
-<p>  templates:</p>
+<p>Create a new roots project called <var>name</var>.</p>
 
-<pre><code>- default (jade, stylus, coffeescript) - default    
-- ejs (ejs, stylus, coffeescript)    
-- min (default stack, no comments and uses jade layouts)    
-- basic (html, css, javascript, no layouts)    
-- blog (blog example optimized for dynamic content)    
-</code></pre>
+<p>templates:</p>
+
+<dl>
+<dt class="flush"><code>default</code></dt><dd>jade, stylus, and coffeescript (default stack)</dd>
+<dt class="flush"><code>ejs</code></dt><dd>ejs, stylus, and coffeescript</dd>
+<dt class="flush"><code>min</code></dt><dd>default stack but with no comments and it uses jade layouts</dd>
+<dt class="flush"><code>basic</code></dt><dd>html, css, javascript, no layouts</dd>
+<dt class="flush"><code>blog</code></dt><dd>blog example optimized for dynamic content</dd>
+</dl>
+
 
 <h2 id="TEMPLATE">TEMPLATE</h2>
 
-<p>  <code>template</code>, <code>&lt;command></code>  <br />
-  manage roots project templates.</p>
+<p><code>roots template</code> <var>command</var></p>
 
-<p>  commands:</p>
+<p>Manage roots project templates.</p>
 
-<pre><code>- add, &lt;name> &lt;git-url> (git clone will download the template)    
-- remove, &lt;name> (be careful with this)    
-- default, &lt;name> (sets a template to be the default for roots new)    
-</code></pre>
+<p>commands:</p>
+
+<dl>
+<dt><code>add</code> <var>name</var> <var>git-url</var></dt><dd>Git clone will download the template.</dd>
+<dt><code>remove</code> <var>name</var></dt><dd>Be careful with this.</dd>
+<dt><code>default</code> <var>name</var></dt><dd>Sets a template to be the default for roots new.</dd>
+</dl>
+
 
 <h2 id="COMPILE">COMPILE</h2>
 
-<p>  <code>compile</code>, --<var>no-compress</var>  <br />
-  compile, compress, and minify the project to <code>public</code>, adding the option <var>no-compress</var> will bypass the compression.</p>
+<p><code>roots compile</code> [ <code>--no-compress</code> ]</p>
+
+<p>Compile, compress, and minify the project to <code>public</code>.</p>
+
+<dl>
+<dt><code>--no-compress</code></dt><dd>Bypass the compression step.</dd>
+</dl>
+
 
 <h2 id="WATCH">WATCH</h2>
 
-<p>  <code>watch</code>  <br />
-  watch your project and compile/reload whenever a file is saved. does not work for roots-express or roots-rails.</p>
+<p><code>roots watch</code> [ --no-open ]</p>
+
+<p>Watch your project and compile/reload whenever a file is saved. Does
+not work for roots-express or roots-rails.</p>
+
+<dl>
+<dt><code>--no-open</code></dt><dd>Don't open a new browser window.</dd>
+</dl>
+
 
 <h2 id="DEPLOY">DEPLOY</h2>
 
-<p>  <code>deploy</code>, <var>name</var>, --<var>service</var>  <br />
-  configure, compile, commit, and deploy your project. <var>name</var> optional for heroku.</p>
+<p><code>roots deploy</code> [ <var>name</var> ] [ --<var>service</var> ]</p>
 
-<pre><code>services:    
-  - heroku - default    
-  - nodejitsu    
-  - gh-pages   
-</code></pre>
+<p>Configure, compile, commit, and deploy your project. <var>name</var> optional for
+heroku.</p>
+
+<p>services:</p>
+
+<dl>
+<dt class="flush"><code>heroku</code></dt><dd>The default service.</dd>
+<dt><code>nodejitsu</code></dt><dd>see: <a href="https://www.nodejitsu.com/">nodejitsu.com</a></dd>
+<dt><code>gh-pages</code></dt><dd>Deploy to a git branch labeled "gh-pages". GitHub will automatically host the compiled project at <code>http://&lt;username>.github.io/&lt;repo name>/</code>. Be careful because the root of your project will not be at the root of the URL, unlike when you are viewing your project with <code>roots watch</code>.</dd>
+</dl>
+
 
 <h2 id="CLEAN">CLEAN</h2>
 
-<p>  <code>clean</code>
-  remove the compiled files.</p>
+<p><code>roots clean</code></p>
+
+<p>Remove the compiled files.</p>
 
 <h2 id="VERSION">VERSION</h2>
 
-<p>  <code>version</code>  <br />
-  print the version of the current roots install.</p>
+<p><code>roots</code> <code>version</code>|<code>-v</code></p>
+
+<p>Print the version of the current roots install.</p>
 
 <h2 id="PKG">PKG</h2>
 
-<p>  <code>pkg</code>, <code>&lt;command></code>  <br />
-  exposes a package manager's interface. type <code>roots pkg</code> to display the package manager's options. any command given after <code>pkg</code> is delegated to the package manager.</p>
+<p><code>roots pkg</code> [ <var>command</var> ]</p>
 
-<p>  package managers:</p>
+<p>Exposes a package manager's interface. Type <code>roots pkg</code> to display the package
+manager's options. any command given after <code>pkg</code> is delegated to the package
+manager.</p>
 
-<pre><code>- bower (http://bower.io) - default    
-- cdnjs (https://github.com/jenius/cli-js)    
-</code></pre>
+<p>package managers:</p>
 
-<p>  you can change your package manager via the <code>~/.rootsrc</code> file.</p>
+<dl>
+<dt class="flush"><code>bower</code></dt><dd>http://bower.io (default)</dd>
+<dt class="flush"><code>cdnjs</code></dt><dd>https://github.com/jenius/cli-js</dd>
+</dl>
+
+
+<p>bower commands:</p>
+
+<dl>
+<dt class="flush"><code>list</code></dt><dd>List the components you have installed in the current project.</dd>
+<dt><code>search</code> <var>query</var></dt><dd>Search for components.</dd>
+<dt><code>install</code> <var>name</var></dt><dd>Install a component.</dd>
+<dt><code>uninstall</code> <var>name</var></dt><dd>Uninstall a component.</dd>
+<dt><code>update</code> <var>name</var></dt><dd>Update a component to the latest version.</dd>
+<dt><code>info</code> <var>name</var></dt><dd>Get more info about a component.</dd>
+</dl>
+
+
+<p>You can change your package manager via the <code>~/.rootsrc</code> file.</p>
 
 <h2 id="PLUGIN">PLUGIN</h2>
 
-<p>  <code>plugin</code>, <code>&lt;command></code>  <br />
-  manages plugins (user-generated roots compilers).</p>
+<p><code>roots plugin</code> <var>command</var></p>
 
-<p>  commands:</p>
+<p>Manages plugins like 3rd party roots compilers.</p>
 
-<pre><code>- generate --js (optional, generates a javascript template rather than coffeescript)    
-- install &lt;username>/&lt;repo> (must provide a username/repo on github)
-</code></pre>
+<p>commands:</p>
+
+<dl>
+<dt><code>generate</code> --js</dt><dd>optional, generates a javascript template rather than coffeescript</dd>
+<dt><code>install</code> <var>username</var>/<var>repo</var></dt><dd>Must provide a username/repo on GitHub.</dd>
+</dl>
+
 
 <h2 id="DOCUMENTATION">DOCUMENTATION</h2>
 
 <p>Full docs can be found at http://roots.cx</p>
 
+<h2 id="BUGS">BUGS</h2>
+
+<p>Please report bugs at the GitHub repo <a href="https://github.com/jenius/roots/issues">issue
+tracker</a>.</p>
+
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'></li>
-    <li class='tc'>August 2013</li>
+    <li class='tc'>November 2013</li>
     <li class='tr'>roots(1)</li>
   </ol>
 
