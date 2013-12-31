@@ -1,7 +1,7 @@
 fs = require 'fs'
 path = require 'path'
 
-module.exports = 
+module.exports =
 
   before: (cb) ->
     fs.open(path.join(@root, 'before.txt'), 'w', cb)

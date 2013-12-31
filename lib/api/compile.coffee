@@ -25,13 +25,23 @@ class Compile
 
   # @api private
 
+  _hook_method = (hook) ->
+    if not hook then return W.resolve()
+
+    if Array.isArray(hook)
+      hooks = hook.map((h) => nodefn.call(h.bind(@roots)))
+    else if typeof hook == 'function'
+      hooks = [nodefn.call(hook.bind(@roots))]
+    else
+      W.reject('before hook should be a function or array')
+
+    W.all(hooks)
+
   before_hook = ->
-    if not @roots.config.before then return W.resolve()
-    nodefn.call(@roots.config.before.bind(@roots))
+    _hook_method.call(@, @roots.config.before)
 
   after_hook = (ast) ->
-    if not @roots.config.after then return
-    nodefn.call(@roots.config.after.bind(@roots))
+    _hook_method.call(@, @roots.config.after)
 
   create_folders = (ast) ->
     mkdirp.sync(@roots.config.output_path())

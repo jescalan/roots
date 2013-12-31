@@ -8,6 +8,14 @@ roots is a fast, simple, and customizable static site compiler
 
 > **Note:** This project is in early development, and versioning is a little different. [Read this](http://markup.im/#q4_cRZ1Q) for more details.
 
+### Dev To Do List
+
+- multipass compiles
+- dynamic content
+- precompiled templates
+- custom compilers
+- another round of speed profiling
+
 ### Why should you care?
 
 If you make a lot of websites, or perhaps even make websites as a profession, there's no doubt that you will want to be very efficient at making websites, and on top of that you'll probably want to have the websites you make be very fast, cheap to host, and simple to build and optimize. If this is the case for you, my friend, you have come to the right place - roots is what you are looking for.
