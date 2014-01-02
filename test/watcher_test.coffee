@@ -6,6 +6,8 @@ require('./helpers')(should)
 
 Roots = require '../lib'
 
+# todo: tests for live reload
+
 class Watcher
   constructor: (@root) ->
     @output = path.join(@root, 'public')
