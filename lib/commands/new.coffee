@@ -12,7 +12,7 @@ exports.execute = (args) ->
   Roots.new(path: proj_path, template: tpl_name)
     .on('template:created', ->
       console.log "new project created at #{proj_path.replace(process.cwd(), '').slice(1)}".green
-      console.log "(using #{name} template)".grey
+      console.log "(using #{tpl_name} template)".grey
     )
     .on('deps:installing', -> process.stdout.write '\ninstalling dependencies... '.grey)
     .on('deps:finished', -> process.stdout.write 'done!\n'.green)
