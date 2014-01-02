@@ -17,6 +17,17 @@ remove = (test_path) ->
 run_in_dir = (dir, cmd, cb) ->
   run("cd \"#{dir}\"; #{path.join(path.relative(dir, __dirname), '../bin/roots')} #{cmd}", cb)
 
+describe 'precompiled template errors', ->
+  before (done) ->
+    @root = path.join(root, 'precompile_error')
+    @output = path.join(@root, 'public')
+    done()
+
+  it 'notifies you if theres an error', (done) ->
+    run_in_dir @root, 'compile --no-compress', (err, out, stderr) ->
+      stderr.should.match /ERROR/
+      done()
+
 describe 'precompiled templates', ->
 
   before (done) ->
