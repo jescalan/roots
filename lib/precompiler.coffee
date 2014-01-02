@@ -7,11 +7,14 @@ minimatch = require 'minimatch'
 readdirp = require 'readdirp'
 roots = require './index'
 compressor = require './utils/compressor'
+W = require('when')
 
 # compile jade templates into JS functions for use on the client-side, and
 # save it to a specified file
 
 module.exports = ->
+  deferred = W.defer()
+
   roots.print.debug 'precompiling templates', 'yellow'
   return false if not roots.project.templates?
   template_dir = path.join(roots.project.rootDir, roots.project.templates)
@@ -28,13 +31,18 @@ module.exports = ->
       templates: _.map(res.files, (f) -> f.fullPath)
     )
 
-    buf = precompiler.compile()
-    buf = compressor buf, 'js'
+    try
+      buf = precompiler.compile()
+      buf = compressor buf, 'js'
+    catch e
+      deferred.reject(e)
 
     output_path = roots.project.path 'precompiledTemplateOutput'
     mkdirp.sync path.dirname(output_path)
     fs.writeFileSync output_path, buf
+    deferred.resolve()
 
+  deferred.promise
 
 class Precompiler
 
