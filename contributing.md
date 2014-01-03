@@ -15,7 +15,9 @@ Our own tests are not yet complete either, and we have had a tough time figuring
 
 ### Code Style
 
-To keep a consistant coding style in the project, we're going with [Felix's Node.js Style Guide](http://nodeguide.com/style.html) for JS and [Polar Mobile's guide](https://github.com/polarmobile/coffeescript-style-guide) for CoffeeScript, but it should be noted that much of this project uses under_scores rather than camelCase for naming. Both of these are pretty standard guides. For documenting in the code, we're using [JSDoc](http://usejsdoc.org/).
+To keep a consistant coding style in the project, we're going with [Felix's Node.js Style Guide](https://github.com/felixge/node-style-guide) for JS and [Polar Mobile's guide](https://github.com/polarmobile/coffeescript-style-guide) for CoffeeScript, but it should be noted that much of this project uses under_scores rather than camelCase for naming. Both of these are pretty standard guides. For documenting in the code, we're using [JSDoc](http://usejsdoc.org/).
+
+Our `.editorconfig` file will help inforce some of these standards. You can download a plugin for your editor of choice [here](http://editorconfig.org/#download).
 
 ### Commit Cleanliness
 
