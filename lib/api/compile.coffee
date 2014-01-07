@@ -33,7 +33,7 @@ class Compile
     else if typeof hook == 'function'
       hooks = [nodefn.call(hook.bind(@roots))]
     else
-      W.reject('before hook should be a function or array')
+      return W.reject('before hook should be a function or array')
 
     W.all(hooks)
 
