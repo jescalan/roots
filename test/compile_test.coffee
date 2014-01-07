@@ -101,3 +101,20 @@ describe 'compile', ->
         should.exist(output, 'before.txt')
         should.exist(output, 'after.txt')
         run("rm -rf #{path.join(p, 'before.txt')}", done)
+
+  it 'should correctly handle multipass compiles', (done) ->
+    p = path.join(test_path, 'multipass')
+    output = path.join(p, 'public')
+
+    new Roots(p).compile()
+      .on('error', done)
+      .on 'done', ->
+        should.exist(output, 'foo.html')
+        should.contain_content(output, 'foo.html', /<p>wow<\/p>/)
+        should.exist(output, 'bar.html')
+        should.contain_content(output, 'bar.html', /<p>wow<\/p>/)
+        should.exist(output, 'baz.html')
+        should.contain_content(output, 'baz.html', /<p>so compile<\/p>/)
+        should.exist(output, 'quux.html')
+        should.contain_content(output, 'quux.html', /<p>so compile<\/p>/)
+        done()

@@ -6,6 +6,7 @@ W = require 'when'
 nodefn = require 'when/node/function'
 test_path = path.join(__dirname, 'fixtures')
 glob = require 'glob'
+rimraf = require 'rimraf'
 
 Roots = require '../lib'
 
@@ -20,7 +21,8 @@ before (done) ->
   W.all(tasks, -> done())
 
 # remove all test output (this needs to work cross-platform)
-after (done) -> run('rm -rf test/fixtures/**/public', done)
+after ->
+  rimraf.sync(public_dir) for public_dir in glob.sync('test/fixtures/**/public')
 
 describe 'constructor', ->
 

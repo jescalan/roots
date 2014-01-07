@@ -1,0 +1,2 @@
+locals:
+  wow: 'so compile'
