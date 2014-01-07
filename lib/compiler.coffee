@@ -25,7 +25,7 @@ class Compiler
         adapter.render(content, options)
           .tap(=> @roots.emit('compile', f))
 
-      pipeline(adapters.map((a,i) => _.partial(task, a).bind(@)), contents)
+      pipeline(adapters.map((a,i) => task.bind(@, a)), contents)
         .then((out) => write_file.call(@, f, out, adapters[adapters.length-1]))
 
   copy: (f) ->
