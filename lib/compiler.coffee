@@ -17,20 +17,16 @@ class Compiler
 
     nodefn.call(fs.readFile.bind(fs), f, { encoding: 'utf8' }).then (contents) =>
 
-      task = (pair) ->
-        index   = pair[0]
-        content = pair[1]
-        adapter = adapters[index]
+      task = (adapter, content) ->
         options = configure_options.call(@, { adapter: adapter.name, file: f })
 
-        if not adapter.name then return [++index, content]
+        if not adapter.name then return content
 
         adapter.render(content, options)
           .tap(=> @roots.emit('compile', f))
-          .then((out) => return [++index, out])
 
-      pipeline(adapters.map((a,i) => task.bind(@)).reverse(), [0, contents])
-        .then((res) => write_file.call(@, f, res[1], adapters[res[0]-1]))
+      pipeline(adapters.map((a,i) => _.partial(task, a).bind(@)), contents)
+        .then((out) => write_file.call(@, f, out, adapters[adapters.length-1]))
 
   copy: (f) ->
     deferred = W.defer()
@@ -60,20 +56,15 @@ class Compiler
   configure_options = (opts) ->
     res = _.extend(@roots.config.locals || {}, @roots.config[opts.adapter] || {})
     res.filename = opts.file
-    res
+    return res
 
   get_adapters = (f) ->
     extensions = path.basename(f).split('.').slice(1)
     adapters = []
-      
+    
     for ext in extensions.reverse()
-      found = false
-      for n, c of @roots.config.compilers
-        if _.contains(c.extensions, ext)
-          adapters.push(c)
-          found = true
-          break
-      if not found then adapters.push(output: ext)
+      compiler = _.find(@roots.config.compilers, (c) -> _.contains(c.extensions, ext))
+      adapters.push(compiler) if compiler
 
     return adapters
 
