@@ -21,10 +21,17 @@ module.exports = class TerminalPrinter
     @log text, color
 
   error: (err) =>
-    err = new Error(err) if typeof err is "string"
+    if err instanceof Error
+      message = err.stack
+    else if typeof err is 'string'
+      message = err
+    else
+      message = err.toString()
+      if message is '[object Object]'
+        message = JSON.stringify err
 
     console.log '\u0007' # bell sound
-    console.error '\n\n------------ ERROR ------------\n\n'.red + err.stack + '\n'
+    console.error '\n\n------------ ERROR ------------\n\n'.red + message + '\n'
 
   compiling: ->
     process.stdout.write('compiling... '.grey)
