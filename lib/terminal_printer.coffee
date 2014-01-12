@@ -21,6 +21,11 @@ module.exports = class TerminalPrinter
     @log text, color
 
   error: (err) =>
+    message = @normalize_error err
+    console.log '\u0007' # bell sound
+    console.error '\n\n------------ ERROR ------------\n\n'.red + message + '\n'
+
+  normalize_error: (err) ->
     if err instanceof Error
       message = err.stack
     else if typeof err is 'string'
@@ -29,9 +34,7 @@ module.exports = class TerminalPrinter
       message = err.toString()
       if message is '[object Object]'
         message = JSON.stringify err
-
-    console.log '\u0007' # bell sound
-    console.error '\n\n------------ ERROR ------------\n\n'.red + message + '\n'
+    message
 
   compiling: ->
     process.stdout.write('compiling... '.grey)
