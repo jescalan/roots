@@ -5,6 +5,7 @@ readdirp    = require 'readdirp'
 _           = require 'lodash'
 minimatch   = require 'minimatch'
 yaml_parser = require './yaml_parser'
+pipeline    = require 'when/pipeline'
 
 class FSParser
 
@@ -38,13 +39,33 @@ class ParseTask
     return deferred.promise
 
   parse_file: (file) ->
-    yaml_parser.detect(file)
-      .then((res) =>
-        cat = if res then 'dynamic' else if compiled.call(@, file) then 'compiled' else 'static'
-        @ast[cat].push(file)
-      ).yield(@ast)
+    extensions = _.clone(@roots.extensions.all)
+
+    extensions.push
+      fs:
+        category: 'compiled'
+        extract: true
+        detect: compiled.bind(@)
+    
+    extensions.push
+      fs:
+        category: 'static'
+        extract: true
+        detect: (-> true)
+
+    list = (sort.bind(@, ext, file) for ext in extensions when ext.fs)
+    pipeline(list, false).yield(@ast)
 
   # @api private
+  
+  sort = (ext, file, extract) ->
+    if extract then return W.resolve(true)
+    W.resolve(ext.fs.detect(file)).then (detected) =>
+      if not detected then return W.resolve(false)
+      cat = ext.fs.category || ext.category
+      @ast[cat] ||= []
+      @ast[cat].push(file)
+      if ext.extract then W.resolve(true) else W.resolve(false)
 
   format_dirs = ->
     @ast.dirs = _.uniq(@ast.dirs).map((d) => @roots.config.out(d))

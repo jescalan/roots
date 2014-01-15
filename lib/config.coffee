@@ -31,6 +31,9 @@ class Config
 
     @[k] = v for k, v of conf
 
+    # extensions get special handling
+    @roots.extensions.register(ext) for ext in @extensions if @extensions
+
   # produces the full path to the output folder
   output_path: ->
     path.join(@roots.root, @output)
