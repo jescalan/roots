@@ -6,9 +6,8 @@ class DynamicContent
   fs:
     # category: 'dynamic' # default: @category
     extract: true # default: false
+    ordered: true # default: false
     detect: (f) -> true
-
-  order: 'before' # default 'parallel'
 
   compile_hooks:
     # category: 'dynamic' # default: @category || 'all'

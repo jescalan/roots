@@ -9,41 +9,20 @@ class Compiler
 
   constructor: (@roots) ->
 
-  compile_dynamic: (f) ->
-    console.log "compiling dynamic #{f}"
-
   compile: (f) ->
     adapters = get_adapters.call(@, f)
 
     nodefn.call(fs.readFile.bind(fs), f, { encoding: 'utf8' }).then (contents) =>
 
       task = (adapter, content) ->
-        options = configure_options.call(@, { adapter: adapter.name, file: f })
-
         if not adapter.name then return content
 
+        options = configure_options.call(@, { adapter: adapter.name, file: f })
         adapter.render(content, options)
           .tap(=> @roots.emit('compile', f))
 
       pipeline(adapters.map((a,i) => task.bind(@, a)), contents)
         .then((out) => write_file.call(@, f, out, adapters[adapters.length-1]))
-
-  copy: (f) ->
-    deferred = W.defer()
-
-    output = @roots.config.out(f)
-    rs = fs.createReadStream(f)
-    ws = fs.createWriteStream(output)
-    rs.pipe(ws)
-
-    rs.on('error', deferred.reject)
-    ws.on('error', deferred.reject)
-
-    ws.on 'close', =>
-      @roots.emit('copy', f)
-      deferred.resolve()
-
-    return deferred.promise
 
   # @api private
   
@@ -64,7 +43,7 @@ class Compiler
     
     for ext in extensions.reverse()
       compiler = _.find(@roots.config.compilers, (c) -> _.contains(c.extensions, ext))
-      adapters.push(compiler) if compiler
+      adapters.push(if compiler then compiler else { output: ext })
 
     return adapters
 

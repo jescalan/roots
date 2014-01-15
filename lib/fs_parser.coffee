@@ -45,6 +45,7 @@ class ParseTask
       fs:
         category: 'compiled'
         extract: true
+        ordered: true
         detect: compiled.bind(@)
     
     extensions.push

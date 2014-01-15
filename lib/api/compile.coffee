@@ -1,8 +1,9 @@
-W      = require 'when'
-nodefn = require 'when/node/function'
-guard  = require 'when/guard'
-keys   = require 'when/keys'
-mkdirp = require 'mkdirp'
+W        = require 'when'
+nodefn   = require 'when/node/function'
+guard    = require 'when/guard'
+keys     = require 'when/keys'
+sequence = require 'when/sequence'
+mkdirp   = require 'mkdirp'
 
 FSParser = require '../fs_parser'
 Compiler = require '../compiler'
@@ -46,16 +47,27 @@ class Compile
   create_folders = (ast) ->
     mkdirp.sync(@roots.config.output_path())
     W.map(ast.dirs, guard(guard.n(1), nodefn.lift(mkdirp)))
-      .catch((err) -> console.error(err))
       .yield(ast)
 
   process_files = (ast) ->
+    ordered = []
+    parallel = []
+
+    compile_task = (category) =>
+      W.map(ast[category], @compiler.compile.bind(@compiler))
+
+    for ext in @roots.extensions.all
+      if ext.fs.ordered
+        ordered.push((-> compile_task(ext.category)))
+      else
+        parallel.push(compile_task(ext.category))
+
+    ordered.push((-> compile_task('compiled')))
+    parallel.push(compile_task('static'))
+        
     keys.all
-      compile:
-        W.map(ast.dynamic, @compiler.compile_dynamic.bind(@compiler))
-        .then(=> W.map(ast.compiled, @compiler.compile.bind(@compiler)))
-      copy:
-        W.map(ast.static, @compiler.copy.bind(@compiler))
+      ordered: sequence(ordered)
+      parallel: W.all(parallel)
 
 module.exports = Compile
 
