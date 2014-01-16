@@ -113,7 +113,8 @@ class Precompiler
       jade.runtime.attrs.toString().replace(/exports\./g,''),
       jade.runtime.escape.toString(),
       nulls.toString(),
-      joinClasses.toString()
+      joinClasses.toString(),
+      ";__ROOTS_ENV='#{process.env["ROOTS_ENV"]}';"
     ]
 
     buf.push jade.runtime.rethrow.toString() if @debug
