@@ -54,17 +54,15 @@ class Compile
     parallel = []
 
     compile_task = (category) =>
+      # console.log category
       W.map(ast[category], @compiler.compile.bind(@compiler, category))
-      # TODO: category_after hook here
+        .then(=> sequence(@roots.extensions.hooks('category_hooks.after'), @, category))
 
     for ext in @roots.extensions.all
       if ext.fs.ordered
-        ordered.push((-> compile_task(ext.category)))
+        ordered.push(((c) => compile_task.bind(@, c))(ext.category))
       else
-        parallel.push(compile_task(ext.category))
-
-    ordered.push((-> compile_task('compiled')))
-    parallel.push(compile_task('static'))
+        parallel.push(compile_task.call(@, ext.category))
         
     keys.all
       ordered: sequence(ordered)

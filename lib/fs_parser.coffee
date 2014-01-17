@@ -39,18 +39,18 @@ class ParseTask
     return deferred.promise
 
   parse_file: (file) ->
-    extensions = _.clone(@roots.extensions.all)
+    extensions = @roots.extensions.all
 
     extensions.push
+      category: 'compiled'
       fs:
-        category: 'compiled'
         extract: true
         ordered: true
         detect: compiled.bind(@)
     
     extensions.push
+      category: 'static'
       fs:
-        category: 'static'
         extract: true
         detect: (-> true)
 

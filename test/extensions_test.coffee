@@ -27,8 +27,10 @@ describe 'extensions', ->
     ext.remove('foo')
     ext.all.length.should.not.be.above(0)
 
-  it 'should integrate an extension with the compile pipeline', ->
+  it 'should integrate an extension with the compile pipeline', (done) ->
     project = new Roots(path.join(__dirname, 'fixtures/extensions/basic'))
     project.extensions.all.length.should.be.above(0)
-    # finish this test out
+    project.compile()
+      .on('error', done)
+      .on('done', done)
 

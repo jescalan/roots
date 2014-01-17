@@ -9,19 +9,9 @@ sequence = require 'when/sequence'
 class Compiler
 
   constructor: (@roots) ->
-    @hooks =
-      before_file: extract_hooks.call(@, 'before_file')
-      after_file: extract_hooks.call(@, 'after_file')
-      before_pass: extract_hooks.call(@, 'before_pass')
-      after_pass: extract_hooks.call(@, 'after_pass')
 
   compile: (@category, f) ->
-    (new CompileFile(@roots, @hooks, f)).run()
-
-  # @api private
-  
-  extract_hooks = (name) ->
-    @roots.extensions.all.filter((e) -> e.compile_hooks[name])
+    (new CompileFile(@roots, @category, f)).run()
 
 module.exports = Compiler
 
@@ -29,16 +19,17 @@ module.exports = Compiler
 
 class CompileFile
 
-  constructor: (@roots, @hooks, @path) ->
+  constructor: (@roots, @category, @path) ->
     @adapters = get_adapters.call(@)
     @options = { filename: @path }
 
   run: ->
     read_file(@path)
       .then((o) => @content = o)
-      .then(=> sequence(@hooks.before_file, @)) # TODO: integrate category filter?
+      .then(=> sequence(@roots.extensions.hooks('compile_hooks.before_file'), @))
       .then(each_pass.bind(@))
       .tap(=> @roots.emit('compile', @path))
+      .then(=> sequence(@roots.extensions.hooks('compile_hooks.after_file'), @))
       .then(write_file.bind(@))
   
   # @api private
@@ -71,10 +62,10 @@ class CompilePass
   run: (@adapter, @index, @content) ->
     @opts = configure_options.call(@)
 
-    sequence(@file.hooks.before_pass, @)
+    sequence(@file.roots.extensions.hooks('compile_hooks.before_pass'), @)
       .then(compile_or_pass.bind(@))
       .then((out) => @content = out)
-      .then(=> sequence(@file.hooks.after_pass, @))
+      .then(=> sequence(@file.roots.extensions.hooks('compile_hooks.after_pass'), @))
       .then(=> @content)
 
   # @api private
