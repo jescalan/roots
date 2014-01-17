@@ -37,7 +37,8 @@
     "sprout": "0.0.x",
     "configstore": "0.1.x",
     "infestor": "0.1.x",
-    "faye-websocket": "0.7.x"
+    "faye-websocket": "0.7.x",
+    "graceful-fs": "2.x.x"
   },
   "devDependencies": {
     "mocha": "*",

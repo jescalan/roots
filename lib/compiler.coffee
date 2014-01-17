@@ -1,44 +1,57 @@
-fs     = require 'fs'
+fs     = require 'graceful-fs'
 path   = require 'path'
 _      = require 'lodash'
 W      = require 'when'
 nodefn = require 'when/node/function'
 pipeline = require 'when/pipeline'
+sequence = require 'when/sequence'
 
 class Compiler
 
   constructor: (@roots) ->
+    @hooks =
+      before_file: extract_hooks.call(@, 'before_file')
+      after_file: extract_hooks.call(@, 'after_file')
+      before_pass: extract_hooks.call(@, 'before_pass')
+      after_pass: extract_hooks.call(@, 'after_pass')
 
-  compile: (f) ->
-    adapters = get_adapters.call(@, f)
-
-    nodefn.call(fs.readFile.bind(fs), f, { encoding: 'utf8' }).then (contents) =>
-
-      task = (adapter, content) ->
-        if not adapter.name then return content
-
-        options = configure_options.call(@, { adapter: adapter.name, file: f })
-        adapter.render(content, options)
-          .tap(=> @roots.emit('compile', f))
-
-      pipeline(adapters.map((a,i) => task.bind(@, a)), contents)
-        .then((out) => write_file.call(@, f, out, adapters[adapters.length-1]))
+  compile: (@category, f) ->
+    (new CompileFile(@roots, @hooks, f)).run()
 
   # @api private
   
-  # TODO: Locals should be merged from the following contexts
-  # - [x] global (conserved until process exits)
-  # - [x] adapter-specific (used only with a specific adapter)
-  # - [ ] compile-specific (conserved until full compile finished)
-  # - [ ] file-specific (conserved until file compile finished)
-  
-  configure_options = (opts) ->
-    res = _.extend(@roots.config.locals || {}, @roots.config[opts.adapter] || {})
-    res.filename = opts.file
-    return res
+  extract_hooks = (name) ->
+    @roots.extensions.all.filter((e) -> e.compile_hooks[name])
 
-  get_adapters = (f) ->
-    extensions = path.basename(f).split('.').slice(1)
+module.exports = Compiler
+
+# @api private
+
+class CompileFile
+
+  constructor: (@roots, @hooks, @path) ->
+    @adapters = get_adapters.call(@)
+    @options = { filename: @path }
+
+  run: ->
+    read_file(@path)
+      .then((o) => @content = o)
+      .then(=> sequence(@hooks.before_file, @)) # TODO: integrate category filter?
+      .then(each_pass.bind(@))
+      .tap(=> @roots.emit('compile', @path))
+      .then(write_file.bind(@))
+  
+  # @api private
+
+  read_file = (f) ->
+    nodefn.call(fs.readFile, f, { encoding: 'utf8' })
+
+  write_file = (content) ->
+    output = @roots.config.out(@path, _.last(@adapters).output)
+    nodefn.call(fs.writeFile, output, content)
+
+  get_adapters = ->
+    extensions = path.basename(@path).split('.').slice(1)
     adapters = []
     
     for ext in extensions.reverse()
@@ -47,27 +60,47 @@ class Compiler
 
     return adapters
 
-  write_file = (f, content, adapter) ->
-    output = @roots.config.out(f, adapter.output)
-    nodefn.call(fs.writeFile, output, content)
+  each_pass = ->
+    pass = new CompilePass(@)
+    pipeline(@adapters.map((a,i) => pass.run.bind(pass,a,i)), @content)
 
-module.exports = Compiler
+class CompilePass
+
+  constructor: (@file) ->
+
+  run: (@adapter, @index, @content) ->
+    @opts = configure_options.call(@)
+
+    sequence(@file.hooks.before_pass, @)
+      .then(compile_or_pass.bind(@))
+      .then((out) => @content = out)
+      .then(=> sequence(@file.hooks.after_pass, @))
+      .then(=> @content)
+
+  # @api private
+  
+  configure_options = ->
+    _.extend @file.roots.config.locals || {},         # global
+             @file.roots.config[@adapter.name] || {}, # adapter
+             @file.options                            # file
+             # TODO: options per full project compile
+  
+  compile_or_pass = ->
+    if not @adapter.name then return @content
+
+    @adapter.render(@content, @opts)
 
 ###
 
 What's Going On Here?
 ---------------------
 
-The compiler class is responsible for (you guessed it) compiling files into their destination. It also will copy static files.
+This is potentially the most complex piece of the roots core, which is good and bad. It's good because it is definitely digestible, thanks to the use of promises and the fantastic utilities provided by when.js. It's bad because if you found yourself here trying to make a quick patch, it's going to take you a while to grok all the logic going on in here.
 
-The compile method banks heavily on [accord](https://github.com/jenius/accord), a unified interface for compiling across many languages, built specifically for roots. The `get_adapters` method looks at the file's extension(s) and matches them to one or more compilers, depending on the number of file extensions it has. We then read the file's contents and get started with the compile pipeline.
+The compiler contains three different classes. The first one is only initialized once, when the base roots class is initialized. This class pulls out any hooks that are being used by roots extensions, which is something we don't want to do for every file. It's main method, `run` is called once for each file being compiled. Since we need an isolated scope for each compilation as this is an async operation and multiple files could potentially be compiling at the same time, this task initializes a new private CompileFile class to contain that scope.
 
-This part is a little more confusing. You can see that upfront a function is defined called "task" - this function runs once for each compile pass on the file. This function recieves an array (pair) that contains the index - aka number of compile pass we're on - and the contents. First, we use the index to grab the correct adapter from the adapters array, then pass the adapter and file names to the `configure_options` method, which creates an options object from user-defined global and compiler-specific settings.
+The CompileFile instance is responsible for all operations concerned with compiling the entire file. Keep in mind that the compilation process can involve multiple compile passes, since multipass compilation is core to roots -- all per-compile-pass logic is delegated to a separate class with its own scope, which will be described in the next paragraph. So in order to prepare the file for compilation, its contents need to be read, and its extension(s) need to be scanned to detemine which compile adapter(s) will be used to process the file. Once those two are set, there is an opportunity for extensions to come in and do whatever they need to do. After this, the file is fully compiled. For this, each adapter is paired with an instance of the CompilePass class which takes care of the compile logic. Once finished here, the compile event is emitted, extensions have the chance to jump in with an after hook, and finally the file is written with the newly compiled contents.
 
-Finally, with the correct adapter, contents, and options in hand, we're ready to get started with the compilation. But before this, we need to ensure that a compile is actually necessary. If there is an extension that hasn't been matched to a compiler, it simply passes through with the same content. If not, we compile the file, emit a `compile` event, and return the newly compiled content.
-
-Now on to how these tasks are actually run. The pipeline function from when.js (https://github.com/cujojs/when/blob/master/docs/api.md#whenpipeline) is used to handle this, acting on an array of as many "task" function as extensions on the file. It kicks off the first compile pass with index zero and the contents read from the file, and any subsequent functions are called with the results of the previous function, as this is how when/pipeline works. When all compiles are finished, the resulting file is written.
-
-The copy method uses streams to asynchronously copy a file as quickly as possible. The method appears a bit unweidly because of it's integration with promises, but it gets the job done, and fast.
+The actual compilation process is executed in a scope of its own to keep things clean and separate, and since multiple ones can be going on at once. This task allows extensions to get in a before hook with access to the number of compile pass and the adapter it's on. Then the actual compile runs using an adapter from accord. Finally, an after hook gives the same access as before, but also with the compiled content available. Finally, the compiled content is passed through to be used by the next compile pass, or if it's the last one, control returns to the CompileFile instance.
 
 ###

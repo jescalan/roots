@@ -11,8 +11,10 @@ class DynamicContent
 
   compile_hooks:
     # category: 'dynamic' # default: @category || 'all'
-    before: (ctx) ->
-    after: (ctx) ->
+    before_file: (ctx) ->
+    after_file: (ctx) ->
+    before_pass: (ctx) ->
+    after_pass: (ctx) ->
 
   category_hooks:
     # category: 'dynamic' # default: @category || 'all'

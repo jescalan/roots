@@ -54,7 +54,8 @@ class Compile
     parallel = []
 
     compile_task = (category) =>
-      W.map(ast[category], @compiler.compile.bind(@compiler))
+      W.map(ast[category], @compiler.compile.bind(@compiler, category))
+      # TODO: category_after hook here
 
     for ext in @roots.extensions.all
       if ext.fs.ordered
