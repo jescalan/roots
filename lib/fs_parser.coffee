@@ -66,7 +66,7 @@ class ParseTask
       cat = ext.fs.category || ext.category
       @ast[cat] ||= []
       @ast[cat].push(file)
-      if ext.extract then W.resolve(true) else W.resolve(false)
+      if ext.fs.extract then W.resolve(true) else W.resolve(false)
 
   format_dirs = ->
     @ast.dirs = _.uniq(@ast.dirs).map((d) => @roots.config.out(d))
