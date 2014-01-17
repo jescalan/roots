@@ -27,8 +27,8 @@ class Extensions
   ###
 
   hooks: (name) ->
-    name = name.split('.')
-    @all.filter((e) -> if e[name[0]] then e[name[0]][name[1]])
+    n = name.split('.')
+    _.compact(@all.map((e) -> if e[n[0]] && e[n[0]][n[1]] then return e[n[0]][n[1]]))
 
   ###*
    * remove an extension
