@@ -76,7 +76,10 @@ module.exports = Config
 What's Going On Here?
 ---------------------
 
-This class holds the global configuration for a roots project. It depends on the main roots class, and is constructed using dependency injection to hold on to a reference to the instance of the main roots class it was constructed under.
+This class holds the global configuration for a roots project. It depends on
+the main roots class, and is constructed using dependency injection to hold on
+to a reference to the instance of the main roots class it was constructed
+under.
 
 Full configuration options are documented in `docs/configuration.md`
 

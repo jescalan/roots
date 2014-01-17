@@ -59,6 +59,7 @@ What is this all about?
 * Exposes two public API methods
   * start - returns a promise
   * stop - sync
-* 'Start' injects some javascript at the bottom of the page for livereload if in development
+* 'Start' injects some javascript at the bottom of the page for livereload if
+  in development
 
 ###

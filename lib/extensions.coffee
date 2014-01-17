@@ -19,9 +19,12 @@ module.exports = Extensions
 Roots Extensions
 ----------------
 
-The roots extension API is an extremely powerful managed set of hooks into roots' internals that allow external packages to customize roots' behavior. This class is responsible for the management of extensions in a roots project.
+The roots extension API is an extremely powerful managed set of hooks into
+roots' internals that allow external packages to customize roots' behavior.
+This class is responsible for the management of extensions in a roots project.
 
-Extensions can expose hooks that link into a 4 different spots in the roots compile pipeline, detailed more thoroughly below.
+Extensions can expose hooks that link into a 4 different spots in the roots
+compile pipeline, detailed more thoroughly below.
 
 ## FS Parse Hooks
 
