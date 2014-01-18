@@ -1,13 +1,12 @@
-roots         = require './index'
-colors        = require 'colors'
-WebSocket     = require('faye-websocket')
-EventEmitter  = require('events').EventEmitter
+roots = require './index'
+colors = require 'colors'
+WebSocket = require('faye-websocket')
 
 ###*
  * @class This handles notifications that are sent to the browser.
  * @todo Make a way of sending log & debug messaages to the browser.
 ###
-module.exports = class BrowserPrinter
+class BrowserPrinter
   constructor: ->
     roots.print.on 'error', @error
     roots.print.on 'compiling', @compiling
@@ -77,3 +76,5 @@ module.exports = class BrowserPrinter
       data: err.stack
     @saveMsg msg
     @sendMsg msg
+
+module.exports = BrowserPrinter

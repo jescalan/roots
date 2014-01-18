@@ -68,7 +68,8 @@
     "osenv": "0.0.x",
     "moment": "2.4.x",
     "underscore.string": "2.x.x",
-    "haml": "0.4.x"
+    "haml": "0.4.x",
+    "infestor": "~0.2.0"
   },
   "devDependencies": {
     "mocha": "latest",

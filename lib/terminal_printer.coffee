@@ -1,9 +1,8 @@
-roots         = require './index'
-colors        = require 'colors'
-WebSocket     = require('faye-websocket')
-EventEmitter  = require('events').EventEmitter
+roots = require './index'
+colors = require 'colors'
+WebSocket = require('faye-websocket')
 
-module.exports = class TerminalPrinter
+class TerminalPrinter
   constructor: ->
     roots.print.on 'log', @log
     roots.print.on 'debug', @debug
@@ -11,13 +10,13 @@ module.exports = class TerminalPrinter
     roots.print.on 'compiling', @compiling
     roots.print.on 'reload', @reload
 
-  log: (text, color) =>
+  log: (text, color) ->
     if color isnt ''
       console.log text[color]
     else
       console.log text
 
-  debug: (text, color) =>
+  debug: (text, color) ->
     @log text, color
 
   error: (err) =>
@@ -41,3 +40,5 @@ module.exports = class TerminalPrinter
 
   reload: =>
     @log('done!', 'green')
+
+module.exports = TerminalPrinter

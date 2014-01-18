@@ -1,7 +1,7 @@
-roots         = require './index'
-colors        = require 'colors'
-WebSocket     = require('faye-websocket')
-EventEmitter  = require('events').EventEmitter
+roots = require './index'
+colors = require 'colors'
+WebSocket = require('faye-websocket')
+EventEmitter = require('events').EventEmitter
 
 ###*
  * This class handles reporting and notifying the user. Currently it just
@@ -26,6 +26,6 @@ class Print extends EventEmitter
   reload: ->
     @emit 'reload'
 
-exports.Print           = Print
+exports.Print = Print
 exports.TerminalPrinter = require('./terminal_printer')
-exports.BrowserPrinter  = require('./browser_printer')
+exports.BrowserPrinter = require('./browser_printer')
