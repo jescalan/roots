@@ -68,7 +68,10 @@ class LayoutsExtension
     rel_file = path.relative(roots.project.path('views'), fh.path)
 
     # if there's a custom override, use that instead
-    layout = roots.project.layouts[key] for key of roots.project.layouts if key is rel_file
+    for key of roots.project.layouts
+      if key is rel_file
+        layout = roots.project.layouts[key]
+        break
 
     # no match
     if not layout? then return false
