@@ -1,32 +1,22 @@
 class TestExtension
 
-  constructor = (@opts) ->
-  
-  category: 'test'
+  constructor: (@opts = {}) ->
+    @category = 'test'
 
-  fs:
-    # category: 'dynamic' # default: @category
-    extract: true # default: false
-    ordered: true # default: false
-    detect: (path) ->
-      console.log 'detect function'
-      return false
+    @fs =
+      extract: true
+      ordered: true
+      detect: (path) ->
+        if path.match(/foobar/) then true else false
 
-  compile_hooks:
-    # category: 'dynamic' # default: @category || 'all'
-    before_file: (ctx) ->
-      console.log 'before file hook'
-    after_file: (ctx) ->
-      console.log 'after file hook'
-    before_pass: (ctx) ->
-      console.log 'before pass hook'
-    after_pass: (ctx) ->
-      console.log 'after pass hook'
+    @compile_hooks =
+      before_file: (ctx) -> console.log 'before file hook'
+      after_file: (ctx) -> console.log 'after file hook'
+      before_pass: (ctx) -> console.log 'before pass hook'
+      after_pass: (ctx) -> console.log 'after pass hook'
 
-  category_hooks:
-    # category: 'dynamic' # default: @category || 'all'
-    after: (ctx, category) ->
-      console.log "after " + category
+    @category_hooks =
+      after: (ctx, category) -> console.log "after " + category
 
 module.exports =
 

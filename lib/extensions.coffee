@@ -1,4 +1,6 @@
 _ = require 'lodash'
+CompiledExtension = require './extensions/compiled'
+StaticExtension = require './extensions/static'
 
 ###*
  * @class Extensions
@@ -9,6 +11,8 @@ class Extensions
 
   constructor: (@roots) ->
     @all = []
+    @register(new StaticExtension)
+    @register(new CompiledExtension(@roots))
 
   ###*
    * register a roots extension with your project
@@ -17,7 +21,7 @@ class Extensions
   ###
 
   register: (ext, priority) ->
-    if typeof priority == undefined then return @all.push(ext)
+    if typeof priority == undefined then return @all.unshift(ext)
     @all.splice(priority, 0, ext)
 
   ###*

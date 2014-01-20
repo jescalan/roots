@@ -39,22 +39,7 @@ class ParseTask
     return deferred.promise
 
   parse_file: (file) ->
-    extensions = @roots.extensions.all
-
-    extensions.push
-      category: 'compiled'
-      fs:
-        extract: true
-        ordered: true
-        detect: compiled.bind(@)
-    
-    extensions.push
-      category: 'static'
-      fs:
-        extract: true
-        detect: (-> true)
-
-    list = (sort.bind(@, ext, file) for ext in extensions when ext.fs)
+    list = (sort.bind(@, ext, file) for ext in @roots.extensions.all when ext.fs)
     pipeline(list, false).yield(@ast)
 
   # @api private
@@ -74,10 +59,6 @@ class ParseTask
 
   ignored = (f) ->
     @roots.config.ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i) -> i).length
-
-  compiled = (f) ->
-    exts = _(@roots.config.compilers).map((i)-> i.extensions).flatten().value()
-    _.contains(exts, path.extname(f).slice(1))
 
 module.exports = FSParser
 

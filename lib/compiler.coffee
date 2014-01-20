@@ -28,6 +28,7 @@ class CompileFile
       .then((o) => @content = o)
       .then(=> sequence(@roots.extensions.hooks('compile_hooks.before_file'), @))
       .then(each_pass.bind(@))
+      .tap((out) => @content = out)
       .tap(=> @roots.emit('compile', @path))
       .then(=> sequence(@roots.extensions.hooks('compile_hooks.after_file'), @))
       .then(write_file.bind(@))
@@ -37,9 +38,9 @@ class CompileFile
   read_file = (f) ->
     nodefn.call(fs.readFile, f, { encoding: 'utf8' })
 
-  write_file = (content) ->
+  write_file = ->
     output = @roots.config.out(@path, _.last(@adapters).output)
-    nodefn.call(fs.writeFile, output, content)
+    nodefn.call(fs.writeFile, output, @content)
 
   get_adapters = ->
     extensions = path.basename(@path).split('.').slice(1)
@@ -62,6 +63,8 @@ class CompilePass
   run: (@adapter, @index, @content) ->
     @opts = configure_options.call(@)
 
+    # console.log @adapter.name
+
     sequence(@file.roots.extensions.hooks('compile_hooks.before_pass'), @)
       .then(compile_or_pass.bind(@))
       .then((out) => @content = out)
@@ -78,7 +81,6 @@ class CompilePass
   
   compile_or_pass = ->
     if not @adapter.name then return @content
-
     @adapter.render(@content, @opts)
 
 ###

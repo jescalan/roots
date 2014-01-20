@@ -20,7 +20,7 @@ before (done) ->
     tasks.push nodefn.call(run, "cd #{p}; npm install")
   W.all(tasks, -> done())
 
-# remove all test output (this needs to work cross-platform)
+# remove all test output
 after ->
   rimraf.sync(public_dir) for public_dir in glob.sync('test/fixtures/**/public')
 
