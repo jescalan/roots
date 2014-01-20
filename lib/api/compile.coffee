@@ -54,8 +54,7 @@ class Compile
     parallel = []
 
     compile_task = (category) =>
-      # console.log category
-      W.map(ast[category], @compiler.compile.bind(@compiler, category))
+      W.map(ast[category] || [], @compiler.compile.bind(@compiler, category))
         .then(=> sequence(@roots.extensions.hooks('category_hooks.after'), @, category))
 
     for ext in @roots.extensions.all

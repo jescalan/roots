@@ -22,7 +22,7 @@ class FSParser
 class ParseTask
 
   constructor: (@roots) ->
-    @ast = { dirs: [], compiled: [], static: [], dynamic: [] }
+    @ast = { dirs: [] }
 
   parse_dir: (dir) ->
     deferred = W.defer()
@@ -64,7 +64,7 @@ class ParseTask
     W.resolve(ext.fs.detect(file)).then (detected) =>
       if not detected then return W.resolve(false)
       cat = ext.fs.category || ext.category
-      @ast[cat] ||= []
+      @ast[cat] ?= []
       @ast[cat].push(file)
       if ext.fs.extract then W.resolve(true) else W.resolve(false)
 

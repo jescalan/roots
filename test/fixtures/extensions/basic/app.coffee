@@ -2,7 +2,7 @@ class TestExtension
 
   constructor = (@opts) ->
   
-  category: 'dynamic'
+  category: 'test'
 
   fs:
     # category: 'dynamic' # default: @category
