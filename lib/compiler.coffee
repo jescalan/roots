@@ -38,7 +38,8 @@ class CompileFile
   read_file = (f) ->
     nodefn.call(fs.readFile, f, { encoding: 'utf8' })
 
-  write_file = ->
+  write_file = (after_results) ->
+    if _.any(after_results, ((r) -> not r)) then return
     output = @roots.config.out(@path, _.last(@adapters).output)
     nodefn.call(fs.writeFile, output, @content)
 

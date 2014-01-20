@@ -1,9 +1,8 @@
 class Static
 
   constructor: ->
-    @category = 'static'
-  
     @fs =
+      category: 'static'
       extract: true
       detect: (-> true)
 

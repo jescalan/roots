@@ -1,9 +1,8 @@
 class TestExtension
 
   constructor: (@opts = {}) ->
-    @category = 'test'
-
     @fs =
+      category: 'test'
       extract: true
       ordered: true
       detect: (path) ->
@@ -11,16 +10,16 @@ class TestExtension
 
     @compile_hooks =
       before_file: (ctx) =>
-        if ctx.category == @category
+        if ctx.category == @fs.category
           console.log 'before file hook for ' + ctx.path
       after_file: (ctx) =>
-        if ctx.category == @category
+        if ctx.category == @fs.category
           console.log 'after file hook for ' + ctx.path
       before_pass: (ctx) =>
-        if ctx.file.category == @category
+        if ctx.file.category == @fs.category
           console.log 'before pass hook for ' + ctx.file.path
       after_pass: (ctx) =>
-        if ctx.file.category == @category
+        if ctx.file.category == @fs.category
           console.log 'after pass hook for ' + ctx.file.path
 
     @category_hooks =

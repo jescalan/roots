@@ -59,9 +59,9 @@ class Compile
 
     for ext in @roots.extensions.all
       if ext.fs.ordered
-        ordered.push(((c) => compile_task.bind(@, c))(ext.category))
+        ordered.push(((c) => compile_task.bind(@, c))(ext.fs.category))
       else
-        parallel.push(compile_task.call(@, ext.category))
+        parallel.push(compile_task.call(@, ext.fs.category))
         
     keys.all
       ordered: sequence(ordered)

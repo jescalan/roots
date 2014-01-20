@@ -4,9 +4,8 @@ path = require 'path'
 class Compiled
 
   constructor: (@roots) ->
-    @category = 'compiled'
-
     @fs =
+      category: 'compiled'
       extract: true
       ordered: true
       detect: (f) =>
