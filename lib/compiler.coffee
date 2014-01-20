@@ -63,8 +63,6 @@ class CompilePass
   run: (@adapter, @index, @content) ->
     @opts = configure_options.call(@)
 
-    # console.log @adapter.name
-
     sequence(@file.roots.extensions.hooks('compile_hooks.before_pass'), @)
       .then(compile_or_pass.bind(@))
       .then((out) => @content = out)
