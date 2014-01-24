@@ -33,4 +33,3 @@ describe 'extensions', ->
     project.compile()
       .on('error', done)
       .on('done', done)
-

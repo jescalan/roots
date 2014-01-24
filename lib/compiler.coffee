@@ -9,9 +9,10 @@ sequence = require 'when/sequence'
 class Compiler
 
   constructor: (@roots) ->
+    @options = {}
 
   compile: (@category, f) ->
-    (new CompileFile(@roots, @category, f)).run()
+    (new CompileFile(@roots, @category, f, @options)).run()
 
 module.exports = Compiler
 
@@ -19,9 +20,9 @@ module.exports = Compiler
 
 class CompileFile
 
-  constructor: (@roots, @category, @path) ->
+  constructor: (@roots, @category, @path, @options) ->
     @adapters = get_adapters.call(@)
-    @options = { filename: @path }
+    @local_options = { filename: @path }
 
   run: ->
     read_file(@path)
@@ -55,7 +56,7 @@ class CompileFile
 
   each_pass = ->
     pass = new CompilePass(@)
-    pipeline(@adapters.map((a,i) => pass.run.bind(pass,a,i)), @content)
+    pipeline(@adapters.map((a,i) => pass.run.bind(pass,a,i+1)), @content)
 
 class CompilePass
 
@@ -74,9 +75,9 @@ class CompilePass
   
   configure_options = ->
     _.extend @file.roots.config.locals || {},         # global
-             @file.roots.config[@adapter.name] || {}, # adapter
-             @file.options                            # file
-             # TODO: options per full project compile
+             @file.roots.config[@adapter.name] || {}, # per adapter
+             @file.local_options,                     # per file
+             { site: @file.options }                  # per compile pass
   
   compile_or_pass = ->
     if not @adapter.name then return @content

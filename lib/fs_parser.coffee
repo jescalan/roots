@@ -4,7 +4,6 @@ W           = require 'when'
 readdirp    = require 'readdirp'
 _           = require 'lodash'
 minimatch   = require 'minimatch'
-yaml_parser = require './yaml_parser'
 pipeline    = require 'when/pipeline'
 
 class FSParser
@@ -46,12 +45,13 @@ class ParseTask
   
   sort = (ext, file, extract) ->
     if extract then return W.resolve(true)
-    W.resolve(ext.fs.detect(file)).then (detected) =>
+    extfs = ext.fs()
+    W.resolve(extfs.detect(file)).then (detected) =>
       if not detected then return W.resolve(false)
-      cat = ext.fs.category || ext.category
+      cat = extfs.category || ext.category
       @ast[cat] ?= []
       @ast[cat].push(file)
-      if ext.fs.extract then W.resolve(true) else W.resolve(false)
+      if extfs.extract then W.resolve(true) else W.resolve(false)
 
   format_dirs = ->
     @ast.dirs = _.uniq(@ast.dirs).map((d) => @roots.config.out(d))

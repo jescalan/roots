@@ -18,6 +18,7 @@ class Extensions
    * register a roots extension with your project
    * @param  {Object} ext       - extension object/instance
    * @param  {Integer} priority - optional, how early the extension is run
+   * @todo   set roots instance on each extension (?)
   ###
 
   register: (ext, priority) ->
@@ -32,7 +33,7 @@ class Extensions
 
   hooks: (name) ->
     n = name.split('.')
-    _.compact(@all.map((e) -> if e[n[0]] && e[n[0]][n[1]] then return e[n[0]][n[1]]))
+    _.compact(@all.map((e) -> if e[n[0]] && e[n[0]]()[n[1]] then return e[n[0]]()[n[1]]))
 
   ###*
    * remove an extension
