@@ -29,7 +29,7 @@ class CompileFile
       .then((o) => @content = o)
       .then(=> sequence(@roots.extensions.hooks('compile_hooks.before_file'), @))
       .then(each_pass.bind(@))
-      .tap((out) => @content = out)
+      .tap((o) => @content = o)
       .tap(=> @roots.emit('compile', @path))
       .then(=> sequence(@roots.extensions.hooks('compile_hooks.after_file'), @))
       .then(write_file.bind(@))
