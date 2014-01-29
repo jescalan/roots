@@ -11,7 +11,9 @@ exports.start = (serve_dir) ->
   if roots.project.conf("mode") is "dev"
     app.use(infestor content: """
       <!-- roots development configuration -->
-      <script>var __livereload = #{roots.project.conf("livereloadEnabled")};</script>
+      <script>var __livereload  = #{roots.project.conf("livereloadEnabled")};
+              var __rootsport   = #{port};
+      </script>
       <script src='__roots__/main.js'></script>
     """)
     app.use('/__roots__', connect.static(path.resolve(__dirname, 'browser_assets')))
