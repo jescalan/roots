@@ -128,3 +128,14 @@ class FooBar
 ```
 
 This is all pretty straightforward stuff. Example usage could be if you wanted to stop the write for all files in your category, then manually write them once the whole category is finished, maybe to just one file. the `ctx` object is slightly less interesting this time although it does still contain the `roots` object with access to all the settings you need.
+
+### Write Hook
+
+You can also hook into the method that writes files in roots and use it to write more than one file. Under `compile_hooks`, if you add a `write` method, it will allow you to jump in. The write hook expects a specific output and _if you do not provide this output, it will crash_, so take note. From the write hook, you must return either an object or an array of objects that have two keys:
+
+- path: the absolute path to where the file should be written
+- content: the content you want to write to the file
+
+...so if you want to write multiple files out of one input, you can just override the write hook, do your path and content figuring, and return an array, one object for each file you want to write. Note that you can also return a promise for your object or array of objects if you need to do async tasks here.
+
+You have access to a full context object from the write hook, as with anything else. The context in this hook is an exact mirror of the context that you get in the after file hook.

@@ -20,9 +20,9 @@ module.exports = Compiler
 
 class CompileFile
 
-  constructor: (@roots, @category, @path, @options) ->
+  constructor: (@roots, @category, @path, @compile_options) ->
     @adapters = get_adapters.call(@)
-    @local_options = { filename: @path }
+    @file_options = { filename: @path }
 
   run: ->
     read_file(@path)
@@ -41,8 +41,17 @@ class CompileFile
 
   write_file = (after_results) ->
     if _.any(after_results, ((r) -> not r)) then return
-    output = @roots.config.out(@path, _.last(@adapters).output)
-    nodefn.call(fs.writeFile, output, @content)
+
+    sequence(@roots.extensions.hooks('compile_hooks.write'), @)
+    .then (out) =>
+      out = _.flatten(out)
+
+      write_pipeline = if out.length
+        out
+      else
+        [{ path: @roots.config.out(@path, _.last(@adapters).output), content: @content }]
+
+      W.map(write_pipeline, (o) -> nodefn.call(fs.writeFile, o.path, o.content))
 
   get_adapters = ->
     extensions = path.basename(@path).split('.').slice(1)
@@ -74,13 +83,16 @@ class CompilePass
   # @api private
   
   configure_options = ->
-    _.extend @file.roots.config.locals || {},         # global
-             @file.roots.config[@adapter.name] || {}, # per adapter
-             @file.local_options,                     # per file
-             { site: @file.options }                  # per compile pass
+    global_options  = @file.roots.config.locals || {}
+    adapter_options = @file.roots.config[@adapter.name] || {}
+    file_options    = @file.file_options
+    compile_options = @file.compile_options
+
+    _.extend(global_options, adapter_options, file_options, compile_options)
   
   compile_or_pass = ->
     if not @adapter.name then return @content
+    # compile hook here
     @adapter.render(@content, @opts)
 
 ###
