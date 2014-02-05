@@ -4,8 +4,8 @@ class TestExtension
     category: 'test'
     extract: true
     ordered: true
-    detect: (path) ->
-      if path.match(/foobar/) then true else false
+    detect: (f) ->
+      if f.relative.match(/foobar/) then true else false
 
   compile_hooks: ->
     before_file: (ctx) =>

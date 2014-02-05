@@ -1,10 +1,11 @@
-fs          = require 'fs'
-path        = require 'path'
-W           = require 'when'
-readdirp    = require 'readdirp'
-_           = require 'lodash'
-minimatch   = require 'minimatch'
-pipeline    = require 'when/pipeline'
+fs        = require 'fs'
+path      = require 'path'
+W         = require 'when'
+readdirp  = require 'readdirp'
+_         = require 'lodash'
+minimatch = require 'minimatch'
+pipeline  = require 'when/pipeline'
+File      = require 'vinyl'
 
 class FSParser
 
@@ -14,9 +15,9 @@ class FSParser
     task = new ParseTask(@roots)
 
     if fs.statSync(@roots.root).isDirectory()
-      promise = task.parse_dir(@roots.root)
+      task.parse_dir(@roots.root)
     else
-      promise = task.parse_file(@roots.root)
+      task.parse_file(@roots.root)
 
 class ParseTask
 
@@ -46,11 +47,12 @@ class ParseTask
   sort = (ext, file, extract) ->
     if extract then return W.resolve(true)
     extfs = ext.fs()
+    file = new File(base: @roots.root, path: file)
     W.resolve(extfs.detect(file)).then (detected) =>
       if not detected then return W.resolve(false)
       cat = extfs.category || ext.category
       @ast[cat] ?= []
-      @ast[cat].push(file)
+      @ast[cat].push(file) unless _.contains(@ast[cat], file)
       if extfs.extract then W.resolve(true) else W.resolve(false)
 
   format_dirs = ->

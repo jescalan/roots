@@ -20,7 +20,8 @@ module.exports = Compiler
 
 class CompileFile
 
-  constructor: (@roots, @category, @path, @compile_options) ->
+  constructor: (@roots, @category, file, @compile_options) ->
+    @path = file.path # TODO: rewrite path refs to make better use of vinyl
     @adapters = get_adapters.call(@)
     @file_options = { filename: @path }
 
@@ -40,7 +41,11 @@ class CompileFile
     nodefn.call(fs.readFile, f, { encoding: 'utf8' })
 
   write_file = (after_results) ->
-    if _.any(after_results, ((r) -> not r)) then return
+    if _.any(after_results, ((r) -> r == false)) then return
+
+    # console.log @path
+    # console.log @category
+    # console.log @content
 
     sequence(@roots.extensions.hooks('compile_hooks.write'), @)
     .then (out) =>
@@ -49,7 +54,7 @@ class CompileFile
       write_pipeline = if out.length
         out
       else
-        [{ path: @roots.config.out(@path, _.last(@adapters).output), content: @content }]
+        [{ path: @roots.config.out(@path, _.first(@adapters).output), content: @content }]
 
       W.map(write_pipeline, (o) -> nodefn.call(fs.writeFile, o.path, o.content))
 
@@ -57,7 +62,7 @@ class CompileFile
     extensions = path.basename(@path).split('.').slice(1)
     adapters = []
     
-    for ext in extensions.reverse()
+    for ext in _.clone(extensions.reverse())
       compiler = _.find(@roots.config.compilers, (c) -> _.contains(c.extensions, ext))
       adapters.push(if compiler then compiler else { output: ext })
 

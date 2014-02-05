@@ -58,12 +58,12 @@ class Compile
         .then(=> sequence(@roots.extensions.hooks('category_hooks.after'), @, category))
 
     for ext in @roots.extensions.all
-      extfs = ext.fs() # TODO: ensure this exists
+      extfs = if ext.fs then ext.fs() else {}
       if extfs.ordered
         ordered.push(((c) => compile_task.bind(@, c))(extfs.category))
       else
         parallel.push(compile_task.call(@, extfs.category))
-        
+
     keys.all
       ordered: sequence(ordered)
       parallel: W.all(parallel)
