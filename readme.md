@@ -1,10 +1,18 @@
-# roots
+<p align="center"><a><img src="http://cl.ly/PqFy/logo.png" /></a></p>
+
+<p align="center">
+  <a title='NPM version' href="http://badge.fury.io/js/roots">
+    <img src='https://badge.fury.io/js/roots.png' />
+  </a>
+  <a title='Build Status' href="https://travis-ci.org/jenius/roots">
+    <img src='https://travis-ci.org/jenius/roots.png?branch=v3' />
+  </a>
+  <a title='Dependency Status' href="https://david-dm.org/jenius/roots">
+    <img src='https://david-dm.org/jenius/roots.png?theme=shields.io' />
+  </a>
+</p>
 
 roots is a fast, simple, and customizable static site compiler
-
-[![npm](https://badge.fury.io/js/roots.png)](http://badge.fury.io/js/roots)
-[![tests](https://travis-ci.org/jenius/roots.png?branch=master)](https://travis-ci.org/jenius/roots)
-[![dependencies](https://david-dm.org/jenius/roots.png?theme=shields.io)](https://david-dm.org/jenius/roots)
 
 > **Note:** This project is in early development, and versioning is a little different. [Read this](http://markup.im/#q4_cRZ1Q) for more details.
 
