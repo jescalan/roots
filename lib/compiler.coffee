@@ -43,10 +43,6 @@ class CompileFile
   write_file = (after_results) ->
     if _.any(after_results, ((r) -> r == false)) then return
 
-    # console.log @path
-    # console.log @category
-    # console.log @content
-
     sequence(@roots.extensions.hooks('compile_hooks.write'), @)
     .then (out) =>
       out = _.flatten(out)
@@ -54,9 +50,9 @@ class CompileFile
       write_pipeline = if out.length
         out
       else
-        [{ path: @roots.config.out(@path, _.first(@adapters).output), content: @content }]
+        [{ path: @roots.config.out(@path, _.last(@adapters).output), content: @content }]
 
-      W.map(write_pipeline, (o) -> nodefn.call(fs.writeFile, o.path, o.content))
+      W.map(write_pipeline, (o) -> if o then nodefn.call(fs.writeFile, o.path, o.content))
 
   get_adapters = ->
     extensions = path.basename(@path).split('.').slice(1)

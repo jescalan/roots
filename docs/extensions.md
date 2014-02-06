@@ -138,4 +138,4 @@ You can also hook into the method that writes files in roots and use it to write
 
 ...so if you want to write multiple files out of one input, you can just override the write hook, do your path and content figuring, and return an array, one object for each file you want to write. Note that you can also return a promise for your object or array of objects if you need to do async tasks here.
 
-You have access to a full context object from the write hook, as with anything else. The context in this hook is an exact mirror of the context that you get in the after file hook.
+You have access to a full context object from the write hook, as with anything else. The context in this hook is an exact mirror of the context that you get in the after file hook. Finally, if you return false out of the write hook, nothing will be written, as is the case with the after hook.
