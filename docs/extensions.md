@@ -3,9 +3,9 @@ Roots Extension API
 
 If there is more functionality you want to add to roots, you can probably do this with a plugin. There are a number of plugins that are officially maintained:
 
-- [roots-dynamic-content](#)
+- [roots-dynamic-content](https://github.com/carrot/roots-dynamic-content)
+- [roots-precompiled-templates](https://github.com/carrot/roots-client-templates)
 - [roots-layouts](#)
-- [roots-precompiled-templates](#)
 - [roots-browserify](#)
 - [roots-json-content](#)
 
@@ -41,10 +41,10 @@ class YellExtension
   fs: ->
     category: 'upcased'
     detect: (f) ->
-      path.basename(f) == path.basename(f).toUpperCase()
+      path.basename(f.relative) == path.basename(f.relative).toUpperCase()
 ```
 
-So category is just a string (we can use this later), and detect is a function which is fed a full file path for each file that's run through. Here, we just run a simple comparison to see if the basename is all uppercase. The `detect` function also can return a promise if you are running an async operation. Do note that speed is important in roots, so make sure you have considered the speed impacts of your extension. That means try not to for example read the full contents of a file synchronously, because that could take quite a while in a larger project.
+So category is just a string (we can use this later), and detect is a function which is fed a [vinyl](https://github.com/wearefractal/vinyl) wrapper for each file that's run through. Here, we just run a simple comparison to see if the basename is all uppercase. The `detect` function also can return a promise if you are running an async operation. Do note that speed is important in roots, so make sure you have considered the speed impacts of your extension. That means try not to for example read the full contents of a file synchronously, because that could take quite a while in a larger project.
 
 There are a couple more options to consider here in the filesystem sorting section. First, it's possible that multiple extensions could be operating on the same project, and it's important to consider the order in which they run, and whether files are "caught" by one extension or passed through to others. You can handle this with the `extract` boolean, which can be set to `true` in order to stop the file from being potentially sorted into other categories after detection. In this case we do want that, since we want the file to be compiled _only_ as all uppercase, not also compiled normally after. This is the case for most extensions. Let's update our code:
 
@@ -59,7 +59,7 @@ class YellExtension
     category: 'upcased'
     extract: true
     detect: (f) ->
-      path.basename(f) == path.basename(f).toUpperCase()
+      path.basename(f.relative) == path.basename(f.relative).toUpperCase()
 ```
 
 Finally, it's possible that you actually need your category to be compiled **before** anything else compiles. For example, dynamic content is compiled before anything else, because it makes locals available to all other view templates. Since roots compiles all files as quickly as possible, compiling dynamic content alongside normal views would result in race conditions where only some dynamic content would be available in the rest of the views. For that reason, the extension must ensure that the entire "dynamic" category is finished compiling before the rest of the project begins. This of course has speed implications as well which should be considered, but if it's necessary, it's necessary.
@@ -81,7 +81,7 @@ class YellExtension
     category: 'upcased'
     extract: true
     detect: (f) ->
-      path.basename(f) == path.basename(f).toUpperCase()
+      path.basename(f.relative) == path.basename(f.relative).toUpperCase()
 
   compile_hooks: ->
     after_file: (ctx) =>

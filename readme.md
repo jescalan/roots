@@ -4,7 +4,7 @@ roots is a fast, simple, and customizable static site compiler
 
 [![npm](https://badge.fury.io/js/roots.png)](http://badge.fury.io/js/roots)
 [![tests](https://travis-ci.org/jenius/roots.png?branch=master)](https://travis-ci.org/jenius/roots)
-[![dependencies](https://david-dm.org/jenius/roots.png)](https://david-dm.org/jenius/roots)
+[![dependencies](https://david-dm.org/jenius/roots.png?theme=shields.io)](https://david-dm.org/jenius/roots)
 
 > **Note:** This project is in early development, and versioning is a little different. [Read this](http://markup.im/#q4_cRZ1Q) for more details.
 

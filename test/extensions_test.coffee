@@ -27,9 +27,21 @@ describe 'extensions', ->
     ext.remove('foo')
     ext.all.length.should.not.be.above(2)
 
-  it 'should integrate an extension with the compile pipeline', (done) ->
+describe 'extension hooks', ->
+
+  before (done) ->
     project = new Roots(path.join(__dirname, 'fixtures/extensions/basic'))
     project.extensions.all.length.should.be.above(2)
     project.compile()
       .on('error', done)
       .on('done', done)
+
+  it 'before_file hook should work'
+  it 'after_file hook should work'
+  it 'returning false on after_file should prevent write'
+  it 'before_pass hook should work'
+  it 'after_pass hook should work'
+  it 'write hook should work'
+  it 'returning false on write hook should prevent write'
+  it 'should write one or more custom paths from write hook'
+  it 'after category hook should work'
