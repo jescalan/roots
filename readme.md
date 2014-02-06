@@ -122,5 +122,3 @@ project.watch()
 - Details on the license [can be found here](license.md)
 - Details on running tests and contributing [can be found here](contributing.md)
 - Details on how to get super rich from contributing to roots [can be found here](contributing.md#getting-money)
-
-![Analytics](https://ga-beacon.appspot.com/UA-37002571-2/roots/main)
