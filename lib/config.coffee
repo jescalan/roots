@@ -31,6 +31,9 @@ class Config
 
     @[k] = v for k, v of conf
 
+    # extensions get special handling
+    @roots.extensions.register(ext) for ext in @extensions if @extensions
+
   # produces the full path to the output folder
   output_path: ->
     path.join(@roots.root, @output)
@@ -59,7 +62,7 @@ class Config
     for dep in Object.keys(pkg.dependencies)
       if accord.supports(dep)
         try
-          local_compiler = require(path.join(@roots.root, 'node_modules', dep))
+          local_compiler = path.join(@roots.root, 'node_modules', dep)
         catch err
           throw new Error("'#{dep}' not found. install with `npm install #{dep} --save`")
 
@@ -73,7 +76,10 @@ module.exports = Config
 What's Going On Here?
 ---------------------
 
-This class holds the global configuration for a roots project. It depends on the main roots class, and is constructed using dependency injection to hold on to a reference to the instance of the main roots class it was constructed under.
+This class holds the global configuration for a roots project. It depends on
+the main roots class, and is constructed using dependency injection to hold on
+to a reference to the instance of the main roots class it was constructed
+under.
 
 Full configuration options are documented in `docs/configuration.md`
 
