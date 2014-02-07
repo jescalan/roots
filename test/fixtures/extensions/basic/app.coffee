@@ -1,7 +1,10 @@
 class TestExtension
 
+  constructor: ->
+    @category = 'test'
+
   fs: ->
-    category: 'test'
+    category: @category
     extract: true
     ordered: true
     detect: (f) ->
@@ -9,20 +12,25 @@ class TestExtension
 
   compile_hooks: ->
     before_file: (ctx) =>
-      if ctx.category == @fs().category
-        console.log 'before file hook for ' + ctx.path
+      if ctx.category == @category
+        ctx.roots.emit('before_file', ctx.path)
     after_file: (ctx) =>
-      if ctx.category == @fs().category
-        console.log 'after file hook for ' + ctx.path
+      if ctx.category == @category
+        ctx.roots.emit('after_file', ctx.path)
     before_pass: (ctx) =>
-      if ctx.file.category == @fs().category
-        console.log 'before pass hook for ' + ctx.file.path
+      if ctx.file.category == @category
+        ctx.file.roots.emit('before_pass', ctx.file.path)
     after_pass: (ctx) =>
-      if ctx.file.category == @fs().category
-        console.log 'after pass hook for ' + ctx.file.path
+      if ctx.file.category == @category
+        ctx.file.roots.emit('after_pass', ctx.file.path)
+    write: (ctx) =>
+      if ctx.category == @category
+        ctx.roots.emit('write', ctx.path)
+        false
 
   category_hooks: ->
-    after: (ctx, category) -> console.log "after category " + category
+    after: (ctx, category) ->
+      ctx.roots.emit('after_category', ctx.path)      
 
 module.exports =
   extensions: [new TestExtension()]
