@@ -10,6 +10,9 @@
   <a title='Dependency Status' href="https://david-dm.org/jenius/roots">
     <img src='https://david-dm.org/jenius/roots.png?theme=shields.io' />
   </a>
+  <a href='https://coveralls.io/r/jenius/roots?branch=v3'>
+    <img src='https://coveralls.io/repos/jenius/roots/badge.png?branch=v3' alt='Coverage Status' />
+  </a>
 </p>
 
 roots is a fast, simple, and customizable static site compiler
