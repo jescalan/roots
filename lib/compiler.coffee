@@ -49,8 +49,11 @@ class CompileFile
 
       write_pipeline = if out.length
         out
-      else
+      else if _.last(@adapters)?
         [{ path: @roots.config.out(@path, _.last(@adapters).output), content: @content }]
+      # handle if a file does not have an extension, just pass her right through
+      else
+        [{path: @roots.config.out(@path), @content}]
 
       W.map(write_pipeline, (o) -> if o then nodefn.call(fs.writeFile, o.path, o.content))
 
