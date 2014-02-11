@@ -20,6 +20,7 @@ describe 'compile', ->
       .on 'done', =>
         should.exist(output, [
           'index.html',
+          'LECHUCK_ALE',
           'nested',
           'nested/foo.html',
           'nested/double_nested',
