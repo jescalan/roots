@@ -146,7 +146,7 @@ class FSParser
       cat = extfs.category || ext.category
       @ast[cat] ?= []
       @ast[cat].push(file) unless _.contains(@ast[cat], file)
-      if extfs.extract then true else false
+      return extfs.extract
 
   ###*
    * Makes sure there are no duplicate directories and that they have been

@@ -29,11 +29,7 @@ class Extensions
 
     for ext in extensions.reverse()
       if typeof ext != 'function' then @roots.bail(125, ext)
-
-      if typeof priority == undefined
-        @all.unshift(ext)
-      else
-        @all.splice(priority, 0, ext)
+      if priority? then @all.unshift(ext) else @all.splice(priority, 0, ext)
 
   ###*
    * Create a new instance of each extension, checking for any sort of errors
