@@ -19,29 +19,36 @@ Roots extensions are extremely powerful, and have the ability to transform roots
 
 Let's start at the beginning. When roots starts compiling your project, it scans the folder for all files, and sorts them into categories. By default, it will sort files into `compiled` or `static`, with the compiled files being ones that match file extensions of compilers that you have installed, and static being files that should simply be copied over. _This is the first place that your extension can jump in_.
 
-Extensions are defined as objects, or preferably classes. Let's lay down the skeleton for a sample extension that finds any file with a filename in all caps and makes sure the contents are also all caps.
+Extensions export a function that returns a class. The function is executed when roots is initialized, this is the time for setting up any global options or configuration that persist across as many compiles as will happen. The extension must then export a "class" (which in js is really a function, but since these examples use coffeescript we'll go with class). This class will be _re-instantiated each time compile is run_. This means that any context inside the class is cleared between compiles. If there is anything you want to be able to hold on to between compiles, it needs to be outside the class. Conversely, do not store anything outside the class that you do not want to be untouched between two compiles. For example, if you add content to an array outside each compile, it will continue getting larger each compile. This is usually not what you want to do, so assume that anything outside the class is used for global configuration for the extension. With that out of the way, let's lay down the skeleton for a sample extension that finds any file with a filename in all caps and makes sure the contents are also all caps.
+
+tl;dr - your extension must be a function that returns a function
 
 ```coffee
-class YellExtension
-  
-  constructor: (@opts = {}) ->
+module.exports = (opts) ->
+
+  # any initialization code here
+
+  class YellExtension
+    constructor: (@roots) ->
 ```
+
+Notice that an instance of the roots class is passed into the constructor. This instance will give you access to literally any and all information that roots is hanging on to. You can grab things out of the app.coffee file, you can access compile adapters, etc. And this is not a clone of the instance, this is _the_ instance, so modifying values could screw things up. Weild this repsonsibility carefully if you choose to at all. Since we don't need it for this extension, the constructor will be omitted from the rest of the example code in this guide.
 
 #### File Sorting
 
-Ok, there's a start. Now, in order to get into the filesystem scanning portion, we want to define a category that we'll sort the targeted files into, as well as a function that we can use to detect whether this is a file we want to separate into our own category, which, for this extension, means that it's filename will be in all uppercase. We can do this by defining a `fs` method on the class which returns an object with `category` and `detect` properties.
+Ok, so we have a start. Now, in order to get into the filesystem scanning portion, we want to define a category that we'll sort the targeted files into, as well as a function that we can use to detect whether this is a file we want to separate into our own category, which, for this extension, means that it's filename will be in all uppercase. We can do this by defining a `fs` method on the class which returns an object with `category` and `detect` properties.
 
 ```coffee
 path = require 'path'
 
-class YellExtension
-  
-  constructor: (@opts = {}) ->
+module.exports = (opts) ->
 
-  fs: ->
-    category: 'upcased'
-    detect: (f) ->
-      path.basename(f.relative) == path.basename(f.relative).toUpperCase()
+  class YellExtension
+
+    fs: ->
+      category: 'upcased'
+      detect: (f) ->
+        path.basename(f.relative) == path.basename(f.relative).toUpperCase()
 ```
 
 So category is just a string (we can use this later), and detect is a function which is fed a [vinyl](https://github.com/wearefractal/vinyl) wrapper for each file that's run through. Here, we just run a simple comparison to see if the basename is all uppercase. The `detect` function also can return a promise if you are running an async operation. Do note that speed is important in roots, so make sure you have considered the speed impacts of your extension. That means try not to for example read the full contents of a file synchronously, because that could take quite a while in a larger project.
@@ -51,15 +58,15 @@ There are a couple more options to consider here in the filesystem sorting secti
 ```coffee
 path = require 'path'
 
-class YellExtension
-  
-  constructor: (@opts = {}) ->
+module.exports = (opts) ->
 
-  fs: ->
-    category: 'upcased'
-    extract: true
-    detect: (f) ->
-      path.basename(f.relative) == path.basename(f.relative).toUpperCase()
+  class YellExtension
+
+    fs: ->
+      category: 'upcased'
+      extract: true
+      detect: (f) ->
+        path.basename(f.relative) == path.basename(f.relative).toUpperCase()
 ```
 
 Finally, it's possible that you actually need your category to be compiled **before** anything else compiles. For example, dynamic content is compiled before anything else, because it makes locals available to all other view templates. Since roots compiles all files as quickly as possible, compiling dynamic content alongside normal views would result in race conditions where only some dynamic content would be available in the rest of the views. For that reason, the extension must ensure that the entire "dynamic" category is finished compiling before the rest of the project begins. This of course has speed implications as well which should be considered, but if it's necessary, it's necessary.
@@ -73,20 +80,20 @@ The next step for us is to modify the file's content. A good way to do this woul
 ```coffee
 path = require 'path'
 
-class YellExtension
-  
-  constructor: (@opts = {}) ->
+module.exports = (opts) ->
 
-  fs: ->
-    category: 'upcased'
-    extract: true
-    detect: (f) ->
-      path.basename(f.relative) == path.basename(f.relative).toUpperCase()
+  class YellExtension
 
-  compile_hooks: ->
-    after_file: (ctx) =>
-      if ctx.category == @fs.category
-        ctx.content = ctx.content.toUpperCase()
+    fs: ->
+      category: 'upcased'
+      extract: true
+      detect: (f) ->
+        path.basename(f.relative) == path.basename(f.relative).toUpperCase()
+
+    compile_hooks: ->
+      after_file: (ctx) =>
+        if ctx.category == @fs.category
+          ctx.content = ctx.content.toUpperCase()
 ```
 
 So let's talk about this. First, we have the `compile_hooks` method, which returns an object with 4 potential hooks, one that we've seen: `before_file`, `after_file`, `before_pass`, and `after_pass`. The "pass" hooks fire once for each compile pass taken on the file (files can have multiple extensions and be compiled multiple times), and the "file" hooks fire once per file, no matter how many extensions it has or how many times it is compiled. Each hook is passed a context object, which is an instance of a class. The file hooks get an instance of the [CompileFile class](https://github.com/jenius/roots/blob/v3%23extension-api/lib/compiler.coffee#L20), and the pass hooks get the [CompilePass class](https://github.com/jenius/roots/blob/v3%23extension-api/lib/compiler.coffee#L59). The information available in each class will be listed in the next section.
@@ -119,12 +126,13 @@ There is one more hook you can use that will fire only when all the files in a g
 
 ```coffee
 
-class FooBar
-  
-  category_hooks: ->
-    after: (ctx, category) ->
-      console.log "finished up with #{category}!"
+module.exports = (opts) ->
 
+  class FooBar
+    
+    category_hooks: ->
+      after: (ctx, category) ->
+        console.log "finished up with #{category}!"
 ```
 
 This is all pretty straightforward stuff. Example usage could be if you wanted to stop the write for all files in your category, then manually write them once the whole category is finished, maybe to just one file. the `ctx` object is slightly less interesting this time although it does still contain the `roots` object with access to all the settings you need.

@@ -1,8 +1,17 @@
-class Static
+module.exports = ->
 
-  fs: ->
-    category: 'static'
-    extract: true
-    detect: (-> true)
+  ###*
+   * @class
+   * @classdesc This extension is run last, scoops all remiaining files into
+   * a "static" category to be copied over directly.
+  ###
 
-module.exports = Static
+  class Static
+    
+    constructor: ->
+      @category = 'static'
+
+    fs: ->
+      category: @category
+      extract: true
+      detect: (-> true)

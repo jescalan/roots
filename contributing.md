@@ -7,11 +7,17 @@ Hello there! First of all, thanks for being interested in roots and helping out.
 
 If you are opening an issue about a bug, make sure that you include clear steps for how we can reproduce the problem. If we can't reproduce it, we can't fix it. If you are suggesting a feature, make sure your explanation is clear and detailed.
 
+### Contributing
+
+We've tried to make the roots codebase as clean and easy to understand as possible, but when it comes down to it, roots is a _very complex project_ and may take a good bit of time to grok the code if you're trying to jump in. The fact that you can be compiling multiple times at once with multiple projects at once, on multiple files at once, with multiple compile passes on each file, and no errors, slowness, or overflows should occur in the situation makes for a codebase that can be really challenging to fully understand.
+
+That being said, we've made sure to _very thoroughly document_ every single function and class in the codebase, not only for contributors and potential contributors, but so that we are able to quickly get a handle on what's going on in any part of the code. This means that in each file, there can easily be more comments than code, which can make it difficult to scan through if you are just reading code and not after all the docs (yet). If this is the case, you should install a plugin that will fold the comments, such as [FoldComments for Sublime Text](https://github.com/hasclass/FoldComments). This way, you can hit a keystroke to quickly expand and contract the large comment blocks and either look at the much more compact code pieces or read through the comments/docs.
+
 ### Testing
 
 Roots is constantly evolving, and to ensure that things are secure and working for everyone, we need to have tests. If you are adding a new feature, please make sure to add a test for it.
 
-Our own tests are not yet complete either, and we have had a tough time figuring out how to test things like the watch process and deployers. This is a constant work in progress for us, and it will be steadily improving over time.
+Please also ensure that any new lines you add are _fully covered_ by tests. Of course, this does not mean there will be no bugs, but it certainly makes it less likely. To test the code coverage, you can run `npm run coverage`.
 
 ### Code Style
 
@@ -25,6 +31,6 @@ If you submit a pull request that doesn't have a clean commit log, we will ask y
 
 ### Getting Money
 
-We are kind and generous here at roots HQ, and would love to thank anyone who makes a contribution to roots. We therefore have pledged to send 1 - 5 [dogecoins](http://dogecoin.com/) per merged pull request to any contributors. Please note that the estimated value of a dogecoin is currently $100, so that means you'll theoretically be recieving between $100 and $500 per successful PR. There is no limit to how many pull requests you can claim a bounty on, so more contributions == more money. Documentation of you making it rain with your newfound riches is always appreciated.
+We are kind and generous here at roots HQ, and would love to thank anyone who makes a contribution to roots. We therefore have pledged to send 100 - 500 [dogecoins](http://dogecoin.com/) per merged pull request to any contributors. Please note that the estimated value of a dogecoin is currently $100, so that means you'll theoretically be recieving between $10,000 and $50,000 per successful PR. There is no limit to how many pull requests you can claim a bounty on, so more contributions == more money. Documentation of you making it rain with your newfound riches is always appreciated.
 
 To claim the bounty, just leave your dogecoin wallet address in a comment on the closed PR.

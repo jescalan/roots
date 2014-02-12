@@ -8,11 +8,12 @@ sequence = require 'when/sequence'
 
 class Compiler
 
-  constructor: (@roots) ->
+  constructor: (@roots, @extensions) ->
     @options = {}
 
-  compile: (@category, f) ->
-    (new CompileFile(@roots, @category, f, @options)).run()
+  compile: (category, file) ->
+    cf = new CompileFile(@roots, @extensions, @options, category, file)
+    cf.run()
 
 module.exports = Compiler
 
@@ -20,7 +21,7 @@ module.exports = Compiler
 
 class CompileFile
 
-  constructor: (@roots, @category, file, @compile_options) ->
+  constructor: (@roots, @extensions, @compile_options, @category, file) ->
     @path = file.path # TODO: rewrite path refs to make better use of vinyl
     @adapters = get_adapters.call(@)
     @file_options = { filename: @path }
@@ -28,11 +29,11 @@ class CompileFile
   run: ->
     read_file(@path)
       .then((o) => @content = o)
-      .then(=> sequence(@roots.extensions.hooks('compile_hooks.before_file'), @))
+      .then(=> sequence(@extensions.hooks('compile_hooks.before_file'), @))
       .then(each_pass.bind(@))
       .tap((o) => @content = o)
       .tap(=> @roots.emit('compile', @path))
-      .then(=> sequence(@roots.extensions.hooks('compile_hooks.after_file'), @))
+      .then(=> sequence(@extensions.hooks('compile_hooks.after_file'), @))
       .then(write_file.bind(@))
   
   # @api private
@@ -43,7 +44,7 @@ class CompileFile
   write_file = (after_results) ->
     if _.any(after_results, ((r) -> r == false)) then return
 
-    sequence(@roots.extensions.hooks('compile_hooks.write'), @)
+    sequence(@extensions.hooks('compile_hooks.write'), @)
     .then (out) =>
       out = _.flatten(out)
 
@@ -61,7 +62,7 @@ class CompileFile
     extensions = path.basename(@path).split('.').slice(1)
     adapters = []
     
-    for ext in _.clone(extensions.reverse())
+    for ext in _.clone(extensions).reverse()
       compiler = _.find(@roots.config.compilers, (c) -> _.contains(c.extensions, ext))
       adapters.push(if compiler then compiler else { output: ext })
 
@@ -78,10 +79,10 @@ class CompilePass
   run: (@adapter, @index, @content) ->
     @opts = configure_options.call(@)
 
-    sequence(@file.roots.extensions.hooks('compile_hooks.before_pass'), @)
+    sequence(@file.extensions.hooks('compile_hooks.before_pass'), @)
       .then(compile_or_pass.bind(@))
       .then((out) => @content = out)
-      .then(=> sequence(@file.roots.extensions.hooks('compile_hooks.after_pass'), @))
+      .then(=> sequence(@file.extensions.hooks('compile_hooks.after_pass'), @))
       .then(=> @content)
 
   # @api private
