@@ -49,15 +49,6 @@ class Extensions
     return extensions
 
   ###*
-   * Removes an extension.
-   * 
-   * @param  {String} name - name of the extension you'd like to remove
-  ###
-
-  remove: (name) ->
-    _.remove(@all, ((i) -> i.name == name))
-
-  ###*
    * Ensures that all existant properties of an extension are functions.
    * 
    * @param  {Function} ext - instance of an extension

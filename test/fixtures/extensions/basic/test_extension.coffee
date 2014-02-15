@@ -1,4 +1,4 @@
-test_ext = ->
+module.exports = ->
 
   class TestExtension
 
@@ -30,6 +30,6 @@ test_ext = ->
           ctx.roots.emit('write', ctx.path)
           false
 
-  category_hooks: ->
-    after: (ctx, category) ->
-      ctx.roots.emit('after_category', ctx.path)    
+    category_hooks: ->
+      after: (ctx, category) ->
+        ctx.roots.emit('after_category', ctx.path)    

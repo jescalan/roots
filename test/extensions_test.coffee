@@ -17,15 +17,7 @@ describe 'extensions', ->
     ext.register(-> { name: 'bar' })
     ext.all.length.should.be.above(3)
     ext.register((-> { name: 'baz' }), 0)
-    ext.all[0].name.should.eql('baz')
-
-  it 'should remove extensions by name', ->
-    project = new Roots(path.join(__dirname, 'fixtures/compile/basic'))
-    ext = project.extensions
-    ext.register(-> { name: 'foo' })
-    ext.all.length.should.be.above(2)
-    ext.remove('foo')
-    ext.all.length.should.not.be.above(2)
+    ext.all[0]().name.should.eql('baz')
 
 describe 'extension hooks', ->
 
