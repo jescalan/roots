@@ -78,6 +78,7 @@ class Roots extends EventEmitter
   bail: (code, details) ->
     switch code
       when 125 then msg = "malformed extension error"
+      when 126 then msg = "malformed write hook output"
 
     console.error "\nFLAGRANT ERROR!\n".red.bold
     console.error "It looks like there was a " + "#{msg}".bold + "."

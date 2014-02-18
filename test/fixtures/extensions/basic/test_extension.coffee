@@ -26,9 +26,9 @@ module.exports = ->
         if ctx.file.category == @category
           ctx.file.roots.emit('after_pass', ctx.file.path)
       write: (ctx) =>
-        if ctx.category == @category
-          ctx.roots.emit('write', ctx.path)
-          false
+        if ctx.category != @category then return true
+        ctx.roots.emit('write', ctx.path)
+        false
 
     category_hooks: ->
       after: (ctx, category) ->
