@@ -17,6 +17,10 @@ class Config
 
     @ignores ?= []
     @ignores = @ignores.concat(['package.json', 'app.coffee', "#{@output}/**/*"])
+
+    @watcher_ignores ?= []
+    @watcher_ignores = @watcher_ignores.concat(['package.json', 'app.coffee', "#{@output}/**/*"])
+
     @compilers = get_compilers.call(@)
 
   load_config = ->

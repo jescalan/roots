@@ -22,7 +22,7 @@ autoprefixer = module.require('autoprefixer-stylus')
 module.exports =
 
   output: 'public'
-  
+
   stylus:
     use: [axis, autoprefixer]
 ```
@@ -34,30 +34,30 @@ As you can see, here we are able to locally require in extra dependencies and pu
 Below are all the options that you can pass to roots, from the simplest to the most advanced.
 
 #### output
-The path to a folder (starting from project root) that your project will be compiled into.    
-_default: `public`_ 
+The path to a folder (starting from project root) that your project will be compiled into.
+_default: `public`_
 
 #### ignores
-An array containing [minimatch](https://github.com/isaacs/minimatch) strings that represent files or folder you wish to ignore from the compile process. Full globstar syntax supported. Automatically ignores `package.json`, `node_modules`, `app.coffee` and your output directory (wouldn't want to have it recursively compile itself!)    
+An array containing [minimatch](https://github.com/isaacs/minimatch) strings that represent files or folder you wish to ignore from the compile process. Full globstar syntax supported. Automatically ignores `package.json`, `node_modules`, `app.coffee` and your output directory (wouldn't want to have it recursively compile itself!)
 
 #### dump_dirs
-Array of directories that will have their contents dumped into the output folder rather than compiling into the folder they are in    
+Array of directories that will have their contents dumped into the output folder rather than compiling into the folder they are in
 _default: `['views', 'assets']`_
 
 #### env
-Basic environment variable. Usually set through command line options, but if you need you can override here.    
+Basic environment variable. Usually set through command line options, but if you need you can override here.
 _default: `development`_
 
 #### debug
-When enabled, commands will dump out lots of information on what roots is doing internally.    
+When enabled, commands will dump out lots of information on what roots is doing internally.
 _default: `false`_
 
 #### live_reload
-When enabled, on `roots watch`, the browser will automatically reload every time you save a file in your project.    
+When enabled, on `roots watch`, the browser will automatically reload every time you save a file in your project.
 _default: `true`_
 
 #### open_browser
-When enabled, `roots watch` will automatically open a browser to the local server.    
+When enabled, `roots watch` will automatically open a browser to the local server.
 _default: `true`_
 
 #### locals
@@ -71,7 +71,6 @@ Same thing as before, but is run after each compile. Surprise surprise.
 
 #### Coming Soon!
 - layouts
-- watcher ignores
 - precompiled templates
 
 ### Compiler Options
