@@ -15,6 +15,6 @@ class Watcher
 
   ignore = (p) ->
     f = p.replace(@roots.root, '').slice(1)
-    @roots.config.ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i)->i).length
+    @roots.config.watcher_ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i)->i).length
 
 module.exports = Watcher
