@@ -147,3 +147,20 @@ You can also hook into the method that writes files in roots and use it to write
 ...so if you want to write multiple files out of one input, you can just override the write hook, do your path and content figuring, and return an array, one object for each file you want to write. Note that you can also return a promise for your object or array of objects if you need to do async tasks here.
 
 You have access to a full context object from the write hook, as with anything else. The context in this hook is an exact mirror of the context that you get in the after file hook. Finally, if you return false out of the write hook, nothing will be written, as is the case with the after hook.
+
+### Adding an Extension to Roots' Pipeline
+
+Adding an extension to roots is fairly simple. All you have to do is add it to an `extensions` array in `app.coffee`. For example:
+
+```coffee
+yell = module.require('yellr')
+
+module.exports =
+
+  extensions = [yell()]
+
+```
+
+So what's happening here is that we assume that we have `npm install`ed our extension, `yellr` locally. We then use `module.require` to require it from local (since this file is evaluated inside roots, using `module.require` ensures that the require root is from your project's folder), call it to initialize, and add it to the extensions array. If there were any options for the plugin, they would be passed in on this initialization.
+
+This call returns the extension's class, and a fresh instance of the class is initialized each compile pass. This way, you can hold on to "global" extension config passed in through the function wrapper, but you don't get any overlap or confusion between each compile pass.
