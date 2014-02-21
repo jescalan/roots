@@ -94,14 +94,18 @@ class Compile
     W.all(hooks)
 
   ###*
-   * Given a roots ast, create the nested folder structure for the project.
+   * Creates the nested folder structure for a project. First, creates an array
+   * of just the output paths, then creates the base public folder, then
+   * sequentially walks through the folders and creates them all.
    * 
    * @param  {Object} ast - roots ast
   ###
 
   create_folders = (ast) ->
+    output_paths = ast.dirs.map((d) => @roots.config.out(d))
+
     nodefn.call(mkdirp, @roots.config.output_path())
-      .then(-> W.map(ast.dirs, guard(guard.n(1), nodefn.lift(mkdirp))))
+      .then(-> W.map(output_paths, guard(guard.n(1), nodefn.lift(mkdirp))))
 
   ###*
    * Files are processed by category, and each category can be processed in

@@ -95,19 +95,16 @@ class Config
     path.join(@roots.root, @output)
 
   ###*
-   * Given a file and optional extension, this function produces the path to
-   * the file's destination.
+   * Given a vinyl-wrapped file and optional extension, this function produces
+   * the path to the file's destination.
    * 
-   * @param  {String} f - file path
+   * @param  {File} f - vinyl instance
    * @param  {String} ext - file extension, no dot
    * @return {String} path to where the file should be written
-   *
-   * @todo have this take a vinyl file
   ###
 
   out: (f, ext) ->
-    relative = f.replace(@roots.root, '')
-    res = relative.slice(1).split(path.sep)
+    res = f.relative.split(path.sep)
     if _.contains(@dump_dirs, res[0]) then res.shift()
     res.unshift(@output_path())
     res = res.join(path.sep)

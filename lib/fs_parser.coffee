@@ -149,9 +149,8 @@ class FSParser
       return extfs.extract
 
   ###*
-   * Makes sure there are no duplicate directories and that they have been
-   * passed through the output path parser, which removes certain folders
-   * like `views` and `assets` so they dump to root.
+   * Makes sure there are no duplicate directories and that they all directories
+   * are passed through as vinyl-wrapped file objects.
    *
    * @private
    * 
@@ -159,7 +158,7 @@ class FSParser
   ###
 
   format_dirs = ->
-    @ast.dirs = _.uniq(@ast.dirs).map((d) => @config.out(d))
+    @ast.dirs = _.uniq(@ast.dirs).map((d) => new File(base: @root, path: d))
     @ast
 
   ###*

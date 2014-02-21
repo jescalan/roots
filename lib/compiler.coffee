@@ -137,6 +137,8 @@ class CompileFile
    * 
    * @param  {Array} results - results from all write hooks
    * @return {Array} an array of promises for written files
+   *
+   * @todo if custom path is given, it always also writes standard
   ###
 
   process_write_hook_results = (results) ->
@@ -147,10 +149,10 @@ class CompileFile
     normal_write_pushed = false
 
     for res in results
-      if res == true and not normal_write_pushed
-        write_tasks.push(write_task.call(@))
+      if res == true
+        if not normal_write_pushed then write_tasks.push(write_task.call(@))
         normal_write_pushed = true
-      else if typeof res == 'object'
+      else if typeof res == 'object' and not Array.isArray(res)
         write_tasks.push(write_task.call(@, res))
       else if Array.isArray(res)
         write_tasks.concat(res.map((i) => write_task.call(@, i)))
@@ -170,11 +172,11 @@ class CompileFile
 
   write_task = (obj) ->
     obj ?= {
-      path: @roots.config.out(@file.path, _.last(@adapters).output)
+      path: @roots.config.out(@file, _.last(@adapters).output)
       content: @content
     }
 
-    if !obj.path? or !obj.content? then @roots.bail(126, o)
+    if !obj.path? or !obj.content? then @roots.bail(126, obj)
     nodefn.call(fs.writeFile, obj.path, obj.content)
 
   ###*
