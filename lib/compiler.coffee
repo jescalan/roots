@@ -183,6 +183,9 @@ class CompileFile
    * Read the file's extension and grab any and all adapters that match. If there
    * isn't a matching adapter, returns an adapter stub that is used to just copy
    * the file.
+   *
+   * If no adapters are found, it's a file with no extension, so it gets a stub
+   * adapter with no extension.
    * 
    * @return {Array} an array of adapter objects, in order
   ###
@@ -194,6 +197,8 @@ class CompileFile
     for ext in _.clone(extensions).reverse()
       compiler = _.find(@roots.config.compilers, (c) -> _.contains(c.extensions, ext))
       adapters.push(if compiler then compiler else { output: ext })
+
+    if !adapters.length then adapters.push({ output: '' })
 
     return adapters
 
