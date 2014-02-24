@@ -16,7 +16,6 @@ class ConfigLoader
 
   constructor: (@args, @done) ->
     @proj = roots.project
-    @path = path.join(@proj.rootDir + '/app.coffee')
 
   init: ->
     @load_file()
@@ -33,15 +32,23 @@ class ConfigLoader
     @done()
 
   load_file: ->
-    # if there's no app.coffee, set a blank config
-    if not fs.existsSync(@path) then return @config = {}
+    # support both app.js and app.coffee
+    coffeeConfig  = path.join(@proj.rootDir + '/app.coffee')
+    jsConfig      = path.join(@proj.rootDir + '/app.js')
 
-    conf = require(@path)
+    if fs.existsSync(coffeeConfig)
+      conf = require(coffeeConfig)
 
-    # if there are exports, assume a node config file
-    if Object.keys(conf).length > 0 then return @config = conf
-    # if there are no exports, assume a default config file
-    @config = eval(coffee.compile(fs.readFileSync(@path, 'utf8'), { bare: true }))
+      if Object.keys(conf).length > 0 then return @config = conf
+      return @config = eval(coffee.compile(fs.readFileSync(coffeeConfig, 'utf8'), {bare: true}))
+    else if fs.existsSync(jsConfig)
+      conf = require(jsConfig)
+
+      if Object.keys(conf).length > 0 then return @config = conf
+      return @config = eval(fs.readFileSync(jsConfig, 'utf8'))
+    else
+      # handle when there is no app.coffee
+      @config = {}
 
   configure_compilers: ->
     configurable_compilers = ['stylus', 'coffeescript']
