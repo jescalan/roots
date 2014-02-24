@@ -7,25 +7,17 @@ describe 'extensions', ->
   it 'should register extensions', ->
     project = new Roots(path.join(__dirname, 'fixtures/compile/basic'))
     ext = project.extensions
-    ext.register({ name: 'foo' })
+    ext.register(-> { name: 'foo' })
     ext.all.length.should.be.above(0)
 
   it 'should register extensions at a specified index', ->
     project = new Roots(path.join(__dirname, 'fixtures/compile/basic'))
     ext = project.extensions
-    ext.register({ name: 'foo' })
-    ext.register({ name: 'bar' })
+    ext.register(-> { name: 'foo' })
+    ext.register(-> { name: 'bar' })
     ext.all.length.should.be.above(3)
-    ext.register({ name: 'baz' }, 0)
-    ext.all[0].name.should.eql('baz')
-
-  it 'should remove extensions by name', ->
-    project = new Roots(path.join(__dirname, 'fixtures/compile/basic'))
-    ext = project.extensions
-    ext.register({ name: 'foo' })
-    ext.all.length.should.be.above(2)
-    ext.remove('foo')
-    ext.all.length.should.not.be.above(2)
+    ext.register((-> { name: 'baz' }), 0)
+    ext.all[0]().name.should.eql('baz')
 
 describe 'extension hooks', ->
 
@@ -60,7 +52,27 @@ describe 'extension hooks', ->
   it 'after category hook should work', ->
     @after_category.should.be.ok
 
-  it 'returning false on after_file should prevent write'
-  it 'returning false on write hook should prevent write'
-  it 'returning true on write hook should write normally'
-  it 'should write one or more custom paths from write hook'
+describe 'write hook', ->
+
+  before (done) ->
+    @path = path.join(__dirname, 'fixtures/extensions/write_hook')
+    @public = path.join(@path, 'public')
+    project = new Roots(@path)
+    project.extensions.all.length.should.be.above(2)
+    project.compile().on('error', done).on('done', done)
+
+  it 'returning false on write hook should prevent write', ->
+    should.not_exist(@public, 'prevent_write.html')
+
+  it 'returning true on write hook should write normally', ->
+    should.exist(@public, 'write_normal.html')
+
+  it 'should write one one custom path from write hook', ->
+    should.exist(@public, 'override.html')
+    should.contain_content(@public, 'override.html', /wow overrides/)
+
+  it 'should write multiple custom paths from write hook', ->
+    should.exist(@public, 'multi1.html')
+    should.contain_content(@public, 'multi1.html', /clone 1/)
+    should.exist(@public, 'multi2.html')
+    should.contain_content(@public, 'multi2.html', /clone 2/)

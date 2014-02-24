@@ -7,24 +7,64 @@ minimatch = require 'minimatch'
 pipeline  = require 'when/pipeline'
 File      = require 'vinyl'
 
+###*
+ * @class FS Parser
+ * @classdesc Recursively parses the project folder, producing an object
+ *            which puts each file into a category for processing.
+###
+
 class FSParser
 
-  constructor: (@roots) ->
+  ###*
+   * Creates a new instance of the FSParser class. Sets up instance vars:
+   * 
+   * - root: the project root
+   * - config: roots config object
+   * - extensions: all extension instances for this compile
+   * 
+   * @param  {Function} roots - instance of the roots base class
+  ###
+
+  constructor: (@roots, @extensions) ->
+    @root = @roots.root
+    @config = @roots.config
+
+  ###*
+   * Parses the roots base class' root path, whether file or directory
+   * returns an "ast" representing the files categorized by the way they
+   * need to be parsed. The ast is an object with the key being the
+   * category name and the value being an array of vinyl file instances.
+   * It would look something like this (with one 'example' extension):
+   *
+   * {
+   *   compiled: [<File>, <File>],
+   *   example: [<File>, <File>, <File>],
+   *   static: [<File>]
+   * }
+   * 
+   * @return {Object} when.js promise for an ast
+  ###
 
   parse: ->
-    task = new ParseTask(@roots)
-
-    if fs.statSync(@roots.root).isDirectory()
-      task.parse_dir(@roots.root)
-    else
-      task.parse_file(@roots.root)
-
-class ParseTask
-
-  constructor: (@roots) ->
     @ast = { dirs: [] }
 
-  parse_dir: (dir) ->
+    if fs.statSync(@root).isDirectory()
+      parse_dir.call(@, @root)
+    else
+      parse_file.call(@, @root)
+
+  ###*
+   * Parses the root as a directory, reading it recursively, adding
+   * all subdirectories to the `dirs` category, and parsing all files
+   * with the `parse_file` method below.
+   *
+   * @private
+   * 
+   * @param  {String} dir - path to a directory
+   * @return {Object} 'ast' object, described above
+  ###
+
+  parse_dir = (dir) ->
     deferred = W.defer()
     files = []
 
@@ -34,75 +74,101 @@ class ParseTask
       .on 'data', (f) =>
         if ignored.call(@, f.path) then return
         if f.parentDir.length then @ast.dirs.push(f.fullParentDir)
-        files.push(@parse_file(f.fullPath))
+        files.push(parse_file.call(@, f.fullPath))
 
     return deferred.promise
 
-  parse_file: (file) ->
-    list = (sort.bind(@, ext, file) for ext in @roots.extensions.all when ext.fs)
+  ###*
+   * Goes through each extension and runs it's `detect` function for the
+   * provided file. If it passes, the file is added to that extension's category.
+   * The roots default `static` extension runs last and collects any and all
+   * files that were not sorted into other categories.
+   *
+   * Also note the partial application and use of `when/pipeline`. We bind each
+   * extension and the file to the `sort` function upfront, and leave only the last
+   * parameter to be set, which represents `extract`, discussed below. Pipeline
+   * calls each function in an array in order, passing the results of the last
+   * function to the next one. The arg provided to pipeline is what goes to the
+   * first function in the list. Detailed docs for pipeline found here:
+   *
+   * https://github.com/cujojs/when/blob/master/docs/api.md#whenpipeline
+   *
+   * This method also wraps each file in a vinyl wrapper. More info in vinyl:
+   * https://github.com/wearefractal/vinyl
+   *
+   * @private
+   * 
+   * @param  {String} file - path to a file
+  ###
+
+  parse_file = (file) ->
+    file = new File(base: @root, path: file)
+    list = (sort.bind(@, ext, file) for ext in @extensions when ext.fs)
+
     pipeline(list, false).yield(@ast)
 
-  # @api private
-  
+  ###*
+   * Given a file and an extension, runs the extension's `detect` function
+   * on the file. If it returns false, the file is not added to the extension's
+   * category and the function returns. If true, the file is added to the
+   * extension's category.
+   * 
+   * After this, if the extension has `extract` set to true, meaning that once
+   * a file has been added to it's category, it's not eligable to be added to any
+   * other category, it returns `true`. At the top of the sort function, if `true`
+   * comes in (meaning a file has been added to a category and extracted), it will
+   * skip any detection and continue passing true down the line.
+   *
+   * The way pipeline works above, the result of one function is passed to the next.
+   * So as soon as an extension returns true (aka file is extracted), detections will
+   * not be run for any other extension, and therefore it will not be added to any
+   * other categories.
+   *
+   * @private
+   * 
+   * @param  {Function} ext - a roots extension instance
+   * @param  {File} file - vinyl wrapper for a file
+   * @param  {Boolean} extract - if true, function is skipped
+   * @return {Boolean} promise for a boolean, passed as extract to next function
+   *
+   * @todo handle error if ext.fs doesn't return an object
+   * @todo handle error if ext.fs.detect doesn't exist
+   * @todo handle error if category not found
+  ###
+
   sort = (ext, file, extract) ->
-    if extract then return W.resolve(true)
+    if extract then return true
+
     extfs = ext.fs()
-    file = new File(base: @roots.root, path: file)
+
     W.resolve(extfs.detect(file)).then (detected) =>
-      if not detected then return W.resolve(false)
+      if not detected then return false
       cat = extfs.category || ext.category
       @ast[cat] ?= []
       @ast[cat].push(file) unless _.contains(@ast[cat], file)
-      if extfs.extract then W.resolve(true) else W.resolve(false)
+      return extfs.extract
+
+  ###*
+   * Makes sure there are no duplicate directories and that they all directories
+   * are passed through as vinyl-wrapped file objects.
+   *
+   * @private
+   * 
+   * @return {Object} - modified instance of the `ast`
+  ###
 
   format_dirs = ->
-    @ast.dirs = _.uniq(@ast.dirs).map((d) => @roots.config.out(d))
+    @ast.dirs = _.uniq(@ast.dirs).map((d) => new File(base: @root, path: d))
     @ast
 
+  ###*
+   * Checks a file against the ignored list to see if it should be skipped.
+   * 
+   * @param  {String} f - file path
+   * @return {Boolean} whether the file should be ignored or not
+  ###
+
   ignored = (f) ->
-    @roots.config.ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i) -> i).length
+    @config.ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i) -> i).length
 
 module.exports = FSParser
-
-###
-
-What's Going On Here?
----------------------
-
-This class is responsible for analyzing a roots project and sorting each file
-into a category for processing later. It can be fed a file or a directory, and
-will produce an object containing arrays for `dirs`, `compiled`, `static`, and
-`dynamic`, each array containing full paths to the specified file.
-
-You will probably quickly notice that the FSParser class uses a private
-ParseTask class for most of its logic. This is because while there is only one
-FSParser per Roots object, the `parse` method is async and it's possible that
-more than one `parse` could be running at once. Since each `parse` call
-outputs a shared ast, ast cannot be a property of the FSParser class to
-prevent possible conflicts between parallel-running `parse` calls, and would
-have to be passed between each method call to keep it without conflict. But to
-make this cleaner, we  utilize a private class that is instantiated each
-`parse` call and can safely share the ast between its methods.
-
-There are only really two methods being called here, `parse_dir` and
-`parse_file`. Starting with the directory parse, we use readdirp to read
-through the project directory. When it encounters a file (on 'data' event), a
-few things happen. First, it checks to make sure the file is not ignored. By
-using minimatch to test against the file path, we can ensure that full
-globstar ignores (like in .gitignore) are supported. Next, if the file is
-nested in a directory, we push that to the ast directories array. Finally, we
-process the file, and add that task to an array which we resolve using
-[when.all](https://github.com/cujojs/when/blob/master/docs/api.md#whenall)
-once all the files have been read. On the way out, one more task goes through
-`ast.dirs` and formats them correctly, since they don't come out totally right
-initially.
-
-The `parse_file` function is the logic core for this class. Since dynamic
-files are processed before normally compiled files because they make locals
-available in all other views, each file needs to be analyzed to determine
-whether it contains dynamic content or not. In order to do this as efficiently
-as possible, only the first three bytes of each file is read asynchrnously as
-a stream, which is all it takes to determine that the file does or does not
-contain dynamic content. See `./yaml_parser.coffee` for more details.
-
-###
