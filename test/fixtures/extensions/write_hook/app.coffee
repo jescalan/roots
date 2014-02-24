@@ -29,7 +29,7 @@ write_custom_path = ->
     compile_hooks: ->
       write: (ctx) =>
         if ctx.category == @category
-          { path: path.join(ctx.roots.config.output_path(), 'override.html'), content: 'wow overrides' }
+          { path: path.join(ctx.roots.root, 'override.html'), content: 'wow overrides' }
         else
           true
 
@@ -46,8 +46,8 @@ write_multiple = ->
       write: (ctx) =>
         if ctx.category == @category
           [
-            { path: path.join(ctx.roots.config.output_path(), 'multi1.html'), content: 'clone 1' },
-            { path: path.join(ctx.roots.config.output_path(), 'multi2.html'), content: 'clone 2' }
+            { path: path.join(ctx.roots.root, 'multi1.html'), content: 'clone 1' },
+            { path: path.join(ctx.roots.root, 'multi2.html'), content: 'clone 2' }
           ]
         else
           true

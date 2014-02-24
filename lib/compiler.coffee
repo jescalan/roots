@@ -1,10 +1,11 @@
-fs     = require 'graceful-fs'
-path   = require 'path'
-_      = require 'lodash'
-W      = require 'when'
-nodefn = require 'when/node/function'
+fs       = require 'graceful-fs'
+path     = require 'path'
+_        = require 'lodash'
+W        = require 'when'
+nodefn   = require 'when/node/function'
 pipeline = require 'when/pipeline'
 sequence = require 'when/sequence'
+File     = require 'vinyl'
 
 ###*
  * @class Compiler
@@ -17,7 +18,7 @@ class Compiler
    * Creates a new compiler instance, which holds on to the roots instance
    * as well as an array of initialized extensions, and creates an empty
    * options object, which is re-created per-compile.
-   * 
+   *
    * @param  {Function} @roots - Roots class instance
    * @param  {Function} @extensions - array of initialzed extensions
   ###
@@ -27,7 +28,7 @@ class Compiler
 
   ###*
    * Compile a single file asynchronously.
-   * 
+   *
    * @param  {String} category - category the file is being compiled in
    * @param  {File} file - vinyl-wrapped file
    * @return {Promise} promise for the fully compiled file
@@ -52,7 +53,7 @@ class CompileFile
    * Creates a new instances of the CompileFile class. Grabs the adapter(s)
    * needed to compile the file, creates the per-file options object and adds
    * filename to it.
-   * 
+   *
    * @param  {Function} roots           Roots class instance
    * @param  {Array}    extensions      Array of initialzed extensions
    * @param  {Object}   compile_options Per-compile options object
@@ -74,7 +75,7 @@ class CompileFile
    * - emit a compile event once finished passing the file vinyl wrapper
    * - run the extensions' after hooks
    * - write the file
-   * 
+   *
    * @return {Promise} promise for a compiled and written file
   ###
 
@@ -87,12 +88,12 @@ class CompileFile
       .tap(=> @roots.emit('compile', @file))
       .then(=> sequence(@extensions.hooks('compile_hooks.after_file'), @))
       .then(write_file.bind(@))
-  
+
   ###*
    * Async utf8 file read from a vinyl file wrapped in a promise.
    *
    * @private
-   * 
+   *
    * @param  {f} f - vinyl-wrapped file
    * @return {Promise} a promise for the file's contents
   ###
@@ -109,7 +110,7 @@ class CompileFile
    * - Move on once all write tasks have been completed
    *
    * @private
-   * 
+   *
    * @return {Promise} promise for written file(s)
    *
    * @todo adjust config.out to work better with vinyl
@@ -134,7 +135,7 @@ class CompileFile
    * - If a write hook returns anything else, roots bails
    *
    * We then return an array of promises for all write tasks.
-   * 
+   *
    * @param  {Array} results - results from all write hooks
    * @return {Array} an array of promises for written files
    *
@@ -162,21 +163,33 @@ class CompileFile
     return W.resolve(write_tasks)
 
   ###*
-   * A helper function for write_file, this is a single write task. It accepts
-   * an object with a path and content property. If not provided, it uses a
-   * default. It then writes the content to the path asynchronously.
-   * 
+   * Single task to write a file. Accepts an optional object with the following keys:
+   *
+   * - path: relative (to root) or absolute path to write to
+   * - content: content to write
+   * - extension: extension to write the file with
+   *
+   * If an object is passed, each of these keys is optional, and if not provided will
+   * be filled in with default values. The path then is wrapped with vinyl, passed
+   * through the roots output path generator, and the file is written.
+   *
    * @param  {Object} obj - object with `path` and `content` properties
    * @return {Promise} a promise for the written file
   ###
 
   write_task = (obj) ->
-    obj ?= {
-      path: @roots.config.out(@file, _.last(@adapters).output)
-      content: @content
-    }
+    obj ?= {}
 
-    if !obj.path? or !obj.content? then @roots.bail(126, obj)
+    obj = _.defaults obj,
+      path: @file
+      content: @content
+      extension: _.last(@adapters).output
+
+    if not (obj.path instanceof File)
+      obj.path = new File(base: @roots.root, path: obj.path)
+
+    obj.path = @roots.config.out(obj.path, obj.extension)
+
     nodefn.call(fs.writeFile, obj.path, obj.content)
 
   ###*
@@ -186,14 +199,14 @@ class CompileFile
    *
    * If no adapters are found, it's a file with no extension, so it gets a stub
    * adapter with no extension.
-   * 
+   *
    * @return {Array} an array of adapter objects, in order
   ###
 
   get_adapters = ->
     extensions = path.basename(@file.path).split('.').slice(1)
     adapters = []
-    
+
     for ext in _.clone(extensions).reverse()
       compiler = _.find(@roots.config.compilers, (c) -> _.contains(c.extensions, ext))
       adapters.push(if compiler then compiler else { output: ext })
@@ -207,7 +220,7 @@ class CompileFile
    * own task, it gets its own context. This method runs pipeline, which runs
    * through an array and passes one's output to the next. Before doing this,
    * it binds an adapter and an index to each compile pass.
-   * 
+   *
    * @return {Promise} a promise for the compiled content of the file
   ###
 
@@ -239,7 +252,7 @@ class CompilePass
    * - Then set the content on the context
    * - Then execute any after_pass hooks
    * - Finally, return the content
-   * 
+   *
    * @param  {Object} @adapter - accord adapter to compile with
    * @param  {Integer} @index - # of the compile pass
    * @param  {String} @content - the content to be compiled
@@ -272,7 +285,7 @@ class CompilePass
    *   compiles, but are cleared between one compile and the next
    *
    * @private
-   * 
+   *
    * @return {Object} - all options merged into a single object
   ###
 
@@ -292,7 +305,7 @@ class CompilePass
    *
    * If there is a name this means we have a legit adapter, and it runs the
    * compile and returns a promise for the content.
-   * 
+   *
    * @return {Promise|String} a string or promise for a string of content
    *
    * @todo maybe use instance rather than name to classify?
