@@ -28,6 +28,8 @@ roots is a fast, simple, and customizable static site compiler
 - [x] multipass compiles
 - [x] precompiled templates
 - [x] dynamic content
+- [ ] debug mode
+- [ ] environments
 - [ ] custom compilers
 - [ ] deployment (ship)
 - [ ] bower integration
