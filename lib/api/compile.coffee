@@ -1,3 +1,4 @@
+fs       = require 'fs'
 W        = require 'when'
 nodefn   = require 'when/node/function'
 guard    = require 'when/guard'
@@ -40,6 +41,7 @@ class Compile
    * - create the folder structure
    * - compile and write each of the files
    * - execute user after hooks if present
+   * - removes any empty folders that exist after compile
    * - emit finished events
   ###
 
@@ -51,6 +53,7 @@ class Compile
       .tap(create_folders.bind(@))
       .then(process_files.bind(@))
       .then(after_hook.bind(@))
+      .then(purge_empty_folders.bind(@))
       .done (=> @roots.emit('done')), ((err) => @roots.emit('error', err))
 
   ###*
@@ -103,6 +106,7 @@ class Compile
 
   create_folders = (ast) ->
     output_paths = ast.dirs.map((d) => @roots.config.out(d))
+    @__dirs = output_paths
 
     nodefn.call(mkdirp, @roots.config.output_path())
       .then(-> W.map(output_paths, guard(guard.n(1), nodefn.lift(mkdirp))))
@@ -151,5 +155,22 @@ class Compile
     keys.all
       ordered: sequence(ordered)
       parallel: W.all(parallel)
+
+  ###*
+   * Sometimes extensions prevent file writes and leave behind empty
+   * folders. The client templates extension is a good example. No matter
+   * how it happens, there should not be any empty folders in the output,
+   * so this method gets rid of them if they exist.
+   *
+   * The way this is done is *very* hacky, but it is the speediest way. It
+   * tries to delete every folder, and if it succeeds, it means the folder was
+   * empty, as trying to remove a directory with contents throws an error (which
+   * we ignore using an empty callback).
+   * 
+   * @private
+  ###
+
+  purge_empty_folders = ->
+    @__dirs.map (d) -> fs.rmdir(d, ->)
 
 module.exports = Compile
