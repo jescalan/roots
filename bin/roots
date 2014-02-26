@@ -22,7 +22,7 @@ var fs = require('fs'),
     path = require('path');
 
 var cmds = fs.readdirSync(path.join(__dirname, '../lib/commands')).map(function(d){
-  return path.basename(d, '.coffee'); // TODO: this can't be set as coffee
+  return path.basename(d).split('.')[0];
 });
 
 if (cmds.indexOf(args._[0]) > -1) {
