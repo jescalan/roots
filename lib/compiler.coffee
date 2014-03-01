@@ -6,6 +6,7 @@ nodefn   = require 'when/node/function'
 pipeline = require 'when/pipeline'
 sequence = require 'when/sequence'
 File     = require 'vinyl'
+Magic    = new (require('mmmagic').Magic)
 
 ###*
  * @class Compiler
@@ -99,7 +100,16 @@ class CompileFile
   ###
 
   read_file = (f) ->
-    nodefn.call(fs.readFile, f.path, { encoding: 'utf8' })
+    options = null
+
+    # we can not use nodefn because the Magic lib
+    # bombs out when we do. https://github.com/mscdex/mmmagic/issues/20
+    W.promise (resolve, reject) ->
+      Magic.detectFile f.path, (e, r) ->
+        reject(e) if e?
+
+        options = {encoding: 'utf8'} if ~r.indexOf('ASCII text')
+        resolve(nodefn.call(fs.readFile, f.path, options))
 
   ###*
    * Writes a file from the content property on the instance. Can be modified
