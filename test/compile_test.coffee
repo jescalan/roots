@@ -26,6 +26,7 @@ describe 'compile', ->
           'nested/double_nested',
           'nested/double_nested/bar.html'
         ])
+        should(fs.statSync(path.join(output, "doge.png")).size).equal(fs.statSync(path.join(p, "doge.png")).size)
         done()
 
   it 'should copy files in nested directories', (done) ->
