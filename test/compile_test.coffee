@@ -120,3 +120,21 @@ describe 'compile', ->
         should.exist(output, 'quux.html')
         should.contain_content(output, 'quux.html', /<p>so compile<\/p>/)
         done()
+
+  it 'should be able to handle the most Fd filenames ever', (done) ->
+    p = path.join(test_path, 'weird_filenames')
+    output = path.join(p, 'public')
+
+    new Roots(p).compile()
+      .on('error', done)
+      .on 'done', ->
+        should.exist(output, 'foo%20bar.wow')
+        should.exist(output, 'pestan%CC%83a.md')
+        should.exist(output, 'doge.eats.twerking-cyrus%C3%9F-tm-___%5C%3Acat.png')
+        should.exist(output, 'folder.withdot')
+        should.exist(output, 'folder.withdot/.dotfile.wow')
+        should.exist(output, 'folder.withdot/file.something.other.js')
+        should.exist(output, 'folder.withdot/look%40mybiceps')
+        should.exist(output, 'folder.withdot/manyOf%E2%88%ABchin')
+        should.exist(output, 'folder.withdot/manyOf%E2%88%ABchin/er%20mer%20.gerd.wat')
+        done()
