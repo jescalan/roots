@@ -31,7 +31,7 @@ class Config
    *
    * Finally, we read the package.json file if present and grab all the adapters
    * needed to compile files in this project. More details on that later.
-   * 
+   *
    * @param  {Function} @roots - roots class instance
    *
    * @todo uniq filter ignores
@@ -97,7 +97,7 @@ class Config
   ###*
    * Given a vinyl-wrapped file and optional extension, this function produces
    * the path to the file's destination.
-   * 
+   *
    * @param  {File} f - vinyl instance
    * @param  {String} ext - file extension, no dot
    * @return {String} path to where the file should be written
@@ -106,6 +106,7 @@ class Config
   out: (f, ext) ->
     res = f.relative.split(path.sep)
     if _.contains(@dump_dirs, res[0]) then res.shift()
+    res = res.map(encodeURIComponent)
     res.unshift(@output_path())
     res = res.join(path.sep)
     if ext then res = res.replace(/\..*$/, ".#{ext}")
@@ -118,7 +119,7 @@ class Config
    * have not been installed.
    *
    * @private
-   * 
+   *
    * @return {Array} - array of accord adapters
   ###
 

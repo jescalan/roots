@@ -163,15 +163,18 @@ class CompileFile
     return W.resolve(write_tasks)
 
   ###*
-   * Single task to write a file. Accepts an optional object with the following keys:
+   * Single task to write a file. Accepts an optional object with the following
+   * keys:
    *
    * - path: relative (to root) or absolute path to write to
    * - content: content to write
    * - extension: extension to write the file with
    *
-   * If an object is passed, each of these keys is optional, and if not provided will
-   * be filled in with default values. The path then is wrapped with vinyl, passed
-   * through the roots output path generator, and the file is written.
+   * If an object is passed, each of these keys is optional, and if not provided
+   * will be filled in with default values. The path then is wrapped with vinyl,
+   * passed through the roots output path generator, and the file is written.
+   * The extension property is only set if there was a compile, otherwise any
+   * extensions are preserved as is.
    *
    * @param  {Object} obj - object with `path` and `content` properties
    * @return {Promise} a promise for the written file
@@ -183,7 +186,9 @@ class CompileFile
     obj = _.defaults obj,
       path: @file
       content: @content
-      extension: _.last(@adapters).output
+
+    was_compiled = !!_(@adapters, 'name').pluck('name').compact().value().length
+    if was_compiled then obj.extension = _.last(@adapters).output
 
     if not (obj.path instanceof File)
       obj.path = new File(base: @roots.root, path: obj.path)
