@@ -96,7 +96,14 @@ class Config
 
   ###*
    * Given a vinyl-wrapped file and optional extension, this function produces
-   * the path to the file's destination.
+   * the path to the file's destination. To do so, it goes through these steps:
+   *
+   * - Take the relative path and split it by /
+   * - If it's in a 'dumped' directory, remove that directory
+   * - URI encode any strange characters
+   * - Add the full path to the output folder to the beginning
+   * - Join it back together with /
+   * - If an extension override was provided, replace the extension
    *
    * @param  {File} f - vinyl instance
    * @param  {String} ext - file extension, no dot
