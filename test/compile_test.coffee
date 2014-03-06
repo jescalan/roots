@@ -25,7 +25,8 @@ describe 'compile', ->
           'nested/foo.html',
           'nested/double_nested',
           'nested/double_nested/bar.html',
-          'unicode_land.html'
+          'unicode_land.html',
+          'empty.html'
         ])
         should(fs.statSync(path.join(output, "doge.png")).size).equal(fs.statSync(path.join(p, "doge.png")).size)
         should.contain_content(output, 'unicode_land.html', /å sky so hîgh ☆/)
