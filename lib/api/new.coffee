@@ -5,6 +5,7 @@ exec           = require('child_process').exec
 nodefn         = require 'when/node/function'
 sprout         = require 'sprout'
 global_config  = require '../global_config'
+_              = require 'lodash'
 
 class New extends EventEmitter
 
@@ -16,9 +17,9 @@ class New extends EventEmitter
     @template = opts.template || global_config().get('default_template')
     @options = opts.options
 
-    if sprout.list().length < 1
-      # TODO: make this 'roots-base'
-      sprout.add(name: 'base', url: @base_url)
+    # if sprout list doesn't contain roots-base
+    if not _.contains(sprout.list(), 'roots-base')
+      sprout.add(name: 'roots-base', url: @base_url)
         .catch((err) => @emit('error', err))
         .tap(=> @emit('template:base_added'))
         .then(=> init.call(@))

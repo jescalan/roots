@@ -37,7 +37,7 @@ exports.reset = (override) ->
 
 remove_roots_config = (deferred) ->
   tasks = []
-  tasks.push(sprout.remove(tpl)) for tpl in _.without(sprout.list(), 'base')
+  tasks.push(sprout.remove(tpl)) for tpl in _.without(sprout.list(), 'roots-base')
 
   W.all(tasks)
     .then(-> fs.unlinkSync(global_config().path))

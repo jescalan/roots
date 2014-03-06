@@ -24,7 +24,7 @@ describe 'new', ->
       if err then return done(err)
       events.should.be.above(2)
       rimraf.sync(p)
-      Roots.template.remove('base').done((-> done()), done)
+      Roots.template.remove('roots-base').done((-> done()), done)
 
     Roots.new(
       path: p
