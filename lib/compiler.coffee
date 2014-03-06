@@ -6,7 +6,6 @@ nodefn   = require 'when/node/function'
 pipeline = require 'when/pipeline'
 sequence = require 'when/sequence'
 File     = require 'vinyl'
-Magic    = new (require('mmmagic').Magic)
 
 ###*
  * @class Compiler
@@ -64,6 +63,7 @@ class CompileFile
 
   constructor: (@roots, @extensions, @compile_options, @category, @file) ->
     @adapters = get_adapters.call(@)
+    @is_compiled = !!_(@adapters).pluck('name').compact().value().length
     @file_options = { filename: @file.path }
 
   ###*
@@ -81,7 +81,7 @@ class CompileFile
   ###
 
   run: ->
-    read_file(@file)
+    read_file.call(@, @file)
       .then((o) => @content = o)
       .then(=> sequence(@extensions.hooks('compile_hooks.before_file'), @))
       .then(each_pass.bind(@))
@@ -102,14 +102,9 @@ class CompileFile
   read_file = (f) ->
     options = null
 
-    # we can not use nodefn because the Magic lib
-    # bombs out when we do. https://github.com/mscdex/mmmagic/issues/20
-    W.promise (resolve, reject) ->
-      Magic.detectFile f.path, (e, r) ->
-        reject(e) if e?
-
-        options = {encoding: 'utf8'} if ~r.indexOf('ASCII text')
-        resolve(nodefn.call(fs.readFile, f.path, options))
+    # if the file is compiled, read as utf8, if not read as buffer
+    opts = if @is_compiled then { encoding: 'utf8' } else null
+    nodefn.call(fs.readFile, f.path, opts)
 
   ###*
    * Writes a file from the content property on the instance. Can be modified
@@ -197,8 +192,7 @@ class CompileFile
       path: @file
       content: @content
 
-    was_compiled = !!_(@adapters, 'name').pluck('name').compact().value().length
-    if was_compiled then obj.extension = _.last(@adapters).output
+    if @is_compiled then obj.extension = _.last(@adapters).output
 
     if not (obj.path instanceof File)
       obj.path = new File(base: @roots.root, path: obj.path)

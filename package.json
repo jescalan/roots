@@ -38,8 +38,7 @@
     "infestor": "0.2.x",
     "faye-websocket": "0.7.x",
     "graceful-fs": "2.x",
-    "vinyl": "0.2.x",
-    "mmmagic": "~0.3.6"
+    "vinyl": "0.2.x"
   },
   "devDependencies": {
     "mocha": "*",
