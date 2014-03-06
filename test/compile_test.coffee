@@ -24,9 +24,11 @@ describe 'compile', ->
           'nested',
           'nested/foo.html',
           'nested/double_nested',
-          'nested/double_nested/bar.html'
+          'nested/double_nested/bar.html',
+          'unicode_land.html'
         ])
         should(fs.statSync(path.join(output, "doge.png")).size).equal(fs.statSync(path.join(p, "doge.png")).size)
+        should.contain_content(output, 'unicode_land.html', /å sky so hîgh ☆/)
         done()
 
   it 'should copy files in nested directories', (done) ->
