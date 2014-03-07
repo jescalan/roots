@@ -17,11 +17,11 @@ Documentation for building your own extensions can be found below.
 Building an Extension
 ---------------------
 
-Roots extensions are extremely powerful, and have the ability to transform roots into more or less anything you want. A lot of what are currently extensions used to be written directly to the core, integrated throughout it in multiple places. Therefore, the extensions API has hooks into many different places in roots' core compile pipeline, and to understand how to write an extension, it's important to understand at least in general how roots works.
+Roots extensions are extremely powerful, and have the ability to transform roots into more or less anything you want. A lot of what are currently extensions used to be written directly to the core, integrated throughout it in multiple places. Therefore, the extensions API has hooks into many different places in roots' core compile pipeline, and to understand how to write an extension, it's important to understand at least in general how roots works. We will be discussing this throughout the document.
 
-Let's start at the beginning. When roots starts compiling your project, it scans the folder for all files, and sorts them into categories. By default, it will sort files into `compiled` or `static`, with the compiled files being ones that match file extensions of compilers that you have installed, and static being files that should simply be copied over. *This is the first place that your extension can jump in*.
+Extensions export a function that returns a class. The function is executed when roots is initialized, this is the time for setting up any global options or configuration that persist across as many compiles as will happen. The extension must then export a "class" (which in js is really a function, but since these examples use coffeescript we'll go with class). This class will be *re-instantiated each time compile is run*.
 
-Extensions export a function that returns a class. The function is executed when roots is initialized, this is the time for setting up any global options or configuration that persist across as many compiles as will happen. The extension must then export a "class" (which in js is really a function, but since these examples use coffeescript we'll go with class). This class will be *re-instantiated each time compile is run*. This means that any context inside the class is cleared between compiles. If there is anything you want to be able to hold on to between compiles, it needs to be outside the class. Conversely, do not store anything outside the class that you do not want to be untouched between two compiles. For example, if you add content to an array outside each compile, it will continue getting larger each compile. This is usually not what you want to do, so assume that anything outside the class is used for global configuration for the extension. With that out of the way, let's lay down the skeleton for a sample extension that finds any file with a filename in all caps and makes sure the contents are also all caps.
+With that out of the way, let's lay down the skeleton for a sample extension that finds any file with a filename in all caps and makes sure the contents are also all caps.
 
 tl;dr - your extension must be a function that returns a function:
 
@@ -39,7 +39,9 @@ Notice that an instance of the roots class is passed into the constructor. This 
 File Sorting
 ------------
 
-Ok, so we have a start. Now, in order to get into the filesystem scanning portion, we want to define a category that we'll sort the targeted files into, as well as a function that we can use to detect whether this is a file we want to separate into our own category, which, for this extension, means that it's filename will be in all uppercase. We can do this by defining a `fs` method on the class which returns an object with `category` and `detect` properties:
+Ok, so we have a start. Now let's talk about the first spot that we can get into the roots pipeline. When roots starts compiling your project, it scans the folder for all files, and sorts them into categories. By default, it will sort files into ``compiled`` or ``static``, with the compiled files being ones that match file extensions of compilers that you have installed, and static being files that should simply be copied over. *This is the first place that your extension can jump in*.
+
+In order to get into the filesystem scanning portion, we want to define a category that we'll sort the targeted files into, as well as a function that we can use to detect whether this is a file we want to separate into our own category, which, for this extension, means that it's filename will be in all uppercase. We can do this by defining a ``fs`` method on the class which returns an object with ``category`` and ``detect`` properties:
 
 .. code-block:: coffee-script
 
@@ -56,7 +58,7 @@ Ok, so we have a start. Now, in order to get into the filesystem scanning portio
 
 So category is just a string (we can use this later), and detect is a function which is fed a `vinyl <https://github.com/wearefractal/vinyl>`_ wrapper for each file that's run through. Here, we just run a simple comparison to see if the basename is all uppercase. The `detect` function also can return a promise if you are running an async operation. Do note that speed is important in roots, so make sure you have considered the speed impacts of your extension. That means try not to for example read the full contents of a file synchronously, because that could take quite a while in a larger project.
 
-There are a couple more options to consider here in the filesystem sorting section. First, it's possible that multiple extensions could be operating on the same project, and it's important to consider the order in which they run, and whether files are "caught" by one extension or passed through to others. You can handle this with the `extract` boolean, which can be set to `true` in order to stop the file from being potentially sorted into other categories after detection. In this case we do want that, since we want the file to be compiled *only* as all uppercase, not also compiled normally after. This is the case for most extensions. Let's update our code:
+There are a couple more options to consider here in the filesystem sorting section. First, it's possible that multiple extensions could be operating on the same project, and it's important to consider the order in which they run, and whether files are "caught" by one extension or passed through to others. You can handle this with the ``extract`` boolean, which can be set to ``true`` in order to stop the file from being potentially sorted into other categories after detection. In this case we do want that, since we want the file to be compiled *only* as all uppercase, not also compiled normally after. This is the case for most extensions. Let's update our code:
 
 .. code-block:: coffee-script
 
@@ -74,7 +76,7 @@ There are a couple more options to consider here in the filesystem sorting secti
 
 Finally, it's possible that you actually need your category to be compiled **before** anything else compiles. For example, dynamic content is compiled before anything else, because it makes locals available to all other view templates. Since roots compiles all files as quickly as possible, compiling dynamic content alongside normal views would result in race conditions where only some dynamic content would be available in the rest of the views. For that reason, the extension must ensure that the entire "dynamic" category is finished compiling before the rest of the project begins. This of course has speed implications as well which should be considered, but if it's necessary, it's necessary.
 
-For this extension, there's no need for the file to be compiled before others, so we can skip the `ordered` property, which defaults to `false`. And that will do it for the filesystem sorting portion, we now have a neat list of all files with upcased filenames and are ready to move on to the compile hooks, where we get a chance to modify the content.
+For this extension, there's no need for the file to be compiled before others, so we can skip the `ordered` property, which defaults to ``false``. And that will do it for the filesystem sorting portion, we now have a neat list of all files with upcased filenames and are ready to move on to the compile hooks, where we get a chance to modify the content.
 
 Compile Hooks
 -------------
@@ -96,13 +98,41 @@ The next step for us is to modify the file's content. A good way to do this woul
             path.basename(f.relative) == path.basename(f.relative).toUpperCase()
 
         compile_hooks: ->
+          category: 'upcased'
           after_file: (ctx) =>
-            if ctx.category == @fs.category
-              ctx.content = ctx.content.toUpperCase()
+            ctx.content = ctx.content.toUpperCase()
 
 So let's talk about this. First, we have the ``compile_hooks`` method, which returns an object with 4 potential hooks, one that we've seen: ``before_file``, ``after_file``, ``before_pass``, and ``after_pass``. The "pass" hooks fire once for each compile pass taken on the file (files can have multiple extensions and be compiled multiple times), and the "file" hooks fire once per file, no matter how many extensions it has or how many times it is compiled. Each hook is passed a context object, which is an instance of a class. The file hooks get an instance of the `CompileFile class <https://github.com/jenius/roots/blob/v3/lib/compiler.coffee#L20>`_, and the pass hooks get the `CompilePass class <https://github.com/jenius/roots/blob/v3/lib/compiler.coffee#L59>`_. The information available in each class will be listed in the next section.
 
 After this hook, the file goes on to be written, and all is well! Only one caveat, if you return false or a promise for false from the ``after_file`` hook, the file **will not be written**.
+
+Categories
+----------
+
+Before we jump in to the next section, let's take a moment to talk about the ``category`` property. This is a piece of information that can be used in a few different sections, so it's a bit more flexible. You might have noticed a little bit of redundancy actually in the previous example, which we can eliminate here with clever use of the ``category`` property.
+
+If you define a ``category`` on the class itself, that category is automatically applied to all hooks. Let's use this to do a quick refactor of the code above.
+
+.. code-block:: coffee-script
+
+    path = require 'path'
+
+    module.exports = (opts) ->
+
+      class YellExtension
+        constructor: ->
+          @category = 'upcased'
+
+        fs: ->
+          extract: true
+          detect: (f) ->
+            path.basename(f.relative) == path.basename(f.relative).toUpperCase()
+
+        compile_hooks: ->
+          after_file: (ctx) =>
+            ctx.content = ctx.content.toUpperCase()
+
+Nice! Now all the repetiton has been cut. In addition, if you want to override one specific set of hooks with another category, you can always define it explicitly on the set of hooks, and it will override the category on the class. Finally, if you don't define a category at all (and you don't have a ``fs`` method, which banks on having a category, or the ``fs`` method has it's own scoped category), your extension will run for all categories.
 
 Information Available to Compile Hooks
 --------------------------------------
@@ -172,3 +202,60 @@ Adding an extension to roots is fairly simple. All you have to do is add it to a
 So what's happening here is that we assume that we have ``npm install``ed our extension, ``yellr`` locally. We then use ``module.require`` to require it from local (since this file is evaluated inside roots, using ``module.require`` ensures that the require root is from your project's folder), call it to initialize, and add it to the extensions array. If there were any options for the plugin, they would be passed in on this initialization.
 
 This call returns the extension's class, and a fresh instance of the class is initialized each compile pass. This way, you can hold on to "global" extension config passed in through the function wrapper, but you don't get any overlap or confusion between each compile pass.
+
+Example: Concatenation
+----------------------
+
+Now that we have the basic info out of the way, let's take a look at a couple examples of common patterns in roots extensions. First is an example of how to collect the contents of certain files and concatenate them into a single file.
+
+For example, if you were making an extension that collected all the contents of javascript files and concatenated them into a single file, you would want to carefully choose where to store the contents while they were being collected. Let's take a look at some code to put this in context:
+
+.. code-block:: coffee-script
+  
+  module.exports (opts) = ->
+
+    class JSConcat
+      constructor: ->
+        @category = 'js-concat'
+        @contents = ''
+
+      fs: ->
+        detect: (f) ->
+          path.extname(f.relative) == 'js'
+
+      compile_hooks: ->
+        after_file: (ctx) =>
+          @contents += ctx.contents
+        write: ->
+          false
+
+      category_hooks: ->
+        after: (ctx) =>
+          write file
+
+What we have here is a simple extension that concatenates js files into a single file rather than outputting them individually. What it does is pretty straightforward. It detects files that have a ``.js`` extension and puts them into a category. After each one is compiled, it's contents are pushed into a string, and the normal file write is prevented. When they have all been compiled, a file is written to a user-specificed output path containing the concatenated results. Now, this extension works fine, but one small context change would result in a borked extension. See if you can spot the mistake here:
+
+.. code-block:: coffee-script
+  
+  module.exports (opts) = ->
+    contents = ''
+
+    class JSConcat
+      constructor: ->
+        @category = 'js-concat'
+
+      fs: ->
+        detect: (f) ->
+          path.extname(f.relative) == 'js'
+
+      compile_hooks: ->
+        after_file: (ctx) ->
+          contents += ctx.contents
+        write: ->
+          false
+
+      category_hooks: ->
+        after: (ctx) =>
+          write file
+
+See it? Can you guess what it would do wrong? What would happen here is that each time a compile happened, it would add another full set of contents to the original. So after three compiles, the file would have 3x the original contents, and they would just be duplicates of the original. This is because while the class is re-instantiated each compile, the extension itself is only instantiated once when the class is created.
