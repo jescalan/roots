@@ -76,16 +76,26 @@ class Extensions
   not_function = (prop) -> prop && typeof prop != 'function'
 
   ###*
-   * Returns a given extension's hook, if it exists.
+   * Returns a given extension's hook, if it exists. The nitty gritty:
+   *
+   * - Takes a hook name like 'compile_hooks.before'
+   * - Splits it to a namespace and key at the period
+   * - For each extension, if that namespace and key both exist
+   *   and the extension is in its category, return the key
    * 
    * @param  {String} name - hook name, separated with periods
    * @return {Function}      the hook function if exists, otherwise undefined
-   *
-   * @todo fix this, it's too ugly
   ###
 
-  hooks = (name) ->
-    n = name.split('.')
-    _.compact(@map((e) -> if e[n[0]] && e[n[0]]()[n[1]] then return e[n[0]]()[n[1]]))
+  hooks = (name, category) ->
+    namespace = name.split('.')[0]
+    key = name.split('.')[1]
+
+    _.compact @map (ext) ->
+      if not ext[namespace] then return
+      if (ext[namespace]().category and ext[namespace]().category isnt category) or
+         (ext.category and ext.category isnt category) then return
+
+      ext[namespace]()[key]
 
 module.exports = Extensions

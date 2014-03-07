@@ -83,11 +83,11 @@ class CompileFile
   run: ->
     read_file.call(@, @file)
       .then((o) => @content = o)
-      .then(=> sequence(@extensions.hooks('compile_hooks.before_file'), @))
+      .then(=> sequence(@extensions.hooks('compile_hooks.before_file', @category), @))
       .then(each_pass.bind(@))
       .tap((o) => @content = o)
       .tap(=> @roots.emit('compile', @file))
-      .then(=> sequence(@extensions.hooks('compile_hooks.after_file'), @))
+      .then(=> sequence(@extensions.hooks('compile_hooks.after_file', @category), @))
       .then(write_file.bind(@))
 
   ###*
@@ -122,7 +122,7 @@ class CompileFile
   ###
 
   write_file = ->
-    sequence(@extensions.hooks('compile_hooks.write'), @)
+    sequence(@extensions.hooks('compile_hooks.write', @category), @)
       .then(process_write_hook_results.bind(@))
       .then(W.all)
 
@@ -273,10 +273,10 @@ class CompilePass
   run: (@adapter, @index, @content) ->
     @opts = configure_options.call(@)
 
-    sequence(@file.extensions.hooks('compile_hooks.before_pass'), @)
+    sequence(@file.extensions.hooks('compile_hooks.before_pass', @file.category), @)
       .then(compile_or_pass.bind(@))
       .then((o) => @content = o)
-      .then(=> sequence(@file.extensions.hooks('compile_hooks.after_pass'), @))
+      .then(=> sequence(@file.extensions.hooks('compile_hooks.after_pass', @file.category), @))
       .then(=> @content)
 
   ###*

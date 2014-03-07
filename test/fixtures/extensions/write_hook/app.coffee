@@ -2,15 +2,15 @@ path = require 'path'
 
 write_prevent = ->
   class WritePrevent
-    constructor: -> @category = 'writeprevent'
+    constructor: ->
+      @category = 'writeprevent'
 
     fs: ->
-      category: @category
       extract: true
       detect: (f) -> !!f.relative.match(/prevent_write/)
 
     compile_hooks: ->
-      write: (ctx) => ctx.category != @category
+      write: -> false
 
 write_normal = ->
   class WriteNormal
@@ -22,35 +22,27 @@ write_custom_path = ->
     constructor: -> @category = 'writepath'
 
     fs: ->
-      category: @category
       extract: true
       detect: (f) -> !!f.relative.match(/write_custom_path/)
 
     compile_hooks: ->
       write: (ctx) =>
-        if ctx.category == @category
-          { path: path.join(ctx.roots.root, 'override.html'), content: 'wow overrides' }
-        else
-          true
+        { path: path.join(ctx.roots.root, 'override.html'), content: 'wow overrides' }
 
 write_multiple = ->
   class WriteMultiple
     constructor: -> @category = 'multipath'
 
     fs: ->
-      category: @category
       extract: true
       detect: (f) -> !!f.relative.match(/write_multiple_paths/)
 
     compile_hooks: ->
       write: (ctx) =>
-        if ctx.category == @category
-          [
-            { path: path.join(ctx.roots.root, 'multi1.html'), content: 'clone 1' },
-            { path: path.join(ctx.roots.root, 'multi2.html'), content: 'clone 2' }
-          ]
-        else
-          true
+        [
+          { path: path.join(ctx.roots.root, 'multi1.html'), content: 'clone 1' },
+          { path: path.join(ctx.roots.root, 'multi2.html'), content: 'clone 2' }
+        ]
 
 module.exports =
   extensions: [write_prevent(), write_normal(), write_custom_path(), write_multiple()]

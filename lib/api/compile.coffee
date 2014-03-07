@@ -143,14 +143,21 @@ class Compile
 
     compile_task = (category) =>
       W.map(ast[category] || [], @compiler.compile.bind(@compiler, category))
-        .then(=> sequence(@extensions.hooks('category_hooks.after'), @, category))
+        .then(=> sequence(@extensions.hooks('category_hooks.after', category), @, category))
 
     for ext in @extensions
       extfs = if ext.fs then ext.fs() else {}
+      category = if extfs.category then extfs.category else ext.category
+
+      # if extfs has keys, but no category, bail
+      if Object.keys(extfs).length > 1 and not extfs.category and not category
+        @roots.bail(125, 'fs hooks defined with no category')
+
       if extfs.ordered
-        ordered.push(((c) => compile_task.bind(@, c))(extfs.category))
+        ordered.push(((c) => compile_task.bind(@, c))(category))
       else
-        parallel.push(compile_task.call(@, extfs.category))
+        parallel.push(compile_task.call(@, category))
+
 
     keys.all
       ordered: sequence(ordered)

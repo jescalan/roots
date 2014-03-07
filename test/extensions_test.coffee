@@ -76,3 +76,10 @@ describe 'write hook', ->
     should.contain_content(@public, 'multi1.html', /clone 1/)
     should.exist(@public, 'multi2.html')
     should.contain_content(@public, 'multi2.html', /clone 2/)
+
+describe 'categories', ->
+
+  it 'should scope all hooks to an extension-bound category property'
+  it 'should allow individual hook blocks to override the category'
+  it 'should run hooks on every category if no category is provided'
+  it 'should still run correctly with only hook-level categories defined'
