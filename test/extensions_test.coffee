@@ -83,3 +83,15 @@ describe 'categories', ->
   it 'should allow individual hook blocks to override the category'
   it 'should run hooks on every category if no category is provided'
   it 'should still run correctly with only hook-level categories defined'
+
+describe 'extension failures', ->
+
+  it 'should bail when fs is defined but not a function'
+  it 'should bail when fs is a function but doesnt return an object'
+  it 'should bail when compile_hooks is defined but not a function'
+  it 'should bail when compile_hooks is a function but doesnt return an object'
+  it 'should bail when category_hooks is defined but not a function'
+  it 'should bail when category_hooks is a function but doesnt return an object'
+  it 'should bail when fs is used without a category'
+  it 'should bail if write hook returns anything other than an array, object, or boolean'
+  it "should bail if an extension's constructor throws an error"
