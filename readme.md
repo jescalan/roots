@@ -19,6 +19,10 @@ roots is a fast, simple, and customizable static site compiler
 
 > **Note:** This project is in early development, and versioning is a little different. [Read this](http://markup.im/#q4_cRZ1Q) for more details.
 
+### v3 Beta Support
+
+If you help us test the prerelease versions of roots v3, we will love you forever. You also get free exclusive premium VIP support from the roots core team, which you can get access to [here](https://gitter.im/jenius/roots).
+
 ### Dev To Do List
 
 - [x] basic compile
