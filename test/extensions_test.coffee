@@ -79,10 +79,45 @@ describe 'write hook', ->
 
 describe 'categories', ->
 
-  it 'should scope all hooks to an extension-bound category property'
-  it 'should allow individual hook blocks to override the category'
-  it 'should run hooks on every category if no category is provided'
-  it 'should still run correctly with only hook-level categories defined'
+  before (done) ->
+    @file = []
+    @category = []
+
+    @path = path.join(__dirname, 'fixtures/extensions/category_scope')
+    @public = path.join(@path, 'public')
+    project = new Roots(@path)
+    project.compile()
+      .on('error', done)
+      .on('after_file', (r) => @file.push(r))
+      .on('after_category', (r) => @category.push(r))
+      .on('done', done)
+
+  it 'should scope all hooks to an extension-bound category property', ->
+    @file.indexOf('[1] active').should.be.above(-1)
+    @category.indexOf('[1] scope_test').should.be.above(-1)
+
+  it 'should allow individual hook blocks to override the category', ->
+    @file.indexOf('[2] scope_override').should.be.above(-1)
+    @file.indexOf('[3] failed_override').should.be.below(0)
+    @category.indexOf('[2] scope_override').should.be.above(-1)
+    @category.indexOf('[2] whack').should.be.below(0)
+
+  it 'should run hooks on every category if no category is provided', ->
+    @file.indexOf('[5] active').should.be.above(-1)
+    @file.indexOf('[5] passive').should.be.above(-1)
+    @file.indexOf('[5] failed_override').should.be.above(-1)
+    @file.indexOf('[5] hook_level').should.be.above(-1)
+    @file.indexOf('[5] scope_override').should.be.above(-1)
+    @category.indexOf('[5] compiled').should.be.above(-1)
+    @category.indexOf('[5] static').should.be.above(-1)
+    @category.indexOf('[5] not_overridden').should.be.above(-1)
+    @category.indexOf('[5] hook_level').should.be.above(-1)
+    @category.indexOf('[5] scope_override').should.be.above(-1)
+    @category.indexOf('[5] scope_test').should.be.above(-1)
+
+  it 'should still run correctly with only hook-level categories defined', ->
+    @file.indexOf('[4] hook_level').should.be.above(-1)
+    @category.indexOf('[4] hook_level').should.be.above(-1)
 
 describe 'extension failures', ->
 

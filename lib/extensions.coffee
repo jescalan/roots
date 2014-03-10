@@ -93,8 +93,11 @@ class Extensions
 
     _.compact @map (ext) ->
       if not ext[namespace] then return
-      if (ext[namespace]().category and ext[namespace]().category isnt category) or
-         (ext.category and ext.category isnt category) then return
+
+      if ext[namespace]().category
+        if ext[namespace]().category != category then return
+      else
+        if ext.category and ext.category != category then return
 
       ext[namespace]()[key]
 
