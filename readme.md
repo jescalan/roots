@@ -17,7 +17,7 @@
 
 roots is a fast, simple, and customizable static site compiler
 
-> **Note:** This project is in early development, and versioning is a little different. [Read this](http://markup.im/#q4_cRZ1Q) for more details.
+> **Note:** Roots version 3 is currently in beta, so use at your own risk! You can find up-to-date docs for this version at http://roots.rtfd.org
 
 ### Dev To Do List
 
