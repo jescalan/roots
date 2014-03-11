@@ -28,7 +28,8 @@ class Extensions
     if not Array.isArray(extensions) then extensions = [extensions]
 
     for ext in extensions.reverse()
-      if typeof ext != 'function' then @roots.bail(125, ext)
+      if typeof ext != 'function'
+        @roots.bail(125, "Extension must return a function/class", ext)
       if priority? then @all.unshift(ext) else @all.splice(priority, 0, ext)
 
   ###*
@@ -40,7 +41,7 @@ class Extensions
   
   instantiate: ->
     extensions = @all.map (Ext) =>
-      try ext = new Ext(@roots); catch err then @roots.bail(125, err)
+      try ext = new Ext(@roots); catch err then @roots.bail(125, err, ext)
       check_extension_errors(ext)
       return ext
 
@@ -56,13 +57,13 @@ class Extensions
 
   check_extension_errors = (ext) ->
     if not_function(ext.fs)
-      @roots.bail(125, 'the fs property must be a function')
+      @roots.bail(125, 'The fs property must be a function', ext)
 
     if not_function(ext.compile_hooks)
-      @roots.bail(125, 'the compile_hooks property must be a function')
+      @roots.bail(125, 'The compile_hooks property must be a function', ext)
 
     if not_function(ext.category_hooks)
-      @roots.bail(125, 'the category_hooks property must be a function')
+      @roots.bail(125, 'The category_hooks property must be a function', ext)
 
   ###*
    * If exists and is not a function. Helper.
@@ -80,6 +81,8 @@ class Extensions
    *
    * - Takes a hook name like 'compile_hooks.before'
    * - Splits it to a namespace and key at the period
+   * - If an object is not returned, bail. This piece uses a really
+   *   dirty hack to get access to the roots object out of scope.
    * - For each extension, if that namespace and key both exist
    *   and the extension is in its category, return the key
    * 
@@ -91,14 +94,18 @@ class Extensions
     namespace = name.split('.')[0]
     key = name.split('.')[1]
 
-    _.compact @map (ext) ->
+    _.compact @map (ext) =>
       if not ext[namespace] then return
+      called_namespace = ext[namespace]()
 
-      if ext[namespace]().category
-        if ext[namespace]().category != category then return
+      if typeof called_namespace isnt 'object'
+        @[@length-2].roots.bail(125, "#{namespace} should return an object", ext)
+
+      if called_namespace.category
+        if called_namespace.category isnt category then return
       else
-        if ext.category and ext.category != category then return
+        if ext.category and ext.category isnt category then return
 
-      ext[namespace]()[key]
+      called_namespace[key]
 
 module.exports = Extensions

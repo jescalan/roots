@@ -149,9 +149,12 @@ class Compile
       extfs = if ext.fs then ext.fs() else {}
       category = if extfs.category then extfs.category else ext.category
 
+      if typeof extfs != 'object'
+        @roots.bail(125, 'fs must return an object', ext)
+
       # if extfs has keys, but no category, bail
-      if Object.keys(extfs).length > 1 and not extfs.category and not category
-        @roots.bail(125, 'fs hooks defined with no category')
+      if Object.keys(extfs).length > 0 and not extfs.category and not category
+        @roots.bail(125, 'fs hooks defined with no category', ext)
 
       if extfs.ordered
         ordered.push(((c) => compile_task.bind(@, c))(category))

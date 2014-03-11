@@ -119,14 +119,48 @@ describe 'categories', ->
     @file.indexOf('[4] hook_level').should.be.above(-1)
     @category.indexOf('[4] hook_level').should.be.above(-1)
 
+# Some of these are thrown as errors, others are reported through roots'
+# "on error" handler. This is just because of their placement within the
+# code. While I would like to make this more consistent the priority for
+# now is that all the errors are working and have clear messages.
+
 describe 'extension failures', ->
 
-  it 'should bail when fs is defined but not a function'
-  it 'should bail when fs is a function but doesnt return an object'
-  it 'should bail when compile_hooks is defined but not a function'
-  it 'should bail when compile_hooks is a function but doesnt return an object'
-  it 'should bail when category_hooks is defined but not a function'
-  it 'should bail when category_hooks is a function but doesnt return an object'
-  it 'should bail when fs is used without a category'
-  it 'should bail if write hook returns anything other than an array, object, or boolean'
-  it "should bail if an extension's constructor throws an error"
+  before ->
+    @path = path.join(__dirname, 'fixtures/extensions/failures')
+
+  it 'should bail when the extension does not return a class/function', ->
+    (-> (new Roots(path.join(@path, 'case1'))).compile()).should.throw()
+
+  it 'should bail when fs is defined but not a function', ->
+    (-> (new Roots(path.join(@path, 'case2'))).compile()).should.throw()
+
+  it 'should bail when fs is a function but doesnt return an object', (done) ->
+    (new Roots(path.join(@path, 'case3'))).compile().on('error', -> done())
+
+  it 'should bail when fs is used with no category', (done) ->
+    (new Roots(path.join(@path, 'case4'))).compile().on('error', -> done())
+
+  it 'should bail when compile_hooks is defined but not a function', ->
+    (-> (new Roots(path.join(@path, 'case5'))).compile()).should.throw()
+
+  it 'should bail when compile_hooks is a function but doesnt return an object', (done) ->
+    (new Roots(path.join(@path, 'case6'))).compile().on('error', -> done())
+
+  it 'should bail when compile_hooks returned object keys are not functions'
+
+  it 'should bail when category_hooks is defined but not a function', ->
+    (-> (new Roots(path.join(@path, 'case7'))).compile()).should.throw()
+
+  it 'should bail when category_hooks is a function but doesnt return an object', (done) ->
+    (new Roots(path.join(@path, 'case8'))).compile().on('error', -> done())
+
+  # TODO: this error needs slightly better feedback
+  it 'should bail if write hook returns anything other than an array, object, or boolean', (done) ->
+    (new Roots(path.join(@path, 'case9'))).compile().on('error', -> done())
+
+  it "should bail if an extension's constructor throws an error", ->
+    (-> (new Roots(path.join(@path, 'case10'))).compile()).should.throw()
+
+  it 'should bail when fs.detect is not a function'
+  it 'should bail when category_hooks returned object keys are not functions'

@@ -163,7 +163,7 @@ class CompileFile
       else if Array.isArray(res)
         write_tasks.concat(res.map((i) => write_task.call(@, i)))
       else
-        @roots.bail(126, res)
+        @roots.bail(126, 'invalid return from write_hook', res)
 
     return W.resolve(write_tasks)
 
