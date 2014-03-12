@@ -3,6 +3,7 @@ require 'colors'
 fs             = require 'fs'
 Config         = require './config'
 Extensions     = require './extensions'
+util           = require 'util'
 
 ###*
  * @class
@@ -85,7 +86,6 @@ class Roots extends EventEmitter
     console.error "It looks like there was a " + "#{name}".bold + " Error."
     console.error "Check out " + "http://roots.cx/errors##{code}".green + " for more help\n"
 
-    util = require 'util'
     console.error "Reason:".yellow.bold
     console.error message
     console.error "\nOffending Extension:".yellow.bold
