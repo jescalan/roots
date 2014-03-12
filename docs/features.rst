@@ -25,7 +25,7 @@ Feature List
 - client-side javascript management
 - multipass compilation
 - live reload in browser
-- clean and clear error handling
+- clean and clear error handling and in-browser notification
 
 Comparisons
 -----------
