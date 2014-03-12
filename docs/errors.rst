@@ -8,4 +8,9 @@ The numbers you see here are unix error codes. They start at `125` because this 
 125 - Malformed Extension
 -------------------------
 
-This error means that you fed roots an `extension <docs/extensions.md>`_ of the incorrect type. To fix this, check through your extensions and make sure that they all are correctly formatted according to the roots extension spec.
+This error means that you fed roots an `extension <extensions.html>`_ of the incorrect type. To fix this, check the specific error message that roots gave you, read through the extension docs linked above, and make sure that everything is formatted correctly. If you are having trouble writing an extension, feel free to drop in to the `roots support channel <http://gitter.im/jenius/roots>`_
+
+126 - Malformed Write Hook Output
+---------------------------------
+
+This error means that your extension's `write hook <extensions.html#write-hook>`_ returned incorrectly formatted output. See the docs for write hooks (linked above) for more details on how to correct this.
