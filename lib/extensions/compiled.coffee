@@ -14,7 +14,6 @@ module.exports = ->
       @category = 'compiled'
 
     fs: ->
-      category: @category
       extract: true
       ordered: true
       detect: detect_fn.bind(@)

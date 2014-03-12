@@ -76,3 +76,91 @@ describe 'write hook', ->
     should.contain_content(@public, 'multi1.html', /clone 1/)
     should.exist(@public, 'multi2.html')
     should.contain_content(@public, 'multi2.html', /clone 2/)
+
+describe 'categories', ->
+
+  before (done) ->
+    @file = []
+    @category = []
+
+    @path = path.join(__dirname, 'fixtures/extensions/category_scope')
+    @public = path.join(@path, 'public')
+    project = new Roots(@path)
+    project.compile()
+      .on('error', done)
+      .on('after_file', (r) => @file.push(r))
+      .on('after_category', (r) => @category.push(r))
+      .on('done', done)
+
+  it 'should scope all hooks to an extension-bound category property', ->
+    @file.indexOf('[1] active').should.be.above(-1)
+    @category.indexOf('[1] scope_test').should.be.above(-1)
+
+  it 'should allow individual hook blocks to override the category', ->
+    @file.indexOf('[2] scope_override').should.be.above(-1)
+    @file.indexOf('[3] failed_override').should.be.below(0)
+    @category.indexOf('[2] scope_override').should.be.above(-1)
+    @category.indexOf('[2] whack').should.be.below(0)
+
+  it 'should run hooks on every category if no category is provided', ->
+    @file.indexOf('[5] active').should.be.above(-1)
+    @file.indexOf('[5] passive').should.be.above(-1)
+    @file.indexOf('[5] failed_override').should.be.above(-1)
+    @file.indexOf('[5] hook_level').should.be.above(-1)
+    @file.indexOf('[5] scope_override').should.be.above(-1)
+    @category.indexOf('[5] compiled').should.be.above(-1)
+    @category.indexOf('[5] static').should.be.above(-1)
+    @category.indexOf('[5] not_overridden').should.be.above(-1)
+    @category.indexOf('[5] hook_level').should.be.above(-1)
+    @category.indexOf('[5] scope_override').should.be.above(-1)
+    @category.indexOf('[5] scope_test').should.be.above(-1)
+
+  it 'should still run correctly with only hook-level categories defined', ->
+    @file.indexOf('[4] hook_level').should.be.above(-1)
+    @category.indexOf('[4] hook_level').should.be.above(-1)
+
+# Some of these are thrown as errors, others are reported through roots'
+# "on error" handler. This is just because of their placement within the
+# code. While I would like to make this more consistent the priority for
+# now is that all the errors are working and have clear messages.
+
+describe 'extension failures', ->
+
+  before ->
+    @path = path.join(__dirname, 'fixtures/extensions/failures')
+
+  it 'should bail when the extension does not return a class/function', ->
+    (-> (new Roots(path.join(@path, 'case1'))).compile()).should.throw()
+
+  it 'should bail when fs is defined but not a function', ->
+    (-> (new Roots(path.join(@path, 'case2'))).compile()).should.throw()
+
+  it 'should bail when fs is a function but doesnt return an object', (done) ->
+    (new Roots(path.join(@path, 'case3'))).compile().on('error', -> done())
+
+  it 'should bail when fs is used with no category', (done) ->
+    (new Roots(path.join(@path, 'case4'))).compile().on('error', -> done())
+
+  it 'should bail when compile_hooks is defined but not a function', ->
+    (-> (new Roots(path.join(@path, 'case5'))).compile()).should.throw()
+
+  it 'should bail when compile_hooks is a function but doesnt return an object', (done) ->
+    (new Roots(path.join(@path, 'case6'))).compile().on('error', -> done())
+
+  it 'should bail when compile_hooks returned object keys are not functions'
+
+  it 'should bail when category_hooks is defined but not a function', ->
+    (-> (new Roots(path.join(@path, 'case7'))).compile()).should.throw()
+
+  it 'should bail when category_hooks is a function but doesnt return an object', (done) ->
+    (new Roots(path.join(@path, 'case8'))).compile().on('error', -> done())
+
+  # TODO: this error needs slightly better feedback
+  it 'should bail if write hook returns anything other than an array, object, or boolean', (done) ->
+    (new Roots(path.join(@path, 'case9'))).compile().on('error', -> done())
+
+  it "should bail if an extension's constructor throws an error", ->
+    (-> (new Roots(path.join(@path, 'case10'))).compile()).should.throw()
+
+  it 'should bail when fs.detect is not a function'
+  it 'should bail when category_hooks returned object keys are not functions'

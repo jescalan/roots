@@ -49,10 +49,11 @@ class Roots extends EventEmitter
   ###*
    * Compiles a roots project. Wow.
    * @return {Function} instance of itself for chaining
+   *
+   * @todo does loading the compiler inside the function boost speed?
   ###
 
   compile: ->
-    # TODO: does this actually provide a speed boost?
     Compile = require('./api/compile')
     (new Compile(@)).exec()
     return @
@@ -75,19 +76,30 @@ class Roots extends EventEmitter
    * @param {String} details - any additional details to be printed
   ###
 
-  bail: (code, details) ->
+  bail: (code, message, ext) ->
     switch code
-      when 125 then msg = "malformed extension error"
-      when 126 then msg = "malformed write hook output"
+      when 125 then name = "Malformed Extension"
+      when 126 then name = "Malformed Write Hook Output"
 
     console.error "\nFLAGRANT ERROR!\n".red.bold
-    console.error "It looks like there was a " + "#{msg}".bold + "."
+    console.error "It looks like there was a " + "#{name}".bold + " Error."
     console.error "Check out " + "http://roots.cx/errors##{code}".green + " for more help\n"
 
-    if details
-      console.error "DETAILS:".yellow.bold
-      console.error details
+    util = require 'util'
+    console.error "Reason:".yellow.bold
+    console.error message
+    console.error "\nOffending Extension:".yellow.bold
+    console.error "Name: ".bold + ext.constructor.name
+    process.stderr.write "Extension: ".bold
+    console.error util.inspect(ext, { colors: true, showHidden: true })
+    process.stderr.write "Prototype: ".bold
+    console.error ext.constructor.prototype
 
-    process.exit(code)
+    class RootsError extends Error
+      constructor: (@name, @message, @ext, @code) ->
+        Error.call(@)
+        Error.captureStackTrace(@, @constructor)
+
+    throw new RootsError(name, message, ext, code)
 
 module.exports = Roots

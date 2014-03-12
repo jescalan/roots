@@ -12,6 +12,5 @@ module.exports = ->
       @category = 'static'
 
     fs: ->
-      category: @category
       extract: true
       detect: (-> true)
