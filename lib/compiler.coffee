@@ -178,8 +178,8 @@ class CompileFile
    * If an object is passed, each of these keys is optional, and if not provided
    * will be filled in with default values. The path then is wrapped with vinyl,
    * passed through the roots output path generator, and the file is written.
-   * The extension property is only set if there was a compile, otherwise any
-   * extensions are preserved as is.
+   * The extension property is only set if there wasn't already an extension override
+   * and there was a compile, otherwise any extensions are preserved as is.
    *
    * @param  {Object} obj - object with `path` and `content` properties
    * @return {Promise} a promise for the written file
@@ -192,7 +192,8 @@ class CompileFile
       path: @file
       content: @content
 
-    if @is_compiled then obj.extension = _.last(@adapters).output
+    if not obj.extension? and @is_compiled
+      obj.extension = _.last(@adapters).output
 
     if not (obj.path instanceof File)
       obj.path = new File(base: @roots.root, path: obj.path)
