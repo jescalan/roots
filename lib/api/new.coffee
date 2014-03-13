@@ -41,7 +41,7 @@ class New extends EventEmitter
 
   install_deps = ->
     @emit('deps:installing')
-    nodefn.call(exec, "cd #{@path}; npm install")
+    nodefn.call(exec, "cd #{@path} && npm install")
       .tap(=> @emit('deps:finished'))
 
 module.exports = New
