@@ -141,3 +141,14 @@ describe 'compile', ->
         should.exist(output, 'folder.withdot/manyOf%E2%88%ABchin')
         should.exist(output, 'folder.withdot/manyOf%E2%88%ABchin/er%20mer%20.gerd.wat')
         done()
+
+  it 'should work with different environments', (done) ->
+    p = path.join(test_path, 'environments')
+    output = path.join(p, 'public')
+
+    new Roots(p, { env: 'doge' }).compile()
+      .on('error', done)
+      .on 'done', ->
+        should.exist(output, 'doge_file.html')
+        should.not_exist(output, 'dev_file.html')
+        done()
