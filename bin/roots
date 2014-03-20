@@ -3,7 +3,10 @@
 require('coffee-script/register');
 require('colors');
 
-var args = require('optimist').alias('v', 'version').argv,
+var args = require('optimist')
+            .alias('v', 'version')
+            .alias('e', 'env')
+            .argv,
     notifier = require('update-notifier')({ packagePath: '../package.json' });
 
 // new version notification

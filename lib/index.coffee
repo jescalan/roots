@@ -18,10 +18,10 @@ class Roots extends EventEmitter
    * @return {Function} - instance of the Roots class
   ###
 
-  constructor: (@root) ->
+  constructor: (@root, opts={}) ->
     if not fs.existsSync(@root) then throw new Error("path does not exist")
     @extensions = new Extensions(@)
-    @config = new Config(@)
+    @config = new Config(@, opts)
 
   ###*
    * Alternate constructor, creates a new roots project in a given folder and
@@ -52,6 +52,7 @@ class Roots extends EventEmitter
    * @return {Function} instance of itself for chaining
    *
    * @todo does loading the compiler inside the function boost speed?
+   * @todo needs a way to programmatically stop the watcher
   ###
 
   compile: ->
