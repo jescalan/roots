@@ -25,7 +25,7 @@
     "minimatch": "0.2.x",
     "lodash": "2.x",
     "js-yaml": "3.x",
-    "when": "2.x",
+    "when": "3.x",
     "accord": "0.0.7",
     "mkdirp": "0.3.x",
     "optimist": "0.6.x",

@@ -2,7 +2,7 @@ fs       = require 'graceful-fs'
 path     = require 'path'
 _        = require 'lodash'
 W        = require 'when'
-nodefn   = require 'when/node/function'
+nodefn   = require 'when/node'
 pipeline = require 'when/pipeline'
 sequence = require 'when/sequence'
 File     = require 'vinyl'
@@ -82,13 +82,14 @@ class CompileFile
 
   run: ->
     read_file.call(@, @file)
+      .with(@)
       .then((o) => @content = o)
       .then(=> sequence(@extensions.hooks('compile_hooks.before_file', @category), @))
-      .then(each_pass.bind(@))
+      .then(each_pass)
       .tap((o) => @content = o)
       .tap(=> @roots.emit('compile', @file))
       .then(=> sequence(@extensions.hooks('compile_hooks.after_file', @category), @))
-      .then(write_file.bind(@))
+      .then(write_file)
 
   ###*
    * Async utf8 file read from a vinyl file wrapped in a promise.
@@ -275,7 +276,8 @@ class CompilePass
     @opts = configure_options.call(@)
 
     sequence(@file.extensions.hooks('compile_hooks.before_pass', @file.category), @)
-      .then(compile_or_pass.bind(@))
+      .with(@)
+      .then(compile_or_pass)
       .then((o) => @content = o)
       .then(=> sequence(@file.extensions.hooks('compile_hooks.after_pass', @file.category), @))
       .then(=> @content)

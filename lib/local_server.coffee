@@ -1,5 +1,5 @@
 path      = require 'path'
-nodefn    = require 'when/node/function'
+nodefn    = require 'when/node'
 http      = require 'http'
 connect   = require 'connect'
 infestor  = require 'infestor'

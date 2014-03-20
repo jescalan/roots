@@ -3,7 +3,7 @@ path = require 'path'
 fs = require 'fs'
 run = require('child_process').exec
 W = require 'when'
-nodefn = require 'when/node/function'
+nodefn = require 'when/node'
 test_path = path.join(__dirname, 'fixtures')
 glob = require 'glob'
 rimraf = require 'rimraf'
@@ -16,9 +16,9 @@ before (done) ->
   for d in glob.sync("#{test_path}/*/*/package.json")
     p = path.dirname(d)
     if fs.existsSync(path.join(p, 'node_modules')) then continue
-    console.log "installing deps for #{d}"
+    console.log "installing deps for #{d.replace(test_path,'').replace('.json','')}...".grey
     tasks.push nodefn.call(run, "cd #{p}; npm install")
-  W.all(tasks, -> done())
+  W.all(tasks).then(-> done())
 
 # remove all test output
 after ->

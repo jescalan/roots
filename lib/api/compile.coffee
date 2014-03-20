@@ -1,6 +1,6 @@
 fs       = require 'fs'
 W        = require 'when'
-nodefn   = require 'when/node/function'
+nodefn   = require 'when/node'
 guard    = require 'when/guard'
 keys     = require 'when/keys'
 sequence = require 'when/sequence'
@@ -50,10 +50,11 @@ class Compile
 
     before_hook.call(@)
       .then(@fs_parser.parse.bind(@fs_parser))
-      .tap(create_folders.bind(@))
-      .then(process_files.bind(@))
-      .then(after_hook.bind(@))
-      .then(purge_empty_folders.bind(@))
+      .with(@)
+      .tap(create_folders)
+      .then(process_files)
+      .then(after_hook)
+      .then(purge_empty_folders)
       .done (=> @roots.emit('done')), ((err) => @roots.emit('error', err))
 
   ###*
