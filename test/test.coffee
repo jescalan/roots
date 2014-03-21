@@ -1,12 +1,12 @@
-should = require 'should'
-path = require 'path'
-fs = require 'fs'
-run = require('child_process').exec
-W = require 'when'
-nodefn = require 'when/node'
+should    = require 'should'
+path      = require 'path'
+fs        = require 'fs'
+run       = require('child_process').exec
+W         = require 'when'
+nodefn    = require 'when/node'
 test_path = path.join(__dirname, 'fixtures')
-glob = require 'glob'
-rimraf = require 'rimraf'
+glob      = require 'glob'
+rimraf    = require 'rimraf'
 
 Roots = require '../lib'
 
