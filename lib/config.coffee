@@ -37,10 +37,10 @@ class Config
    * @todo uniq filter ignores
   ###
 
-  constructor: (@roots) ->
+  constructor: (@roots, opts) ->
     @output = 'public'
     @dump_dirs = ['views', 'assets']
-    @env = 'development'
+    @env = opts.env || 'development'
     @debug = false
     @live_reload = true
     @open_browser = true
@@ -48,7 +48,7 @@ class Config
     load_config.call(@)
 
     @ignores ?= []
-    @ignores = @ignores.concat(['package.json', 'app.coffee', "#{@output}/**/*"])
+    @ignores = @ignores.concat(['package.json', 'app*.coffee', "#{@output}/**/*"])
 
     @watcher_ignores ?= []
     @watcher_ignores = @watcher_ignores.concat(['package.json', 'app.coffee', "#{@output}/**/*"])
@@ -57,7 +57,10 @@ class Config
 
   ###*
    * This function is responsible for loading the app.coffee file into the config.
-   * First, it makes sure app.coffee exists. If not, it just returns.
+   * First, it checks the environment. If it's 'development', the default, roots loads
+   * 'app.coffee', and if there is a custom environment, it tries to load
+   * 'app.ENV_NAME.coffee'. It then makes sure the config file exists. If not, it just
+   *  returns, and if there was a custom environment logs out a warning.
    *
    * If it does exist, there are two ways app.coffee can be processed. First is
    * 'simple mode', entered if it doesn't export anything when the file is required.
@@ -72,18 +75,21 @@ class Config
   ###
 
   load_config = ->
-    config_path = path.join(@roots.root, 'app')
-    if not fs.existsSync("#{config_path}.coffee") then return
+    basename = if @env is 'development' then "app" else "app.#{@env}"
+    config_path = path.join(@roots.root, basename)
+    config_exists = fs.existsSync("#{config_path}.coffee")
 
-    # if there are exports, assume a node config file
-    # otherwise, assume a default config file
+    if not config_exists
+      if @env isnt 'development'
+        console.warn "\nEnvironment config file not found. Make sure 'app.#{@env}.coffee' is present at the root of your project.\n".yellow
+      return
+
     conf = require(config_path)
     if Object.keys(conf).length < 1
       conf = eval(coffee.compile(fs.readFileSync("#{config_path}.coffee", 'utf8'), { bare: true }))
 
     @[k] = v for k, v of conf
 
-    # extensions get special handling
     @roots.extensions.register(@extensions) if @extensions
 
   ###*
