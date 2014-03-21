@@ -14,3 +14,4 @@ Table of Contents
    configuration
    errors
    extensions
+   environments
