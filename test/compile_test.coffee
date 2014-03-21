@@ -131,15 +131,15 @@ describe 'compile', ->
     new Roots(p).compile()
       .on('error', done)
       .on 'done', ->
-        should.exist(output, 'foo%20bar.wow')
-        should.exist(output, 'pestan%CC%83a.md')
-        should.exist(output, 'doge.eats.twerking-cyrus%C3%9F-tm-___%5C%3Acat.png')
+        should.exist(output, 'foo bar.wow')
+        should.exist(output, 'pesta#na.md')
+        should.exist(output, 'doge.eats.twerking-cyrus-tm-___cat.png')
         should.exist(output, 'folder.withdot')
         should.exist(output, 'folder.withdot/.dotfile.wow')
         should.exist(output, 'folder.withdot/file.something.other.js')
-        should.exist(output, 'folder.withdot/look%40mybiceps')
-        should.exist(output, 'folder.withdot/manyOf%E2%88%ABchin')
-        should.exist(output, 'folder.withdot/manyOf%E2%88%ABchin/er%20mer%20.gerd.wat')
+        should.exist(output, 'folder.withdot/look@mybiceps')
+        should.exist(output, 'folder.withdot/manyOf∫chin')
+        should.exist(output, 'folder.withdot/manyOf∫chin/er mer .gerd.wat')
         done()
 
   it 'should work with different environments', (done) ->
