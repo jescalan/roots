@@ -15,3 +15,4 @@ Table of Contents
    errors
    extensions
    environments
+   javascript_api
