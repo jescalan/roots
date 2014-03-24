@@ -141,6 +141,9 @@ class Config
     if not fs.existsSync(pkg_json_path) then return res
 
     pkg = require(pkg_json_path)
+
+    if not pkg.dependencies then return res
+
     for dep in Object.keys(pkg.dependencies)
       if accord.supports(dep)
         try
@@ -149,6 +152,7 @@ class Config
           throw new Error("'#{dep}' not found. install dependencies with 'npm install'")
 
         res[dep] = accord.load(dep, local_compiler)
-    res
+
+    return res
 
 module.exports = Config
