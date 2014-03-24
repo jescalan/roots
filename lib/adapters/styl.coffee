@@ -18,6 +18,7 @@ exports.compile = (file, options={}, cb) ->
     inline: roots.project.conf 'compress'
     filename: file.path
     use: plugins
+    'include css': true
   )
 
   # patching stylus warnings to actually show like regular errors
