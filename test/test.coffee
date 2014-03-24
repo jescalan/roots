@@ -357,6 +357,9 @@ describe 'adapters', ->
     it 'should include custom stylus libs', ->
       should.match_expected(@output, 'autopref.css')
 
+    it 'should include css imports', ->
+      should.match_expected(@output, 'css_imports.css')
+
     after -> remove(@output)
 
   describe 'scss', ->
