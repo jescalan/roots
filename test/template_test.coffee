@@ -1,5 +1,4 @@
 should = require 'should'
-nodefn = require 'when/node/function'
 Roots = require '../'
 test_tpl_path = 'https://github.com/jenius/sprout-test-template.git'
 
