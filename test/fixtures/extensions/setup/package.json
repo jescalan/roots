@@ -1,0 +1,6 @@
+{
+  "name": "test",
+  "dependencies": {
+    "when": "3.x"
+  }
+}

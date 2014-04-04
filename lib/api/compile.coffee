@@ -49,6 +49,7 @@ class Compile
     @roots.emit('start')
 
     before_hook.call(@)
+      .then(setup_extensions.bind(@))
       .then(@fs_parser.parse.bind(@fs_parser))
       .with(@)
       .tap(create_folders)
@@ -96,6 +97,17 @@ class Compile
       return W.reject('before hook should be a function or array')
 
     W.all(hooks)
+
+  ###*
+   * If present, runs an async-compatible `setup` function in each extension,
+   * ensuring that any asynchrnonous setup the extension needs is completed.
+   * 
+   * @return {Promise} a promise that the extension setup is finished
+  ###
+
+  setup_extensions = ->
+    req_setup = @extensions.filter((ext) -> !!ext.setup)
+    W.map(req_setup, ((ext) -> ext.setup()))
 
   ###*
    * Creates the nested folder structure for a project. First, creates an array

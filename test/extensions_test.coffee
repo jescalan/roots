@@ -1,6 +1,7 @@
 should = require 'should'
-path = require 'path'
-Roots = require '../lib'
+path   = require 'path'
+fs     = require 'fs'
+Roots  = require '../lib'
 
 describe 'extensions', ->
 
@@ -164,3 +165,20 @@ describe 'extension failures', ->
 
   it 'should bail when fs.detect is not a function'
   it 'should bail when category_hooks returned object keys are not functions'
+
+describe 'setup-function', ->
+
+  before ->
+    p = path.join(__dirname, 'fixtures/extensions/setup')
+    @project = new Roots(p)
+    @public = path.join(p, 'public')
+
+  it 'works', (done) ->
+    @project
+      .on('error', done)
+      .on 'test', (v) =>
+        v.should.equal('value')
+        fs.existsSync(path.join(@public, 'test.html')).should.be.ok
+        done()
+
+    @project.compile()
