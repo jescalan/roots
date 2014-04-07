@@ -39,7 +39,7 @@ Roots is certainly not the only static site compiler out there. Check out a [com
 
 ### Usage
 
-See [the docs](http://rots.rtfd.org) for more info. As we get closer to release, this section will be expanded out to a basic 'getting started' tutorial and table of contents for the docs.
+See [the docs](http://roots.rtfd.org) for more info. As we get closer to release, this section will be expanded out to a basic 'getting started' tutorial and table of contents for the docs.
 
 ### License & Contributing
 
