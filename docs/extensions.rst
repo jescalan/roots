@@ -53,6 +53,23 @@ With that out of the way, let's lay down the skeleton for a sample extension tha
 
 Notice that an instance of the roots class is passed into the constructor. This instance will give you access to literally any and all information that roots is hanging on to. You can grab things out of the app.coffee file, you can access compile adapters, etc. And this is not a clone of the instance, this is *the* instance, so modifying values could screw things up. Weild this repsonsibility carefully if you choose to at all. Since we don't need it for this extension, the constructor will be omitted from the rest of the example code in this guide.
 
+Async Setup
+-----------
+
+It's possible that you might need to make some asynchronous calls to set up your extension. For example, the [roots-records](https://github.com/carrot/roots-records) extension accepts a url from which it can fetch content and include as locals, and the [roots-browserify](https://github.com/carrot/roots-browserify) extension uses browserify to build a dependency tree so all files browserify is compiling are removed from roots' pipeline. If you need to perform an async task, this can be accomplished by using a setup function which returns a value or promise. Let's look at an example:
+
+.. code-block:: coffee-script
+    fn = require 'when/function'
+
+    module.exports = ->
+      class Example
+        setup: ->
+          console.log 'starting async operation...'
+          fn.call(setTimeout, (-> return { response: true }), 500)
+            .tap(-> console.log 'finished async operation')
+
+Here, we introduce a fake async operation, which really is just setting a timeout, and use [whenjs](https://github.com/cujojs/when) to execute it an return a promise. If you include this extension in your pipeline, you will see that it logs out these values just once, and in the correct order. Whoo!
+
 File Sorting
 ------------
 
