@@ -2,13 +2,14 @@
 
 require('coffee-script/register');
 require('colors');
+
 var cli = require('../lib/cli'),
     notifier = require('update-notifier')({ packagePath: '../package.json' }),
-    args = require('optimist')
-            .alias('v', 'version')
-            .alias('e', 'env')
-            .alias('q', 'quiet')
-            .argv
+    args = require('minimist')(process.argv.slice(2), {
+      v: 'version',
+      e: 'env',
+      q: 'quiet'
+    });
 
 // new version notification
 notifier.update && notifier.notify();

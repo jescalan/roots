@@ -28,7 +28,6 @@
     "when": "3.x",
     "accord": "0.0.8",
     "mkdirp": "0.3.x",
-    "optimist": "0.6.x",
     "update-notifier": "0.1.x",
     "chokidar": "0.8.x",
     "open": "0.0.4",
@@ -39,7 +38,8 @@
     "faye-websocket": "0.7.x",
     "graceful-fs": "2.x",
     "vinyl": "0.2.x",
-    "anti-matter": "0.0.1"
+    "anti-matter": "0.0.1",
+    "minimist": "0.0.8"
   },
   "devDependencies": {
     "mocha": "*",
