@@ -1,4 +1,5 @@
 path   = require 'path'
+fs = require 'fs'
 should = require 'should'
 cli    = require '../lib/cli'
 pkg    = require('../package.json')
@@ -142,3 +143,22 @@ describe 'cli', ->
         done()
 
       cli.execute(_: ['tpl', 'remove', 'foo'])
+
+  describe 'clean', ->
+
+    it 'should remove the output folder from a given directory', (done) ->
+      cli.once 'data', (data) ->
+        data.should.exist
+        done()
+
+      cli.execute(_: ['clean', path.join(__dirname, 'fixtures/compile/basic')])
+
+    it 'should remove the output folder from cwd', (done) ->
+      cli.once 'data', (data) ->
+        data.should.exist
+        process.chdir(cwd)
+        done()
+
+      cwd = process.cwd()
+      process.chdir(path.join(__dirname, 'fixtures/compile/copy'))
+      cli.execute(_: ['clean'])

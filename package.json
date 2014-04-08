@@ -39,13 +39,13 @@
     "graceful-fs": "2.x",
     "vinyl": "0.2.x",
     "anti-matter": "0.0.1",
-    "minimist": "0.0.8"
+    "minimist": "0.0.8",
+    "rimraf": "2.x"
   },
   "devDependencies": {
     "mocha": "*",
     "should": "*",
     "glob": "3.x",
-    "rimraf": "2.x",
     "coveralls": "2.x",
     "mocha-lcov-reporter": "0.0.1",
     "istanbul": "0.2.x"

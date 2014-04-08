@@ -16,7 +16,7 @@ module.exports = ->
     }, {
       name: 'watch'
       optional: ['dir', '--no-open']
-      description: 'Watches the given [dir] or current directory, opens a browser to a local server (unless --no-open is passed), and recompiles every time changes are made.'  
+      description: 'Watches the given [dir] or current directory, opens a browser to a local server (unless [--no-open] is passed), and recompiles every time changes are made.'  
     }, {
       name: 'deploy'
       required: ['deployer']
@@ -24,7 +24,8 @@ module.exports = ->
       description: 'Deploys the given [file/dir] or by default the output folder via the given [deployer]. See http://ship.io for deployers.'  
     }, {
       name: 'clean'
-      description: 'Removes the output folder.'  
+      optional: ['dir']
+      description: 'Removes the output folder from a roots project in [dir] or current directory'  
     }, {
       name: 'version'
       description: 'Outputs the currently installed version of roots.'  
