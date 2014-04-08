@@ -1,5 +1,6 @@
 chokidar  = require 'chokidar'
 minimatch = require 'minimatch'
+_         = require 'lodash'
 
 ###*
  * @class Watcher
@@ -26,7 +27,7 @@ class Watcher
 
     @roots.compile()
 
-    watcher
+    return _.extend(@roots, { watcher: watcher })
 
   ###*
    * Given a path, returns true or false depending on whether it should be ignored
