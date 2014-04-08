@@ -25,7 +25,7 @@ describe 'extension hooks', ->
   before (done) ->
     @project = new Roots(path.join(__dirname, 'fixtures/extensions/basic'))
     @project.extensions.all.length.should.be.above(2)
-    @project.compile()
+    @project
       .on('error', done)
       .on('before_file', => @before_file = true)
       .on('after_file', => @after_file = true)
@@ -33,7 +33,9 @@ describe 'extension hooks', ->
       .on('after_pass', => @after_pass = true)
       .on('write', => @write = true)
       .on('after_category', => @after_category = true)
-      .on('done', done)
+      .on('done', -> done())
+
+    @project.compile()
 
   it 'before_file hook should work', ->
     @before_file.should.be.ok
@@ -60,7 +62,8 @@ describe 'write hook', ->
     @public = path.join(@path, 'public')
     project = new Roots(@path)
     project.extensions.all.length.should.be.above(2)
-    project.compile().on('error', done).on('done', done)
+    project.on('error', done).on('done', -> done())
+    project.compile()
 
   it 'returning false on write hook should prevent write', ->
     should.not_exist(@public, 'prevent_write.html')
@@ -87,11 +90,14 @@ describe 'categories', ->
     @path = path.join(__dirname, 'fixtures/extensions/category_scope')
     @public = path.join(@path, 'public')
     project = new Roots(@path)
-    project.compile()
+
+    project
       .on('error', done)
       .on('after_file', (r) => @file.push(r))
       .on('after_category', (r) => @category.push(r))
-      .on('done', done)
+      .on('done', -> done())
+
+    project.compile()
 
   it 'should scope all hooks to an extension-bound category property', ->
     @file.indexOf('[1] active').should.be.above(-1)
@@ -130,36 +136,51 @@ describe 'extension failures', ->
   before ->
     @path = path.join(__dirname, 'fixtures/extensions/failures')
 
+  # @todo: should these be throwing?
   it 'should bail when the extension does not return a class/function', ->
     (-> (new Roots(path.join(@path, 'case1'))).compile()).should.throw()
 
+  # @todo: should these be throwing?
   it 'should bail when fs is defined but not a function', ->
     (-> (new Roots(path.join(@path, 'case2'))).compile()).should.throw()
 
   it 'should bail when fs is a function but doesnt return an object', (done) ->
-    (new Roots(path.join(@path, 'case3'))).compile().on('error', -> done())
+    project = new Roots(path.join(@path, 'case3'))
+    project.on('error', -> done())
+    project.compile()
 
   it 'should bail when fs is used with no category', (done) ->
-    (new Roots(path.join(@path, 'case4'))).compile().on('error', -> done())
+    project = new Roots(path.join(@path, 'case4'))
+    project.on('error', -> done())
+    project.compile()
 
+  # @todo: should these be throwing?
   it 'should bail when compile_hooks is defined but not a function', ->
     (-> (new Roots(path.join(@path, 'case5'))).compile()).should.throw()
 
   it 'should bail when compile_hooks is a function but doesnt return an object', (done) ->
-    (new Roots(path.join(@path, 'case6'))).compile().on('error', -> done())
+    project = new Roots(path.join(@path, 'case6'))
+    project.on('error', -> done())
+    project.compile()
 
   it 'should bail when compile_hooks returned object keys are not functions'
 
+  # @todo: should these be throwing?
   it 'should bail when category_hooks is defined but not a function', ->
     (-> (new Roots(path.join(@path, 'case7'))).compile()).should.throw()
 
   it 'should bail when category_hooks is a function but doesnt return an object', (done) ->
-    (new Roots(path.join(@path, 'case8'))).compile().on('error', -> done())
+    project = new Roots(path.join(@path, 'case8'))
+    project.on('error', -> done())
+    project.compile()
 
   # TODO: this error needs slightly better feedback
   it 'should bail if write hook returns anything other than an array, object, or boolean', (done) ->
-    (new Roots(path.join(@path, 'case9'))).compile().on('error', -> done())
+    project = new Roots(path.join(@path, 'case9'))
+    project.on('error', -> done())
+    project.compile()
 
+  # @todo: should these be throwing?
   it "should bail if an extension's constructor throws an error", ->
     (-> (new Roots(path.join(@path, 'case10'))).compile()).should.throw()
 

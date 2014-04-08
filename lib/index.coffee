@@ -5,6 +5,9 @@ Config         = require './config'
 Extensions     = require './extensions'
 util           = require 'util'
 
+Compile = require('./api/compile')
+Watch   = require('./api/watch')
+
 ###*
  * @class
  * @classdesc main roots class, public api for roots
@@ -49,26 +52,21 @@ class Roots extends EventEmitter
 
   ###*
    * Compiles a roots project. Wow.
-   * @return {Function} instance of itself for chaining
-   *
-   * @todo does loading the compiler inside the function boost speed?
-   * @todo needs a way to programmatically stop the watcher
+   * 
+   * @return {Promise} promise for finished compile
   ###
 
   compile: ->
-    Compile = require('./api/compile')
     (new Compile(@)).exec()
-    return @
 
   ###*
    * Watches a folder for changes and compiles whenever changes happen.
    * 
-   * @return {Function} instance of itself for chaining
+   * @return {Object} [chokidar](https://github.com/paulmillr/chokidar) instance
   ###
 
   watch: ->
-    (new (require('./api/watch'))(@)).exec()
-    return @
+    (new Watch(@)).exec()
 
   ###*
    * If an irrecoverable error has occurred, exit the application with

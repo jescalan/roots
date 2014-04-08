@@ -9,7 +9,6 @@ mkdirp   = require 'mkdirp'
 FSParser = require '../fs_parser'
 Compiler = require '../compiler'
 
-
 ###*
  * @class Compile
  * @classdesc Compiles a project
@@ -56,7 +55,7 @@ class Compile
       .then(process_files)
       .then(after_hook)
       .then(purge_empty_folders)
-      .done (=> @roots.emit('done')), ((err) => @roots.emit('error', err))
+      .then(@roots.emit.bind(@roots, 'done'), @roots.emit.bind(@roots, 'error'))
 
   ###*
    * Calls any user-provided before hooks with the roots context.
