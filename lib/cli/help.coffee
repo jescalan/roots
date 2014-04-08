@@ -1,9 +1,9 @@
 antimatter = require 'anti-matter'
 
-exports.execute = ->
+module.exports = ->
   antimatter
     title: 'Roots Usage'
-    options: { log: true, width: 65 }
+    options: { width: 65, color: 'blue' }
     commands: [{
       name: 'new'
       required: ['name']
