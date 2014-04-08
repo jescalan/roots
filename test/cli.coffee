@@ -42,21 +42,26 @@ describe 'cli', ->
     cli.execute({ _: ['help'] }, quiet: true)
 
   describe 'new', ->
+
     it '`roots new` should error', (done) ->
       cli.once 'err', (data) -> data.should.not.exist
       setTimeout(done, 250)
 
       cli.execute(_: ['new'])
 
+    # todo: need a good way to test this/respond to queries
     it '`roots new blah` should not error'
 
   describe 'compile', ->
-    it.skip '`roots compile` should compile a project', (done) ->
+
+    it '`roots compile` should compile a project', (done) ->
       cli.once 'inline', (data) ->
         data.should.eql('compiling... '.grey)
+        process.chdir(cwd)
         done()
 
-      # process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
+      cwd = process.cwd()
+      process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
       cli.execute(_: ['compile'])
 
     it '`roots compile /path/etc` should compile a project at a path', (done) ->
@@ -72,14 +77,17 @@ describe 'cli', ->
     it.skip '`roots watch` should watch a project', (done) ->
       cli.once 'inline', (data) ->
         data.should.eql('compiling... '.grey)
+        process.chdir(cwd)
         done()
 
-      # process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
+      cwd = process.cwd()
+      process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
       cli.execute(_: ['watch'])
 
     it '`roots watch /path/etc` should watch a project at a path'
 
   describe 'tpl', ->
+
     it '`roots tpl add name url` should add a template', (done) ->
       cli.once 'data', (data) ->
         data.should.eql("done!".green)
@@ -115,12 +123,12 @@ describe 'cli', ->
 
       cli.execute(_: ['tpl', 'default'])
 
-    it '`roots tpl default name` should error because no templates installed', (done) ->
+    it '`roots tpl default xxx` should error because no templates installed', (done) ->
       cli.once 'err', (data) ->
         data.should.exist
         done()
 
-      cli.execute(_: ['tpl', 'default', 'roots-base'])
+      cli.execute(_: ['tpl', 'default', 'xxx'])
 
     it '`roots tpl remove name` should remove a template', (done) ->
       cli.once 'data', (data) ->
