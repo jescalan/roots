@@ -90,7 +90,7 @@ describe 'cli', ->
 
       cwd = process.cwd()
       process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
-      project = cli.execute(_: ['watch'])
+      project = cli.execute(_: ['watch'], open: false)
 
   describe 'tpl', ->
 
