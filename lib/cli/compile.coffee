@@ -7,6 +7,10 @@ module.exports = (args, cli)->
 
   cli.emit('inline', 'compiling... '.grey)
 
-  (new Roots(dir, opts)).compile()
+  project = new Roots(dir, opts)
+
+  project
     .on('error', cli.emit.bind(cli, 'err'))
     .on('done', -> cli.emit('data', 'done!'.green))
+
+  project.compile()

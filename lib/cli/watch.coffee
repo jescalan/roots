@@ -9,6 +9,7 @@ module.exports = (args, cli) ->
   dir = if args._[1] then path.resolve(args._[1]) else process.cwd()
   opts = { env: args.env || 'development' }
   project = new Roots(dir, opts)
+  args.open ?= true
 
   cli.emit('inline', 'compiling... '.grey)
 
@@ -21,7 +22,8 @@ module.exports = (args, cli) ->
   w.on 'error', (err) -> on_error(cli, server, err)
   w.on 'done', -> on_done(cli, server)
   w.once 'done', ->
-    if project.config.open_browser then open("http://localhost:#{process.env.port || default_port}/")
+    if project.config.open_browser and args.open
+      open("http://localhost:#{process.env.port || default_port}/")
 
   w
 

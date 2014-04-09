@@ -23,11 +23,13 @@ class Watcher
 
   compile_and_change_file: (file, first_compile, cb) ->
     count = 0
-    new Roots(@root).watch()
+    project = new Roots(@root)
+    project
       .on('error', cb)
       .on 'done', ->
         if ++count is 1 then return first_compile()
         cb()
+    project.watch()
 
     setTimeout =>
       p = path.join(@root, file)

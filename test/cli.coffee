@@ -1,4 +1,5 @@
 path   = require 'path'
+fs = require 'fs'
 should = require 'should'
 cli    = require '../lib/cli'
 pkg    = require('../package.json')
@@ -73,34 +74,33 @@ describe 'cli', ->
 
   describe 'watch', ->
 
-    # TODO: need a way to cancel the watch process here
-    it.skip '`roots watch` should watch a project', (done) ->
-      cli.once 'inline', (data) ->
-        data.should.eql('compiling... '.grey)
-        process.chdir(cwd)
-        done()
+    it '`roots watch` should watch a project', (done) ->
+      i = 0
+
+      fn = (data) ->
+        i++
+        if i == 1
+          data.should.eql('compiling... '.grey)
+          process.chdir(cwd)
+        else
+          project.watcher.close()
+          cli.removeListener('inline', fn)
+          done()
+
+      cli.on('inline', fn)
 
       cwd = process.cwd()
       process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
-      cli.execute(_: ['watch'])
-
-    it '`roots watch /path/etc` should watch a project at a path'
+      project = cli.execute(_: ['watch'], open: false)
 
   describe 'tpl', ->
 
     it '`roots tpl add name url` should add a template', (done) ->
       cli.once 'data', (data) ->
-        data.should.eql("done!".green)
+        data.should.eql("template 'foo' added".green)
         done()
 
       cli.execute(_: ['tpl', 'add', 'foo', test_tpl_path])
-
-    it '`roots tpl` should return help', (done) ->
-      cli.once 'data', (data) ->
-        data.should.match /Roots Templates/
-        done()
-
-      cli.execute(_: ['tpl'])
 
     it '`roots tpl add name` should error', (done) ->
       cli.once 'err', (data) ->
@@ -108,6 +108,13 @@ describe 'cli', ->
         done()
 
       cli.execute(_: ['tpl', 'add', 'foo'])
+
+    it '`roots tpl` should return help', (done) ->
+      cli.once 'data', (data) ->
+        data.should.match /Roots Templates/
+        done()
+
+      cli.execute(_: ['tpl'])
 
     it '`roots tpl list` should list templates', (done) ->
       cli.once 'data', (data) ->
@@ -136,3 +143,22 @@ describe 'cli', ->
         done()
 
       cli.execute(_: ['tpl', 'remove', 'foo'])
+
+  describe 'clean', ->
+
+    it 'should remove the output folder from a given directory', (done) ->
+      cli.once 'data', (data) ->
+        data.should.exist
+        done()
+
+      cli.execute(_: ['clean', path.join(__dirname, 'fixtures/compile/basic')])
+
+    it 'should remove the output folder from cwd', (done) ->
+      cli.once 'data', (data) ->
+        data.should.exist
+        process.chdir(cwd)
+        done()
+
+      cwd = process.cwd()
+      process.chdir(path.join(__dirname, 'fixtures/compile/copy'))
+      cli.execute(_: ['clean'])

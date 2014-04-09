@@ -1,17 +1,43 @@
 chokidar  = require 'chokidar'
 minimatch = require 'minimatch'
+_         = require 'lodash'
+
+###*
+ * @class Watcher
+ * @classdesc Watched a project, recompiles on change
+###
 
 class Watcher
 
   constructor: (@roots) ->
 
+  ###*
+   * Compile the project, once done, watch it for further changes.
+   * 
+   * @return {Object} chokidar [https://github.com/paulmillr/chokidar] instance
+  ###
+
   exec: ->
-    @roots.compile().once 'done', =>
-      chokidar.watch(@roots.root, { ignoreInitial: true, ignored: ignore.bind(@) })
+    watcher = chokidar.watch(@roots.root, { ignoreInitial: true, ignored: ignore.bind(@) })
+
+    @roots.once 'done', =>
+      watcher
         .on('error', (err) => @roots.emit('error', err))
         .on('change', @roots.compile.bind(@roots))
 
-  # @api private
+    @roots.compile()
+
+    return _.extend(@roots, { watcher: watcher })
+
+  ###*
+   * Given a path, returns true or false depending on whether it should be ignored
+   * or not.
+   *
+   * @private
+   * 
+   * @param  {String} p - absolute file path
+   * @return {Boolean} whether the file should be ignored or not
+  ###
 
   ignore = (p) ->
     f = p.replace(@roots.root, '').slice(1)
