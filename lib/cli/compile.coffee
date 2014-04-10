@@ -10,7 +10,9 @@ module.exports = (args, cli)->
   project = new Roots(dir, opts)
 
   project
-    .on('error', cli.emit.bind(cli, 'err'))
     .on('done', -> cli.emit('data', 'done!'.green))
+    .on 'error', (err) ->
+      cli.emit('err', Error(err).stack)
+      process.nextTick -> process.exit(1)
 
   project.compile()

@@ -28,9 +28,8 @@ module.exports = (args, cli) ->
   w
 
 on_error = (cli, server, err) ->
-  cli.emit('err', "\n\nERROR\n-----\n".red)
-  cli.emit('err', err.stack)
-  server.show_error(err.stack)
+  cli.emit('err', Error(err).stack)
+  server.show_error(Error(err).stack)
 
 on_start = (cli, server) ->
   cli.emit('inline', 'compiling... '.grey)

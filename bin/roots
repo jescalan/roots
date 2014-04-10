@@ -16,9 +16,12 @@ notifier.update && notifier.notify();
 
 // log data and errors to the console
 if (!args.quiet) {
-  cli.on('err', function(err){ console.error(err); process.exit(1) })
-     .on('data', console.log.bind(console))
+  cli.on('data', console.log.bind(console))
      .on('inline', process.stdout.write.bind(process.stdout))
+     .on('err', function(err){
+          console.error("\n\nERROR\n-----\n".red);
+          console.error(err);
+        });
 }
 
 // pass the arguments to the cli module
