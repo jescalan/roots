@@ -6,9 +6,11 @@ require('colors');
 var cli = require('../lib/cli'),
     notifier = require('update-notifier')({ packagePath: '../package.json' }),
     args = require('minimist')(process.argv.slice(2), {
-      v: 'version',
-      e: 'env',
-      q: 'quiet'
+      alias: {
+        v: 'version',
+        e: 'env',
+        q: 'quiet'
+      }
     });
 
 // new version notification

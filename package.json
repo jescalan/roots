@@ -40,7 +40,8 @@
     "vinyl": "0.2.x",
     "anti-matter": "0.0.1",
     "minimist": "0.0.8",
-    "rimraf": "2.x"
+    "rimraf": "2.x",
+    "npm": "^1.4.6"
   },
   "devDependencies": {
     "mocha": "*",
