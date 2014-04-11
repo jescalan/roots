@@ -2,16 +2,16 @@
 
 <p align="center">
   <a title='NPM version' href="http://badge.fury.io/js/roots">
-    <img src='https://badge.fury.io/js/roots.png' />
+    <img src='https://badge.fury.io/js/roots.svg' />
   </a>
   <a title='Build Status' href="https://travis-ci.org/jenius/roots">
-    <img src='https://travis-ci.org/jenius/roots.png?branch=v3' />
+    <img src='https://travis-ci.org/jenius/roots.svg?branch=v3' />
   </a>
   <a title='Dependency Status' href="https://david-dm.org/jenius/roots">
-    <img src='https://david-dm.org/jenius/roots.png?theme=shields.io' />
+    <img src='https://david-dm.org/jenius/roots.svg' />
   </a>
   <a href='https://coveralls.io/r/jenius/roots?branch=v3'>
-    <img src='https://coveralls.io/repos/jenius/roots/badge.png?branch=v3' alt='Coverage Status' />
+    <img src='http://img.shields.io/coveralls/jenius/roots.svg?branch=v3' alt='Coverage Status' />
   </a>
 </p>
 
