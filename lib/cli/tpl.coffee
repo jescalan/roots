@@ -6,8 +6,8 @@ module.exports = (args, cli) ->
   if args.length < 2 then return cli.emit('data', help())
   
   promise = switch args[1]
-    when 'add' then Roots.template.add(name: args[2], url: args[3])
-    when 'remove' then Roots.template.remove(args[2])
+    when 'add' then Roots.template.add(name: args[2], uri: args[3])
+    when 'remove' then Roots.template.remove(name: args[2])
     when 'list' then cli.emit('data', Roots.template.list(pretty: true))
     when 'default' then Roots.template.default(args[2])
     when 'reset' then Roots.template.reset()

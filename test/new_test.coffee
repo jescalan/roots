@@ -24,26 +24,26 @@ describe 'new', ->
       if err then return done(err)
       events.should.be.above(2)
       rimraf.sync(p)
-      Roots.template.remove('roots-base').done((-> done()), done)
+      Roots.template.remove(name: 'roots-base').done((-> done()), done)
 
-    Roots.new(
+    Roots.new
       path: p
       options: { name: 'foo', description: 'bar' }
       done: (inst) -> inst.should.be.an.instanceof(Roots)
-    ).on('done', -> finish())
-     .on('error', finish)
-     .on('template:base_added', increment)
-     .on('template:created', increment)
-     .on('deps:installing', increment)
-     .on('deps:finished', increment)
+    .on('done', -> finish())
+    .on('error', finish)
+    .on('template:base_added', increment)
+    .on('template:created', increment)
+    .on('deps:installing', increment)
+    .on('deps:finished', increment)
 
   it 'should create a project with another template if provided', (done) ->
     p = path.join(test_path, 'testing')
 
-    Roots.template.add(name: 'foobar', url: test_tpl_path)
+    Roots.template.add(name: 'foobar', uri: test_tpl_path)
       .catch(done)
       .then ->
         Roots.new(path: p, options: { foo: 'bar' }, template: 'foobar').on 'done', ->
           fs.existsSync(path.join(p, 'index.html')).should.be.ok
           rimraf.sync(p)
-          Roots.template.remove('foobar').then(-> done())
+          Roots.template.remove(name: 'foobar').then(-> done())

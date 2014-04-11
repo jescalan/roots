@@ -6,20 +6,42 @@ nodefn         = require 'when/node'
 sprout         = require 'sprout'
 global_config  = require '../global_config'
 _              = require 'lodash'
+npm            = require 'npm'
+
+###*
+ * @class New
+ * @classdesc Uses sprout to create new roots projects
+###
 
 class New extends EventEmitter
 
   constructor: (@roots) ->
     @base_url = 'https://github.com/roots-dev/base.git'
 
-  exec: (opts) ->
-    @path = opts.path || throw new Error('missing path')
-    @template = opts.template || global_config().get('default_template')
-    @options = opts.options
+  ###*
+   * Main method, given a path to where the project should be and some (optional)
+   * additional options, creates a new project template. If no template is provided,
+   * uses the roots default template, which is installed if not present. Once the
+   * template is created, installs dependencies if a package.json is present.
+   *
+   * @param  {Object} opts - Arguments object, takes the following:
+   *                       - path: path to nonexistant folder where project should be
+   *                       - template: name of the template to use for the project
+   *                       - options: overrides for template config
+   *                       - defaults: default values for template config
+  ###
 
-    # if sprout list doesn't contain roots-base
+  exec: (opts) ->
+    @path      = opts.path     || throw new Error('missing path')
+    @template  = opts.template || global_config().get('default_template')
+    @overrides = opts.options  || {}
+    @defaults  = opts.defaults || {}
+
+    @pkg = path.join(@path, 'package.json')
+    @defaults.name = opts.name
+
     if not _.contains(sprout.list(), 'roots-base')
-      sprout.add(name: 'roots-base', url: @base_url)
+      sprout.add(name: 'roots-base', uri: @base_url)
         .catch((err) => @emit('error', err))
         .tap(=> @emit('template:base_added'))
         .then(=> init.call(@))
@@ -28,37 +50,46 @@ class New extends EventEmitter
 
     return @
 
-  # @api private
+  ###*
+   * Uses sprout.init to create a project template, emits events, and installs
+   * dependencies if necessary.
+   * 
+   * @private
+  ###
 
   init = ->
-    sprout.init(template: @template, path: @path, options: @options)
-      .tap(=> @emit('template:created'))
-      .then(=> if has_deps.call(@) then install_deps.call(@))
-      .done((=> @emit('done', @path)), ((err) => @emit('error', err)))
+    sprout.init
+      name: @template
+      path: @path
+      overrides: @overrides
+      defaults: @defaults
+    .tap(=> @emit('template:created'))
+    .then(=> if has_deps.call(@) then install_deps.call(@))
+    .done((=> @emit('done', @path)), ((err) => @emit('error', err)))
+
+  ###*
+   * Tests whether a project has a package.json file and therefore needs to have
+   * dependencies installed.
+   *
+   * @private
+   * @return {Boolean} whether a package.json file exists in the template
+  ###
 
   has_deps = ->
-    fs.existsSync(path.join(@path, 'package.json'))
+    fs.existsSync(@pkg)
+
+  ###*
+   * Uses npm to install a project's dependencies.
+   *
+   * @private
+   * @return {Promise} a promise for installed deps
+  ###
 
   install_deps = ->
     @emit('deps:installing')
-    nodefn.call(exec, "cd #{@path} && npm install")
-      .tap(=> @emit('deps:finished'))
+
+    nodefn.call(npm.load.bind(npm), require(@pkg))
+      .then(=> nodefn.call(npm.commands.install, path.dirname(@pkg), []))
+      .then(=> @emit('deps:finished'))
 
 module.exports = New
-
-###
-
-What's Going On Here?
----------------------
-
-The 'new' class handles the creation of roots templates. It exposes an event emitter, but it's internal methods operate entirely via promises to keep the internal code clean and expose hooks to each part of the process.
-
-The main method, exec, will check to see if the user has any templates installed. If not, it will add the base template, which is the roots default, then continue. If there are already templates, it will continue, assuming the user has used roots before. It will then initialize the template through sprout and return a promise for when it has finished.
-
-The second, has_deps is a simple method that checks to see if the project has a package.json and therefore dependencies that need to be installed. It returns a boolean.
-
-Finally, install_deps will jump into the project and run `npm install`. Throughout the process, events are emitted at times where it might be useful to be able to hook into  the process via the public API.
-
-To see a sample implementation, check out commands/new.coffee to see how you can hook into the events.
-
-###
