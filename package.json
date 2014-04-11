@@ -32,7 +32,7 @@
     "chokidar": "0.8.x",
     "open": "0.0.4",
     "connect": "2.x",
-    "sprout": "0.0.8",
+    "sprout": "0.1.x",
     "configstore": "0.2.x",
     "infestor": "0.2.x",
     "faye-websocket": "0.7.x",
