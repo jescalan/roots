@@ -31,6 +31,6 @@ If you submit a pull request that doesn't have a clean commit log, we will ask y
 
 ### Getting Money
 
-We are kind and generous here at roots HQ, and would love to thank anyone who makes a contribution to roots. We therefore have pledged to send 100 - 500 [dogecoins](http://dogecoin.com/) per merged pull request to any contributors. Please note that the estimated value of a dogecoin is currently $100, so that means you'll theoretically be recieving between $10,000 and $50,000 per successful PR. There is no limit to how many pull requests you can claim a bounty on, so more contributions == more money. Documentation of you making it rain with your newfound riches is always appreciated.
+We are kind and generous here at roots HQ, and would love to thank anyone who makes a contribution to roots. We therefore have pledged to send 100 - 500 [dogecoins](http://dogecoin.com/) per merged pull request to any contributors. Please note that dogecoin is estimated to reach a value of $100<sup>[citation needed]</sup>, so that means you'll theoretically be recieving between $10,000 and $50,000 per successful PR. There is no limit to how many pull requests you can claim a bounty on, so more contributions == more money. Documentation of you making it rain with your newfound riches is always appreciated.
 
 To claim the bounty, just leave your dogecoin wallet address in a comment on the closed PR.
