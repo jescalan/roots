@@ -6,9 +6,9 @@ module.exports = ->
   ###*
    * @class
    * @classdesc This extension puts files into a "compiled" category if their
-   * extensions match to an extension that an installed compiler is looking for
+     extensions match to an extension that an installed compiler is looking
+     for.
   ###
-
   class Compiled
     constructor: (@roots) ->
       @category = 'compiled'
@@ -17,9 +17,10 @@ module.exports = ->
       extract: true
       ordered: true
       detect: detect_fn.bind(@)
-    
-    # @api private
-    
+
+    ###*
+     * @private
+    ###
     detect_fn = (f) ->
       exts = _(@roots.config.compilers).map((i)-> i.extensions).flatten().value()
       _.contains(exts, path.extname(f.relative).slice(1))

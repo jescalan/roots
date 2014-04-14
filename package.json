@@ -6,7 +6,7 @@
     "Sam Saccone <sam@samx.it>"
   ],
   "description": "simple, flexible, and powerful static site compiler",
-  "main": "index.js",
+  "main": "lib",
   "license": "MIT",
   "repository": {
     "type": "git",

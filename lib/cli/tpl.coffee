@@ -4,7 +4,7 @@ Roots = require '../'
 module.exports = (args, cli) ->
   args = args._
   if args.length < 2 then return cli.emit('data', help())
-  
+
   promise = switch args[1]
     when 'add' then Roots.template.add(name: args[2], uri: args[3])
     when 'remove' then Roots.template.remove(name: args[2])
@@ -31,9 +31,9 @@ help = ->
       description: 'Removed the template with the given [name]'
     }, {
       name: 'list'
-      description: 'Lists all installed roots templates'  
+      description: 'Lists all installed roots templates'
     }, {
       name: 'default'
       required: ['name']
-      description: 'Makes the template [name] the default template whenever `roots new` is run'  
+      description: 'Makes the template [name] the default template whenever `roots new` is run'
     }]

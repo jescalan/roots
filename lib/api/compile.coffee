@@ -1,10 +1,10 @@
-fs       = require 'fs'
-W        = require 'when'
-nodefn   = require 'when/node'
-guard    = require 'when/guard'
-keys     = require 'when/keys'
+fs = require 'fs'
+W = require 'when'
+nodefn = require 'when/node'
+guard = require 'when/guard'
+keys = require 'when/keys'
 sequence = require 'when/sequence'
-mkdirp   = require 'mkdirp'
+mkdirp = require 'mkdirp'
 
 FSParser = require '../fs_parser'
 Compiler = require '../compiler'
@@ -13,20 +13,15 @@ Compiler = require '../compiler'
  * @class Compile
  * @classdesc Compiles a project
 ###
-
 class Compile
-
   ###*
    * Creates a new instance of the compile class.
-   * 
    * - makes a new fs parser instance
    * - makes a new compiler instance
    * - makes a new instance of each extension, with error detection.
    *   this must happen every compile pass to clear lingering context
-   * 
-   * @param  {Function} roots - instance of the base roots class
+   * @param {Function} roots - instance of the base roots class
   ###
-  
   constructor: (@roots) ->
     @extensions = @roots.extensions.instantiate()
     @fs_parser = new FSParser(@roots, @extensions)
@@ -34,7 +29,6 @@ class Compile
 
   ###*
    * Compiles the project. This process includes the following steps:
-   *
    * - execute user before hooks if present
    * - parse the project, sort files into categories
    * - create the folder structure
@@ -43,7 +37,6 @@ class Compile
    * - removes any empty folders that exist after compile
    * - emit finished events
   ###
-
   exec: ->
     @roots.emit('start')
 
@@ -59,32 +52,25 @@ class Compile
 
   ###*
    * Calls any user-provided before hooks with the roots context.
-   *
    * @private
   ###
-
   before_hook = ->
     hook_method.call(@, @roots.config.before)
 
   ###*
    * Calls any user-provided after hooks with the roots context.
-   *
    * @private
   ###
-
   after_hook = (ast) ->
     hook_method.call(@, @roots.config.after)
 
   ###*
    * Checks to ensure the requested hook(s) is/are present, then calls them,
-   * whether there was an array of hooks provided or just a single hook.
-   *
-   * @private
-   * 
-   * @param  {Array|Function} hook - a function or array of functions
+     whether there was an array of hooks provided or just a single hook.
+   * @param {Array|Function} hook - a function or array of functions
    * @return {Promise} promise for resolved hooks
+   * @private
   ###
-
   hook_method = (hook) ->
     if not hook then return W.resolve()
 
@@ -99,23 +85,19 @@ class Compile
 
   ###*
    * If present, runs an async-compatible `setup` function in each extension,
-   * ensuring that any asynchrnonous setup the extension needs is completed.
-   * 
+     ensuring that any asynchrnonous setup the extension needs is completed.
    * @return {Promise} a promise that the extension setup is finished
   ###
-
   setup_extensions = ->
     req_setup = @extensions.filter((ext) -> !!ext.setup)
     W.map(req_setup, ((ext) -> ext.setup()))
 
   ###*
-   * Creates the nested folder structure for a project. First, creates an array
-   * of just the output paths, then creates the base public folder, then
-   * sequentially walks through the folders and creates them all.
-   * 
-   * @param  {Object} ast - roots ast
+   * Creates the nested folder structure for a project. First, creates an
+     array of just the output paths, then creates the base public folder, then
+     sequentially walks through the folders and creates them all.
+   * @param {Object} ast - roots ast
   ###
-
   create_folders = (ast) ->
     output_paths = ast.dirs.map((d) => @roots.config.out(d))
     @__dirs = output_paths
@@ -125,30 +107,27 @@ class Compile
 
   ###*
    * Files are processed by category, and each category can be processed in
-   * One of two ways: parallel or ordered. Parallel processed categories will
-   * crunch through their files as quickly as possible, starting immediately.
-   * Ordered categories will parallel compile all the files in the category, but
-   * wait until one category is finished before moving to the next one.
-   *
-   * An example use for each of these is client templates and dynamic content.
-   * With client templates, they do not depend on any other compile process so
-   * they are a great fit for parallel. For dynamic content, the front matter must
-   * be parsed then available in normal templates, which means all dynamic content
-   * must be finished parsing before normal content starts. For this reason, dynamic
-   * content has to be ordered so it is placed before the normal compiles.
-   *
-   * So what this function does is first distinguishes ordered or parallel for each
-   * extension, then pushes a compile task for that extension onto the appropriate
-   * stack. The compile task just grabs the files from the category and runs them
-   * each through the compiler's `compile` method. Then when they are finished, it
-   * runs the after category hook.
-   *
-   * Once the ordered and parallel stacks are full of tasks, they are run. Ordered
-   * gets sequenced so they run in order, and parallel runs (surprise) in parallel.
-   * 
-   * @param  {Object} ast - roots ast
+     One of two ways: parallel or ordered. Parallel processed categories will
+     crunch through their files as quickly as possible, starting immediately.
+     Ordered categories will parallel compile all the files in the category,
+     but wait until one category is finished before moving to the next one. An
+     example use for each of these is client templates and dynamic content.
+     With client templates, they do not depend on any other compile process so
+     they are a great fit for parallel. For dynamic content, the front matter
+     must be parsed then available in normal templates, which means all
+     dynamic content must be finished parsing before normal content starts.
+   * For this reason, dynamic content has to be ordered so it is placed before
+     the normal compiles. So what this function does is first distinguishes
+     ordered or parallel for each extension, then pushes a compile task for
+     that extension onto the appropriate stack. The compile task just grabs
+     the files from the category and runs them each through the compiler's
+     `compile` method. Then when they are finished, it runs the after category
+     hook.
+   * Once the ordered and parallel stacks are full of tasks, they are run.
+     Ordered gets sequenced so they run in order, and parallel runs (surprise)
+     in parallel.
+   * @param {Object} ast - roots ast
   ###
-
   process_files = (ast) ->
     ordered = []
     parallel = []
@@ -179,19 +158,16 @@ class Compile
       parallel: W.all(parallel)
 
   ###*
-   * Sometimes extensions prevent file writes and leave behind empty
-   * folders. The client templates extension is a good example. No matter
-   * how it happens, there should not be any empty folders in the output,
-   * so this method gets rid of them if they exist.
-   *
+   * Sometimes extensions prevent file writes and leave behind empty folders.
+     The client templates extension is a good example. No matter how it
+     happens, there should not be any empty folders in the output, so this
+     method gets rid of them if they exist.
    * The way this is done is *very* hacky, but it is the speediest way. It
-   * tries to delete every folder, and if it succeeds, it means the folder was
-   * empty, as trying to remove a directory with contents throws an error (which
-   * we ignore using an empty callback).
-   * 
+     tries to delete every folder, and if it succeeds, it means the folder was
+     empty, as trying to remove a directory with contents throws an error
+     (which we ignore using an empty callback).
    * @private
   ###
-
   purge_empty_folders = ->
     @__dirs.map (d) -> fs.rmdir(d, ->)
 

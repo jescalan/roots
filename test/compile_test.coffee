@@ -134,4 +134,4 @@ describe 'compile', ->
       should.exist(output, 'doge_file.html')
       should.not_exist(output, 'dev_file.html')
       done()
-    , done        
+    , done

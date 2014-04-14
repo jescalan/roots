@@ -1,8 +1,8 @@
-sprout        = require 'sprout'
-_             = require 'lodash'
-W             = require 'when'
+sprout = require 'sprout'
+_ = require 'lodash'
+W = require 'when'
 global_config = require '../global_config'
-fs            = require 'fs'
+fs = require 'fs'
 
 exports.add = sprout.add.bind(sprout) # TODO: prepend all templates with "roots-"
 exports.remove = sprout.remove

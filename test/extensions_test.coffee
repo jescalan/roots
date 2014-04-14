@@ -1,7 +1,7 @@
 should = require 'should'
-path   = require 'path'
-fs     = require 'fs'
-Roots  = require '../lib'
+path = require 'path'
+fs = require 'fs'
+Roots = require '../lib'
 
 describe 'extensions', ->
 

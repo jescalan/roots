@@ -1,8 +1,8 @@
-path   = require 'path'
+path = require 'path'
 fs = require 'fs'
 should = require 'should'
-cli    = require '../lib/cli'
-pkg    = require('../package.json')
+cli = require '../lib/cli'
+pkg = require('../package.json')
 
 test_tpl_path = 'https://github.com/jenius/sprout-test-template.git'
 
