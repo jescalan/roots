@@ -12,9 +12,7 @@ npm = require 'npm'
  * @class New
  * @classdesc Uses sprout to create new roots projects
 ###
-
 class New extends EventEmitter
-
   constructor: (@roots) ->
     @base_url = 'https://github.com/roots-dev/base.git'
 
@@ -32,7 +30,6 @@ class New extends EventEmitter
    * @param {Object} opts.options - overrides for template config
    * @param {Object} opts.defaults - default values for template config
   ###
-
   exec: (opts) ->
     @path = opts.path || throw new Error('missing path')
     @template = opts.template || global_config().get('default_template')
@@ -57,7 +54,6 @@ class New extends EventEmitter
      dependencies if necessary.
    * @private
   ###
-
   init = ->
     sprout.init
       name: @template
@@ -74,7 +70,6 @@ class New extends EventEmitter
    * @private
    * @return {Boolean} whether a package.json file exists in the template
   ###
-
   has_deps = ->
     fs.existsSync(@pkg)
 
@@ -83,7 +78,6 @@ class New extends EventEmitter
    * @private
    * @return {Promise} a promise for installed deps
   ###
-
   install_deps = ->
     @emit('deps:installing')
 

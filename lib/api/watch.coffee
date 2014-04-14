@@ -6,9 +6,7 @@ _ = require 'lodash'
  * @class Watcher
  * @classdesc Watched a project, recompiles on change
 ###
-
 class Watcher
-
   constructor: (@roots) ->
 
   ###*
@@ -16,7 +14,6 @@ class Watcher
    * @return {Object} chokidar [https://github.com/paulmillr/chokidar]
      instance
   ###
-
   exec: ->
     watcher = chokidar.watch(@roots.root, { ignoreInitial: true, ignored: ignore.bind(@) })
 
@@ -36,7 +33,6 @@ class Watcher
    * @return {Boolean} whether the file should be ignored or not
    * @private
   ###
-
   ignore = (p) ->
     f = p.replace(@roots.root, '').slice(1)
     @roots.config.watcher_ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i)->i).length

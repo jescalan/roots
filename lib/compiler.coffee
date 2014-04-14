@@ -11,9 +11,7 @@ File = require 'vinyl'
  * @class Compiler
  * @classdesc Responsible for compiling files, multipass included
 ###
-
 class Compiler
-
   ###*
    * Creates a new compiler instance, which holds on to the roots instance as
      well as an array of initialized extensions, and creates an empty options
@@ -21,7 +19,6 @@ class Compiler
    * @param {Function} @roots - Roots class instance
    * @param {Function} @extensions - array of initialzed extensions
   ###
-
   constructor: (@roots, @extensions) ->
     @options = {}
 
@@ -31,7 +28,6 @@ class Compiler
    * @param {File} file - vinyl-wrapped file
    * @return {Promise} promise for the fully compiled file
   ###
-
   compile: (category, file) ->
     cf = new CompileFile(@roots, @extensions, @options, category, file)
     cf.run()
@@ -44,9 +40,7 @@ module.exports = Compiler
    easily with a scope that doesn't interfere with anything else.
  * @private
 ###
-
 class CompileFile
-
   ###*
    * Creates a new instances of the CompileFile class. Grabs the adapter(s)
      needed to compile the file, creates the per-file options object and adds
@@ -57,7 +51,6 @@ class CompileFile
    * @param {String} category Category of file being compiled
    * @param {File} file Vinyl-wrapped file
   ###
-
   constructor: (@roots, @extensions, @compile_options, @category, @file) ->
     @adapters = get_adapters.call(@)
     @is_compiled = !!_(@adapters).pluck('name').compact().value().length
@@ -75,7 +68,6 @@ class CompileFile
    * - write the file
    * @return {Promise} promise for a compiled and written file
   ###
-
   run: ->
     read_file.call(@, @file)
       .with(@)
@@ -93,7 +85,6 @@ class CompileFile
    * @return {Promise} a promise for the file's contents
    * @private
   ###
-
   read_file = (f) ->
     options = null
 
@@ -111,7 +102,6 @@ class CompileFile
    * @todo adjust config.out to work better with vinyl
    * @private
   ###
-
   write_file = ->
     sequence(@extensions.hooks('compile_hooks.write', @category), @)
       .then(process_write_hook_results.bind(@))
@@ -134,7 +124,6 @@ class CompileFile
    * @return {Array} an array of promises for written files
    * @todo if custom path is given, it always also writes standard
   ###
-
   process_write_hook_results = (results) ->
     if results.length < 1 then return [write_task.call(@)]
     if _.contains(results, false) then return []
@@ -172,7 +161,6 @@ class CompileFile
    * @param {Object} obj - object with `path` and `content` properties
    * @return {Promise} a promise for the written file
   ###
-
   write_task = (obj) ->
     obj ?= {}
 
@@ -198,7 +186,6 @@ class CompileFile
      stub adapter with no extension.
    * @return {Array} an array of adapter objects, in order
   ###
-
   get_adapters = ->
     extensions = path.basename(@file.path).split('.').slice(1)
     adapters = []
@@ -218,7 +205,6 @@ class CompileFile
      it binds an adapter and an index to each compile pass.
    * @return {Promise} a promise for the compiled content of the file
   ###
-
   each_pass = ->
     pass = new CompilePass(@)
     pipeline(@adapters.map((a,i) => pass.run.bind(pass,a,i+1)), @content)
@@ -227,15 +213,12 @@ class CompileFile
  * @class CompilePass
  * @classdesc Handles one compilation pass on a file's content.
 ###
-
 class CompilePass
-
   ###*
    * Creates a new instance, holding on to a reference to the CompileFile
      instance.
    * @param {Function} file - instance of CompileFile
   ###
-
   constructor: (@file) ->
 
   ###*
@@ -255,7 +238,6 @@ class CompilePass
    * @return {Promise} a promise for the compiled content
    * @todo is there a way to yield(@content)?
   ###
-
   run: (@adapter, @index, @content) ->
     @opts = configure_options.call(@)
 
@@ -282,7 +264,6 @@ class CompilePass
    * @return {Object} - all options merged into a single object
    * @private
   ###
-
   configure_options = ->
     global_options  = @file.roots.config.locals || {}
     adapter_options = @file.roots.config[@adapter.name] || {}
@@ -301,7 +282,6 @@ class CompilePass
    * @return {Promise|String} a string or promise for a string of content
    * @todo maybe use instance rather than name to classify?
   ###
-
   compile_or_pass = ->
     if not @adapter.name then return @content
     @adapter.render(@content, @opts)

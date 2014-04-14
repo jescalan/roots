@@ -12,9 +12,7 @@ File = require 'vinyl'
  * @classdesc Recursively parses the project folder, producing an object which
    puts each file into a category for processing.
 ###
-
 class FSParser
-
   ###*
    * Creates a new instance of the FSParser class. Sets up instance vars:
    * - root: the project root
@@ -22,7 +20,6 @@ class FSParser
    * - extensions: all extension instances for this compile
    * @param {Function} roots - instance of the roots base class
   ###
-
   constructor: (@roots, @extensions) ->
     @root = @roots.root
     @config = @roots.config
@@ -40,7 +37,6 @@ class FSParser
    * }
    * @return {Object} when.js promise for an ast
   ###
-
   parse: ->
     @ast = { dirs: [] }
 
@@ -57,7 +53,6 @@ class FSParser
    * @return {Object} 'ast' object, described above
    * @private
   ###
-
   parse_dir = (dir) ->
     deferred = W.defer()
     files = []
@@ -90,7 +85,6 @@ class FSParser
    * @param {String} file - path to a file
    * @private
   ###
-
   parse_file = (file) ->
     file = new File(base: @root, path: file)
     list = (sort.bind(@, ext, file) for ext in @extensions when ext.fs)
@@ -122,7 +116,6 @@ class FSParser
    * @todo handle error if category not found
    * @private
   ###
-
   sort = (ext, file, extract) ->
     if extract then return true
 
@@ -141,7 +134,6 @@ class FSParser
    * @return {Object} - modified instance of the `ast`
    * @private
   ###
-
   format_dirs = ->
     @ast.dirs = _.uniq(@ast.dirs).map((d) => new File(base: @root, path: d))
     @ast
@@ -151,7 +143,6 @@ class FSParser
    * @param {String} f - file path
    * @return {Boolean} whether the file should be ignored or not
   ###
-
   ignored = (f) ->
     @config.ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i) -> i).length
 

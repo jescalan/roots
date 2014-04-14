@@ -7,9 +7,7 @@ static_ext = require './extensions/static'
  * @classdesc Responsible for managing roots extensions
  * @todo could this be an array with methods on it rather than a class?
 ###
-
 class Extensions
-
   constructor: (@roots) ->
     @all = []
     @register [compiled_ext(), static_ext()]
@@ -23,7 +21,6 @@ class Extensions
    * @param {Object} extensions - an extension or array of extensions
    * @param {Integer} priority - optional, how early the extension(s) is/are run
   ###
-
   register: (extensions, priority) ->
     if not Array.isArray(extensions) then extensions = [extensions]
 
@@ -37,7 +34,6 @@ class Extensions
      in the way the extension was configured.
    * @return {Array} - array of instantiated extensions
   ###
-
   instantiate: ->
     extensions = @all.map (Ext) =>
       try ext = new Ext(@roots); catch err then @roots.bail(125, err, ext)
@@ -52,7 +48,6 @@ class Extensions
    * Ensures that all existant properties of an extension are functions.
    * @param {Function} ext - instance of an extension
   ###
-
   check_extension_errors = (ext) ->
     if not_function(ext.fs)
       @roots.bail(125, 'The fs property must be a function', ext)
@@ -69,7 +64,6 @@ class Extensions
    * @return {Boolean} whether it exists and is not a function or not
    * @private
   ###
-
   not_function = (prop) -> prop && typeof prop != 'function'
 
   ###*
@@ -83,7 +77,6 @@ class Extensions
    * @param  {String} name - hook name, separated with periods
    * @return {Function} The hook function if exists, otherwise undefined
   ###
-
   hooks = (name, category) ->
     namespace = name.split('.')[0]
     key = name.split('.')[1]

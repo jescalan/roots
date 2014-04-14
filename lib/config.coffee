@@ -8,9 +8,7 @@ _ = require 'lodash'
  * @class Config
  * @classdesc Manages configuration info and setup for roots
 ###
-
 class Config
-
   ###*
    * Creates a new instance of the roots config. This happens once, as soon as
      you initialize the roots class. The constructor sets up a number of
@@ -32,7 +30,6 @@ class Config
    * @param  {Function} @roots - roots class instance
    * @todo uniq filter ignores
   ###
-
   constructor: (@roots, opts) ->
     @output = 'public'
     @dump_dirs = ['views', 'assets']
@@ -68,7 +65,6 @@ class Config
      config object, overwriting the defaults if this applies. Finally,
      extensions are all registered with roots if they are provided.
   ###
-
   load_config = ->
     basename = if @env is 'development' then "app" else "app.#{@env}"
     config_path = path.join(@roots.root, basename)
@@ -91,7 +87,6 @@ class Config
    * Produces the full path to the output folder
    * @return {String} - path to output folder
   ###
-
   output_path: ->
     path.join(@roots.root, @output)
 
@@ -109,7 +104,6 @@ class Config
    * @param  {String} ext - file extension, no dot
    * @return {String} path to where the file should be written
   ###
-
   out: (f, ext) ->
     res = f.relative.split(path.sep)
     if _.contains(@dump_dirs, res[0]) then res.shift()
@@ -125,7 +119,6 @@ class Config
    * @return {Array} - array of accord adapters
    * @private
   ###
-
   get_compilers = ->
     res = {}
     pkg_json_path = path.join(@roots.root, 'package.json')

@@ -12,16 +12,13 @@ Watch = require('./api/watch')
  * @class
  * @classdesc main roots class, public api for roots
 ###
-
 class Roots extends EventEmitter
-
   ###*
    * Given a path to a project, set up the configuration and return a roots
      instance
    * @param {[type]} root - path to a folder
    * @return {Function} - instance of the Roots class
   ###
-
   constructor: (@root, opts={}) ->
     if not fs.existsSync(@root) then throw new Error("path does not exist")
     @extensions = new Extensions(@)
@@ -37,7 +34,6 @@ class Roots extends EventEmitter
    * @param {Object} opts.options Additional options to pass to sprout
    * @return {Function} Roots class instance
   ###
-
   @new: (opts) ->
     n = new (require('./api/new'))(@)
     n.exec(opts).on('done', (root) => if opts.done then opts.done(new @(root)))
@@ -47,14 +43,12 @@ class Roots extends EventEmitter
    * Exposes an API to manage your roots project templates through sprout. See
      api/template for details.
   ###
-
   @template: require('./api/template')
 
   ###*
    * Compiles a roots project. Wow.
    * @return {Promise} promise for finished compile
   ###
-
   compile: ->
     (new Compile(@)).exec()
 
@@ -62,7 +56,6 @@ class Roots extends EventEmitter
    * Watches a folder for changes and compiles whenever changes happen.
    * @return {Object} [chokidar](https://github.com/paulmillr/chokidar) instance
   ###
-
   watch: ->
     (new Watch(@)).exec()
 
@@ -72,7 +65,6 @@ class Roots extends EventEmitter
    * @param {Integer} code - numeric error code
    * @param {String} details - any additional details to be printed
   ###
-
   bail: (code, message, ext) ->
     switch code
       when 125 then name = "Malformed Extension"

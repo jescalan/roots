@@ -13,9 +13,7 @@ Compiler = require '../compiler'
  * @class Compile
  * @classdesc Compiles a project
 ###
-
 class Compile
-
   ###*
    * Creates a new instance of the compile class.
    * - makes a new fs parser instance
@@ -24,7 +22,6 @@ class Compile
    *   this must happen every compile pass to clear lingering context
    * @param {Function} roots - instance of the base roots class
   ###
-
   constructor: (@roots) ->
     @extensions = @roots.extensions.instantiate()
     @fs_parser = new FSParser(@roots, @extensions)
@@ -40,7 +37,6 @@ class Compile
    * - removes any empty folders that exist after compile
    * - emit finished events
   ###
-
   exec: ->
     @roots.emit('start')
 
@@ -58,7 +54,6 @@ class Compile
    * Calls any user-provided before hooks with the roots context.
    * @private
   ###
-
   before_hook = ->
     hook_method.call(@, @roots.config.before)
 
@@ -66,7 +61,6 @@ class Compile
    * Calls any user-provided after hooks with the roots context.
    * @private
   ###
-
   after_hook = (ast) ->
     hook_method.call(@, @roots.config.after)
 
@@ -77,7 +71,6 @@ class Compile
    * @return {Promise} promise for resolved hooks
    * @private
   ###
-
   hook_method = (hook) ->
     if not hook then return W.resolve()
 
@@ -95,7 +88,6 @@ class Compile
      ensuring that any asynchrnonous setup the extension needs is completed.
    * @return {Promise} a promise that the extension setup is finished
   ###
-
   setup_extensions = ->
     req_setup = @extensions.filter((ext) -> !!ext.setup)
     W.map(req_setup, ((ext) -> ext.setup()))
@@ -106,7 +98,6 @@ class Compile
      sequentially walks through the folders and creates them all.
    * @param {Object} ast - roots ast
   ###
-
   create_folders = (ast) ->
     output_paths = ast.dirs.map((d) => @roots.config.out(d))
     @__dirs = output_paths
@@ -137,7 +128,6 @@ class Compile
      in parallel.
    * @param {Object} ast - roots ast
   ###
-
   process_files = (ast) ->
     ordered = []
     parallel = []
@@ -178,7 +168,6 @@ class Compile
      (which we ignore using an empty callback).
    * @private
   ###
-
   purge_empty_folders = ->
     @__dirs.map (d) -> fs.rmdir(d, ->)
 
