@@ -1,6 +1,6 @@
-chokidar  = require 'chokidar'
+chokidar = require 'chokidar'
 minimatch = require 'minimatch'
-_         = require 'lodash'
+_ = require 'lodash'
 
 ###*
  * @class Watcher
@@ -13,8 +13,8 @@ class Watcher
 
   ###*
    * Compile the project, once done, watch it for further changes.
-   * 
-   * @return {Object} chokidar [https://github.com/paulmillr/chokidar] instance
+   * @return {Object} chokidar [https://github.com/paulmillr/chokidar]
+     instance
   ###
 
   exec: ->
@@ -30,13 +30,11 @@ class Watcher
     return _.extend(@roots, { watcher: watcher })
 
   ###*
-   * Given a path, returns true or false depending on whether it should be ignored
-   * or not.
-   *
-   * @private
-   * 
-   * @param  {String} p - absolute file path
+   * Given a path, returns true or false depending on whether it should be
+     ignored or not.
+   * @param {String} p - absolute file path
    * @return {Boolean} whether the file should be ignored or not
+   * @private
   ###
 
   ignore = (p) ->

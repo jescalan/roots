@@ -1,4 +1,4 @@
-path  = require 'path'
+path = require 'path'
 Roots = require '../'
 
 module.exports = (args, cli) ->

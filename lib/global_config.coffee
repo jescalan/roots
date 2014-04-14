@@ -3,7 +3,6 @@ pkg = require '../package.json'
 ###*
  * Interface for interacting with the roots global config options
  * Docs here: https://github.com/yeoman/configstore#documentation
- * 
  * @return {Object} configstore api
 ###
 

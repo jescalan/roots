@@ -1,6 +1,6 @@
-open   = require 'open'
-path   = require 'path'
-Roots  = require '../'
+open = require 'open'
+path = require 'path'
+Roots = require '../'
 Server = require '../local_server'
 
 default_port = 1111

@@ -46,7 +46,7 @@ An array containing `minimatch <https://github.com/isaacs/minimatch>`_ strings t
 
 **dump_dirs**
 
-Array of directories that will have their contents dumped into the output folder rather than compiling into the folder they are in. 
+Array of directories that will have their contents dumped into the output folder rather than compiling into the folder they are in.
 *default: ``['views', 'assets']``*
 
 **env**

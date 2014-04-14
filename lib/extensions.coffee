@@ -15,13 +15,13 @@ class Extensions
     @register [compiled_ext(), static_ext()]
 
   ###*
-   * Registers roots extension(s) with your project. Tests each extension passed
-   * to ensure it's the right type, then flips the extensions backwards and pushes
-   * each one to the beginning of the array, conserving order, unless there's a priority
-   * given, in which case it's inserted at a certain index.
-   * 
-   * @param  {Object} extensions - an extension or array of extensions
-   * @param  {Integer} priority - optional, how early the extension(s) is/are run
+   * Registers roots extension(s) with your project. Tests each extension
+     passed to ensure it's the right type, then flips the extensions backwards
+     and pushes each one to the beginning of the array, conserving order,
+     unless there's a priority given, in which case it's inserted at a certain
+     index.
+   * @param {Object} extensions - an extension or array of extensions
+   * @param {Integer} priority - optional, how early the extension(s) is/are run
   ###
 
   register: (extensions, priority) ->
@@ -34,11 +34,10 @@ class Extensions
 
   ###*
    * Create a new instance of each extension, checking for any sort of errors
-   * in the way the extension was configured.
-   * 
+     in the way the extension was configured.
    * @return {Array} - array of instantiated extensions
   ###
-  
+
   instantiate: ->
     extensions = @all.map (Ext) =>
       try ext = new Ext(@roots); catch err then @roots.bail(125, err, ext)
@@ -51,8 +50,7 @@ class Extensions
 
   ###*
    * Ensures that all existant properties of an extension are functions.
-   * 
-   * @param  {Function} ext - instance of an extension
+   * @param {Function} ext - instance of an extension
   ###
 
   check_extension_errors = (ext) ->
@@ -67,27 +65,23 @@ class Extensions
 
   ###*
    * If exists and is not a function. Helper.
-   *
-   * @private
-   * 
-   * @param  {???} prop - anything
+   * @param {???} prop - anything
    * @return {Boolean} whether it exists and is not a function or not
+   * @private
   ###
 
   not_function = (prop) -> prop && typeof prop != 'function'
 
   ###*
    * Returns a given extension's hook, if it exists. The nitty gritty:
-   *
    * - Takes a hook name like 'compile_hooks.before'
    * - Splits it to a namespace and key at the period
-   * - If an object is not returned, bail. This piece uses a really
-   *   dirty hack to get access to the roots object out of scope.
-   * - For each extension, if that namespace and key both exist
-   *   and the extension is in its category, return the key
-   * 
+   * - If an object is not returned, bail. This piece uses a really dirty hack
+     to get access to the roots object out of scope.
+   * - For each extension, if that namespace and key both exist and the
+     extension is in its category, return the key
    * @param  {String} name - hook name, separated with periods
-   * @return {Function}      the hook function if exists, otherwise undefined
+   * @return {Function} The hook function if exists, otherwise undefined
   ###
 
   hooks = (name, category) ->

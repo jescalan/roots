@@ -28,4 +28,3 @@ if (!args.quiet) {
 
 // pass the arguments to the cli module
 cli.execute(args, notifier.packageFile)
-  

@@ -22,7 +22,7 @@ To compile with an environment, you can pass an ``--env`` or ``-e`` flag to the 
 If you are using the javascript api, you can pass an ``env`` option to the ``Roots`` constructor as such:
 
 .. code-block:: javascript
-  
+
   var Roots = require('roots');
   var project = new Roots(__dirname, { env: 'production' })
 

@@ -1,12 +1,12 @@
 require 'colors'
 {EventEmitter} = require('events')
-fs             = require 'fs'
-Config         = require './config'
-Extensions     = require './extensions'
-util           = require 'util'
+fs = require 'fs'
+Config = require './config'
+Extensions = require './extensions'
+util = require 'util'
 
 Compile = require('./api/compile')
-Watch   = require('./api/watch')
+Watch = require('./api/watch')
 
 ###*
  * @class
@@ -16,8 +16,9 @@ Watch   = require('./api/watch')
 class Roots extends EventEmitter
 
   ###*
-   * Given a path to a project, set up the configuration and return a roots instance
-   * @param  {[type]} root - path to a folder
+   * Given a path to a project, set up the configuration and return a roots
+     instance
+   * @param {[type]} root - path to a folder
    * @return {Function} - instance of the Roots class
   ###
 
@@ -28,31 +29,29 @@ class Roots extends EventEmitter
 
   ###*
    * Alternate constructor, creates a new roots project in a given folder and
-   * returns a roots instance for this project. Takes an object with these keys:
-   *
-   * path: path to the folder you'd like to create and initialize a project in
-   * template: name of the template you'd like to use (default: base)
-   * options: additional options to pass to sprout
-   * 
-   * @param  {Object} opts - options object, described above
+     returns a roots instance for this project.
+   * @param {string} opts.path Path to the folder you'd like to create and
+     initialize a project in
+   * @param {string} [opts.template='base'] Name of the template you'd like
+     to use.
+   * @param {Object} opts.options Additional options to pass to sprout
    * @return {Function} Roots class instance
   ###
-  
+
   @new: (opts) ->
     n = new (require('./api/new'))(@)
     n.exec(opts).on('done', (root) => if opts.done then opts.done(new @(root)))
     return n
 
   ###*
-   * Exposes an API to manage your roots project templates through sprout.
-   * See api/template for details.
+   * Exposes an API to manage your roots project templates through sprout. See
+     api/template for details.
   ###
 
   @template: require('./api/template')
 
   ###*
    * Compiles a roots project. Wow.
-   * 
    * @return {Promise} promise for finished compile
   ###
 
@@ -61,7 +60,6 @@ class Roots extends EventEmitter
 
   ###*
    * Watches a folder for changes and compiles whenever changes happen.
-   * 
    * @return {Object} [chokidar](https://github.com/paulmillr/chokidar) instance
   ###
 
@@ -69,9 +67,8 @@ class Roots extends EventEmitter
     (new Watch(@)).exec()
 
   ###*
-   * If an irrecoverable error has occurred, exit the application with
-   * as clear an error as possible and a specific exit code.
-   *
+   * If an irrecoverable error has occurred, exit the application with as
+     clear an error as possible and a specific exit code.
    * @param {Integer} code - numeric error code
    * @param {String} details - any additional details to be printed
   ###

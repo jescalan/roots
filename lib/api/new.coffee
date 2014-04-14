@@ -1,12 +1,12 @@
-path           = require 'path'
-fs             = require 'fs'
+path = require 'path'
+fs = require 'fs'
 {EventEmitter} = require('events')
-exec           = require('child_process').exec
-nodefn         = require 'when/node'
-sprout         = require 'sprout'
-global_config  = require '../global_config'
-_              = require 'lodash'
-npm            = require 'npm'
+exec = require('child_process').exec
+nodefn = require 'when/node'
+sprout = require 'sprout'
+global_config = require '../global_config'
+_ = require 'lodash'
+npm = require 'npm'
 
 ###*
  * @class New
@@ -19,23 +19,25 @@ class New extends EventEmitter
     @base_url = 'https://github.com/roots-dev/base.git'
 
   ###*
-   * Main method, given a path to where the project should be and some (optional)
-   * additional options, creates a new project template. If no template is provided,
-   * uses the roots default template, which is installed if not present. Once the
-   * template is created, installs dependencies if a package.json is present.
-   *
-   * @param  {Object} opts - Arguments object, takes the following:
-   *                       - path: path to nonexistant folder where project should be
-   *                       - template: name of the template to use for the project
-   *                       - options: overrides for template config
-   *                       - defaults: default values for template config
+   * Main method, given a path to where the project should be and some
+     (optional) additional options, creates a new project template. If no
+     template is provided, uses the roots default template, which is installed
+     if not present. Once the template is created, installs dependencies if a
+     package.json is present.
+   * @param {Object} opts - Arguments object, takes the following:
+   * @param {string} opts.path - path to nonexistant folder where project
+     should be
+   * @param {string} opts.template - name of the template to use for the
+     project
+   * @param {Object} opts.options - overrides for template config
+   * @param {Object} opts.defaults - default values for template config
   ###
 
   exec: (opts) ->
-    @path      = opts.path     || throw new Error('missing path')
-    @template  = opts.template || global_config().get('default_template')
-    @overrides = opts.options  || {}
-    @defaults  = opts.defaults || {}
+    @path = opts.path || throw new Error('missing path')
+    @template = opts.template || global_config().get('default_template')
+    @overrides = opts.options || {}
+    @defaults = opts.defaults || {}
 
     @pkg = path.join(@path, 'package.json')
     @defaults.name = opts.name
@@ -52,8 +54,7 @@ class New extends EventEmitter
 
   ###*
    * Uses sprout.init to create a project template, emits events, and installs
-   * dependencies if necessary.
-   * 
+     dependencies if necessary.
    * @private
   ###
 
@@ -68,9 +69,8 @@ class New extends EventEmitter
     .done((=> @emit('done', @path)), ((err) => @emit('error', err)))
 
   ###*
-   * Tests whether a project has a package.json file and therefore needs to have
-   * dependencies installed.
-   *
+   * Tests whether a project has a package.json file and therefore needs to
+     have dependencies installed.
    * @private
    * @return {Boolean} whether a package.json file exists in the template
   ###
@@ -80,7 +80,6 @@ class New extends EventEmitter
 
   ###*
    * Uses npm to install a project's dependencies.
-   *
    * @private
    * @return {Promise} a promise for installed deps
   ###
