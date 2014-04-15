@@ -39,17 +39,24 @@
     "graceful-fs": "2.x",
     "vinyl": "0.2.x",
     "anti-matter": "0.0.1",
-    "minimist": "0.0.8",
     "rimraf": "2.x",
+    "argparse": "0.1.x",
     "npm": "^1.4.6"
   },
   "devDependencies": {
     "mocha": "*",
     "should": "*",
+    "chai": "*",
+    "sinon": "*",
+    "sinon-chai": "*",
+    "chai-as-promised": "*",
     "glob": "3.x",
     "coveralls": "2.x",
     "mocha-lcov-reporter": "0.0.1",
-    "istanbul": "0.2.x"
+    "istanbul": "0.2.x",
+    "roots": "^3.0.0-rc.6",
+    "roots-util": "0.0.4",
+    "chai-fs": "0.0.3"
   },
   "scripts": {
     "test": "mocha",

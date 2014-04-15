@@ -1,17 +1,5 @@
-should = require 'should'
-fs = require 'fs'
-path = require 'path'
-run = require('child_process').exec
-W = require 'when'
-nodefn = require 'when/node/function'
-test_path = path.join(__dirname, 'fixtures/compile')
-require('./helpers')(should)
-
-Roots = require '../lib'
-
-compile_fixture = (p, done, tests) ->
-  project = new Roots(p)
-  project.compile().done(tests, done)
+rimraf = require 'rimraf'
+test_path = path.join(base_path, 'compile')
 
 describe 'compile', ->
 
@@ -20,18 +8,16 @@ describe 'compile', ->
     output = path.join(p, 'public')
 
     compile_fixture p, done, ->
-      should.exist(output, [
+      paths_exist(output, [
         'index.html',
         'LECHUCK_ALE',
-        'nested',
         'nested/foo.html',
-        'nested/double_nested',
         'nested/double_nested/bar.html',
         'unicode_land.html',
         'empty.html'
       ])
-      should(fs.statSync(path.join(output, "doge.png")).size).equal(fs.statSync(path.join(p, "doge.png")).size)
-      should.contain_content(output, 'unicode_land.html', /å sky so hîgh ☆/)
+      fs.statSync(path.join(output, "doge.png")).size.should.equal(fs.statSync(path.join(p, "doge.png")).size)
+      path.join(output, 'unicode_land.html').should.have.content("<p>å sky so hîgh ☆</p><p>ƒloat üp and down ☂</p><p>süch air in face wow ♞</p>")
       done()
 
   it 'should copy files in nested directories', (done) ->
@@ -39,99 +25,105 @@ describe 'compile', ->
     output = path.join(p, 'public')
 
     compile_fixture p, done, ->
-        should.exist(output, ['foo.html', 'nested/bar.html', 'nested/whatever.blah'])
-        done()
+      paths_exist(output, ['foo.html', 'nested/bar.html', 'nested/whatever.blah'])
+      done()
 
   it 'should load a simple app config', (done) ->
     p = path.join(test_path, 'simple_config')
     output = path.join(p, 'foobar')
 
     compile_fixture p, done, ->
-        should.exist(output, 'tests.html')
-        run("rm -rf #{output}", done)
+      path.join(output, 'tests.html').should.be.a.file()
+      rimraf(output, done)
 
   it 'should ignore specified files', (done) ->
     p = path.join(test_path, 'ignores')
     output = path.join(p, 'public')
 
     compile_fixture p, done, ->
-        should.not_exist(output, ['ignoreme.html', 'foo'])
-        should.exist(output, 'nested_ignore.html')
-        done()
+      paths_dont_exist(output, ['ignoreme.html', 'foo'])
+      path.join(output, 'nested_ignore.html').should.be.a.file()
+      done()
 
   it 'should dump specified dirs', (done) ->
     p = path.join(test_path, 'dump_dirs')
     output = path.join(p, 'public')
 
     compile_fixture p, done, ->
-        should.exist(output, ['index.html', 'css/foo.css'])
-        should.not_exist(output, ['views', 'assets'])
-        done()
+      paths_exist(output, ['index.html', 'css/foo.css'])
+      paths_dont_exist(output, ['views', 'assets'])
+      done()
 
   it 'should accept custom compiler options', (done) ->
     p = path.join(test_path, 'compiler_options')
     output = path.join(p, 'public')
 
     compile_fixture p, done, ->
-        should.exist(output, 'index.html')
-        should.match_file(output, 'index.html', 'index_expected.html')
-        done()
+      path.join(output, 'index.html').should.be.a.file()
+      matches_file(output, 'index.html', 'index_expected.html')
+      done()
 
   it 'should use locals', (done) ->
     p = path.join(test_path, 'locals')
     output = path.join(p, 'public')
 
     compile_fixture p, done, ->
-        should.exist(output, 'index.html')
-        should.match_file(output, 'index.html', 'index_expected.html')
-        done()
+      path.join(output, 'index.html').should.be.a.file()
+      matches_file(output, 'index.html', 'index_expected.html')
+      done()
 
   it 'should run before and after hooks', (done) ->
     p = path.join(test_path, 'hooks')
     output = path.join(p, 'public')
 
     compile_fixture p, done, ->
-        should.exist(output, 'before.txt')
-        should.exist(output, 'after.txt')
-        run("rm -rf #{path.join(p, 'before.txt')}", done)
+      path.join(output, 'before.txt').should.be.a.file()
+      path.join(output, 'after.txt').should.be.a.file()
+      rimraf(path.join(p, 'before.txt'), done)
 
   it 'should correctly handle multipass compiles', (done) ->
     p = path.join(test_path, 'multipass')
     output = path.join(p, 'public')
 
     compile_fixture p, done, ->
-        should.exist(output, 'foo.html')
-        should.contain_content(output, 'foo.html', /<p>wow<\/p>/)
-        should.exist(output, 'bar.html')
-        should.contain_content(output, 'bar.html', /<p>wow<\/p>/)
-        should.exist(output, 'baz.html')
-        should.contain_content(output, 'baz.html', /<p>so compile<\/p>/)
-        should.exist(output, 'quux.html')
-        should.contain_content(output, 'quux.html', /<p>so compile<\/p>/)
-        done()
+      p1 = path.join(output, 'foo.html')
+      p2 = path.join(output, 'bar.html')
+      p3 = path.join(output, 'baz.html')
+      p4 = path.join(output, 'quux.html')
 
-  it 'should be able to handle the most Fd filenames ever', (done) ->
+      p1.should.be.a.file()
+      p1.should.have.content("<p>wow</p>")
+      p2.should.be.a.file()
+      p2.should.have.content("<p>wow</p>")
+      p3.should.be.a.file()
+      p3.should.have.content("<p>so compile</p>")
+      p4.should.be.a.file()
+      p4.should.have.content("<p>so compile</p>")
+
+      done()
+
+  it 'should be able to handle strange filenames', (done) ->
     p = path.join(test_path, 'weird_filenames')
     output = path.join(p, 'public')
 
     compile_fixture p, done, ->
-        should.exist(output, 'foo bar.wow')
-        should.exist(output, 'pesta#na.md')
-        should.exist(output, 'doge.eats.twerking-cyrus-tm-___cat.png')
-        should.exist(output, 'folder.withdot')
-        should.exist(output, 'folder.withdot/.dotfile.wow')
-        should.exist(output, 'folder.withdot/file.something.other.js')
-        should.exist(output, 'folder.withdot/look@mybiceps')
-        should.exist(output, 'folder.withdot/manyOf∫chin')
-        should.exist(output, 'folder.withdot/manyOf∫chin/er mer .gerd.wat')
-        done()
+      path.join(output, 'foo bar.wow').should.be.a.file()
+      path.join(output, 'pesta#na.md').should.be.a.file()
+      path.join(output, 'doge.eats.twerking-cyrus-tm-___cat.png').should.be.a.file()
+      path.join(output, 'folder.withdot').should.be.a.directory()
+      path.join(output, 'folder.withdot/.dotfile.wow').should.be.a.file()
+      path.join(output, 'folder.withdot/file.something.other.js').should.be.a.file()
+      path.join(output, 'folder.withdot/look@mybiceps').should.be.a.file()
+      path.join(output, 'folder.withdot/manyOf∫chin').should.be.a.directory()
+      path.join(output, 'folder.withdot/manyOf∫chin/er mer .gerd.wat').should.be.a.file()
+      done()
 
   it 'should work with different environments', (done) ->
     p = path.join(test_path, 'environments')
     output = path.join(p, 'public')
 
     (new Roots(p, { env: 'doge' })).compile().done ->
-      should.exist(output, 'doge_file.html')
-      should.not_exist(output, 'dev_file.html')
+      path.join(output, 'doge_file.html').should.be.a.file()
+      path.join(output, 'dev_file.html').should.not.be.a.path()
       done()
-    , done        
+    , done

@@ -1,31 +1,15 @@
 #!/usr/bin/env node
 
 require('coffee-script/register');
-require('colors');
-
-var cli = require('../lib/cli'),
-    notifier = require('update-notifier')({ packagePath: '../package.json' }),
-    args = require('minimist')(process.argv.slice(2), {
-      alias: {
-        v: 'version',
-        e: 'env',
-        q: 'quiet'
-      }
-    });
+var cli = new (require('../lib/cli')),
+    notifier = require('update-notifier')({ packagePath: '../package.json' });
 
 // new version notification
 notifier.update && notifier.notify();
 
-// log data and errors to the console
-if (!args.quiet) {
-  cli.on('data', console.log.bind(console))
-     .on('inline', process.stdout.write.bind(process.stdout))
-     .on('err', function(err){
-          console.error("\n\nERROR\n-----\n".red);
-          console.error(err);
-        });
-}
+// log out data
+cli.emitter.on('data', console.log.bind(console));
+cli.emitter.on('inline', process.stdout.write.bind(process.stdout))
+cli.emitter.on('err', function(err){ console.error(err); process.exit(1); });
 
-// pass the arguments to the cli module
-cli.execute(args, notifier.packageFile)
-  
+cli.run(process.argv.slice(2));

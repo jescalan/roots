@@ -1,13 +1,6 @@
-should = require 'should'
-path = require 'path'
-fs = require 'fs'
-test_path = path.join(__dirname, 'fixtures/compile')
-require('./helpers')(should)
-
-Roots = require '../lib'
+test_path = path.join(base_path, 'compile')
 
 # todo: tests for live reload
-
 class Watcher
   constructor: (@root) ->
     @output = path.join(@root, 'public')

@@ -1,8 +1,3 @@
-should = require 'should'
-path   = require 'path'
-fs     = require 'fs'
-Roots  = require '../lib'
-
 describe 'extensions', ->
 
   it 'should register extensions', ->
@@ -23,7 +18,7 @@ describe 'extensions', ->
 describe 'extension hooks', ->
 
   before (done) ->
-    @project = new Roots(path.join(__dirname, 'fixtures/extensions/basic'))
+    @project = new Roots(path.join(base_path, 'extensions/basic'))
     @project.extensions.all.length.should.be.above(2)
     @project
       .on('error', done)
@@ -66,20 +61,20 @@ describe 'write hook', ->
     project.compile()
 
   it 'returning false on write hook should prevent write', ->
-    should.not_exist(@public, 'prevent_write.html')
+    path.join(@public, 'prevent_write.html').should.not.be.a.path()
 
   it 'returning true on write hook should write normally', ->
-    should.exist(@public, 'write_normal.html')
+    path.join(@public, 'write_normal.html').should.be.a.file()
 
   it 'should write one one custom path from write hook', ->
-    should.exist(@public, 'override.html')
-    should.contain_content(@public, 'override.html', /wow overrides/)
+    path.join(@public, 'override.html').should.be.a.file()
+    path.join(@public, 'override.html').should.have.content('wow overrides')
 
   it 'should write multiple custom paths from write hook', ->
-    should.exist(@public, 'multi1.html')
-    should.contain_content(@public, 'multi1.html', /clone 1/)
-    should.exist(@public, 'multi2.html')
-    should.contain_content(@public, 'multi2.html', /clone 2/)
+    path.join(@public, 'multi1.html').should.be.a.file()
+    path.join(@public, 'multi1.html').should.have.content('clone 1')
+    path.join(@public, 'multi2.html').should.be.a.file()
+    path.join(@public, 'multi2.html').should.have.content('clone 2')
 
 describe 'categories', ->
 
@@ -199,7 +194,7 @@ describe 'setup-function', ->
       .on('error', done)
       .on 'test', (v) =>
         v.should.equal('value')
-        fs.existsSync(path.join(@public, 'test.html')).should.be.ok
+        path.join(@public, 'test.html').should.be.a.file()
         done()
 
     @project.compile()

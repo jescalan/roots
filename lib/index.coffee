@@ -32,16 +32,15 @@ class Roots extends EventEmitter
    *
    * path: path to the folder you'd like to create and initialize a project in
    * template: name of the template you'd like to use (default: base)
-   * options: additional options to pass to sprout
-   * 
+   * overrides: data to pass to the template, skips prompts
+   * defaults: sets default values for the template's prompts
+   *
    * @param  {Object} opts - options object, described above
-   * @return {Function} Roots class instance
+   * @return {Promise} Promise for a Roots class instance
   ###
-  
+
   @new: (opts) ->
-    n = new (require('./api/new'))(@)
-    n.exec(opts).on('done', (root) => if opts.done then opts.done(new @(root)))
-    return n
+    (require('./api/new'))(@, opts)
 
   ###*
    * Exposes an API to manage your roots project templates through sprout.
@@ -52,7 +51,7 @@ class Roots extends EventEmitter
 
   ###*
    * Compiles a roots project. Wow.
-   * 
+   *
    * @return {Promise} promise for finished compile
   ###
 
@@ -61,7 +60,7 @@ class Roots extends EventEmitter
 
   ###*
    * Watches a folder for changes and compiles whenever changes happen.
-   * 
+   *
    * @return {Object} [chokidar](https://github.com/paulmillr/chokidar) instance
   ###
 
