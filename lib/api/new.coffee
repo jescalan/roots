@@ -30,43 +30,48 @@ base_tpl_url      = 'https://github.com/roots-dev/base.git'
  * @return {Promise} promise for completed new template
 ###
 
-module.exports = (Roots, opts = {}) ->
-  d = W.defer()
+class New
+  constructor: (@Roots) ->
 
-  if not opts.path
-    d.reject(new Error('missing path'))
+  exec: (opts = {}) ->
+    d = W.defer()
+
+    if not opts.path
+      d.reject(new Error('missing path'))
+      return d.promise
+
+    opts =
+      path: path.resolve(opts.path)
+      name: opts.template           || global_config().get('default_template')
+      overrides: opts.overrides     || {}
+      defaults: opts.defaults       || { name: path.basename(opts.path) }
+
+    pkg = path.join(opts.path, 'package.json')
+
+    W.resolve(_.contains(sprout.list(), base_tpl_name))
+      .then (res) ->
+        if not res
+          sprout.add(name: base_tpl_name, uri: base_tpl_url)
+            .tap(-> d.notify('base template added'))
+      .then(-> sprout.init(opts))
+      .tap(-> d.notify('project created'))
+      .then(-> if fs.existsSync(pkg) then install_deps(d, pkg))
+      .done((=> d.resolve(new @Roots(opts.path))), d.reject.bind(d))
+
     return d.promise
 
-  opts =
-    path: path.resolve(opts.path)
-    name: opts.template           || global_config().get('default_template')
-    overrides: opts.overrides     || {}
-    defaults: opts.defaults       || { name: path.basename(opts.path) }
+  ###*
+   * Uses npm to install a project's dependencies.
+   *
+   * @private
+   * @return {Promise} a promise for installed deps
+  ###
 
-  pkg = path.join(opts.path, 'package.json')
+  install_deps = (d, pkg) ->
+    d.notify('dependencies installing')
 
-  W.resolve(_.contains(sprout.list(), base_tpl_name))
-    .then (res) ->
-      if not res
-        sprout.add(name: base_tpl_name, uri: base_tpl_url)
-          .tap(-> d.notify('base template added'))
-    .then(-> sprout.init(opts))
-    .tap(-> d.notify('project created'))
-    .then(-> if fs.existsSync(pkg) then install_deps(d, pkg))
-    .done((-> d.resolve(new Roots(opts.path))), d.reject)
+    nodefn.call(npm.load.bind(npm), require(pkg))
+      .then(-> nodefn.call(npm.commands.install, path.dirname(pkg), []))
+      .then(-> d.notify('dependencies finished installing'))
 
-  return d.promise
-
-###*
- * Uses npm to install a project's dependencies.
- *
- * @private
- * @return {Promise} a promise for installed deps
-###
-
-install_deps = (d, pkg) ->
-  d.notify('dependencies installing')
-
-  nodefn.call(npm.load.bind(npm), require(pkg))
-    .then(-> nodefn.call(npm.commands.install, path.dirname(pkg), []))
-    .then(-> d.notify('dependencies finished installing'))
+module.exports = New

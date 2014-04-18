@@ -1,161 +1,247 @@
-cli    = require '../lib/cli'
-pkg    = require('../package.json')
+rimraf       = require 'rimraf'
+mockery      = require 'mockery'
+cli          = new (require '../lib/cli')(debug: true)
+pkg          = require('../package.json')
+EventEmitter = require('events').EventEmitter
 
 test_tpl_path = 'https://github.com/jenius/sprout-test-template.git'
 
-# describe 'cli', ->
+describe 'cli', ->
 
-#   it "'roots --version' should return the version", (done) ->
-#     cli.once 'data', (data) ->
-#       pkg.version.should.equal(data)
-#       done()
+  before -> mockery.enable(warnOnUnregistered: false)
+  after -> mockery.disable()
 
-#     cli.execute({ _: [], v: true, version: true }, pkg)
+  it 'should throw if no arguments are provided', ->
+    (-> cli.run([])).should.throw()
 
-#   it '`roots xxx` should return an error', (done) ->
-#     cli.once 'err', (data) ->
-#       data.should.match /command not found/
-#       done()
+  it 'should throw if a nonexistant command is run', ->
+    (-> cli.run('xxx')).should.throw()
 
-#     cli.execute(_: ['xxx'])
+  describe 'new', ->
 
-#   it "'roots' should return help", (done) ->
-#     cli.once 'data', (data) ->
-#       data.should.match /Roots Usage/
-#       done()
+    before ->
+      @stub = sinon.stub(Roots, 'new').returns(W.resolve({ root: 'test' }))
+      mockery.registerMock('../../index', Roots)
 
-#     cli.execute(_: [])
+    after ->
+      @stub.restore()
+      mockery.deregisterAll()
 
-#   it '`roots help` should return help text', (done) ->
-#     cli.once 'data', (data) ->
-#       data.should.match /Roots Usage/
-#       done()
+    it 'should throw with no args passed', ->
+      (-> cli.run('new')).should.throw()
 
-#     cli.execute(_: ['help'])
+    it 'should successfully execute new when a path is provided', (done) ->
+      spy = sinon.spy()
 
-#   it '`roots help --quiet` should not log output', (done) ->
-#     cli.once 'data', (data) -> data.should.not.exist
-#     setTimeout(done, 250)
+      cli.on('success', spy)
+      cli.on('info', spy)
 
-#     cli.execute({ _: ['help'] }, quiet: true)
+      cli.run([ 'new', 'blarg', '-o', 'name: blarg, description: sdfdf' ])
+        .done =>
+          @stub.should.have.been.calledOnce
+          spy.should.have.been.calledThrice
+          spy.should.have.been.calledWith('done!')
+          spy.should.have.been.calledWith('project initialized at test')
+          spy.should.have.been.calledWith('using template: roots-base')
+          cli.removeListener('success', spy)
+          cli.removeListener('info', spy)
+          done()
+        , done
 
-#   describe 'new', ->
+    it 'should create a project with a custom template', (done) ->
+      spy = sinon.spy()
 
-#     it '`roots new` should error', (done) ->
-#       cli.once 'err', (data) -> data.should.not.exist
-#       setTimeout(done, 250)
+      cli.on('info', spy)
 
-#       cli.execute(_: ['new'])
+      cli.run("new blarg -t foobar")
+        .done =>
+          spy.should.have.been.calledWith('using template: foobar')
+          cli.removeListener('info', spy)
+          done()
+        , done
 
-#     # todo: need a good way to test this/respond to queries
-#     it '`roots new blah` should not error'
+    # TODO: need a way to test the live prompts
 
-#   describe 'compile', ->
+  describe 'compile', ->
 
-#     it '`roots compile` should compile a project', (done) ->
-#       cli.once 'inline', (data) ->
-#         data.should.eql('compiling... '.grey)
-#         process.chdir(cwd)
-#         done()
+    before ->
+      @stub = sinon.stub(Roots.prototype, 'compile').returns(W.resolve())
+      mockery.registerMock('../../index', Roots)
 
-#       cwd = process.cwd()
-#       process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
-#       cli.execute(_: ['compile'])
+    after ->
+      @stub.restore()
+      mockery.deregisterAll()
 
-#     it '`roots compile /path/etc` should compile a project at a path', (done) ->
-#       cli.once 'inline', (data) ->
-#         data.should.eql('compiling... '.grey)
-#         done()
+    it 'should compile a project', (done) ->
+      spy = sinon.spy()
 
-#       cli.execute(_: ['compile', path.join(__dirname, 'fixtures/compile/copy')])
+      cli.on('inline', spy)
+      cli.on('data', spy)
 
-#   describe 'watch', ->
+      cwd = process.cwd()
+      process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
 
-#     it '`roots watch` should watch a project', (done) ->
-#       i = 0
+      cli.run('compile')
+        .done ->
+          spy.should.have.been.calledTwice
+          spy.should.have.been.calledWith('compiling... '.grey)
+          spy.should.have.been.calledWith('done!'.green)
+          process.chdir(cwd)
+          cli.removeListener('inline', spy)
+          cli.removeListener('data', spy)
+          done()
+        , done
 
-#       fn = (data) ->
-#         i++
-#         if i == 1
-#           data.should.eql('compiling... '.grey)
-#           process.chdir(cwd)
-#         else
-#           project.watcher.close()
-#           cli.removeListener('inline', fn)
-#           done()
+    it 'should compile a project at a given path', (done) ->
+      spy = sinon.spy()
 
-#       cli.on('inline', fn)
+      cli.on('inline', spy)
+      cli.on('data', spy)
 
-#       cwd = process.cwd()
-#       process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
-#       project = cli.execute(_: ['watch'], open: false)
+      cli.run("compile #{path.join(__dirname, 'fixtures/compile/basic')}")
+        .done ->
+          spy.should.have.been.calledTwice
+          spy.should.have.been.calledWith('compiling... '.grey)
+          spy.should.have.been.calledWith('done!'.green)
+          cli.removeListener('inline', spy)
+          cli.removeListener('data', spy)
+          done()
+        , done
 
-#   describe 'tpl', ->
+  describe 'watch', ->
 
-#     it '`roots tpl add name url` should add a template', (done) ->
-#       cli.once 'data', (data) ->
-#         data.should.eql("template 'foo' added".green)
-#         done()
+    before ->
+      @stub = sinon.stub(Roots.prototype, 'watch').returns(new EventEmitter)
+      mockery.registerMock('../../index', Roots)
 
-#       cli.execute(_: ['tpl', 'add', 'foo', test_tpl_path])
+    after ->
+      @stub.restore()
+      mockery.deregisterAll()
 
-#     it '`roots tpl add name` should error', (done) ->
-#       cli.once 'err', (data) ->
-#         data.should.exist
-#         done()
+    it 'should watch a project', (done) ->
+      spy = sinon.spy()
 
-#       cli.execute(_: ['tpl', 'add', 'foo'])
+      cli.on('inline', spy)
+      cli.on('data', spy)
 
-#     it '`roots tpl` should return help', (done) ->
-#       cli.once 'data', (data) ->
-#         data.should.match /Roots Templates/
-#         done()
+      cwd = process.cwd()
+      process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
+      {server, watcher} = cli.run('watch --no-open')
+      spy.should.have.been.calledOnce
+      watcher.emit('done')
+      spy.should.have.been.calledTwice
+      watcher.emit('start')
+      spy.should.have.been.calledThrice
+      # TODO: browser response needs testing here as well
+      process.chdir(cwd)
+      cli.removeListener('inline', spy)
+      cli.removeListener('data', spy)
+      done()
 
-#       cli.execute(_: ['tpl'])
+  describe 'clean', ->
 
-#     it '`roots tpl list` should list templates', (done) ->
-#       cli.once 'data', (data) ->
-#         data.should.match /Templates/
-#         done()
+    it 'should remove the output folder', ->
+      spy = sinon.spy()
 
-#       cli.execute(_: ['tpl', 'list'])
+      cli.on('success', spy)
 
-#     it '`roots tpl default` should error', (done) ->
-#       cli.once 'err', (data) ->
-#         data.should.exist
-#         done()
+      cli.run('clean test')
 
-#       cli.execute(_: ['tpl', 'default'])
+      spy.should.have.been.calledOnce
+      spy.should.have.been.calledWith('output removed')
+      cli.removeListener('inline', spy)
+      cli.removeListener('data', spy)
 
-#     it '`roots tpl default xxx` should error because no templates installed', (done) ->
-#       cli.once 'err', (data) ->
-#         data.should.exist
-#         done()
+  describe 'tpl', ->
 
-#       cli.execute(_: ['tpl', 'default', 'xxx'])
+    it 'should error without arguments', ->
+      (-> cli.run('tpl')).should.throw()
 
-#     it '`roots tpl remove name` should remove a template', (done) ->
-#       cli.once 'data', (data) ->
-#         data.should.eql "template 'foo' removed".green
-#         done()
+    describe 'add', ->
 
-#       cli.execute(_: ['tpl', 'remove', 'foo'])
+      before ->
+        @stub = sinon.stub(Roots.template, 'add').returns(W.resolve())
+        mockery.registerMock('../../../index', Roots)
 
-#   describe 'clean', ->
+      after ->
+        @stub.restore()
+        mockery.deregisterAll()
 
-#     it 'should remove the output folder from a given directory', (done) ->
-#       cli.once 'data', (data) ->
-#         data.should.exist
-#         done()
+      it 'should error without a name', ->
+        (-> cli.run('tpl add')).should.throw()
 
-#       cli.execute(_: ['clean', path.join(__dirname, 'fixtures/compile/basic')])
+      it 'should succeed with a name', (done) ->
+        spy = sinon.spy()
 
-#     it 'should remove the output folder from cwd', (done) ->
-#       cli.once 'data', (data) ->
-#         data.should.exist
-#         process.chdir(cwd)
-#         done()
+        cli.on('success', spy)
 
-#       cwd = process.cwd()
-#       process.chdir(path.join(__dirname, 'fixtures/compile/copy'))
-#       cli.execute(_: ['clean'])
+        cli.run('tpl add foo').then ->
+          spy.should.have.been.calledOnce
+          cli.removeListener('success', spy)
+          done()
+
+      it 'should succeed with a name and url', (done) ->
+        spy = sinon.spy()
+
+        cli.on('success', spy)
+
+        cli.run('tpl add foo bar').then ->
+          spy.should.have.been.calledOnce
+          cli.removeListener('success', spy)
+          done()
+
+    describe 'list', ->
+
+      it 'should list all templates', (done) ->
+
+        cli.on 'data', (data) ->
+          data.should.match /Templates/
+          done()
+
+        cli.run('tpl list')
+
+    describe 'default', ->
+
+      before ->
+        @stub = sinon.stub(Roots.template, 'default').returns(W.resolve())
+        mockery.registerMock('../../../index', Roots)
+
+      after ->
+        @stub.restore()
+        mockery.deregisterAll()
+
+      it 'should error without a name', ->
+        (-> cli.run('tpl default')).should.throw()
+
+      it 'should succeed with a name', (done) ->
+        spy = sinon.spy()
+
+        cli.on('success', spy)
+
+        cli.run('tpl default wow').then ->
+          spy.should.have.been.calledOnce
+          cli.removeListener('success', spy)
+          done()
+
+    describe 'remove', ->
+
+      before ->
+        @stub = sinon.stub(Roots.template, 'remove').returns(W.resolve())
+        mockery.registerMock('../../../index', Roots)
+
+      after ->
+        @stub.restore()
+        mockery.deregisterAll()
+
+      it 'should error without a name', ->
+        (-> cli.run('tpl remove')).should.throw()
+
+      it 'should succeed with a name', (done) ->
+        spy = sinon.spy()
+
+        cli.on('success', spy)
+
+        cli.run('tpl remove wow').then ->
+          spy.should.have.been.calledOnce
+          cli.removeListener('success', spy)
+          done()

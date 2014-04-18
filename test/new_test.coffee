@@ -6,8 +6,8 @@ describe 'new', ->
 
   afterEach -> rimraf.sync(new_path)
 
-  it 'should reject if not given a path', (done) ->
-    Roots.new().should.be.rejected.notify(done)
+  it 'should reject if not given a path', ->
+    Roots.new().should.be.rejected
 
   it 'should create a project', (done) ->
     spy = sinon.spy()

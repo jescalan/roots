@@ -1,9 +1,8 @@
-path  = require 'path'
-Roots = require '../'
+Roots = require '../../index'
 rimraf = require 'rimraf'
 
-module.exports = (args, cli) ->
-  project = new Roots(path.normalize(args._[1] or process.cwd()))
-  output_path = project.config.output_path()
-  rimraf.sync(output_path)
-  cli.emit('data', "\nRemoved #{output_path}\n".green)
+module.exports = (cli, args) ->
+  project = new Roots(args.path)
+  # TODO: this should be `project.clean()` and probably be async
+  rimraf.sync(project.config.output_path())
+  cli.emit('success', 'output removed')

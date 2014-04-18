@@ -1,31 +1,26 @@
 open   = require 'open'
-path   = require 'path'
-Roots  = require '../'
+Roots  = require '../../index'
 Server = require '../local_server'
 
-default_port = 1111
-
-module.exports = (args, cli) ->
-  dir = if args._[1] then path.resolve(args._[1]) else process.cwd()
-  opts = { env: args.env || 'development' }
-  project = new Roots(dir, opts)
-  args.open ?= true
+module.exports = (cli, args) ->
+  project = new Roots(args.path, { env: args.environment })
+  server  = new Server(project, project.root)
+  port    = process.env.port or args.port
 
   cli.emit('inline', 'compiling... '.grey)
+  server.start(port)
 
-  server = new Server(project, dir)
-  server.start(process.env.port || default_port)
+  watcher = project.watch()
 
-  w = project.watch()
+  watcher.on('start', on_start.bind(null, cli, server))
+  watcher.on('error', on_error.bind(null, cli, server))
+  watcher.on('done', on_done.bind(null, cli, server))
 
-  w.on 'start', -> on_start(cli, server)
-  w.on 'error', (err) -> on_error(cli, server, err)
-  w.on 'done', -> on_done(cli, server)
-  w.once 'done', ->
-    if project.config.open_browser and args.open
-      open("http://localhost:#{process.env.port || default_port}/")
+  watcher.once 'done', ->
+    if project.config.open_browser and not args.no_open
+      open("http://localhost:#{port}/")
 
-  w
+  return { server: server, watcher: watcher }
 
 on_error = (cli, server, err) ->
   cli.emit('err', Error(err).stack)
@@ -36,5 +31,5 @@ on_start = (cli, server) ->
   server.compiling()
 
 on_done = (cli, server) ->
-  cli.emit('inline', 'done!\n'.green)
+  cli.emit('data', 'done!'.green)
   server.reload()

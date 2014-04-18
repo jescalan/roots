@@ -1,12 +1,23 @@
-sprout        = require 'sprout'
+# sprout is a heavy dependency because of inquirer, and this file is
+# loaded upfront, so we awkwardly defer deps from loading until a function
+# is actually called. This shaves off about 400ms of load time when using
+# anything else in roots other than templates (of course).
+
+fs = require 'fs'
 _             = require 'lodash'
 W             = require 'when'
+sprout        = require 'sprout'
 global_config = require '../global_config'
-fs            = require 'fs'
 
-exports.add = sprout.add.bind(sprout) # TODO: prepend all templates with "roots-"
-exports.remove = sprout.remove
-exports.list = sprout.list
+# TODO: prepend all templates with "roots-"
+exports.add = (args) ->
+  sprout.add(args)
+
+exports.remove = (args) ->
+  sprout.remove(args)
+
+exports.list = (args) ->
+  sprout.list(args)
 
 exports.default = (name) ->
   if not name then return W.reject('please provide a template name')

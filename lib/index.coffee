@@ -1,12 +1,8 @@
-require 'colors'
 {EventEmitter} = require('events')
 fs             = require 'fs'
+path           = require 'path'
 Config         = require './config'
 Extensions     = require './extensions'
-util           = require 'util'
-
-Compile = require('./api/compile')
-Watch   = require('./api/watch')
 
 ###*
  * @class
@@ -22,6 +18,7 @@ class Roots extends EventEmitter
   ###
 
   constructor: (@root, opts={}) ->
+    @root = path.resolve(@root)
     if not fs.existsSync(@root) then throw new Error("path does not exist")
     @extensions = new Extensions(@)
     @config = new Config(@, opts)
@@ -40,14 +37,18 @@ class Roots extends EventEmitter
   ###
 
   @new: (opts) ->
-    (require('./api/new'))(@, opts)
+    New = require('./api/new')
+    (new New(@)).exec(opts)
 
   ###*
    * Exposes an API to manage your roots project templates through sprout.
-   * See api/template for details.
+   * See api/template for details. The defineGetter hack makes it such that
+   * while you can call roots.template.x like an object, the dependencies
+   * needed for it are lazy-loaded only when you actually make the call.
+   * This boosts the require time of this file by ~400ms.
   ###
 
-  @template: require('./api/template')
+  @__defineGetter__('template', -> require('./api/template'))
 
   ###*
    * Compiles a roots project. Wow.
@@ -56,6 +57,7 @@ class Roots extends EventEmitter
   ###
 
   compile: ->
+    Compile = require('./api/compile')
     (new Compile(@)).exec()
 
   ###*
@@ -65,6 +67,7 @@ class Roots extends EventEmitter
   ###
 
   watch: ->
+    Watch = require('./api/watch')
     (new Watch(@)).exec()
 
   ###*
@@ -76,6 +79,9 @@ class Roots extends EventEmitter
   ###
 
   bail: (code, message, ext) ->
+    require 'colors'
+    util = require 'util'
+
     switch code
       when 125 then name = "Malformed Extension"
       when 126 then name = "Malformed Write Hook Output"
