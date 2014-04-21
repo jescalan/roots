@@ -26,7 +26,7 @@
     "lodash": "2.x",
     "js-yaml": "3.x",
     "when": "3.x",
-    "accord": "0.0.8",
+    "accord": "0.10.0",
     "mkdirp": "0.3.x",
     "update-notifier": "0.1.x",
     "chokidar": "0.8.x",
@@ -39,21 +39,29 @@
     "graceful-fs": "2.x",
     "vinyl": "0.2.x",
     "anti-matter": "0.0.1",
-    "minimist": "0.0.8",
     "rimraf": "2.x",
+    "argparse": "0.1.x",
     "npm": "^1.4.6"
   },
   "devDependencies": {
     "mocha": "*",
     "should": "*",
+    "chai": "*",
+    "sinon": "*",
+    "sinon-chai": "*",
+    "chai-as-promised": "*",
     "glob": "3.x",
     "coveralls": "2.x",
     "mocha-lcov-reporter": "0.0.1",
-    "istanbul": "0.2.x"
+    "istanbul": "0.2.x",
+    "roots": "^3.0.0-rc.6",
+    "roots-util": "0.0.4",
+    "chai-fs": "0.0.3",
+    "mockery": "^1.4.0"
   },
   "scripts": {
     "test": "mocha",
-    "coverage": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | rm -rf ./coverage; make unbuild",
+    "coverage": "make build; istanbul cover _mocha --report html -- -R spec && open coverage/index.html && make unbuild",
     "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild"
   },
   "engines": {

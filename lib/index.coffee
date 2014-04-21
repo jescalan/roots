@@ -1,12 +1,8 @@
-require 'colors'
 {EventEmitter} = require('events')
 fs             = require 'fs'
+path           = require 'path'
 Config         = require './config'
 Extensions     = require './extensions'
-util           = require 'util'
-
-Compile = require('./api/compile')
-Watch   = require('./api/watch')
 
 ###*
  * @class
@@ -22,6 +18,7 @@ class Roots extends EventEmitter
   ###
 
   constructor: (@root, opts={}) ->
+    @root = path.resolve(@root)
     if not fs.existsSync(@root) then throw new Error("path does not exist")
     @extensions = new Extensions(@)
     @config = new Config(@, opts)
@@ -32,41 +29,55 @@ class Roots extends EventEmitter
    *
    * path: path to the folder you'd like to create and initialize a project in
    * template: name of the template you'd like to use (default: base)
-   * options: additional options to pass to sprout
-   * 
+   * overrides: data to pass to the template, skips prompts
+   * defaults: sets default values for the template's prompts
+   *
    * @param  {Object} opts - options object, described above
-   * @return {Function} Roots class instance
+   * @return {Promise} Promise for a Roots class instance
   ###
-  
+
   @new: (opts) ->
-    n = new (require('./api/new'))(@)
-    n.exec(opts).on('done', (root) => if opts.done then opts.done(new @(root)))
-    return n
+    New = require('./api/new')
+    (new New(@)).exec(opts)
 
   ###*
    * Exposes an API to manage your roots project templates through sprout.
-   * See api/template for details.
+   * See api/template for details. The defineGetter hack makes it such that
+   * while you can call roots.template.x like an object, the dependencies
+   * needed for it are lazy-loaded only when you actually make the call.
+   * This boosts the require time of this file by ~400ms.
   ###
 
-  @template: require('./api/template')
+  @__defineGetter__('template', -> require('./api/template'))
 
   ###*
    * Compiles a roots project. Wow.
-   * 
+   *
    * @return {Promise} promise for finished compile
   ###
 
   compile: ->
+    Compile = require('./api/compile')
     (new Compile(@)).exec()
 
   ###*
    * Watches a folder for changes and compiles whenever changes happen.
-   * 
+   *
    * @return {Object} [chokidar](https://github.com/paulmillr/chokidar) instance
   ###
 
   watch: ->
+    Watch = require('./api/watch')
     (new Watch(@)).exec()
+
+  ###*
+   * Removes a project's output folder.
+   * @return {Promise} promise for removed output folder
+  ###
+
+  clean: ->
+    Clean = require('./api/clean')
+    (new Clean(@)).exec()
 
   ###*
    * If an irrecoverable error has occurred, exit the application with
@@ -77,6 +88,9 @@ class Roots extends EventEmitter
   ###
 
   bail: (code, message, ext) ->
+    require 'colors'
+    util = require 'util'
+
     switch code
       when 125 then name = "Malformed Extension"
       when 126 then name = "Malformed Write Hook Output"

@@ -1,12 +1,4 @@
-should = require 'should'
-path = require 'path'
-fs = require 'fs'
-test_path = path.join(__dirname, 'fixtures/compile')
-require('./helpers')(should)
-
-Roots = require '../lib'
-
-# todo: tests for live reload
+test_path = path.join(base_path, 'compile')
 
 class Watcher
   constructor: (@root) ->

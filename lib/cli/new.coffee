@@ -1,17 +1,20 @@
-path  = require 'path'
-Roots = require '../'
+Roots = require '../../index'
 
-module.exports = (args, cli) ->
-  name = args._[1]
-  if not name then return cli.emit('err', 'missing project name'.red)
-  proj_path = path.join((args._[2] || process.cwd()), name)
-  tpl_name = k for k of args when k != '_' && k != '$0'
+###*
+ * Simple wrapper for Roots.new, emits events and data to the cli.
+ *
+ * @param  {CLI} cli - event emitter for data to be piped to the cli
+ * @param  {Object} args arguments object to be passed to roots fn
+ * @return {Promise} a promise for the created project
+###
 
-  Roots.new(name: name, path: proj_path, template: tpl_name)
-    .on('template:created', ->
-      cli.emit('data', "new project created at #{proj_path.replace(process.cwd(), '').slice(1)}".green)
-      cli.emit('data', "(using #{tpl_name or 'base'} template)".grey)
-    )
-    .on('deps:installing', -> cli.emit('data', '\ninstalling dependencies... '.grey))
-    .on('deps:finished', -> cli.emit('data', 'done!\n'.green))
-    .on('error', cli.emit.bind(cli, 'err'))
+module.exports = (cli, args) ->
+  Roots.new(args)
+    .progress((i) -> cli.emit('info', i))
+    .then (roots) ->
+      cli.emit('info', "project initialized at #{roots.root}")
+      cli.emit('info', "using template: #{args.template || 'roots-base'}")
+      cli.emit('success', 'done!')
+    .catch (err) ->
+      cli.emit('err', err)
+      throw err

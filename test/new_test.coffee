@@ -1,49 +1,38 @@
-should = require 'should'
-path = require 'path'
-fs = require 'fs'
-test_path = path.join(__dirname, 'fixtures/new')
-rimraf = require 'rimraf'
-mkdirp = require 'mkdirp'
-require('./helpers')(should)
+rimraf        = require 'rimraf'
 test_tpl_path = 'https://github.com/jenius/sprout-test-template.git'
-
-Roots = require '../lib'
+new_path      = path.join(base_path, 'new/testing')
 
 describe 'new', ->
 
-  it 'should throw if not given a path', ->
-    (-> Roots.new()).should.throw
+  afterEach -> rimraf.sync(new_path)
 
-  it 'should create a project with the base tpl, emit all events, and return a roots instance from the callback', (done) ->
-    p = path.join(test_path, 'testing')
+  it 'should reject if not given a path', ->
+    Roots.new().should.be.rejected
 
-    events = 0
-    increment = -> ++events
-
-    finish = (err) ->
-      if err then return done(err)
-      events.should.be.above(2)
-      rimraf.sync(p)
-      Roots.template.remove(name: 'roots-base').done((-> done()), done)
+  it 'should create a project', (done) ->
+    spy = sinon.spy()
 
     Roots.new
-      path: p
-      options: { name: 'foo', description: 'bar' }
-      done: (inst) -> inst.should.be.an.instanceof(Roots)
-    .on('done', -> finish())
-    .on('error', finish)
-    .on('template:base_added', increment)
-    .on('template:created', increment)
-    .on('deps:installing', increment)
-    .on('deps:finished', increment)
+      path: new_path
+      overrides: { name: 'testing', description: 'wow' }
+    .progress(spy)
+    .catch(done)
+    .done (proj) ->
+      proj.root.should.exist
+      spy.should.have.callCount(4)
+      spy.should.have.been.calledWith('base template added')
+      spy.should.have.been.calledWith('project created')
+      spy.should.have.been.calledWith('dependencies installing')
+      spy.should.have.been.calledWith('dependencies finished installing')
+      done()
 
   it 'should create a project with another template if provided', (done) ->
-    p = path.join(test_path, 'testing')
-
     Roots.template.add(name: 'foobar', uri: test_tpl_path)
-      .catch(done)
       .then ->
-        Roots.new(path: p, options: { foo: 'bar' }, template: 'foobar').on 'done', ->
-          fs.existsSync(path.join(p, 'index.html')).should.be.ok
-          rimraf.sync(p)
-          Roots.template.remove(name: 'foobar').then(-> done())
+        Roots.new(path: new_path, overrides: { foo: 'bar' }, template: 'foobar')
+      .then ->
+        util.file.exists('new/testing/index.html').should.be.true
+      .then ->
+        Roots.template.remove(name: 'foobar')
+      .catch(done)
+      .done(done.bind(null, null))

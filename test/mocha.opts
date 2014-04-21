@@ -1,3 +1,5 @@
 --reporter spec
 --compilers coffee:coffee-script/register
---timeout 45000
+--require test/support/all
+--require test/support/helpers
+--timeout 60000

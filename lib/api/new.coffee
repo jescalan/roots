@@ -1,82 +1,63 @@
-path           = require 'path'
-fs             = require 'fs'
-{EventEmitter} = require('events')
-exec           = require('child_process').exec
-nodefn         = require 'when/node'
-sprout         = require 'sprout'
-global_config  = require '../global_config'
-_              = require 'lodash'
-npm            = require 'npm'
+path          = require 'path'
+fs            = require 'fs'
+W             = require 'when'
+nodefn        = require 'when/node'
+sprout        = require 'sprout'
+global_config = require '../global_config'
+_             = require 'lodash'
+npm           = require 'npm'
+
+base_tpl_name = 'roots-base'
+base_tpl_url  = 'https://github.com/roots-dev/base.git'
 
 ###*
- * @class New
- * @classdesc Uses sprout to create new roots projects
+ * Creates a new roots project using a template. If a template is not provided,
+ * the roots-base template is used. If the roots-base template has not been
+ * installed, that is installed first. Once the template has been created, if it
+ * contains a package.json file with dependencies, they are installed. To review
+ * the promise chain:
+ *
+ * - check to see if roots-base is installed
+ * - if not, install it, emitting 'template:base_added' when finished
+ * - initialize the template with sprout
+ * - when finished, emit 'template:created'
+ * - check to see if deps are present
+ * - if so install them, emit 'deps:installing' before and 'deps:finished' after
+ * - at the end, emit 'done' or 'error events', and return a promise
+ *
+ * @param  {Roots} roots - roots instance
+ * @param  {Object} opts - options object
+ * @return {Promise} promise for completed new template
 ###
 
-class New extends EventEmitter
+class New
+  constructor: (@Roots) ->
 
-  constructor: (@roots) ->
-    @base_url = 'https://github.com/roots-dev/base.git'
+  exec: (opts = {}) ->
+    d = W.defer()
 
-  ###*
-   * Main method, given a path to where the project should be and some (optional)
-   * additional options, creates a new project template. If no template is provided,
-   * uses the roots default template, which is installed if not present. Once the
-   * template is created, installs dependencies if a package.json is present.
-   *
-   * @param  {Object} opts - Arguments object, takes the following:
-   *                       - path: path to nonexistant folder where project should be
-   *                       - template: name of the template to use for the project
-   *                       - options: overrides for template config
-   *                       - defaults: default values for template config
-  ###
+    if not opts.path
+      return W.reject(new Error('missing path'))
 
-  exec: (opts) ->
-    @path      = opts.path     || throw new Error('missing path')
-    @template  = opts.template || global_config().get('default_template')
-    @overrides = opts.options  || {}
-    @defaults  = opts.defaults || {}
+    opts =
+      path: path.resolve(opts.path)
+      name: opts.template           || global_config().get('default_template')
+      overrides: opts.overrides     || {}
+      defaults: opts.defaults       || { name: path.basename(opts.path) }
 
-    @pkg = path.join(@path, 'package.json')
-    @defaults.name = opts.name
+    pkg = path.join(opts.path, 'package.json')
 
-    if not _.contains(sprout.list(), 'roots-base')
-      sprout.add(name: 'roots-base', uri: @base_url)
-        .catch((err) => @emit('error', err))
-        .tap(=> @emit('template:base_added'))
-        .then(=> init.call(@))
-    else
-      init.call(@)
+    W.resolve(_.contains(sprout.list(), base_tpl_name))
+      .then (res) ->
+        if not res
+          sprout.add(name: base_tpl_name, uri: base_tpl_url)
+            .tap(-> d.notify('base template added'))
+      .then(-> sprout.init(opts))
+      .tap(-> d.notify('project created'))
+      .then(-> if fs.existsSync(pkg) then install_deps(d, pkg))
+      .done((=> d.resolve(new @Roots(opts.path))), d.reject.bind(d))
 
-    return @
-
-  ###*
-   * Uses sprout.init to create a project template, emits events, and installs
-   * dependencies if necessary.
-   * 
-   * @private
-  ###
-
-  init = ->
-    sprout.init
-      name: @template
-      path: @path
-      overrides: @overrides
-      defaults: @defaults
-    .tap(=> @emit('template:created'))
-    .then(=> if has_deps.call(@) then install_deps.call(@))
-    .done((=> @emit('done', @path)), ((err) => @emit('error', err)))
-
-  ###*
-   * Tests whether a project has a package.json file and therefore needs to have
-   * dependencies installed.
-   *
-   * @private
-   * @return {Boolean} whether a package.json file exists in the template
-  ###
-
-  has_deps = ->
-    fs.existsSync(@pkg)
+    return d.promise
 
   ###*
    * Uses npm to install a project's dependencies.
@@ -85,11 +66,11 @@ class New extends EventEmitter
    * @return {Promise} a promise for installed deps
   ###
 
-  install_deps = ->
-    @emit('deps:installing')
+  install_deps = (d, pkg) ->
+    d.notify('dependencies installing')
 
-    nodefn.call(npm.load.bind(npm), require(@pkg))
-      .then(=> nodefn.call(npm.commands.install, path.dirname(@pkg), []))
-      .then(=> @emit('deps:finished'))
+    nodefn.call(npm.load.bind(npm), require(pkg))
+      .then(-> nodefn.call(npm.commands.install, path.dirname(pkg), []))
+      .then(-> d.notify('dependencies finished installing'))
 
 module.exports = New

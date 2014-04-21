@@ -16,9 +16,9 @@ class Server
 
   ###*
    * Creates a new instance of the server
-   * 
+   *
    * @param  {Function} roots - roots class instance
-   * @param  {String} dir - directory to server
+   * @param  {String} dir - directory to serve
   ###
 
   constructor: (@roots, @dir) ->
@@ -31,7 +31,7 @@ class Server
 
   ###*
    * Start the local server on the given port.
-   * 
+   *
    * @param  {Integer} port - number of port to start the server on
    * @return {Promise} promise for the server object
   ###
@@ -57,7 +57,7 @@ class Server
 
   ###*
    * Send a message through websockets to the browser.
-   * 
+   *
    * @param  {String} k - message key
    * @param  {???} v - message value
   ###
@@ -80,7 +80,7 @@ class Server
    * Given a connect app, adds middleware which injects a snippet to add
    * roots' development js, which connectes up to the socket and handles browser
    * reload and compiling events.
-   * 
+   *
    * @param  {Function} app - connect app instance
   ###
 
@@ -95,7 +95,7 @@ class Server
   ###*
    * Initializes websockets on the server instance.
   ###
-  
+
   initialize_websockets = ->
     @server.on 'upgrade', (req, socket, body) =>
       if WebSocket.isWebSocket(req)

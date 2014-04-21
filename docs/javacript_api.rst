@@ -19,29 +19,24 @@ First, let's look at the more traditional constructor:
 
 As you can can see here, roots is initialized with a path pointing to the project root. You can also pass a second optional parameter specifying options for the project, which are `documented here <configuration.html>`_. Note that the path passed to the constructor *must already exist*, or roots will throw an error.
 
-Now let's check out the ``Roots.new`` alternate constructor. This method takes a path to where you would like your project to be created, an optional template you want to use for it, and an optional callback which returns an initialized `Roots` instance for your newly created project.
-
-Additionally, the ``Roots.new`` command is an event emitter, and you can listen for a number of events throughout the initialization process, as demonstrated below:
+Now let's check out the ``Roots.new`` alternate constructor. This method will create a roots project from a template at a given path, then return an instance. However, since it involves quite a bit of I/O, it is also asynchrnonous. The ``Roots.new`` method itself returns a promise, which, if fulfilled, will return an initialized roots instance. Since it's a lengthy process, the promise also returns progress events along the way. Below is an example of how it could be used:
 
 .. code-block:: javascript
 
     var Roots = require('roots'),
         path = require('path');
 
-    var new_cmd = Roots.new({
+    Roots.new({
       path: path.join(__dirname, 'example-project'),   // directory can not yet exist
-      template: 'base',                                // optional - defaults to 'base'
-      options: { description: 'foobar' }               // optional - options to pass to template
-      done: function(project) { console.log(project) } // optional - returns Roots instance
+      template: 'roots-base',                          // optional - defaults to 'roots-base'
+      overrides: { description: 'foobar' }             // optional - data to pass to template
+    }).progress(function(message){
+      console.log('progress: ' + message); // ex: 'progress: dependencies installing'
+    }).done(function(project){
+      console.log(project); // new roots project instance
+    }, function(err){
+      console.error("oh no! " + err);
     });
-
-    new_cmd
-      .on('template:base_added') // no templates present on system, added a base template
-      .on('template:created')    // created the project template
-      .on('deps:installing')     // found a package.json, ran `npm install`
-      .on('deps:finished')       // finished installing deps
-      .on('error')               // an error occurred, passes error
-      .on('done')                // everything finished
 
 Note that the path you pass to this constructor should not exist, a folder will be created there. If a folder already exists at that path, it will be filled with the files from the template, which probably is not what you want.
 
