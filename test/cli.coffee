@@ -202,25 +202,17 @@ describe 'cli', ->
 
     describe 'default', ->
 
-      before ->
-        @stub = sinon.stub(Roots.template, 'default').returns(W.resolve())
-        mockery.registerMock('../../../index', Roots)
-
-      after ->
-        @stub.restore()
-        mockery.deregisterAll()
-
       it 'should error without a name', ->
         (-> cli.run('tpl default')).should.throw()
 
-      it 'should succeed with a name', (done) ->
+      it 'should error with non-present template name', (done) ->
         spy = sinon.spy()
 
-        cli.on('success', spy)
+        cli.on('err', spy)
 
         cli.run('tpl default wow').then ->
           spy.should.have.been.calledOnce
-          cli.removeListener('success', spy)
+          cli.removeListener('err', spy)
           done()
 
     describe 'remove', ->
