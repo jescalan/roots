@@ -2,13 +2,13 @@
 
 <p align="center">
   <a title='NPM version' href="http://badge.fury.io/js/roots">
-    <img src='https://badge.fury.io/js/roots.png' />
+    <img src='https://badge.fury.io/js/roots.svg' />
   </a>
   <a title='Build Status' href="https://travis-ci.org/jenius/roots">
-    <img src='https://travis-ci.org/jenius/roots.png?branch=master' />
+    <img src='https://travis-ci.org/jenius/roots.svg?branch=master' />
   </a>
   <a title='Dependency Status' href="https://david-dm.org/jenius/roots">
-    <img src='https://david-dm.org/jenius/roots.png' />
+    <img src='https://david-dm.org/jenius/roots.svg' />
   </a>
 </p>
 
