@@ -6,6 +6,7 @@ nodefn   = require 'when/node'
 pipeline = require 'when/pipeline'
 sequence = require 'when/sequence'
 File     = require 'vinyl'
+mkdirp   = require 'mkdirp'
 
 ###*
  * @class Compiler
@@ -201,7 +202,8 @@ class CompileFile
 
     obj.path = @roots.config.out(obj.path, obj.extension)
 
-    nodefn.call(fs.writeFile, obj.path, obj.content)
+    nodefn.call(mkdirp, path.dirname(obj.path))
+      .then(-> nodefn.call(fs.writeFile, obj.path, obj.content))
 
   ###*
    * Read the file's extension and grab any and all adapters that match. If there

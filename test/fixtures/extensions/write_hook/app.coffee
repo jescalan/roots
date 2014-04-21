@@ -41,7 +41,8 @@ write_multiple = ->
       write: (ctx) =>
         [
           { path: path.join(ctx.roots.root, 'multi1.html'), content: 'clone 1' },
-          { path: path.join(ctx.roots.root, 'multi2.html'), content: 'clone 2' }
+          { path: path.join(ctx.roots.root, 'multi2.html'), content: 'clone 2' },
+          { path: path.join(ctx.roots.root, 'subdir/multi3.html'), content: 'clone 3' }
         ]
 
 module.exports =

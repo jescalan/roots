@@ -80,6 +80,8 @@ describe 'write hook', ->
     should.contain_content(@public, 'multi1.html', /clone 1/)
     should.exist(@public, 'multi2.html')
     should.contain_content(@public, 'multi2.html', /clone 2/)
+    should.exist(@public, 'subdir/multi3.html')
+    should.contain_content(@public, 'subdir/multi3.html', /clone 3/)
 
 describe 'categories', ->
 
