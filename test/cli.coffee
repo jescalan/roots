@@ -140,17 +140,17 @@ describe 'cli', ->
 
   describe 'clean', ->
 
-    it 'should remove the output folder', ->
+    it 'should remove the output folder', (done) ->
       spy = sinon.spy()
 
       cli.on('success', spy)
 
-      cli.run('clean test')
-
-      spy.should.have.been.calledOnce
-      spy.should.have.been.calledWith('output removed')
-      cli.removeListener('inline', spy)
-      cli.removeListener('data', spy)
+      cli.run('clean test').then ->
+        spy.should.have.been.calledOnce
+        spy.should.have.been.calledWith('output removed')
+        cli.removeListener('inline', spy)
+        cli.removeListener('data', spy)
+        done()
 
   describe 'tpl', ->
 

@@ -1,4 +1,14 @@
 Roots = require '../../../index'
 
+###*
+ * Simple wrapper for Roots.template.list, emits data to the CLI.
+ *
+ * @param  {CLI} cli - CLI class instance for event emission
+ * @param  {Object} args - arguments to be sent to the roots fn
+ * @return {String}
+###
+
 module.exports = (cli, args) ->
-  cli.emit('data', Roots.template.list(pretty: true))
+  list = Roots.template.list(pretty: true)
+  cli.emit('data', list)
+  return list

@@ -71,6 +71,15 @@ class Roots extends EventEmitter
     (new Watch(@)).exec()
 
   ###*
+   * Removes a project's output folder.
+   * @return {Promise} promise for removed output folder
+  ###
+
+  clean: ->
+    Clean = require('./api/clean')
+    (new Clean(@)).exec()
+
+  ###*
    * If an irrecoverable error has occurred, exit the application with
    * as clear an error as possible and a specific exit code.
    *
