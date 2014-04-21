@@ -1,6 +1,5 @@
 test_path = path.join(base_path, 'compile')
 
-# todo: tests for live reload
 class Watcher
   constructor: (@root) ->
     @output = path.join(@root, 'public')
