@@ -228,7 +228,7 @@ There is one more hook you can use that will fire only when all the files in a g
 
     module.exports = ->
       class FooBar
-        
+
         category_hooks: ->
           after: (ctx, category) ->
             console.log "finished up with #{category}!"
@@ -263,7 +263,7 @@ For example, if you were making an extension that collected all the contents of 
   nodefn = require('when/node/function')
   path = require('path')
   fs = require('fs')
-  
+
   module.exports (opts) = ->
 
     class JSConcat
@@ -296,7 +296,7 @@ What we have here is a simple extension that concatenates js files into a single
   nodefn = require('when/node/function')
   path = require('path')
   fs = require('fs')
-  
+
   module.exports (opts) = ->
     contents = ''
 

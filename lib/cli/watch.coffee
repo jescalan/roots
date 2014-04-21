@@ -1,5 +1,5 @@
 open   = require 'open'
-Roots  = require '../../index'
+Roots  = require '../../lib'
 Server = require '../local_server'
 
 ###*

@@ -18,15 +18,15 @@ class Compile
 
   ###*
    * Creates a new instance of the compile class.
-   * 
+   *
    * - makes a new fs parser instance
    * - makes a new compiler instance
    * - makes a new instance of each extension, with error detection.
    *   this must happen every compile pass to clear lingering context
-   * 
+   *
    * @param  {Function} roots - instance of the base roots class
   ###
-  
+
   constructor: (@roots) ->
     @extensions = @roots.extensions.instantiate()
     @fs_parser = new FSParser(@roots, @extensions)
@@ -80,7 +80,7 @@ class Compile
    * whether there was an array of hooks provided or just a single hook.
    *
    * @private
-   * 
+   *
    * @param  {Array|Function} hook - a function or array of functions
    * @return {Promise} promise for resolved hooks
   ###
@@ -100,7 +100,7 @@ class Compile
   ###*
    * If present, runs an async-compatible `setup` function in each extension,
    * ensuring that any asynchrnonous setup the extension needs is completed.
-   * 
+   *
    * @return {Promise} a promise that the extension setup is finished
   ###
 
@@ -112,7 +112,7 @@ class Compile
    * Creates the nested folder structure for a project. First, creates an array
    * of just the output paths, then creates the base public folder, then
    * sequentially walks through the folders and creates them all.
-   * 
+   *
    * @param  {Object} ast - roots ast
   ###
 
@@ -132,20 +132,22 @@ class Compile
    *
    * An example use for each of these is client templates and dynamic content.
    * With client templates, they do not depend on any other compile process so
-   * they are a great fit for parallel. For dynamic content, the front matter must
-   * be parsed then available in normal templates, which means all dynamic content
-   * must be finished parsing before normal content starts. For this reason, dynamic
-   * content has to be ordered so it is placed before the normal compiles.
+   * they are a great fit for parallel. For dynamic content, the front matter
+   * must be parsed then available in normal templates, which means all dynamic
+   * content must be finished parsing before normal content starts. For this
+   * reason, dynamic content has to be ordered so it is placed before the normal
+   * compiles.
    *
-   * So what this function does is first distinguishes ordered or parallel for each
-   * extension, then pushes a compile task for that extension onto the appropriate
-   * stack. The compile task just grabs the files from the category and runs them
-   * each through the compiler's `compile` method. Then when they are finished, it
-   * runs the after category hook.
+   * So what this function does is first distinguishes ordered or parallel for
+   * each extension, then pushes a compile task for that extension onto the
+   * appropriate stack. The compile task just grabs the files from the category
+   * and runs them each through the compiler's `compile` method. Then when they
+   * are finished, it runs the after category hook.
    *
-   * Once the ordered and parallel stacks are full of tasks, they are run. Ordered
-   * gets sequenced so they run in order, and parallel runs (surprise) in parallel.
-   * 
+   * Once the ordered and parallel stacks are full of tasks, they are run.
+   * Ordered gets sequenced so they run in order, and parallel runs (surprise)
+   * in parallel.
+   *
    * @param  {Object} ast - roots ast
   ###
 
@@ -153,9 +155,9 @@ class Compile
     ordered = []
     parallel = []
 
-    compile_task = (category) =>
-      W.map(ast[category] || [], @compiler.compile.bind(@compiler, category))
-        .then(=> sequence(@extensions.hooks('category_hooks.after', category), @, category))
+    compile_task = (cat) =>
+      W.map(ast[cat] || [], @compiler.compile.bind(@compiler, cat))
+      .then(=> sequence(@extensions.hooks('category_hooks.after', cat), @, cat))
 
     for ext in @extensions
       extfs = if ext.fs then ext.fs() else {}
@@ -179,16 +181,16 @@ class Compile
       parallel: W.all(parallel)
 
   ###*
-   * Sometimes extensions prevent file writes and leave behind empty
-   * folders. The client templates extension is a good example. No matter
-   * how it happens, there should not be any empty folders in the output,
-   * so this method gets rid of them if they exist.
+   * Sometimes extensions prevent file writes and leave behind empty folders.
+   * The client templates extension is a good example. No matter how it happens,
+   * there should not be any empty folders in the output, so this method gets
+   * rid of them if they exist.
    *
    * The way this is done is *very* hacky, but it is the speediest way. It
    * tries to delete every folder, and if it succeeds, it means the folder was
    * empty, as trying to remove a directory with contents throws an error (which
    * we ignore using an empty callback).
-   * 
+   *
    * @private
   ###
 

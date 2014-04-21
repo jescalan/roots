@@ -1,4 +1,4 @@
-Roots = require '../../index'
+Roots = require '../../lib'
 
 ###*
  * Simple wrapper for Roots.new, emits events and data to the cli.
@@ -15,6 +15,4 @@ module.exports = (cli, args) ->
       cli.emit('info', "project initialized at #{roots.root}")
       cli.emit('info', "using template: #{args.template || 'roots-base'}")
       cli.emit('success', 'done!')
-    .catch (err) ->
-      cli.emit('err', err)
-      throw err
+    .catch (err) -> cli.emit('err', err); throw err

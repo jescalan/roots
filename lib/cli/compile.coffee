@@ -1,4 +1,4 @@
-Roots = require '../../index'
+Roots = require '../../lib'
 
 ###*
  * Simple wrapper for Roots.compile, emits events and data to the cli.

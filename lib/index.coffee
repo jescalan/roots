@@ -12,7 +12,7 @@ Extensions     = require './extensions'
 class Roots extends EventEmitter
 
   ###*
-   * Given a path to a project, set up the configuration and return a roots instance
+   * Given a path to a project, set up the config and return a roots instance
    * @param  {[type]} root - path to a folder
    * @return {Function} - instance of the Roots class
   ###
@@ -97,7 +97,7 @@ class Roots extends EventEmitter
 
     console.error "\nFLAGRANT ERROR!\n".red.bold
     console.error "It looks like there was a " + "#{name}".bold + " Error."
-    console.error "Check out " + "http://roots.cx/errors##{code}".green + " for more help\n"
+    console.error "Check out http://roots.cx/errors##{code} for more help\n"
 
     console.error "Reason:".yellow.bold
     console.error message

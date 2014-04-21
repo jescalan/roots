@@ -16,12 +16,12 @@ class Extensions
 
   ###*
    * Registers roots extension(s) with your project. Tests each extension passed
-   * to ensure it's the right type, then flips the extensions backwards and pushes
-   * each one to the beginning of the array, conserving order, unless there's a priority
-   * given, in which case it's inserted at a certain index.
-   * 
+   * to ensure it's the right type, then flips the extensions backwards and
+   * pushes each one to the beginning of the array, conserving order, unless
+   * there's a priority given, in which case it's inserted at a certain index.
+   *
    * @param  {Object} extensions - an extension or array of extensions
-   * @param  {Integer} priority - optional, how early the extension(s) is/are run
+   * @param  {Integer} priority - optional, how early the extensions are run
   ###
 
   register: (extensions, priority) ->
@@ -35,10 +35,10 @@ class Extensions
   ###*
    * Create a new instance of each extension, checking for any sort of errors
    * in the way the extension was configured.
-   * 
+   *
    * @return {Array} - array of instantiated extensions
   ###
-  
+
   instantiate: ->
     extensions = @all.map (Ext) =>
       try ext = new Ext(@roots); catch err then @roots.bail(125, err, ext)
@@ -51,7 +51,7 @@ class Extensions
 
   ###*
    * Ensures that all existant properties of an extension are functions.
-   * 
+   *
    * @param  {Function} ext - instance of an extension
   ###
 
@@ -69,7 +69,7 @@ class Extensions
    * If exists and is not a function. Helper.
    *
    * @private
-   * 
+   *
    * @param  {???} prop - anything
    * @return {Boolean} whether it exists and is not a function or not
   ###
@@ -85,21 +85,21 @@ class Extensions
    *   dirty hack to get access to the roots object out of scope.
    * - For each extension, if that namespace and key both exist
    *   and the extension is in its category, return the key
-   * 
+   *
    * @param  {String} name - hook name, separated with periods
    * @return {Function}      the hook function if exists, otherwise undefined
   ###
 
   hooks = (name, category) ->
-    namespace = name.split('.')[0]
+    namespc = name.split('.')[0]
     key = name.split('.')[1]
 
     _.compact @map (ext) =>
-      if not ext[namespace] then return
-      called_namespace = ext[namespace]()
+      if not ext[namespc] then return
+      called_namespace = ext[namespc]()
 
       if typeof called_namespace isnt 'object'
-        @[@length-2].roots.bail(125, "#{namespace} should return an object", ext)
+        @[@length-2].roots.bail(125, "#{namespc} should return an object", ext)
 
       if called_namespace.category
         if called_namespace.category isnt category then return

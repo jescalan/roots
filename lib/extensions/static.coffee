@@ -7,7 +7,7 @@ module.exports = ->
   ###
 
   class Static
-    
+
     constructor: ->
       @category = 'static'
 

@@ -17,9 +17,15 @@ module.exports = ->
       extract: true
       ordered: true
       detect: detect_fn.bind(@)
-    
-    # @api private
-    
+
+    ###*
+     * Detects whether a file should be compiled or not
+     *
+     * @private
+     * @param  {File} f - file object
+     * @return {Boolean} whether the file should be compiled or not
+    ###
+
     detect_fn = (f) ->
-      exts = _(@roots.config.compilers).map((i)-> i.extensions).flatten().value()
+      exts = _(@roots.config.compilers).map((i)->i.extensions).flatten().value()
       _.contains(exts, path.extname(f.relative).slice(1))

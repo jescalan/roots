@@ -38,8 +38,11 @@ exports.list = sprout.list.bind(sprout)
 ###
 
 exports.default = (args = {}) ->
-  if not args.name then return W.reject(new Error('please provide a template name'))
-  if not _.contains(sprout.list(), args.name) then return W.reject(new Error("you do not have this template installed\n=> try `roots tpl add #{args.name} <url>`"))
+  if not args.name
+    return W.reject(new Error('please provide a template name'))
+
+  if not _.contains(sprout.list(), args.name)
+    return W.reject(new Error "you do not have this template installed")
 
   config = global_config()
   config.set('default_template', args.name)
@@ -80,7 +83,8 @@ exports.reset = (override) ->
 
 remove_roots_config = (deferred) ->
   tasks = []
-  tasks.push(sprout.remove(tpl)) for tpl in _.without(sprout.list(), 'roots-base')
+  for tpl in _.without(sprout.list(), 'roots-base')
+    tasks.push(sprout.remove(tpl))
 
   W.all(tasks)
     .then(-> fs.unlinkSync(global_config().path))

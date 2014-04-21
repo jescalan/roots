@@ -1,4 +1,4 @@
-Roots = require '../../../index'
+Roots = require '../../../lib'
 
 ###*
  * Simple wrapper for Roots.template.list, emits data to the CLI.

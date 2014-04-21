@@ -28,7 +28,7 @@ describe 'cli', ->
     before ->
       # TODO: we need this to emit progress events for full coverage
       @stub = sinon.stub(Roots, 'new').returns(W.resolve({ root: 'test' }))
-      mockery.registerMock('../../index', Roots)
+      mockery.registerMock('../../lib', Roots)
 
     after ->
       @stub.restore()
@@ -79,7 +79,7 @@ describe 'cli', ->
 
     before ->
       @stub = sinon.stub(Roots.prototype, 'compile').returns(W.resolve())
-      mockery.registerMock('../../index', Roots)
+      mockery.registerMock('../../lib', Roots)
 
     after ->
       @stub.restore()
@@ -131,7 +131,7 @@ describe 'cli', ->
 
     before ->
       @stub = sinon.stub(Roots.prototype, 'watch').returns(new EventEmitter)
-      mockery.registerMock('../../index', Roots)
+      mockery.registerMock('../../lib', Roots)
 
     after ->
       @stub.restore()
@@ -182,7 +182,7 @@ describe 'cli', ->
 
       before ->
         @stub = sinon.stub(Roots.template, 'add').returns(W.resolve())
-        mockery.registerMock('../../../index', Roots)
+        mockery.registerMock('../../../lib', Roots)
 
       after ->
         @stub.restore()
@@ -245,7 +245,7 @@ describe 'cli', ->
 
       before ->
         @stub = sinon.stub(Roots.template, 'remove').returns(W.resolve())
-        mockery.registerMock('../../../index', Roots)
+        mockery.registerMock('../../../lib', Roots)
 
       after ->
         @stub.restore()

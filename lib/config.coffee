@@ -48,30 +48,41 @@ class Config
     load_config.call(@)
 
     @ignores ?= []
-    @ignores = @ignores.concat(['package.json', 'app*.coffee', "#{@output}/**/*"])
+    @ignores = @ignores.concat [
+      'package.json',
+      'app*.coffee',
+      "#{@output}/**/*"
+    ]
 
     @watcher_ignores ?= []
-    @watcher_ignores = @watcher_ignores.concat(['package.json', 'app.coffee', "#{@output}/**/*"])
+    @watcher_ignores = @watcher_ignores.concat [
+      'package.json',
+      'app.coffee',
+      "#{@output}/**/*"
+    ]
 
     @compilers = get_compilers.call(@)
 
   ###*
-   * This function is responsible for loading the app.coffee file into the config.
-   * First, it checks the environment. If it's 'development', the default, roots loads
-   * 'app.coffee', and if there is a custom environment, it tries to load
-   * 'app.ENV_NAME.coffee'. It then makes sure the config file exists. If not, it just
-   *  returns, and if there was a custom environment logs out a warning.
+   * This function is responsible for loading the app.coffee file into the
+   * config.
+   *
+   * First, it checks the environment. If it's 'development', the default, roots
+   * loads 'app.coffee', and if there is a custom environment, it tries to load
+   * 'app.ENV_NAME.coffee'. It then makes sure the config file exists. If not,
+   * it just returns, and if there was a custom environment logs out a warning.
    *
    * If it does exist, there are two ways app.coffee can be processed. First is
-   * 'simple mode', entered if it doesn't export anything when the file is required.
-   * In this mode, the config file is processed as a coffeescript object.
+   * 'simple mode', entered if it doesn't export anything when the file is
+   * required. In this mode, the config file is processed as a coffeescript
+   * object.
    *
-   * If the file does export anything, this means it's being used as a node file,
-   * so it is required and processed as a node file.
+   * If the file does export anything, this means it's being used as a node
+   * file, so it is required and processed as a node file.
    *
-   * Each of the values that are exported are attached directly to the config object,
-   * overwriting the defaults if this applies. Finally, extensions are all registered
-   * with roots if they are provided.
+   * Each of the values that are exported are attached directly to the config
+   * object, overwriting the defaults if this applies. Finally, extensions are
+   * all registered with roots if they are provided.
   ###
 
   load_config = ->
@@ -86,7 +97,9 @@ class Config
 
     conf = require(config_path)
     if Object.keys(conf).length < 1
-      conf = eval(coffee.compile(fs.readFileSync("#{config_path}.coffee", 'utf8'), { bare: true }))
+      conf = eval coffee.compile(
+        fs.readFileSync("#{config_path}.coffee", 'utf8'), { bare: true }
+      )
 
     @[k] = v for k, v of conf
 
@@ -149,7 +162,7 @@ class Config
         try
           local_compiler = path.join(@roots.root, 'node_modules', dep)
         catch err
-          throw new Error("'#{dep}' not found. install dependencies with 'npm install'")
+          throw new Error("'#{dep}' not found. install it with 'npm install'")
 
         res[dep] = accord.load(dep, local_compiler)
 

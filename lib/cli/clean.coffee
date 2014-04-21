@@ -1,4 +1,4 @@
-Roots = require '../../index'
+Roots = require '../../lib'
 rimraf = require 'rimraf'
 
 ###*
@@ -12,4 +12,5 @@ rimraf = require 'rimraf'
 module.exports = (cli, args) ->
   project = new Roots(args.path)
   project.clean()
-    .then(cli.emit.bind(cli, 'success', 'output removed'), cli.emit.bind(cli, 'err'))
+    .then -> cli.emit('success', 'output removed')
+    .catch (err) -> cli.emit('err', err); throw err

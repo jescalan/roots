@@ -39,7 +39,7 @@ class Server
   start: (port) ->
     app = connect()
 
-    if @roots.config.env == 'development' then inject_development_js.call(@, app)
+    if @roots.config.env == 'development' then inject_dev_js.call(@, app)
     app.use(connect.static(@roots.config.output_path()))
 
     @server = http.createServer(app)
@@ -66,8 +66,8 @@ class Server
     sock.send(JSON.stringify(type: k, data: v)) for sock in @sockets
 
   ###*
-   * These three methods send 'reload', 'compiling', and 'error' messages through
-   * to the browser.
+   * These three methods send 'reload', 'compiling', and 'error' messages
+   * through to the browser.
   ###
 
   reload: -> @send_msg('reload')
@@ -84,7 +84,7 @@ class Server
    * @param  {Function} app - connect app instance
   ###
 
-  inject_development_js = (app) ->
+  inject_dev_js = (app) ->
     app.use(infestor content:
       "<!-- roots development configuration -->
       <script>var __livereload = #{@roots.config.live_reload};</script>

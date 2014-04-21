@@ -67,12 +67,12 @@ class CompileFile
     @file_options = { filename: @file.path }
 
   ###*
-   * Initialize the actual compilation. This method is a higher level wrapper for
-   * a promise chain, summarized as such:
+   * Initialize the actual compilation. This method is a higher level wrapper
+   * for a promise chain, summarized as such:
    *
    * - reads the file's content, set on the instance
    * - run the before hooks for each extensions before_file hook
-   * - take each pass over the file, and compile, set compiled content on instance
+   * - take each pass over the file, compile, set compiled content on instance
    * - emit a compile event once finished passing the file vinyl wrapper
    * - run the extensions' after hooks
    * - write the file
@@ -81,14 +81,16 @@ class CompileFile
   ###
 
   run: ->
+    hooks = (cat) => @extensions.hooks(cat, @category)
+
     read_file.call(@, @file)
       .with(@)
       .then((o) => @content = o)
-      .then(=> sequence(@extensions.hooks('compile_hooks.before_file', @category), @))
+      .then(=> sequence(hooks('compile_hooks.before_file'), @))
       .then(each_pass)
       .tap((o) => @content = o)
       .tap(=> @roots.emit('compile', @file))
-      .then(=> sequence(@extensions.hooks('compile_hooks.after_file', @category), @))
+      .then(=> sequence(hooks('compile_hooks.after_file'), @))
       .then(write_file)
 
   ###*
@@ -133,7 +135,7 @@ class CompileFile
    * them to one or multiple `write_task`s.
    *
    * - If there are no write hooks, file is written as usual
-   * - If a write hook returns false, file is not written regardless of anything else
+   * - If a write hook returns false, file is not written ever
    * - If a write hook returns true, file is written as usual (once at max)
    * - If a write hook returns an object or array of objects with
    *   path and content props, the file(s) is/are written to the
@@ -179,8 +181,9 @@ class CompileFile
    * If an object is passed, each of these keys is optional, and if not provided
    * will be filled in with default values. The path then is wrapped with vinyl,
    * passed through the roots output path generator, and the file is written.
-   * The extension property is only set if there wasn't already an extension override
-   * and there was a compile, otherwise any extensions are preserved as is.
+   * The extension property is only set if there wasn't already an extension
+   * override and there was a compile, otherwise any extensions are preserved as
+   * is.
    *
    * @param  {Object} obj - object with `path` and `content` properties
    * @return {Promise} a promise for the written file
@@ -204,9 +207,9 @@ class CompileFile
     nodefn.call(fs.writeFile, obj.path, obj.content)
 
   ###*
-   * Read the file's extension and grab any and all adapters that match. If there
-   * isn't a matching adapter, returns an adapter stub that is used to just copy
-   * the file.
+   * Read the file's extension and grab any and all adapters that match. If
+   * there isn't a matching adapter, returns an adapter stub that is used to
+   * just copy the file.
    *
    * If no adapters are found, it's a file with no extension, so it gets a stub
    * adapter with no extension.
@@ -219,7 +222,9 @@ class CompileFile
     adapters = []
 
     for ext in _.clone(extensions).reverse()
-      compiler = _.find(@roots.config.compilers, (c) -> _.contains(c.extensions, ext))
+      compiler = _.find @roots.config.compilers, (c) ->
+        _.contains(c.extensions, ext)
+
       adapters.push(if compiler then compiler else { output: ext })
 
     if !adapters.length then adapters.push({ output: '' })
@@ -237,7 +242,7 @@ class CompileFile
 
   each_pass = ->
     pass = new CompilePass(@)
-    pipeline(@adapters.map((a,i) => pass.run.bind(pass,a,i+1)), @content)
+    pipeline(@adapters.map((a,i) -> pass.run.bind(pass,a,i+1)), @content)
 
 ###*
  * @class CompilePass
@@ -247,19 +252,19 @@ class CompileFile
 class CompilePass
 
   ###*
-   * Creates a new instance, holding on to a reference to the CompileFile instance.
+   * Creates a new instance, holding on to a ref to the CompileFile instance.
    * @param  {Function} file - instance of CompileFile
   ###
 
   constructor: (@file) ->
 
   ###*
-   * Initialize the compile. Takes an adapter, the index (number of the pass), and
-   * content. It takes a couple steps:
+   * Initialize the compile. Takes an adapter, the index (number of the pass),
+   * and content. It takes a couple steps:
    *
    * - First, get the options to be passed in with the adapter, described below
    * - Then execute any before pass hooks
-   * - Then actually compile, or if no compilation needed just pass the content on
+   * - Then actually compile, or if not needed just pass the content on
    * - Then set the content on the context
    * - Then execute any after_pass hooks
    * - Finally, return the content
@@ -274,12 +279,13 @@ class CompilePass
 
   run: (@adapter, @index, @content) ->
     @opts = configure_options.call(@)
+    hooks = (cat) => @file.extensions.hooks(cat, @file.category)
 
-    sequence(@file.extensions.hooks('compile_hooks.before_pass', @file.category), @)
+    sequence(hooks('compile_hooks.before_pass'), @)
       .with(@)
       .then(compile_or_pass)
       .then((o) => @content = o)
-      .then(=> sequence(@file.extensions.hooks('compile_hooks.after_pass', @file.category), @))
+      .then(=> sequence(hooks('compile_hooks.after_pass'), @))
       .then(=> @content)
 
   ###*

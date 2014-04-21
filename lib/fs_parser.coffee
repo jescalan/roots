@@ -17,11 +17,11 @@ class FSParser
 
   ###*
    * Creates a new instance of the FSParser class. Sets up instance vars:
-   * 
+   *
    * - root: the project root
    * - config: roots config object
    * - extensions: all extension instances for this compile
-   * 
+   *
    * @param  {Function} roots - instance of the roots base class
   ###
 
@@ -41,7 +41,7 @@ class FSParser
    *   example: [<File>, <File>, <File>],
    *   static: [<File>]
    * }
-   * 
+   *
    * @return {Object} when.js promise for an ast
   ###
 
@@ -59,7 +59,7 @@ class FSParser
    * with the `parse_file` method below.
    *
    * @private
-   * 
+   *
    * @param  {String} dir - path to a directory
    * @return {Object} 'ast' object, described above
   ###
@@ -80,16 +80,17 @@ class FSParser
 
   ###*
    * Goes through each extension and runs it's `detect` function for the
-   * provided file. If it passes, the file is added to that extension's category.
-   * The roots default `static` extension runs last and collects any and all
-   * files that were not sorted into other categories.
+   * provided file. If it passes, the file is added to that extension's
+   * category. The roots default `static` extension runs last and collects any
+   * and all files that were not sorted into other categories.
    *
    * Also note the partial application and use of `when/pipeline`. We bind each
-   * extension and the file to the `sort` function upfront, and leave only the last
-   * parameter to be set, which represents `extract`, discussed below. Pipeline
-   * calls each function in an array in order, passing the results of the last
-   * function to the next one. The arg provided to pipeline is what goes to the
-   * first function in the list. Detailed docs for pipeline found here:
+   * extension and the file to the `sort` function upfront, and leave only the
+   * last parameter to be set, which represents `extract`, discussed below.
+   * Pipeline calls each function in an array in order, passing the results of
+   * the last function to the next one. The arg provided to pipeline is what
+   * goes to the first function in the list. Detailed docs for pipeline found
+   * here:
    *
    * https://github.com/cujojs/when/blob/master/docs/api.md#whenpipeline
    *
@@ -97,7 +98,7 @@ class FSParser
    * https://github.com/wearefractal/vinyl
    *
    * @private
-   * 
+   *
    * @param  {String} file - path to a file
   ###
 
@@ -112,20 +113,21 @@ class FSParser
    * on the file. If it returns false, the file is not added to the extension's
    * category and the function returns. If true, the file is added to the
    * extension's category.
-   * 
-   * After this, if the extension has `extract` set to true, meaning that once
-   * a file has been added to it's category, it's not eligable to be added to any
-   * other category, it returns `true`. At the top of the sort function, if `true`
-   * comes in (meaning a file has been added to a category and extracted), it will
-   * skip any detection and continue passing true down the line.
    *
-   * The way pipeline works above, the result of one function is passed to the next.
-   * So as soon as an extension returns true (aka file is extracted), detections will
-   * not be run for any other extension, and therefore it will not be added to any
-   * other categories.
+   * After this, if the extension has `extract` set to true, meaning that once
+   * a file has been added to it's category, it's not eligable to be added to
+   * any other category, it returns `true`. At the top of the sort function,
+   * if `true` comes in (meaning a file has been added to a category and
+   * extracted), it will skip any detection and continue passing true down the
+   * line.
+   *
+   * The way pipeline works above, the result of one function is passed to the
+   * next. So as soon as an extension returns true (aka file is extracted),
+   * detections will not be run for any other extension, and therefore it will
+   * not be added to any other categories.
    *
    * @private
-   * 
+   *
    * @param  {Function} ext - a roots extension instance
    * @param  {File} file - vinyl wrapper for a file
    * @param  {Boolean} extract - if true, function is skipped
@@ -153,7 +155,7 @@ class FSParser
    * are passed through as vinyl-wrapped file objects.
    *
    * @private
-   * 
+   *
    * @return {Object} - modified instance of the `ast`
   ###
 
@@ -163,12 +165,15 @@ class FSParser
 
   ###*
    * Checks a file against the ignored list to see if it should be skipped.
-   * 
+   *
    * @param  {String} f - file path
    * @return {Boolean} whether the file should be ignored or not
   ###
 
   ignored = (f) ->
-    @config.ignores.map((i) -> minimatch(f, i, { dot: true })).filter((i) -> i).length
+    @config.ignores
+      .map (i) -> minimatch(f, i, { dot: true })
+      .filter (i) -> i
+      .length
 
 module.exports = FSParser
