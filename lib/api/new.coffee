@@ -8,7 +8,7 @@ _             = require 'lodash'
 npm           = require 'npm'
 
 base_tpl_name = 'roots-base'
-base_tpl_url      = 'https://github.com/roots-dev/base.git'
+base_tpl_url  = 'https://github.com/roots-dev/base.git'
 
 ###*
  * Creates a new roots project using a template. If a template is not provided,
@@ -37,8 +37,7 @@ class New
     d = W.defer()
 
     if not opts.path
-      d.reject(new Error('missing path'))
-      return d.promise
+      return W.reject(new Error('missing path'))
 
     opts =
       path: path.resolve(opts.path)

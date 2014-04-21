@@ -13,8 +13,8 @@ EventEmitter = require('events').EventEmitter
 class CLI extends EventEmitter
 
   ###*
-   * Creates and sets up the argument parser, makes the event emitter through
-   * which it returns all information publicy available.
+   * Creates and sets up the argument parser, then calls the config functions
+   * for each of the subcommands.
    *
    * @param {Boolean} debug - if debug is true, arg parse errors throw rather
    *                          than exiting the process.
@@ -79,7 +79,7 @@ class CLI extends EventEmitter
       help: "Path to a project that you would like to watch"
 
     s.addArgument ['--env', '-e'],
-      defaultValue: 'development'
+      defaultValue: process.env or 'development'
       help: "Your project's environment"
 
     s.addArgument ['--no-open'],
@@ -103,7 +103,7 @@ class CLI extends EventEmitter
       help: "Path to a project that you would like to compile"
 
     s.addArgument ['--env', '-e'],
-      defaultValue: 'development'
+      defaultValue: process.env or 'development'
       help: "Your project's environment"
 
     s.setDefaults(fn: 'compile')

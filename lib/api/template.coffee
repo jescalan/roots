@@ -1,4 +1,4 @@
-fs = require 'fs'
+fs            = require 'fs'
 _             = require 'lodash'
 W             = require 'when'
 sprout        = require 'sprout'
@@ -38,8 +38,8 @@ exports.list = sprout.list.bind(sprout)
 ###
 
 exports.default = (args = {}) ->
-  if not args.name then return W.reject('please provide a template name')
-  if not _.contains(sprout.list(), args.name) then return W.reject("you do not have this template installed\n=> try `roots tpl add #{args.name} <url>`")
+  if not args.name then return W.reject(new Error('please provide a template name'))
+  if not _.contains(sprout.list(), args.name) then return W.reject(new Error("you do not have this template installed\n=> try `roots tpl add #{args.name} <url>`"))
 
   config = global_config()
   config.set('default_template', args.name)

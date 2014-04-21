@@ -1,9 +1,10 @@
 rimraf       = require 'rimraf'
 mockery      = require 'mockery'
-cli          = new (require '../lib/cli')(debug: true)
+CLI          = require '../lib/cli'
 pkg          = require('../package.json')
 EventEmitter = require('events').EventEmitter
 
+cli = new CLI(debug: true)
 test_tpl_path = 'https://github.com/jenius/sprout-test-template.git'
 
 describe 'cli', ->
@@ -17,9 +18,15 @@ describe 'cli', ->
   it 'should throw if a nonexistant command is run', ->
     (-> cli.run('xxx')).should.throw()
 
+  it 'should not error when constructed without debug', ->
+    (-> new CLI).should.not.throw()
+
   describe 'new', ->
 
+    # TODO: need to generate an error here somehow
+
     before ->
+      # TODO: we need this to emit progress events for full coverage
       @stub = sinon.stub(Roots, 'new').returns(W.resolve({ root: 'test' }))
       mockery.registerMock('../../index', Roots)
 
@@ -40,9 +47,9 @@ describe 'cli', ->
         .done =>
           @stub.should.have.been.calledOnce
           spy.should.have.been.calledThrice
-          spy.should.have.been.calledWith('done!')
           spy.should.have.been.calledWith('project initialized at test')
           spy.should.have.been.calledWith('using template: roots-base')
+          spy.should.have.been.calledWith('done!')
           cli.removeListener('success', spy)
           cli.removeListener('info', spy)
           done()
@@ -54,11 +61,17 @@ describe 'cli', ->
       cli.on('info', spy)
 
       cli.run("new blarg -t foobar")
-        .done =>
+        .done ->
           spy.should.have.been.calledWith('using template: foobar')
           cli.removeListener('info', spy)
           done()
         , done
+
+    it 'should handle errors correctly', ->
+      @stub.restore()
+      @stub = sinon.stub(Roots, 'new').returns(W.reject())
+
+      cli.run('new blarg').should.be.rejected
 
     # TODO: need a way to test the live prompts
 
@@ -108,6 +121,12 @@ describe 'cli', ->
           done()
         , done
 
+    it 'should handle errors correctly', ->
+      @stub.restore()
+      @stub = sinon.stub(Roots.prototype, 'compile').returns(W.reject())
+
+      cli.run('compile').should.be.rejected
+
   describe 'watch', ->
 
     before ->
@@ -137,6 +156,8 @@ describe 'cli', ->
       cli.removeListener('inline', spy)
       cli.removeListener('data', spy)
       done()
+
+    it 'should error when trying to compile invalid code'
 
   describe 'clean', ->
 
@@ -190,6 +211,11 @@ describe 'cli', ->
           cli.removeListener('success', spy)
           done()
 
+      it 'should handle errors correctly', ->
+        @stub.restore()
+        @stub = sinon.stub(Roots.template, 'add').returns(W.reject())
+        cli.run('tpl add foo').should.be.rejected
+
     describe 'list', ->
 
       it 'should list all templates', (done) ->
@@ -210,7 +236,7 @@ describe 'cli', ->
 
         cli.on('err', spy)
 
-        cli.run('tpl default wow').then ->
+        cli.run('tpl default wow').catch ->
           spy.should.have.been.calledOnce
           cli.removeListener('err', spy)
           done()
@@ -237,3 +263,8 @@ describe 'cli', ->
           spy.should.have.been.calledOnce
           cli.removeListener('success', spy)
           done()
+
+      it 'should handle errors correctly', ->
+        @stub.restore()
+        @stub = sinon.stub(Roots.template, 'remove').returns(W.reject())
+        cli.run('tpl remove foo').should.be.rejected

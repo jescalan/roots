@@ -3,7 +3,7 @@ Roots  = require '../../index'
 Server = require '../local_server'
 
 ###*
- * Wrapper for the roots watch function, and implementation of the local server
+ * Wrapper for the roots watch function, implementation of the local server
  * and compile/reload/error events that are sent to it. The gist:
  *
  * - Starts the server at the given (or default) port

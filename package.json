@@ -61,7 +61,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "coverage": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | rm -rf ./coverage; make unbuild",
+    "coverage": "make build; istanbul cover _mocha --report html -- -R spec && open coverage/index.html && make unbuild",
     "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild"
   },
   "engines": {
