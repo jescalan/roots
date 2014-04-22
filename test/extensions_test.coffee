@@ -75,6 +75,8 @@ describe 'write hook', ->
     path.join(@public, 'multi1.html').should.have.content('clone 1')
     path.join(@public, 'multi2.html').should.be.a.file()
     path.join(@public, 'multi2.html').should.have.content('clone 2')
+    path.join(@public, 'subdir/multi3.html').should.be.a.file()
+    path.join(@public, 'subdir/multi3.html').should.have.content('clone 3')
 
 describe 'categories', ->
 
