@@ -54,14 +54,14 @@
     "coveralls": "2.x",
     "mocha-lcov-reporter": "0.0.1",
     "istanbul": "0.2.x",
-    "roots": "^3.0.0-rc.6",
     "roots-util": "0.0.4",
     "chai-fs": "0.0.3",
-    "mockery": "^1.4.0",
-    "coffeelint": "^1.3.0"
+    "mockery": "1.4.x",
+    "coffeelint": "1.3.x"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "npm run lint && mocha",
+    "lint": "find lib/ -name '*.coffee' | xargs coffeelint",
     "coverage": "make build; istanbul cover _mocha --report html -- -R spec && open coverage/index.html && make unbuild",
     "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild"
   },

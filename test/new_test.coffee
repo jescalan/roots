@@ -4,6 +4,8 @@ new_path      = path.join(base_path, 'new/testing')
 
 describe 'new', ->
 
+  before (done) -> Roots.template.remove('roots-base').done((-> done()), done)
+
   afterEach -> rimraf.sync(new_path)
 
   it 'should reject if not given a path', ->

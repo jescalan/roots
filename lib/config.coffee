@@ -92,7 +92,8 @@ class Config
 
     if not config_exists
       if @env isnt 'development'
-        console.warn "\nEnvironment config file not found. Make sure 'app.#{@env}.coffee' is present at the root of your project.\n".yellow
+        console.warn "\nEnvironment config file not found. Make sure
+        'app.#{@env}.coffee' is present at the root of your project.\n".yellow
       return
 
     conf = require(config_path)

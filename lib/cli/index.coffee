@@ -65,13 +65,16 @@ class CLI extends EventEmitter
 
     s.addArgument ['--overrides', '-o'],
       type: keyVal
-      help: "Pass information directly to the template without answering questions. Accepts a quoted comma-separated key-value list, like 'a: b, c: d'"
+      help: "Pass information directly to the template without answering
+      questions. Accepts a quoted comma-separated key-value list, like
+      'a: b, c: d'"
 
     s.setDefaults(fn: 'new')
 
   $watch = (sub) ->
     s = sub.addParser 'watch',
-      help: 'Compile a roots project, serve it, and open it in a browser, then recompile when a files changes and refresh the page'
+      help: 'Compile a roots project, serve it, and open it in a browser, then
+      recompile when a files changes and refresh the page'
 
     s.addArgument ['path'],
       nargs: '?'
@@ -84,7 +87,8 @@ class CLI extends EventEmitter
 
     s.addArgument ['--no-open'],
       action: 'storeTrue'
-      help: "If present, this command will not automatically open a browser window"
+      help: "If present, this command will not automatically open a browser
+      window"
 
     s.addArgument ['--port', '-p'],
       type: Number
