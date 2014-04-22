@@ -1,4 +1,6 @@
-<p align="center"><a><img src="http://cl.ly/PqFy/logo.png" /></a></p>
+<p></p>
+<p align="center"><a><img src="http://cl.ly/V7me/logo.svg" /></a></p>
+<br />
 
 <p align="center">
   <a title='NPM version' href="http://badge.fury.io/js/roots">
