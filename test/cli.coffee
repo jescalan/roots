@@ -21,6 +21,32 @@ describe 'cli', ->
   it 'should not error when constructed without debug', ->
     (-> new CLI).should.not.throw()
 
+  it 'should correctly log extension errors', (done) ->
+    broken_ext_path = path.join(base_path, 'extensions/failures/case1')
+
+    cb = (err) ->
+      err.should.match(/Extension must return a function\/class/)
+      cli.removeListener('err', cb)
+      done()
+
+    cli.on('err', cb)
+
+    cli.run("compile #{broken_ext_path}")
+
+  it 'should correctly log other thrown errors', (done) ->
+    stub = sinon.stub(Roots.prototype, 'compile').returns([])
+    mockery.registerMock('../../lib', stub)
+
+    cb = (err) ->
+      err.toString().should.equal("TypeError: Object  has no method 'then'")
+      cli.removeListener('err', cb)
+      stub.restore()
+      mockery.deregisterAll()
+      done()
+
+    cli.on('err', cb)
+    cli.run('compile')
+
   describe 'new', ->
 
     # TODO: need to generate an error here somehow
