@@ -4,6 +4,7 @@ path         = require 'path'
 pkg          = require '../../package.json'
 ArgParse     = require('argparse').ArgumentParser
 EventEmitter = require('events').EventEmitter
+util         = require 'util'
 
 ###*
  * @class  CLI
@@ -46,7 +47,47 @@ class CLI extends EventEmitter
 
     fn = require(".#{path.sep}#{args.fn}")
     delete args.fn
-    fn(@, args)
+
+    try p = fn(@, args)
+    catch err then handle_thrown_error.call(@, err)
+
+    return p
+
+  ###*
+   * If the cli functiom being executed throws an error rather than a rejected
+   * promise, it is handled here rather than crashing roots. In addition, there
+   * is very specific handling for how roots extension errors are reported.
+   * Extension errors can be nasty and hard to debug, so we try to include as
+   * much information as possible for extension authors.
+   *
+   * @param  {*} err - something that was thrown
+  ###
+
+  handle_thrown_error = (err) ->
+    if err.constructor.name isnt 'RootsError' then return @emit('err', err)
+
+    text = ""
+    text += "EXTENSION ERROR!\n".red.bold
+    text += "\n"
+    text += "It looks like there was a " + "#{err.name}".bold + " Error.\n"
+    text += "Check out " + "http://roots.cx/errors##{err.code} ".bold.blue
+    text += "for more help\n"
+    text += "\n"
+    text += "Reason: ".yellow.bold + err.message
+    text += "\n"
+    text += "\nOffending Extension:".yellow.bold
+    text += "\n"
+    text += "Name: ".bold + err.ext.constructor.name + "\n"
+    text += "Extension: \n".bold
+    text += util.inspect(err.ext, { colors: true, showHidden: true })
+    text += "\nPrototype: ".bold
+    text += util.inspect(err.ext.constructor.prototype)
+    text += "\n"
+    text += "\nFull Trace:\n".yellow.bold
+    text += err.stack
+    text += "\n"
+
+    @emit('err', text)
 
   ###*
    * @private

@@ -87,32 +87,6 @@ class Roots extends EventEmitter
    * @param {String} details - any additional details to be printed
   ###
 
-  bail: (code, message, ext) ->
-    require 'colors'
-    util = require 'util'
-
-    switch code
-      when 125 then name = "Malformed Extension"
-      when 126 then name = "Malformed Write Hook Output"
-
-    console.error "\nFLAGRANT ERROR!\n".red.bold
-    console.error "It looks like there was a " + "#{name}".bold + " Error."
-    console.error "Check out http://roots.cx/errors##{code} for more help\n"
-
-    console.error "Reason:".yellow.bold
-    console.error message
-    console.error "\nOffending Extension:".yellow.bold
-    console.error "Name: ".bold + ext.constructor.name
-    process.stderr.write "Extension: ".bold
-    console.error util.inspect(ext, { colors: true, showHidden: true })
-    process.stderr.write "Prototype: ".bold
-    console.error ext.constructor.prototype
-
-    class RootsError extends Error
-      constructor: (@name, @message, @ext, @code) ->
-        Error.call(@)
-        Error.captureStackTrace(@, @constructor)
-
-    throw new RootsError(name, message, ext, code)
+  bail: require('./api/bail')
 
 module.exports = Roots

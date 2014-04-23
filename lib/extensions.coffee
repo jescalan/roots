@@ -42,7 +42,7 @@ class Extensions
   instantiate: ->
     extensions = @all.map (Ext) =>
       try ext = new Ext(@roots); catch err then @roots.bail(125, err, ext)
-      check_extension_errors(ext)
+      check_extension_errors.call(@, ext)
       return ext
 
     extensions.hooks = hooks.bind(extensions)

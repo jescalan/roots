@@ -123,63 +123,84 @@ describe 'categories', ->
     @file.indexOf('[4] hook_level').should.be.above(-1)
     @category.indexOf('[4] hook_level').should.be.above(-1)
 
-# Some of these are thrown as errors, others are reported through roots'
-# "on error" handler. This is just because of their placement within the
-# code. While I would like to make this more consistent the priority for
-# now is that all the errors are working and have clear messages.
+# All of these function should be throwing -- none should be returning an error
+# through the promise handler. When there's an extension error, the flow needs
+# to be immediately stopped.
 
 describe 'extension failures', ->
 
   before ->
     @path = path.join(__dirname, 'fixtures/extensions/failures')
 
-  # @todo: should these be throwing?
   it 'should bail when the extension does not return a class/function', ->
-    (-> (new Roots(path.join(@path, 'case1'))).compile()).should.throw()
+    (=> new Roots(path.join(@path, 'case1')))
+      .should.throw('Extension must return a function/class')
 
-  # @todo: should these be throwing?
+  # this should not throw
   it 'should bail when fs is defined but not a function', ->
-    (-> (new Roots(path.join(@path, 'case2'))).compile()).should.throw()
+    project = new Roots(path.join(@path, 'case2'))
+    (-> project.compile()).should.throw('The fs property must be a function')
 
   it 'should bail when fs is a function but doesnt return an object', (done) ->
     project = new Roots(path.join(@path, 'case3'))
-    project.on('error', -> done())
+
+    project.on 'error', (err) ->
+      err.toString().should.equal('Malformed Extension: fs function must return an object')
+      done()
+
     project.compile()
 
   it 'should bail when fs is used with no category', (done) ->
     project = new Roots(path.join(@path, 'case4'))
-    project.on('error', -> done())
+
+    project.on 'error', (err) ->
+      err.toString().should.equal('Malformed Extension: fs hooks defined with no category')
+      done()
+
     project.compile()
 
-  # @todo: should these be throwing?
+  # this should not throw
   it 'should bail when compile_hooks is defined but not a function', ->
-    (-> (new Roots(path.join(@path, 'case5'))).compile()).should.throw()
+    project = new Roots(path.join(@path, 'case5'))
+    (-> project.compile()).should.throw('The compile_hooks property must be a function')
 
   it 'should bail when compile_hooks is a function but doesnt return an object', (done) ->
     project = new Roots(path.join(@path, 'case6'))
-    project.on('error', -> done())
+
+    project.on 'error', (err) ->
+      err.toString().should.equal('Malformed Extension: compile_hooks should return an object')
+      done()
+
     project.compile()
 
   it 'should bail when compile_hooks returned object keys are not functions'
 
-  # @todo: should these be throwing?
+  # this should not throw
   it 'should bail when category_hooks is defined but not a function', ->
-    (-> (new Roots(path.join(@path, 'case7'))).compile()).should.throw()
+    project = new Roots(path.join(@path, 'case7'))
+    (-> project.compile()).should.throw('The category_hooks property must be a function')
 
   it 'should bail when category_hooks is a function but doesnt return an object', (done) ->
     project = new Roots(path.join(@path, 'case8'))
-    project.on('error', -> done())
+
+    project.on 'error', (err) ->
+      err.toString().should.equal('Malformed Extension: category_hooks should return an object')
+      done()
+
     project.compile()
 
-  # TODO: this error needs slightly better feedback
   it 'should bail if write hook returns anything other than an array, object, or boolean', (done) ->
     project = new Roots(path.join(@path, 'case9'))
-    project.on('error', -> done())
+
+    project.on 'error', (err) ->
+      err.toString().should.equal('Malformed Write Hook Output: invalid return from write_hook')
+      done()
+
     project.compile()
 
-  # @todo: should these be throwing?
   it "should bail if an extension's constructor throws an error", ->
-    (-> (new Roots(path.join(@path, 'case10'))).compile()).should.throw()
+    project = new Roots(path.join(@path, 'case10'))
+    (-> project.compile()).should.throw('wow')
 
   it 'should bail when fs.detect is not a function'
   it 'should bail when category_hooks returned object keys are not functions'

@@ -143,6 +143,9 @@ class FSParser
 
     extfs = ext.fs()
 
+    if typeof extfs isnt 'object'
+      @roots.bail(125, 'fs function must return an object')
+
     W.resolve(extfs.detect(file)).then (detected) =>
       if not detected then return false
       cat = extfs.category || ext.category
