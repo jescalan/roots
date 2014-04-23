@@ -57,14 +57,11 @@
     <a href="#SYNOPSIS">SYNOPSIS</a>
     <a href="#DESCRIPTION">DESCRIPTION</a>
     <a href="#NEW">NEW</a>
-    <a href="#TEMPLATE">TEMPLATE</a>
+    <a href="#TPL">TPL</a>
     <a href="#COMPILE">COMPILE</a>
     <a href="#WATCH">WATCH</a>
-    <a href="#DEPLOY">DEPLOY</a>
     <a href="#CLEAN">CLEAN</a>
     <a href="#VERSION">VERSION</a>
-    <a href="#PKG">PKG</a>
-    <a href="#PLUGIN">PLUGIN</a>
     <a href="#DOCUMENTATION">DOCUMENTATION</a>
   </div>
 
@@ -81,15 +78,14 @@
 
 <h2 id="SYNOPSIS">SYNOPSIS</h2>
 
-<p><code>roots new &lt;name></code> --<var>template</var> <br />
-<code>roots template &lt;command></code>  <br />
-<code>roots compile</code>  --no-compress  <br />
-<code>roots watch</code>  <br />
-<code>roots deploy</code> <var>name</var> --<var>service</var><br />
+<p><code>roots new &lt;name></code> --template name  <br />
+<code>roots tpl &lt;subcommand></code>  <br />
+<code>roots compile</code> path  <br />
+<code>roots watch</code> path  <br />
 <code>roots clean</code>  <br />
-<code>roots version</code>  <br />
 <code>roots pkg</code> <var>command</var>  <br />
-<code>roots plugin</code> <var>command</var></p>
+<code>roots plugin</code> <var>command</var>  <br />
+<code>roots --version</code></p>
 
 <h2 id="DESCRIPTION">DESCRIPTION</h2>
 
@@ -99,93 +95,48 @@
 
 <h2 id="NEW">NEW</h2>
 
-<p>  <code>new</code>, <code>&lt;name></code>, --<var>template</var>  <br />
-  create a new roots project called <var>name</var>.</p>
+<p>  <code>new</code>, <code>&lt;name></code>, --template name  <br />
+  Creates a new roots project called <var>name</var> with the given template if provided. If no template is provided, <code>roots-base</code> will be used.</p>
 
-<p>  templates:</p>
+<h2 id="TPL">TPL</h2>
 
-<pre><code>- default (jade, stylus, coffeescript) - default    
-- ejs (ejs, stylus, coffeescript)    
-- min (default stack, no comments and uses jade layouts)    
-- basic (html, css, javascript, no layouts)    
-- blog (blog example optimized for dynamic content)    
-</code></pre>
+<p>  <code>tpl</code>, <code>&lt;command></code>  <br />
+  Manages roots project templates.</p>
 
-<h2 id="TEMPLATE">TEMPLATE</h2>
-
-<p>  <code>template</code>, <code>&lt;command></code>  <br />
-  manage roots project templates.</p>
-
-<p>  commands:</p>
-
-<pre><code>- add, &lt;name> &lt;git-url> (git clone will download the template)    
-- remove, &lt;name> (be careful with this)    
-- default, &lt;name> (sets a template to be the default for roots new)    
-</code></pre>
+<p>  subcommands:  <br />
+    - add, <var>name</var> <var>git-url</var> (git clone will download the template)  <br />
+    - remove, <var>name</var> (be careful with this)  <br />
+    - list, lists all installed templates  <br />
+    - default, <var>name</var> (sets a template to be the default for roots new)</p>
 
 <h2 id="COMPILE">COMPILE</h2>
 
-<p>  <code>compile</code>, --<var>no-compress</var>  <br />
-  compile, compress, and minify the project to <code>public</code>, adding the option <var>no-compress</var> will bypass the compression.</p>
+<p>  <code>compile</code>, path  <br />
+  Compiles your project once. if a <code>path</code> is provided, compiles a project at the given path.</p>
 
 <h2 id="WATCH">WATCH</h2>
 
-<p>  <code>watch</code>  <br />
-  watch your project and compile/reload whenever a file is saved. does not work for roots-express or roots-rails.</p>
-
-<h2 id="DEPLOY">DEPLOY</h2>
-
-<p>  <code>deploy</code>, <var>name</var>, --<var>service</var>  <br />
-  configure, compile, commit, and deploy your project. <var>name</var> optional for heroku.</p>
-
-<pre><code>services:    
-  - heroku - default    
-  - nodejitsu    
-  - gh-pages   
-</code></pre>
+<p>  <code>watch</code>, path --no-open  <br />
+  Watches your project, opens it in a local server, and compiles &amp; reloads whenever a file is changed. If a path is provided, watches a project at that path.</p>
 
 <h2 id="CLEAN">CLEAN</h2>
 
-<p>  <code>clean</code>
-  remove the compiled files.</p>
+<p>  <code>clean</code>  <br />
+  Removes the compiled files.</p>
 
 <h2 id="VERSION">VERSION</h2>
 
-<p>  <code>version</code>  <br />
-  print the version of the current roots install.</p>
-
-<h2 id="PKG">PKG</h2>
-
-<p>  <code>pkg</code>, <code>&lt;command></code>  <br />
-  exposes a package manager's interface. type <code>roots pkg</code> to display the package manager's options. any command given after <code>pkg</code> is delegated to the package manager.</p>
-
-<p>  package managers:</p>
-
-<pre><code>- bower (http://bower.io) - default    
-- cdnjs (https://github.com/jenius/cli-js)    
-</code></pre>
-
-<p>  you can change your package manager via the <code>~/.rootsrc</code> file.</p>
-
-<h2 id="PLUGIN">PLUGIN</h2>
-
-<p>  <code>plugin</code>, <code>&lt;command></code>  <br />
-  manages plugins (user-generated roots compilers).</p>
-
-<p>  commands:</p>
-
-<pre><code>- generate --js (optional, generates a javascript template rather than coffeescript)    
-- install &lt;username>/&lt;repo> (must provide a username/repo on github)
-</code></pre>
+<p>  <code>--version</code> or <code>-v</code>  <br />
+  Prints the version of the current roots install.</p>
 
 <h2 id="DOCUMENTATION">DOCUMENTATION</h2>
 
-<p>Full docs can be found at http://roots.cx</p>
+<p>Full docs can be found at http://roots.rtfd.org</p>
 
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'></li>
-    <li class='tc'>August 2013</li>
+    <li class='tc'>April 2014</li>
     <li class='tr'>roots(1)</li>
   </ol>
 

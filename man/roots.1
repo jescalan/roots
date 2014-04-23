@@ -1,37 +1,34 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "ROOTS" "1" "August 2013" "" ""
+.TH "ROOTS" "1" "April 2014" "" ""
 .
 .SH "NAME"
 \fBroots\fR \- a toolkit for quickly building beautiful websites
 .
 .SH "SYNOPSIS"
-\fBroots new <name>\fR \-\-\fItemplate\fR
+\fBroots new <name>\fR \-\-template name
 .
 .br
-\fBroots template <command>\fR
+\fBroots tpl <subcommand>\fR
 .
 .br
-\fBroots compile\fR \-\-no\-compress
+\fBroots compile\fR path
 .
 .br
-\fBroots watch\fR
-.
-.br
-\fBroots deploy\fR \fIname\fR \-\-\fIservice\fR
+\fBroots watch\fR path
 .
 .br
 \fBroots clean\fR
-.
-.br
-\fBroots version\fR
 .
 .br
 \fBroots pkg\fR \fIcommand\fR
 .
 .br
 \fBroots plugin\fR \fIcommand\fR
+.
+.br
+\fBroots \-\-version\fR
 .
 .SH "DESCRIPTION"
 Roots exposes a variety of commands for creating, managing, compiling, and deploying websites\. Commands are listed and documented below\.
@@ -40,131 +37,55 @@ Roots exposes a variety of commands for creating, managing, compiling, and deplo
 github repo \fIhttps://github\.com/jenius/roots\fR
 .
 .SH "NEW"
-\fBnew\fR, \fB<name>\fR, \-\-\fItemplate\fR
+\fBnew\fR, \fB<name>\fR, \-\-template name
 .
 .br
-create a new roots project called \fIname\fR\.
+Creates a new roots project called \fIname\fR with the given template if provided\. If no template is provided, \fBroots\-base\fR will be used\.
 .
-.P
-templates:
-.
-.IP "" 4
-.
-.nf
-
-\- default (jade, stylus, coffeescript) \- default
-\- ejs (ejs, stylus, coffeescript)
-\- min (default stack, no comments and uses jade layouts)
-\- basic (html, css, javascript, no layouts)
-\- blog (blog example optimized for dynamic content)
-.
-.fi
-.
-.IP "" 0
-.
-.SH "TEMPLATE"
-\fBtemplate\fR, \fB<command>\fR
+.SH "TPL"
+\fBtpl\fR, \fB<command>\fR
 .
 .br
-manage roots project templates\.
+Manages roots project templates\.
 .
 .P
-commands:
+subcommands:
 .
-.IP "" 4
+.br
+\- add, \fIname\fR \fIgit\-url\fR (git clone will download the template)
 .
-.nf
-
-\- add, <name> <git\-url> (git clone will download the template)
-\- remove, <name> (be careful with this)
-\- default, <name> (sets a template to be the default for roots new)
+.br
+\- remove, \fIname\fR (be careful with this)
 .
-.fi
+.br
+\- list, lists all installed templates
 .
-.IP "" 0
+.br
+\- default, \fIname\fR (sets a template to be the default for roots new)
 .
 .SH "COMPILE"
-\fBcompile\fR, \-\-\fIno\-compress\fR
+\fBcompile\fR, path
 .
 .br
-compile, compress, and minify the project to \fBpublic\fR, adding the option \fIno\-compress\fR will bypass the compression\.
+Compiles your project once\. if a \fBpath\fR is provided, compiles a project at the given path\.
 .
 .SH "WATCH"
-\fBwatch\fR
+\fBwatch\fR, path \-\-no\-open
 .
 .br
-watch your project and compile/reload whenever a file is saved\. does not work for roots\-express or roots\-rails\.
-.
-.SH "DEPLOY"
-\fBdeploy\fR, \fIname\fR, \-\-\fIservice\fR
-.
-.br
-configure, compile, commit, and deploy your project\. \fIname\fR optional for heroku\.
-.
-.IP "" 4
-.
-.nf
-
-services:
-  \- heroku \- default
-  \- nodejitsu
-  \- gh\-pages
-.
-.fi
-.
-.IP "" 0
+Watches your project, opens it in a local server, and compiles & reloads whenever a file is changed\. If a path is provided, watches a project at that path\.
 .
 .SH "CLEAN"
-\fBclean\fR remove the compiled files\.
+\fBclean\fR
+.
+.br
+Removes the compiled files\.
 .
 .SH "VERSION"
-\fBversion\fR
+\fB\-\-version\fR or \fB\-v\fR
 .
 .br
-print the version of the current roots install\.
-.
-.SH "PKG"
-\fBpkg\fR, \fB<command>\fR
-.
-.br
-exposes a package manager\'s interface\. type \fBroots pkg\fR to display the package manager\'s options\. any command given after \fBpkg\fR is delegated to the package manager\.
-.
-.P
-package managers:
-.
-.IP "" 4
-.
-.nf
-
-\- bower (http://bower\.io) \- default
-\- cdnjs (https://github\.com/jenius/cli\-js)
-.
-.fi
-.
-.IP "" 0
-.
-.P
-you can change your package manager via the \fB~/\.rootsrc\fR file\.
-.
-.SH "PLUGIN"
-\fBplugin\fR, \fB<command>\fR
-.
-.br
-manages plugins (user\-generated roots compilers)\.
-.
-.P
-commands:
-.
-.IP "" 4
-.
-.nf
-
-\- generate \-\-js (optional, generates a javascript template rather than coffeescript)
-\- install <username>/<repo> (must provide a username/repo on github)
-.
-.fi
-.
-.IP "" 0
+Prints the version of the current roots install\.
 .
 .SH "DOCUMENTATION"
-Full docs can be found at http://roots\.cx
+Full docs can be found at http://roots\.rtfd\.org

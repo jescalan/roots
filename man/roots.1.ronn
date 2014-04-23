@@ -3,15 +3,14 @@ roots(1) -- a toolkit for quickly building beautiful websites
 
 ## SYNOPSIS
 
-`roots new <name>` --<template>   
-`roots tpl <command>`    
-`roots compile`  --no-compress    
-`roots watch`    
-`roots deploy` <name> --<service>  
+`roots new <name>` --template name    
+`roots tpl <subcommand>`    
+`roots compile` path    
+`roots watch` path    
 `roots clean`    
-`roots version`    
 `roots pkg` <command>    
-`roots plugin` <command>   
+`roots plugin` <command>    
+`roots --version`    
 
 ## DESCRIPTION
 
@@ -21,77 +20,40 @@ Roots exposes a variety of commands for creating, managing, compiling, and deplo
 
 ## NEW
 
-  `new`, `<name>`, --<template>    
-  create a new roots project called <name>.
-
-  templates:    
-    - default (jade, stylus, coffeescript) - default    
-    - ejs (ejs, stylus, coffeescript)    
-    - min (default stack, no comments and uses jade layouts)    
-    - basic (html, css, javascript, no layouts)    
-    - blog (blog example optimized for dynamic content)    
+  `new`, `<name>`, --template name    
+  Creates a new roots project called <name> with the given template if provided. If no template is provided, `roots-base` will be used.
 
 ## TPL
 
   `tpl`, `<command>`    
-  manage roots project templates.
+  Manages roots project templates.
 
-  commands:    
+  subcommands:    
     - add, <name> <git-url> (git clone will download the template)    
     - remove, <name> (be careful with this)    
+    - list, lists all installed templates    
     - default, <name> (sets a template to be the default for roots new)    
 
 ## COMPILE
 
-  `compile`, --<no-compress>    
-  compile, compress, and minify the project to `public`, adding the option <no-compress> will bypass the compression.
+  `compile`, path    
+  Compiles your project once. if a `path` is provided, compiles a project at the given path.
 
 ## WATCH
 
-  `watch`    
-  watch your project and compile/reload whenever a file is saved. does not work for roots-express or roots-rails.
-
-## DEPLOY
-
-  `deploy`, <name>, --<service>    
-  configure, compile, commit, and deploy your project. <name> optional for heroku.
-
-    services:    
-      - heroku - default    
-      - nodejitsu    
-      - gh-pages   
+  `watch`, path --no-open    
+  Watches your project, opens it in a local server, and compiles & reloads whenever a file is changed. If a path is provided, watches a project at that path.
 
 ## CLEAN
 
-  `clean`
-  remove the compiled files.
+  `clean`    
+  Removes the compiled files.
 
 ## VERSION
 
-  `version`    
-  print the version of the current roots install.
-
-## PKG
-
-  `pkg`, `<command>`    
-  exposes a package manager's interface. type `roots pkg` to display the package manager's options. any command given after `pkg` is delegated to the package manager.
-
-  package managers:  
-
-    - bower (http://bower.io) - default    
-    - cdnjs (https://github.com/jenius/cli-js)    
-
-  you can change your package manager via the `~/.rootsrc` file.
-
-## PLUGIN
-
-  `plugin`, `<command>`    
-  manages plugins (user-generated roots compilers).
-
-  commands:    
-    - generate --js (optional, generates a javascript template rather than coffeescript)    
-    - install <username>/<repo> (must provide a username/repo on github)
+  `--version` or `-v`    
+  Prints the version of the current roots install.
 
 ## DOCUMENTATION
 
-Full docs can be found at http://roots.cx
+Full docs can be found at http://roots.rtfd.org
