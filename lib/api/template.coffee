@@ -1,6 +1,7 @@
 fs            = require 'fs'
 _             = require 'lodash'
 W             = require 'when'
+nodefn        = require 'when/node'
 sprout        = require 'sprout'
 global_config = require '../global_config'
 
@@ -54,6 +55,8 @@ exports.default = (args = {}) ->
  *
  * @param  {Boolean} override - do not confirm via stdin if true
  * @return {Promise} a promise for reset templates
+ *
+ * istanbul ignore next
 ###
 
 exports.reset = (override) ->
@@ -79,15 +82,10 @@ exports.reset = (override) ->
  * @private
  * @param  {Object} deferred - deferred object
  * @return {Promise} promise for finished task
+ *
+ * istanbul ignore next
 ###
 
 remove_roots_config = (deferred) ->
-  tasks = []
-  for tpl in _.without(sprout.list(), 'roots-base')
-    tasks.push(sprout.remove(tpl))
-
-  W.all(tasks)
-    .then(-> fs.unlinkSync(global_config().path))
-    .yield('config and templates reset')
-    .done(deferred.resolve, deferred.reject)
+  nodefn.call(fs.unlink, global_config().path)
 
