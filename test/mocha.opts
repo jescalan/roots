@@ -2,4 +2,4 @@
 --compilers coffee:coffee-script/register
 --require test/support/all
 --require test/support/helpers
---timeout 80000
+--timeout 100000
