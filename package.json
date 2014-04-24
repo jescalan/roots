@@ -41,7 +41,8 @@
     "anti-matter": "0.0.1",
     "rimraf": "2.x",
     "argparse": "0.1.x",
-    "npm": "^1.4.6"
+    "npm": "^1.4.6",
+    "superstatic": "git://github.com/carrot/superstatic.git#middleware-args"
   },
   "devDependencies": {
     "mocha": "*",

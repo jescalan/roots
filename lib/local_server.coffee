@@ -1,10 +1,11 @@
-path      = require 'path'
-nodefn    = require 'when/node'
-http      = require 'http'
-connect   = require 'connect'
-infestor  = require 'infestor'
-util      = require 'util'
-WebSocket = require 'faye-websocket'
+path        = require 'path'
+W           = require 'when'
+http        = require 'http'
+connect     = require 'connect'
+infestor    = require 'infestor'
+util        = require 'util'
+WebSocket   = require 'faye-websocket'
+superstatic = require 'superstatic'
 
 ###*
  * @class Server
@@ -37,22 +38,24 @@ class Server
   ###
 
   start: (port) ->
-    app = connect()
+    def = W.defer()
+    @server = superstatic.createServer
+      port: port
+      cwd: @roots.config.output_path()
+      config: @roots.config.server
 
-    if @roots.config.env == 'development' then inject_dev_js.call(@, app)
-    app.use(connect.static(@roots.config.output_path()))
+    # if @roots.config.env == 'development' then inject_dev_js.call(@, server)
+    # if @roots.config.env == 'development' then initialize_websockets.call(@)
 
-    @server = http.createServer(app)
-    if @roots.config.env == 'development' then initialize_websockets.call(@)
-
-    nodefn.call(@server.listen.bind(@server), port).yield(@server)
+    @server.start => def.resolve()
+    def.promise.yield(@server)
 
   ###*
    * Close the server and remove it.
   ###
 
   close: ->
-    @server.close()
+    @server.stop()
     delete @server
 
   ###*
