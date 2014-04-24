@@ -44,8 +44,8 @@ class Server
       cwd: @roots.config.output_path()
       config: @roots.config.server
 
-    # if @roots.config.env == 'development' then inject_dev_js.call(@, server)
     # if @roots.config.env == 'development' then initialize_websockets.call(@)
+    if @roots.config.env == 'development' then inject_dev_js.call(@, @server)
 
     @server.start => def.resolve()
     def.promise.yield(@server)
@@ -87,13 +87,13 @@ class Server
    * @param  {Function} app - connect app instance
   ###
 
-  inject_dev_js = (app) ->
-    app.use(infestor content:
+  inject_dev_js = (server) ->
+    server.use(infestor content:
       "<!-- roots development configuration -->
       <script>var __livereload = #{@roots.config.live_reload};</script>
       <script src='__roots__/main.js'></script>"
     )
-    app.use('/__roots__', connect.static(path.resolve(__dirname, 'browser')))
+    server.use('/__roots__', connect.static(path.resolve(__dirname, 'browser')))
 
   ###*
    * Initializes websockets on the server instance.
