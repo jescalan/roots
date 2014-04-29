@@ -39,15 +39,21 @@ class Server
 
   start: (port) ->
     def = W.defer()
+
     @server = superstatic.createServer
       port: port
       cwd: @roots.config.output_path()
       config: @roots.config.server
 
-    # if @roots.config.env == 'development' then initialize_websockets.call(@)
     if @roots.config.env == 'development' then inject_dev_js.call(@, @server)
 
-    @server.start => def.resolve()
+    @server._createServer()
+    @http_server = http.createServer(@server._client)
+
+    if @roots.config.env == 'development' then initialize_websockets.call(@)
+
+    start_server.call(@, -> def.resolve())
+
     def.promise.yield(@server)
 
   ###*
@@ -100,9 +106,13 @@ class Server
   ###
 
   initialize_websockets = ->
-    @server.on 'upgrade', (req, socket, body) =>
+    @http_server.on 'upgrade', (req, socket, body) =>
       if WebSocket.isWebSocket(req)
         ws = new WebSocket(req, socket, body)
         ws.on('open', => @sockets.push(ws))
+
+  start_server = (cb) ->
+    @server._openServer = @http_server.listen(@server._port, cb.bind(@))
+    @server._openServer._connects = @server._openServer._connects || {}
 
 module.exports = Server
