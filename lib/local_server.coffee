@@ -1,10 +1,11 @@
-path      = require 'path'
-nodefn    = require 'when/node'
-http      = require 'http'
-connect   = require 'connect'
-infestor  = require 'infestor'
-util      = require 'util'
-WebSocket = require 'faye-websocket'
+path        = require 'path'
+W           = require 'when'
+http        = require 'http'
+connect     = require 'connect'
+infestor    = require 'infestor'
+util        = require 'util'
+WebSocket   = require 'faye-websocket'
+superstatic = require 'superstatic'
 
 ###*
  * @class Server
@@ -37,22 +38,30 @@ class Server
   ###
 
   start: (port) ->
-    app = connect()
+    def = W.defer()
 
-    if @roots.config.env == 'development' then inject_dev_js.call(@, app)
-    app.use(connect.static(@roots.config.output_path()))
+    @server = superstatic.createServer
+      port: port
+      cwd: @roots.config.output_path()
+      config: @roots.config.server
 
-    @server = http.createServer(app)
+    if @roots.config.env == 'development' then inject_dev_js.call(@, @server)
+
+    @server._createServer()
+    @http_server = http.createServer(@server._client)
+
     if @roots.config.env == 'development' then initialize_websockets.call(@)
 
-    nodefn.call(@server.listen.bind(@server), port).yield(@server)
+    start_server.call(@, -> def.resolve())
+
+    def.promise.yield(@server)
 
   ###*
    * Close the server and remove it.
   ###
 
   close: ->
-    @server.close()
+    @server.stop()
     delete @server
 
   ###*
@@ -84,22 +93,26 @@ class Server
    * @param  {Function} app - connect app instance
   ###
 
-  inject_dev_js = (app) ->
-    app.use(infestor content:
+  inject_dev_js = (server) ->
+    server.use(infestor content:
       "<!-- roots development configuration -->
       <script>var __livereload = #{@roots.config.live_reload};</script>
       <script src='__roots__/main.js'></script>"
     )
-    app.use('/__roots__', connect.static(path.resolve(__dirname, 'browser')))
+    server.use('/__roots__', connect.static(path.resolve(__dirname, 'browser')))
 
   ###*
    * Initializes websockets on the server instance.
   ###
 
   initialize_websockets = ->
-    @server.on 'upgrade', (req, socket, body) =>
+    @http_server.on 'upgrade', (req, socket, body) =>
       if WebSocket.isWebSocket(req)
         ws = new WebSocket(req, socket, body)
         ws.on('open', => @sockets.push(ws))
+
+  start_server = (cb) ->
+    @server._openServer = @http_server.listen(@server._port, cb.bind(@))
+    @server._openServer._connects = @server._openServer._connects || {}
 
 module.exports = Server
