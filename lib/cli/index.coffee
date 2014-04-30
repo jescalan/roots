@@ -151,6 +151,10 @@ class CLI extends EventEmitter
       defaultValue: process.env or 'development'
       help: "Your project's environment"
 
+    s.addArgument ['--verbose', '-v'],
+      action: 'storeTrue'
+      help: "Offer more verbose output and compile stats"
+
     s.setDefaults(fn: 'compile')
 
   $tpl = (sub) ->

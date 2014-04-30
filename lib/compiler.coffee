@@ -35,9 +35,10 @@ class Compiler
    * @return {Promise} promise for the fully compiled file
   ###
 
-  compile: (category, file) ->
+  compile: (category, notify, file) ->
     cf = new CompileFile(@roots, @extensions, @options, category, file)
-    cf.run()
+    start = new Date
+    cf.run().then(-> notify("#{file.relative}: #{new Date - start}ms"))
 
 module.exports = Compiler
 
@@ -84,7 +85,7 @@ class CompileFile
   run: ->
     hooks = (cat) => @extensions.hooks(cat, @category)
 
-    read_file.call(@, @file)
+    nodefn.call(fs.readFile, @file.path)
       .with(@)
       .then((o) => @content = o)
       .then(=> sequence(hooks('compile_hooks.before_file'), @))
@@ -93,22 +94,6 @@ class CompileFile
       .tap(=> @roots.emit('compile', @file))
       .then(=> sequence(hooks('compile_hooks.after_file'), @))
       .then(write_file)
-
-  ###*
-   * Async utf8 file read from a vinyl file wrapped in a promise.
-   *
-   * @private
-   *
-   * @param  {f} f - vinyl-wrapped file
-   * @return {Promise} a promise for the file's contents
-  ###
-
-  read_file = (f) ->
-    options = null
-
-    # if the file is compiled, read as utf8, if not read as buffer
-    opts = if @is_compiled then { encoding: 'utf8' } else null
-    nodefn.call(fs.readFile, f.path, opts)
 
   ###*
    * Writes a file from the content property on the instance. Can be modified
@@ -169,7 +154,7 @@ class CompileFile
       else
         @roots.bail(126, 'invalid return from write_hook', res)
 
-    return W.resolve(write_tasks)
+    return write_tasks
 
   ###*
    * Single task to write a file. Accepts an optional object with the following
@@ -332,5 +317,5 @@ class CompilePass
   ###
 
   compile_or_pass = ->
-    if not @adapter.name then return @content
-    @adapter.render(@content, @opts)
+    if not @adapter.name then return W.resolve(@content)
+    @adapter.render(String(@content), @opts)

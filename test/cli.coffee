@@ -38,7 +38,7 @@ describe 'cli', ->
     mockery.registerMock('../../lib', stub)
 
     cb = (err) ->
-      err.toString().should.equal("TypeError: Object  has no method 'then'")
+      err.toString().should.equal("TypeError: Object  has no method 'progress'")
       cli.removeListener('err', cb)
       stub.restore()
       mockery.deregisterAll()

@@ -12,7 +12,9 @@ module.exports = (cli, args)->
   project = new Roots(args.path, { env: args.environment })
 
   cli.emit('inline', 'compiling... '.grey)
+  if args.verbose then cli.emit('data', '')
 
   project.compile()
+    .progress (msg) -> if args.verbose then cli.emit('info', msg)
     .then -> cli.emit('data', 'done!'.green)
     .catch -> cli.emit('err', Error(err).stack); throw err

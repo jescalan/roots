@@ -1,4 +1,5 @@
 {EventEmitter} = require('events')
+W              = require 'when'
 fs             = require 'fs'
 path           = require 'path'
 Config         = require './config'
@@ -58,7 +59,9 @@ class Roots extends EventEmitter
 
   compile: ->
     Compile = require('./api/compile')
-    (new Compile(@)).exec()
+    deferred = W.defer()
+    (new Compile(@)).exec(deferred)
+    return deferred.promise
 
   ###*
    * Watches a folder for changes and compiles whenever changes happen.

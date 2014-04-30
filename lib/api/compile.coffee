@@ -44,7 +44,7 @@ class Compile
    * - emit finished events
   ###
 
-  exec: ->
+  exec: (deferred) ->
     @roots.emit('start')
 
     before_hook.call(@)
@@ -52,10 +52,11 @@ class Compile
       .then(@fs_parser.parse.bind(@fs_parser))
       .with(@)
       .tap(create_folders)
-      .then(process_files)
+      .then(process_files.bind(@, deferred.notify.bind(deferred)))
       .then(after_hook)
       .then(purge_empty_folders)
       .then(@roots.emit.bind(@roots, 'done'), @roots.emit.bind(@roots, 'error'))
+      .done(deferred.resolve, deferred.reject)
 
   ###*
    * Calls any user-provided before hooks with the roots context.
@@ -151,12 +152,12 @@ class Compile
    * @param  {Object} ast - roots ast
   ###
 
-  process_files = (ast) ->
+  process_files = (notify, ast) ->
     ordered = []
     parallel = []
 
     compile_task = (cat) =>
-      W.map(ast[cat] || [], @compiler.compile.bind(@compiler, cat))
+      W.map(ast[cat] || [], @compiler.compile.bind(@compiler, cat, notify))
       .then(=> sequence(@extensions.hooks('category_hooks.after', cat), @, cat))
 
     for ext in @extensions
@@ -166,7 +167,6 @@ class Compile
       if typeof extfs != 'object'
         @roots.bail(125, 'fs must return an object', ext)
 
-      # if extfs has keys, but no category, bail
       if Object.keys(extfs).length > 0 and not extfs.category and not category
         @roots.bail(125, 'fs hooks defined with no category', ext)
 
@@ -174,7 +174,6 @@ class Compile
         ordered.push(((c) => compile_task.bind(@, c))(category))
       else
         parallel.push(compile_task.call(@, category))
-
 
     keys.all
       ordered: sequence(ordered)
