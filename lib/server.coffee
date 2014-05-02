@@ -14,7 +14,7 @@ exports.start = (serve_dir) ->
       <script>var __livereload  = #{roots.project.conf("livereloadEnabled")};
               var __rootsport   = #{port};
       </script>
-      <script src='__roots__/main.js'></script>
+      <script src='/__roots__/main.js'></script>
     """)
     app.use('/__roots__', connect.static(path.resolve(__dirname, 'browser_assets')))
 
