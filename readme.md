@@ -12,7 +12,7 @@
   <a href='https://coveralls.io/r/jenius/roots?branch=v3'>
     <img src='http://img.shields.io/coveralls/jenius/roots/v3.svg?style=flat' alt='Coverage Status' />
   </a>
-  <a title='Dependency Status' href="https://david-dm.org/jenius/roots">
+  <a title='Dependency Status' href="https://gemnasium.com/jenius/roots">
     <img src='http://img.shields.io/gemnasium/jenius/roots.svg?style=flat' />
   </a>
 </p>
