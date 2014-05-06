@@ -3,7 +3,6 @@ nodefn    = require 'when/node'
 http      = require 'http'
 connect   = require 'connect'
 infestor  = require 'infestor'
-util      = require 'util'
 WebSocket = require 'faye-websocket'
 
 ###*
