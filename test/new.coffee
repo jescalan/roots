@@ -1,12 +1,11 @@
 rimraf        = require 'rimraf'
+nodefn        = require 'when/node'
 test_tpl_path = 'https://github.com/jenius/sprout-test-template.git'
 new_path      = path.join(base_path, 'new/testing')
 
 describe 'new', ->
 
   before (done) -> Roots.template.remove('roots-base').done((-> done()), done)
-
-  afterEach -> rimraf.sync(new_path)
 
   it 'should reject if not given a path', ->
     Roots.new().should.be.rejected
@@ -26,7 +25,7 @@ describe 'new', ->
       spy.should.have.been.calledWith('project created')
       spy.should.have.been.calledWith('dependencies installing')
       spy.should.have.been.calledWith('dependencies finished installing')
-      done()
+      rimraf(new_path, done)
 
   it 'should create a project with another template if provided', (done) ->
     Roots.template.add(name: 'foobar', uri: test_tpl_path)
@@ -36,5 +35,5 @@ describe 'new', ->
         util.file.exists('new/testing/index.html').should.be.true
       .then ->
         Roots.template.remove(name: 'foobar')
-      .catch(done)
-      .done(done.bind(null, null))
+        nodefn.call(rimraf, new_path)
+      .done(done.bind(null, null), done)
