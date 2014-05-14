@@ -53,6 +53,7 @@ class Compile
       .with(@)
       .tap(create_folders)
       .then(process_files)
+      .then(after_ext_hook)
       .then(after_hook)
       .then(purge_empty_folders)
       .then(@roots.emit.bind(@roots, 'done'), @roots.emit.bind(@roots, 'error'))
@@ -74,6 +75,15 @@ class Compile
 
   after_hook = (ast) ->
     hook_method.call(@, @roots.config.after)
+
+  ###*
+   * Calls any extension-provided after hooks with the roots context.
+   *
+   * @private
+  ###
+
+  after_ext_hook = ->
+    sequence(@extensions.hooks('project_hooks.after'), @)
 
   ###*
    * Checks to ensure the requested hook(s) is/are present, then calls them,

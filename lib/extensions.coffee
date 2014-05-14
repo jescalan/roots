@@ -62,6 +62,9 @@ class Extensions
     if not_function(ext.compile_hooks)
       @roots.bail(125, 'The compile_hooks property must be a function', ext)
 
+    if not_function(ext.project_hooks)
+      @roots.bail(125, 'The project_hooks property must be a function', ext)
+
     if not_function(ext.category_hooks)
       @roots.bail(125, 'The category_hooks property must be a function', ext)
 
@@ -101,10 +104,11 @@ class Extensions
       if typeof called_namespace isnt 'object'
         @[@length-2].roots.bail(125, "#{namespc} should return an object", ext)
 
-      if called_namespace.category
-        if called_namespace.category isnt category then return
-      else
-        if ext.category and ext.category isnt category then return
+      if category?
+        if called_namespace.category
+          if called_namespace.category isnt category then return
+        else
+          if ext.category and ext.category isnt category then return
 
       called_namespace[key]
 

@@ -28,6 +28,7 @@ describe 'extension hooks', ->
       .on('after_pass', => @after_pass = true)
       .on('write', => @write = true)
       .on('after_category', => @after_category = true)
+      .on('after_project', => @after_project = true)
       .on('done', -> done())
 
     @project.compile()
@@ -49,6 +50,9 @@ describe 'extension hooks', ->
 
   it 'after category hook should work', ->
     @after_category.should.be.ok
+
+  it 'after project hook should work', ->
+    @after_project.should.be.ok
 
 describe 'write hook', ->
 
@@ -185,6 +189,20 @@ describe 'extension failures', ->
 
     project.on 'error', (err) ->
       err.toString().should.equal('Malformed Extension: category_hooks should return an object')
+      done()
+
+    project.compile()
+
+  # this should not throw
+  it 'should bail when project_hooks is defined but not a function', ->
+    project = new Roots(path.join(@path, 'case11'))
+    (-> project.compile()).should.throw('The project_hooks property must be a function')
+
+  it 'should bail when project_hooks is a function but doesnt return an object', (done) ->
+    project = new Roots(path.join(@path, 'case12'))
+
+    project.on 'error', (err) ->
+      err.toString().should.equal('Malformed Extension: project_hooks should return an object')
       done()
 
     project.compile()
