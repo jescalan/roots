@@ -58,6 +58,7 @@ class Config
     @watcher_ignores = @watcher_ignores.concat [
       'package.json',
       'app.coffee',
+      'node_modules/**/*',
       "#{@output}/**/*"
     ]
 
