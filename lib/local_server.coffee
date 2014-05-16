@@ -34,7 +34,7 @@ class Server
         "<!-- roots development configuration -->
         <script>var __livereload = #{@roots.config.live_reload};</script>
         <script src='/__roots__/main.js'></script>"
-      opts.cache_control = { '**': 'private, max-age=0, no-cache' }
+      opts.cache_control = { '**': 'max-age=0, no-cache, no-store' }
 
     app = charge(@roots.config.output_path(), opts)
 
