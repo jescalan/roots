@@ -15,4 +15,4 @@ module.exports = (cli, args)->
 
   project.compile()
     .then -> cli.emit('data', 'done!'.green)
-    .catch -> cli.emit('err', Error(err).stack); throw err
+    .catch (err) -> cli.emit('err_exit', Error(err).stack); throw err
