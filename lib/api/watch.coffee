@@ -22,12 +22,10 @@ class Watcher
       ignoreInitial: true
       ignored: ignore.bind(@)
 
-    @roots.once 'done', =>
+    @roots.compile().finally ->
       watcher
         .on('error', (err) => @roots.emit('error', err))
         .on('change', @roots.compile.bind(@roots))
-
-    @roots.compile()
 
     return _.extend(@roots, { watcher: watcher })
 
