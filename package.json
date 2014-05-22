@@ -31,16 +31,15 @@
     "update-notifier": "0.1.x",
     "chokidar": "0.8.x",
     "open": "0.0.5",
-    "connect": "2.x",
     "sprout": "0.1.x",
     "configstore": "0.3.x",
-    "infestor": "0.2.x",
-    "faye-websocket": "0.7.x",
     "graceful-fs": "2.x",
     "vinyl": "0.2.x",
     "rimraf": "2.x",
     "argparse": "0.1.x",
-    "npm": "^1.4.6"
+    "npm": "^1.4.6",
+    "charge": "0.0.3",
+    "serve-static": "^1.1.0"
   },
   "devDependencies": {
     "mocha": "*",
