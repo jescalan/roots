@@ -22,7 +22,7 @@
     "coffee-script": "1.7.x",
     "colors": "0.6.x",
     "readdirp": "1.x",
-    "minimatch": "0.2.x",
+    "minimatch": "0.3.x",
     "lodash": "2.x",
     "js-yaml": "3.x",
     "when": "3.x",
