@@ -59,10 +59,12 @@
     "selenium-webdriver": "^2.41.0",
     "should": "*",
     "sinon": "*",
-    "sinon-chai": "*"
+    "sinon-chai": "*",
+    "dill": "^0.3.0"
   },
   "scripts": {
     "test": "npm run lint && mocha",
+    "integration": "dill test/features --require test/steps/ -f pretty --driver=phantomjs",
     "lint": "find lib/ -name '*.coffee' | xargs coffeelint",
     "coverage": "make build; istanbul cover _mocha --report html -- -R spec && open coverage/index.html && make unbuild",
     "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild"
