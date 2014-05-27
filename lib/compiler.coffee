@@ -280,11 +280,11 @@ class CompilePass
   ###
 
   run: (@adapter, @index, @content) ->
-    @opts = configure_options.call(@)
     hooks = (cat) => @file.extensions.hooks(cat, @file.category)
 
     sequence(hooks('compile_hooks.before_pass'), @)
       .with(@)
+      .tap(=> @opts = configure_options.call(@))
       .then(compile_or_pass)
       .then((o) => @content = o)
       .then(=> sequence(hooks('compile_hooks.after_pass'), @))
