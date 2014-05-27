@@ -55,7 +55,9 @@
     "roots-util": "0.0.4",
     "chai-fs": "0.0.3",
     "mockery": "1.4.x",
-    "coffeelint": "1.3.x"
+    "coffeelint": "1.3.x",
+    "chai-webdriver": "^0.9.0",
+    "selenium-webdriver": "^2.41.0"
   },
   "scripts": {
     "test": "npm run lint && mocha",

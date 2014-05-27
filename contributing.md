@@ -19,6 +19,8 @@ Roots is constantly evolving, and to ensure that things are secure and working f
 
 Please also ensure that any new lines you add are _fully covered_ by tests. Of course, this does not mean there will be no bugs, but it certainly makes it less likely. To test the code coverage, you can run `npm run coverage`.
 
+Since roots integrates directly with the browser for reloading and errors, we use selenium to test these pieces of functionality. While quite powerful, unfortunately installing and working with selenium drivers is generally a pain. By default, we use the [phantomjs](http://phantomjs.org/) driver, which will work as long as you have installed phantomjs. If you are working on the browser tests and want more interactive feedback, you can use the chrome driver as well. If you are doing this, make sure you use version `2.9` of the chrome driver, as the most recent version, `2.10`, has a bug with the node library and doesn't work correctly at the time of this being written. If you have done this and are still having issues with the chrome driver, try restarting.
+
 ### Code Style
 
 To keep a consistant coding style in the project, we're going with [Felix's Node.js Style Guide](http://nodeguide.com/style.html) for JS and [Polar Mobile's guide](https://github.com/polarmobile/coffeescript-style-guide) for CoffeeScript, but it should be noted that much of this project uses under_scores rather than camelCase for naming. Both of these are pretty standard guides. For documenting in the code, we're using [JSDoc](http://usejsdoc.org/).

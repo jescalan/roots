@@ -56,7 +56,9 @@ class Compile
       .then(after_ext_hook)
       .then(after_hook)
       .then(purge_empty_folders)
-      .then(@roots.emit.bind(@roots, 'done'), @roots.emit.bind(@roots, 'error'))
+      .then @roots.emit.bind(@roots, 'done'), (err) ->
+        @roots.emit('error', err)
+        W.reject(err)
 
   ###*
    * Calls any user-provided before hooks with the roots context.

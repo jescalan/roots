@@ -156,7 +156,7 @@ describe 'cli', ->
   describe 'watch', ->
 
     before ->
-      @stub = sinon.stub(Roots.prototype, 'watch').returns(new EventEmitter)
+      @stub = sinon.stub(Roots.prototype, 'watch').returns(W.resolve())
       mockery.registerMock('../../lib', Roots)
 
     after ->
@@ -168,20 +168,19 @@ describe 'cli', ->
 
       cli.on('inline', spy)
       cli.on('data', spy)
+      cli.on('err', spy)
 
-      cwd = process.cwd()
-      process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
-      {server, watcher} = cli.run('watch --no-open')
-      spy.should.have.been.calledOnce
-      watcher.emit('done')
-      spy.should.have.been.calledTwice
-      watcher.emit('start')
-      spy.should.have.been.calledThrice
-      # TODO: browser response needs testing here as well
-      process.chdir(cwd)
-      cli.removeListener('inline', spy)
-      cli.removeListener('data', spy)
-      done()
+      cli.run("watch #{path.join(__dirname, 'fixtures/compile/basic')} --no-open")
+        .then (obj) ->
+          obj.project.emit('start')
+          spy.should.have.been.calledOnce
+          obj.project.emit('done')
+          spy.should.have.been.calledTwice
+          obj.project.emit('error')
+          spy.should.have.been.calledThrice
+          cli.removeListener('inline', spy)
+          cli.removeListener('data', spy)
+          obj.server.close(done)
 
     it 'should error when trying to compile invalid code'
 

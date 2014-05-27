@@ -145,37 +145,22 @@ describe 'extension failures', ->
     project = new Roots(path.join(@path, 'case2'))
     (-> project.compile()).should.throw('The fs property must be a function')
 
-  it 'should bail when fs is a function but doesnt return an object', (done) ->
+  it 'should bail when fs is a function but doesnt return an object', ->
     project = new Roots(path.join(@path, 'case3'))
+    project.compile().should.be.rejectedWith('fs function must return an object')
 
-    project.on 'error', (err) ->
-      err.toString().should.equal('Malformed Extension: fs function must return an object')
-      done()
-
-    project.compile()
-
-  it 'should bail when fs is used with no category', (done) ->
+  it 'should bail when fs is used with no category', ->
     project = new Roots(path.join(@path, 'case4'))
-
-    project.on 'error', (err) ->
-      err.toString().should.equal('Malformed Extension: fs hooks defined with no category')
-      done()
-
-    project.compile()
+    project.compile().should.be.rejectedWith('fs hooks defined with no category')
 
   # this should not throw
   it 'should bail when compile_hooks is defined but not a function', ->
     project = new Roots(path.join(@path, 'case5'))
     (-> project.compile()).should.throw('The compile_hooks property must be a function')
 
-  it 'should bail when compile_hooks is a function but doesnt return an object', (done) ->
+  it 'should bail when compile_hooks is a function but doesnt return an object', ->
     project = new Roots(path.join(@path, 'case6'))
-
-    project.on 'error', (err) ->
-      err.toString().should.equal('Malformed Extension: compile_hooks should return an object')
-      done()
-
-    project.compile()
+    project.compile().should.be.rejectedWith('compile_hooks should return an object')
 
   it 'should bail when compile_hooks returned object keys are not functions'
 
@@ -184,37 +169,22 @@ describe 'extension failures', ->
     project = new Roots(path.join(@path, 'case7'))
     (-> project.compile()).should.throw('The category_hooks property must be a function')
 
-  it 'should bail when category_hooks is a function but doesnt return an object', (done) ->
+  it 'should bail when category_hooks is a function but doesnt return an object', ->
     project = new Roots(path.join(@path, 'case8'))
-
-    project.on 'error', (err) ->
-      err.toString().should.equal('Malformed Extension: category_hooks should return an object')
-      done()
-
-    project.compile()
+    project.compile().should.be.rejectedWith('category_hooks should return an object')
 
   # this should not throw
   it 'should bail when project_hooks is defined but not a function', ->
     project = new Roots(path.join(@path, 'case11'))
     (-> project.compile()).should.throw('The project_hooks property must be a function')
 
-  it 'should bail when project_hooks is a function but doesnt return an object', (done) ->
+  it 'should bail when project_hooks is a function but doesnt return an object', ->
     project = new Roots(path.join(@path, 'case12'))
+    project.compile().should.be.rejectedWith('project_hooks should return an object')
 
-    project.on 'error', (err) ->
-      err.toString().should.equal('Malformed Extension: project_hooks should return an object')
-      done()
-
-    project.compile()
-
-  it 'should bail if write hook returns anything other than an array, object, or boolean', (done) ->
+  it 'should bail if write hook returns anything other than an array, object, or boolean', ->
     project = new Roots(path.join(@path, 'case9'))
-
-    project.on 'error', (err) ->
-      err.toString().should.equal('Malformed Write Hook Output: invalid return from write_hook')
-      done()
-
-    project.compile()
+    project.compile().should.be.rejectedWith('invalid return from write_hook')
 
   it "should bail if an extension's constructor throws an error", ->
     project = new Roots(path.join(@path, 'case10'))
