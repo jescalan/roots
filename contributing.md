@@ -19,6 +19,12 @@ Roots is constantly evolving, and to ensure that things are secure and working f
 
 Please also ensure that any new lines you add are _fully covered_ by tests. Of course, this does not mean there will be no bugs, but it certainly makes it less likely. To test the code coverage, you can run `npm run coverage`.
 
+Since roots integrates directly with the browser for reloading and errors, we use selenium to test these pieces of functionality. While quite powerful, unfortunately installing and working with selenium is really a pain. Below are a couple tips for getting selenium running correctly on osx.
+
+- Make sure you have v2.9 of chromedriver installed, 2.10 is bugged
+- Make sure chromedriver in in your path (aka accessible from the command line)
+- If chromedriver isn't working for you right after installing, try restarting
+
 ### Code Style
 
 To keep a consistant coding style in the project, we're going with [Felix's Node.js Style Guide](http://nodeguide.com/style.html) for JS and [Polar Mobile's guide](https://github.com/polarmobile/coffeescript-style-guide) for CoffeeScript, but it should be noted that much of this project uses under_scores rather than camelCase for naming. Both of these are pretty standard guides. For documenting in the code, we're using [JSDoc](http://usejsdoc.org/).

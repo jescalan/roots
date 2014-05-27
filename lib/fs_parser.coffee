@@ -74,7 +74,8 @@ class FSParser
       .on 'data', (f) =>
         if ignored.call(@, f.path) then return
         if f.parentDir.length then @ast.dirs.push(f.fullParentDir)
-        files.push(parse_file.call(@, f.fullPath))
+        file = parse_file.call(@, f.fullPath)
+        file.then((-> files.push(file)), deferred.reject)
 
     return deferred.promise
 
@@ -133,7 +134,6 @@ class FSParser
    * @param  {Boolean} extract - if true, function is skipped
    * @return {Boolean} promise for a boolean, passed as extract to next function
    *
-   * @todo handle error if ext.fs doesn't return an object
    * @todo handle error if ext.fs.detect doesn't exist
    * @todo handle error if category not found
   ###

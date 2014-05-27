@@ -18,6 +18,7 @@ chai.use(chai_fs);
 
 global.W = W;
 global.sinon = sinon;
+global.chai = chai;
 global.Roots = Roots;
 global.path = path;
 global.fs = fs;

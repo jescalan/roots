@@ -20,23 +20,21 @@ Server = require '../local_server'
 
 module.exports = (cli, args) ->
   project = new Roots(args.path, { env: args.environment })
-  server  = new Server(project, project.root)
-  port    = process.env.port or args.port
+  app  = new Server(project)
+  port = process.env.port or args.port
+  res = { project: project }
 
-  cli.emit('inline', 'compiling... '.grey)
-  server.start(port)
+  project.on('start', -> on_start(cli, app, res.server))
+  project.on('done', -> on_done(cli, app, res.server))
+  project.on('error', (err) -> on_error(cli, app, res.server, err))
 
-  watcher = project.watch()
-
-  watcher.on('start', on_start.bind(null, cli, server))
-  watcher.on('error', on_error.bind(null, cli, server))
-  watcher.on('done', on_done.bind(null, cli, server))
-
-  watcher.once 'done', ->
-    if project.config.open_browser and not args.no_open
-      open("http://localhost:#{port}/")
-
-  return { server: server, watcher: watcher }
+  project.watch()
+    .then (w) ->
+      res.watcher = w
+      res.server = app.start(port)
+      if project.config.open_browser and not args.no_open
+        open("http://localhost:#{port}/")
+    .yield(res)
 
 ###*
  * Emit an error to the CLI and sends it to the server to display in-browser
@@ -47,9 +45,9 @@ module.exports = (cli, args) ->
  * @param  {*} err - the error that happened
 ###
 
-on_error = (cli, server, err) ->
+on_error = (cli, server, active, err) ->
   cli.emit('err', Error(err).stack)
-  server.show_error(Error(err).stack)
+  if active then server.show_error(Error(err).stack)
 
 ###*
  * When a change has been detected, notifies the cli and browser that a compile
@@ -60,9 +58,9 @@ on_error = (cli, server, err) ->
  * @param  {Object} server - server instance
 ###
 
-on_start = (cli, server) ->
+on_start = (cli, server, active) ->
   cli.emit('inline', 'compiling... '.grey)
-  server.compiling()
+  if active then server.compiling()
 
 ###*
  * When a compile has finished, notifies the CLI and reloads the browser.
@@ -72,6 +70,6 @@ on_start = (cli, server) ->
  * @param  {Object} server - server instance
 ###
 
-on_done = (cli, server) ->
+on_done = (cli, server, active) ->
   cli.emit('data', 'done!'.green)
-  server.reload()
+  if active then server.reload()

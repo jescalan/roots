@@ -16,7 +16,7 @@ class Server
    * @param  {String} dir - directory to serve
   ###
 
-  constructor: (@roots, @dir) ->
+  constructor: (@project) ->
 
   ###*
    * Start the local server on the given port.
@@ -26,19 +26,19 @@ class Server
   ###
 
   start: (port, cb) ->
-    opts = @roots.config.server or {}
+    opts = @project.config.server or {}
     opts.log = false
 
-    if @roots.config.env == 'development'
+    if @project.config.env == 'development'
       opts.write = content:
         "<!-- roots development configuration -->
-        <script>var __livereload = #{@roots.config.live_reload};</script>
+        <script>var __livereload = #{@project.config.live_reload};</script>
         <script src='/__roots__/main.js'></script>"
       opts.cache_control = { '**': 'max-age=0, no-cache, no-store' }
 
-    app = charge(@roots.config.output_path(), opts)
+    app = charge(@project.config.output_path(), opts)
 
-    if @roots.config.env == 'development'
+    if @project.config.env == 'development'
       app.stack.splice app.stack.length-2, 0,
         route: '/__roots__'
         handle: serve_static(path.resolve(__dirname, 'browser'))

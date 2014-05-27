@@ -10,24 +10,22 @@ _         = require 'lodash'
 class Watcher
 
   constructor: (@roots) ->
+    @watcher = chokidar.watch @roots.root,
+      ignoreInitial: true
+      ignored: ignore.bind(@)
 
   ###*
    * Compile the project, once done, watch it for further changes.
    *
-   * @return {Object} chokidar [https://github.com/paulmillr/chokidar] instance
+   * @return {Promise} promise that the project has compiled and is watched
   ###
 
   exec: ->
-    watcher = chokidar.watch @roots.root,
-      ignoreInitial: true
-      ignored: ignore.bind(@)
-
-    @roots.compile().finally ->
-      watcher
+    @roots.compile().finally =>
+      @watcher
         .on('error', (err) => @roots.emit('error', err))
         .on('change', @roots.compile.bind(@roots))
-
-    return _.extend(@roots, { watcher: watcher })
+    .yield(@watcher)
 
   ###*
    * Given a path, returns true or false depending on whether it should be
