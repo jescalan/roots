@@ -81,6 +81,12 @@ Hook function that is run before each compile. Function passes in an instance of
 
 Same thing as before, but is run after each compile. Surprise surprise.
 
+**server**
+
+Roots uses `charge <https://github.com/carrot/charge>`_ as a local server, which exposes a bunch of useful options for customizing the way your static site is served. Charge can also be used standalone in production if you want to conserve your site's config, and charge's options match up with those of `divshot <http://www.divshot.com/>`_, a great static hosting service.
+
+You can pass in any of charge's `options <https://github.com/carrot/charge#options>`_ under the ``server`` key other than ``write`` or ``log`` to customize how your site is served. This can be great for redirects, clean urls, and/or single page apps.
+
 Compiler Options
 ----------------
 
