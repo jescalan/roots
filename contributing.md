@@ -19,11 +19,7 @@ Roots is constantly evolving, and to ensure that things are secure and working f
 
 Please also ensure that any new lines you add are _fully covered_ by tests. Of course, this does not mean there will be no bugs, but it certainly makes it less likely. To test the code coverage, you can run `npm run coverage`.
 
-Since roots integrates directly with the browser for reloading and errors, we use selenium to test these pieces of functionality. While quite powerful, unfortunately installing and working with selenium is really a pain. Below are a couple tips for getting selenium running correctly on osx.
-
-- Make sure you have v2.9 of chromedriver installed, 2.10 is bugged
-- Make sure chromedriver in in your path (aka accessible from the command line)
-- If chromedriver isn't working for you right after installing, try restarting
+Since roots integrates directly with the browser for reloading and errors, we use selenium to test these pieces of functionality. While quite powerful, unfortunately installing and working with selenium drivers is generally a pain. By default, we use the [phantomjs](http://phantomjs.org/) driver, which will work as long as you have installed phantomjs. If you are working on the browser tests and want more interactive feedback, you can use the chrome driver as well. If you are doing this, make sure you use version `2.9` of the chrome driver, as the most recent version, `2.10`, has a bug with the node library and doesn't work correctly at the time of this being written. If you have done this and are still having issues with the chrome driver, try restarting.
 
 ### Code Style
 
