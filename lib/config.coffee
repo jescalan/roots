@@ -156,10 +156,7 @@ class Config
     if not fs.existsSync(pkg_json_path) then return res
 
     pkg = require(pkg_json_path)
-
-    if not pkg.dependencies then return res
-
-    for dep in Object.keys(pkg.dependencies)
+    for dep in _.keys(pkg.dependencies).concat(_.keys(pkg.devDependencies))
       if accord.supports(dep)
         try
           local_compiler = path.join(@roots.root, 'node_modules', dep)
