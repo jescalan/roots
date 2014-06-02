@@ -49,6 +49,11 @@ All documentation can be found on [http://roots.cx](http://roots.cx).
 If you are looking for roots docs, see [http://roots.cx/docs](http://roots.cx).
 If you are after the docs for the css library, [axis](https://github.com/jenius/axis), see [http://roots.cx/axis](http://roots.cx/axis).
 
+Version Problems
+----------------
+
+Roots v3 does not compile Roots v2 projects and will give an error. To check the version of your project, check the first line in `app.coffee`. Check the version of Roots you're using with `roots -v`. To remove Roots globally, `npm remove -g roots`. To view available versions of Roots, `npm view roots`. To install a specific version of Roots, `npm install -g roots@2.1.3`. Running `npm update -g` will update your version of Roots. You might have to prepend these commands with `sudo` on your system.
+
 Help
 ----
 
