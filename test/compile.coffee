@@ -28,6 +28,14 @@ describe 'compile', ->
       paths_exist(output, ['foo.html', 'nested/bar.html', 'nested/whatever.blah'])
       done()
 
+  it 'should check devDependancies for compilers', (done) ->
+    p = path.join(test_path, 'dev_deps')
+    output = path.join(p, 'public')
+
+    compile_fixture p, done, ->
+      paths_exist(output, ['index.html'])
+      done()
+
   it 'should load a simple app config', (done) ->
     p = path.join(test_path, 'simple_config')
     output = path.join(p, 'foobar')
