@@ -45,7 +45,7 @@ class CLI extends EventEmitter
     if typeof args is 'string' then args = args.split(' ')
     args = @parser.parseArgs(args)
 
-    fn = require(".#{path.sep}#{args.fn}")
+    fn = require("./#{args.fn}")
     delete args.fn
 
     try p = fn(@, args)
