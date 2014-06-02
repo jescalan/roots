@@ -69,7 +69,7 @@
     "moment": "2.4.x",
     "underscore.string": "2.x.x",
     "haml": "0.4.x",
-    "infestor": "~0.2.0"
+    "infestor": "0.2.0"
   },
   "devDependencies": {
     "mocha": "latest",
