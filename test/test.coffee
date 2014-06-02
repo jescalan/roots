@@ -158,6 +158,26 @@ describe 'ignores', ->
 
   after -> remove(@output)
 
+describe 'app.js config options', ->
+  before (done) ->
+    @root = path.join(root, 'config')
+    @output = path.join(@root, 'snargles')
+    run_in_dir(@root, 'compile --no-compress', done)
+
+  # If the old-formatted config file doesn't work, all these tests
+  # will fail. So this is also an implicit test for that.
+
+  it 'output folder should be configurable', ->
+    should.exist(@output, 'index.html')
+
+  it 'views directory should be configurable', ->
+    should.exist(@output, 'foo.html')
+
+  it 'assets directory should be configurable', ->
+    should.exist(@output, 'bar.css')
+
+  after -> remove(@output)
+
 describe 'config options', ->
 
   before (done) ->
