@@ -87,7 +87,7 @@ The bare basics we want to have defined here are a category that we'll sort the 
         fs: ->
           category: 'upcased'
           detect: (f) ->
-            path.basename(f.relative) == path.basename(f.relative).toUpperCase()
+            path.basename(f.relative) is path.basename(f.relative).toUpperCase()
 
 So the category is just a string (we can use this later), and detect is a function which is fed a `vinyl <https://github.com/wearefractal/vinyl>`_ wrapper for each file that's run through. Here, we just run a simple comparison to see if the basename is all uppercase. The `detect` function *also can return a promise* if you are running an async operation. Do note that it's likely that your ``detect`` function will be run for most or all files in a project, so make sure you have considered the speed impacts of your extension. That means try not to, for example, read the full contents of a file synchronously, because that could take quite a while in a larger project with lots of files.
 
@@ -104,7 +104,7 @@ There are a couple more options to consider here in the filesystem sorting secti
           category: 'upcased'
           extract: true
           detect: (f) ->
-            path.basename(f.relative) == path.basename(f.relative).toUpperCase()
+            path.basename(f.relative) is path.basename(f.relative).toUpperCase()
 
 Much better. Now, it's also possible that you actually need your category to be compiled **before** anything else compiles. For example, `dynamic content <https://github.com/carrot/roots-dynamic-content>`_ is compiled before anything else, because it makes locals available to all other view templates. Since roots compiles all files as quickly as possible, compiling dynamic content alongside normal views would result in race conditions where only some dynamic content would be available in the rest of the views. For that reason, the extension must ensure that the entire "dynamic" category is finished compiling before the rest of the project begins. This of course has speed implications as well which should be considered, but if it's necessary, it's necessary. To make it such that your extension's category is *finished processing before any other category starts*, you can set the ``ordered`` property on ``fs`` to ``true``. If there are multiple extensions for which this is the case, the order in which they will run matches the order that they are added to the roots project, aka their order in the ``extensions`` array in the ``app.coffee`` file.
 
@@ -126,7 +126,7 @@ The next step for us is to modify the file's content to actually make it all upp
           category: 'upcased'
           extract: true
           detect: (f) ->
-            path.basename(f.relative) == path.basename(f.relative).toUpperCase()
+            path.basename(f.relative) is path.basename(f.relative).toUpperCase()
 
         compile_hooks: ->
           category: 'upcased'
@@ -164,7 +164,7 @@ If you define a ``category`` on the class itself, that category is automatically
         fs: ->
           extract: true
           detect: (f) ->
-            path.basename(f.relative) == path.basename(f.relative).toUpperCase()
+            path.basename(f.relative) is path.basename(f.relative).toUpperCase()
 
         compile_hooks: ->
           after_file: (ctx) =>
@@ -185,7 +185,7 @@ See the difference? Adding ``@category`` to the class itself has allowed us to r
           category: 'upcased'
           extract: true
           detect: (f) ->
-            path.basename(f.relative) == path.basename(f.relative).toUpperCase()
+            path.basename(f.relative) is path.basename(f.relative).toUpperCase()
 
         compile_hooks: ->
           category: 'upcased'
@@ -273,7 +273,7 @@ For example, if you were making an extension that collected all the contents of 
 
       fs: ->
         detect: (f) ->
-          path.extname(f.relative) == 'js'
+          path.extname(f.relative) is 'js'
 
       compile_hooks: ->
         after_file: (ctx) =>
@@ -306,7 +306,7 @@ What we have here is a simple extension that concatenates js files into a single
 
       fs: ->
         detect: (f) ->
-          path.extname(f.relative) == 'js'
+          path.extname(f.relative) is 'js'
 
       compile_hooks: ->
         after_file: (ctx) ->

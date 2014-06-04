@@ -8,7 +8,7 @@ ext = ->
     fs: ->
       extract: true
       detect: (f) ->
-        path.basename(f.relative) == 'active'
+        path.basename(f.relative) is 'active'
 
     compile_hooks: ->
       after_file: (ctx) ->
@@ -27,7 +27,7 @@ ext2 = ->
       category: 'scope_override'
       extract: true
       detect: (f) ->
-        path.basename(f.relative) == 'scope_override'
+        path.basename(f.relative) is 'scope_override'
 
     compile_hooks: ->
       category: 'scope_override'
@@ -47,7 +47,7 @@ ext3 = ->
     fs: ->
       extract: true
       detect: (f) ->
-        path.basename(f.relative) == 'failed_override'
+        path.basename(f.relative) is 'failed_override'
 
     compile_hooks: ->
       category: 'failed_override'
@@ -65,7 +65,7 @@ ext4 = ->
       category: 'hook_level'
       extract: true
       detect: (f) ->
-        path.basename(f.relative) == 'hook_level'
+        path.basename(f.relative) is 'hook_level'
 
     compile_hooks: ->
       category: 'hook_level'
@@ -88,5 +88,5 @@ ext5 = ->
       after: (ctx, category) ->
         ctx.roots.emit('after_category', "[5] #{category}")
 
-module.exports = 
+module.exports =
   extensions: [ext(), ext2(), ext3(), ext4(), ext5()]

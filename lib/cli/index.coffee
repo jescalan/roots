@@ -25,7 +25,7 @@ class CLI extends EventEmitter
     @parser = new ArgParse
       version: pkg.version
       description: pkg.description
-      debug: opts.debug || false
+      debug: opts.debug ? false
     sub = @parser.addSubparsers()
 
     $new(sub)

@@ -26,20 +26,20 @@ class Server
   ###
 
   start: (port, cb) ->
-    opts = @project.config.server or {}
+    opts = @project.config.server ? {}
     opts.log = false
 
-    if @project.config.env == 'development'
+    if @project.config.env is 'development'
       opts.write = content:
         "<!-- roots development configuration -->
         <script>var __livereload = #{@project.config.live_reload};</script>
         <script src='/__roots__/main.js'></script>"
-      opts.cache_control = { '**': 'max-age=0, no-cache, no-store' }
+      opts.cache_control = {'**': 'max-age=0, no-cache, no-store'}
 
     app = charge(@project.config.output_path(), opts)
 
-    if @project.config.env == 'development'
-      app.stack.splice app.stack.length-2, 0,
+    if @project.config.env is 'development'
+      app.stack.splice app.stack.length - 2, 0,
         route: '/__roots__'
         handle: serve_static(path.resolve(__dirname, 'browser'))
 

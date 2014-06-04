@@ -148,7 +148,7 @@ class FSParser
 
     W.resolve(extfs.detect(file)).then (detected) =>
       if not detected then return false
-      cat = extfs.category || ext.category
+      cat = extfs.category ? ext.category
       @ast[cat] ?= []
       @ast[cat].push(file) unless _.contains(@ast[cat], file)
       return extfs.extract
@@ -175,7 +175,7 @@ class FSParser
 
   ignored = (f) ->
     @config.ignores
-      .map (i) -> minimatch(f, i, { dot: true })
+      .map (i) -> minimatch(f, i, dot: true)
       .filter (i) -> i
       .length
 

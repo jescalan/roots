@@ -71,7 +71,7 @@ exports.reset = (override) ->
     process.stdin.on 'data', (txt) ->
       process.stdin.pause()
       txt = txt.trim()
-      if txt == 'y' or txt == 'Y' then return remove_roots_config(deferred)
+      if txt is 'y' or txt is 'Y' then return remove_roots_config(deferred)
       deferred.reject('reset cancelled')
 
   return deferred.promise
@@ -88,4 +88,3 @@ exports.reset = (override) ->
 
 remove_roots_config = (deferred) ->
   nodefn.call(fs.unlink, global_config().path)
-

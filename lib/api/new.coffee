@@ -41,9 +41,9 @@ class New
 
     opts =
       path: path.resolve(opts.path)
-      name: opts.template           || global_config().get('default_template')
-      overrides: opts.overrides     || {}
-      defaults: opts.defaults       || { name: path.basename(opts.path) }
+      name: opts.template           ? global_config().get('default_template')
+      overrides: opts.overrides     ? {}
+      defaults: opts.defaults       ? { name: path.basename(opts.path) }
 
     pkg = path.join(opts.path, 'package.json')
 

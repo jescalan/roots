@@ -13,6 +13,6 @@ module.exports = (cli, args) ->
     .progress((i) -> cli.emit('info', i))
     .then (roots) ->
       cli.emit('info', "project initialized at #{roots.root}")
-      cli.emit('info', "using template: #{args.template || 'roots-base'}")
+      cli.emit('info', "using template: #{args.template ? 'roots-base'}")
       cli.emit('success', 'done!')
     .catch (err) -> cli.emit('err', err); throw err

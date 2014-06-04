@@ -40,7 +40,7 @@ class Config
   constructor: (@roots, opts) ->
     @output = 'public'
     @dump_dirs = ['views', 'assets']
-    @env = opts.env || 'development'
+    @env = opts.env ? 'development'
     @debug = false
     @live_reload = true
     @open_browser = true
