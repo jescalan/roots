@@ -59,7 +59,6 @@ class Compile
       .then @roots.emit.bind(@roots, 'done'), (err) ->
         @roots.emit('error', err)
         W.reject(err)
-
   ###*
    * Calls any user-provided before hooks with the roots context.
    *

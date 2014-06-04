@@ -1,11 +1,10 @@
-fs       = require 'graceful-fs'
 path     = require 'path'
 _        = require 'lodash'
 W        = require 'when'
 nodefn   = require 'when/node'
 pipeline = require 'when/pipeline'
 sequence = require 'when/sequence'
-File     = require 'vinyl'
+File     = require 'fobject'
 mkdirp   = require 'mkdirp'
 
 ###*
@@ -31,7 +30,7 @@ class Compiler
    * Compile a single file asynchronously.
    *
    * @param  {String} category - category the file is being compiled in
-   * @param  {File} file - vinyl-wrapped file
+   * @param  {File} file
    * @return {Promise} promise for the fully compiled file
   ###
 
@@ -59,7 +58,7 @@ class CompileFile
    * @param  {Array}    extensions      Array of initialzed extensions
    * @param  {Object}   compile_options Per-compile options object
    * @param  {String}   category        Category of file being compiled
-   * @param  {File}     file            Vinyl-wrapped file
+   * @param  {File}     file
   ###
 
   constructor: (@roots, @extensions, @compile_options, @category, @file) ->
@@ -74,7 +73,7 @@ class CompileFile
    * - reads the file's content, set on the instance
    * - run the before hooks for each extensions before_file hook
    * - take each pass over the file, compile, set compiled content on instance
-   * - emit a compile event once finished passing the file vinyl wrapper
+   * - emit a compile event once finished passing the file
    * - run the extensions' after hooks
    * - write the file
    *
@@ -84,7 +83,7 @@ class CompileFile
   run: ->
     hooks = (cat) => @extensions.hooks(cat, @category)
 
-    read_file.call(@, @file)
+    @read_file(@file)
       .with(@)
       .then((o) => @content = o)
       .then(=> sequence(hooks('compile_hooks.before_file'), @))
@@ -95,20 +94,15 @@ class CompileFile
       .then(write_file)
 
   ###*
-   * Async utf8 file read from a vinyl file wrapped in a promise.
-   *
+   * Async utf8 file read from a file wrapped in a promise.
    * @private
-   *
-   * @param  {f} f - vinyl-wrapped file
+   * @param  {File} file
    * @return {Promise} a promise for the file's contents
   ###
-
-  read_file = (f) ->
-    options = null
-
+  read_file: (file) ->
     # if the file is compiled, read as utf8, if not read as buffer
     opts = if @is_compiled then encoding: 'utf8' else null
-    nodefn.call(fs.readFile, f.path, opts)
+    file.read(opts)
 
   ###*
    * Writes a file from the content property on the instance. Can be modified
@@ -119,10 +113,7 @@ class CompileFile
    * - Move on once all write tasks have been completed
    *
    * @private
-   *
    * @return {Promise} promise for written file(s)
-   *
-   * @todo adjust config.out to work better with vinyl
   ###
 
   write_file = ->
@@ -180,8 +171,8 @@ class CompileFile
    * - extension: extension to write the file with
    *
    * If an object is passed, each of these keys is optional, and if not provided
-   * will be filled in with default values. The path then is wrapped with vinyl,
-   * passed through the roots output path generator, and the file is written.
+   * will be filled in with default values. The path passed through the roots
+   * output path generator, and the file is written.
    * The extension property is only set if there wasn't already an extension
    * override and there was a compile, otherwise any extensions are preserved as
    * is.
@@ -199,12 +190,12 @@ class CompileFile
       obj.extension = _.last(@adapters).output
 
     if not (obj.path instanceof File)
-      obj.path = new File(base: @roots.root, path: obj.path)
+      obj.path = new File(obj.path, base: @roots.root)
 
-    obj.path = @roots.config.out(obj.path, obj.extension)
+    obj.path.path = @roots.config.out(obj.path, obj.extension)
 
     nodefn.call(mkdirp, path.dirname(obj.path))
-      .then(-> nodefn.call(fs.writeFile, obj.path, obj.content))
+      .then(-> obj.path.write(obj.content))
 
   ###*
    * Read the file's extension and grab any and all adapters that match. If

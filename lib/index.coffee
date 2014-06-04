@@ -19,7 +19,7 @@ class Roots extends EventEmitter
 
   constructor: (@root, opts={}) ->
     @root = path.resolve(@root)
-    if not fs.existsSync(@root) then throw new Error("path does not exist")
+    if not fs.existsSync(@root) then throw new Error('path does not exist')
     @extensions = new Extensions(@)
     @config = new Config(@, opts)
 
