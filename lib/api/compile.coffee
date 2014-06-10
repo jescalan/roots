@@ -101,9 +101,9 @@ class Compile
     if not hook then return W.resolve()
 
     if Array.isArray(hook)
-      hooks = hook.map((h) => nodefn.call(h.bind(@roots)))
+      hooks = hook.map((h) => h(@roots))
     else if typeof hook == 'function'
-      hooks = [nodefn.call(hook.bind(@roots))]
+      hooks = [hook(@roots)]
     else
       return W.reject('before hook should be a function or array')
 
