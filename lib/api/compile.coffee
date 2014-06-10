@@ -28,6 +28,7 @@ class Compile
   ###
 
   constructor: (@roots) ->
+    # extensions need to be instantiated inside each worker
     @extensions = @roots.extensions.instantiate()
     @fs_parser = new FSParser(@roots, @extensions)
     @compiler = new Compiler(@roots, @extensions)
@@ -168,7 +169,8 @@ class Compile
     parallel = []
 
     compile_task = (cat) =>
-      W.map(ast[cat] ? [], @compiler.compile.bind(@compiler, cat))
+      # W.map(ast[cat] || [], @compiler.compile.bind(@compiler, cat))
+      W.map(ast[cat] ? [], @roots.queue.bind(@roots, cat))
       .then(=> sequence(@extensions.hooks('category_hooks.after', cat), @, cat))
 
     for ext in @extensions
