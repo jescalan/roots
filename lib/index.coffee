@@ -63,8 +63,6 @@ class Roots extends EventEmitter
   ###
 
   compile: ->
-    # delegate this to the workers
-    # fs parse, then queue up each of the files
     Compile = require('./api/compile')
     (new Compile(@)).exec()
 
@@ -136,10 +134,11 @@ class Roots extends EventEmitter
     worker = _.min(@workers, ((w) -> w.queue.length))
     job_id = uuid.v1()
 
-    @taskmaster.once job_id, (data) ->
+    @taskmaster.once job_id, (data) =>
+      worker.queue.shift()
       if data == true then deferred.resolve() else deferred.reject(data)
       if worker.queue.length > 0 then queue_next(worker)
-      # balance_workers()
+      @workers = balance_workers(@workers)
 
     worker.queue.push([job_id, cat, file])
     if worker.queue.length == 1 then queue_next(worker)
@@ -169,12 +168,31 @@ class Roots extends EventEmitter
    * that the workload is distrubuted fairly.
    *
    * @private
+   *
+   * @param {Array} w - array of worker queues
   ###
 
-  balance_workers = ->
-    # - get length of each worker
-    # - move tasks from the end of longer ones to the end of shorter ones
-    # - if one of them is zero and recieves a task, run queue_next() to kick off
+  balance_workers = (w) ->
+    w = w.sort((a,b) -> a.queue.length > b.queue.length)
+    for i in [0..w.length/2]
+      tmp = w[i].queue.length
+      w[i].queue = balance_pairs(w[i], w[w.length-i-1])
+      if tmp is 0 and w[i].queue.length is 1 then queue_next(w[i])
+    return w
+
+  ###*
+   * Helper method for balance_workers.
+   *
+   * @private
+   *
+   * @param  {Array} a - worker queue, larger
+   * @param  {Array} b - another wotker queue, smaller
+   * @return {Array} a modified version of `a`, evened out with `b`
+  ###
+
+  balance_pairs = (a,b) ->
+    s = (b.queue.length - a.queue.length)/2
+    a.queue.concat(b.queue.splice(b.queue.length-s, s))
 
   ###*
    * Starts the next job in a worker's queue.
@@ -184,6 +202,6 @@ class Roots extends EventEmitter
   ###
 
   queue_next = (worker) ->
-    worker.send(worker.queue.shift())
+    worker.send(worker.queue[0])
 
 module.exports = Roots
