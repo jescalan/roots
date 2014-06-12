@@ -65,7 +65,7 @@ class CompileFile
   constructor: (@roots, @extensions, @compile_options, @category, @file) ->
     @adapters = get_adapters.call(@)
     @is_compiled = !!_(@adapters).pluck('name').compact().value().length
-    @file_options = { filename: @file.path }
+    @file_options = filename: @file.path
 
   ###*
    * Initialize the actual compilation. This method is a higher level wrapper
@@ -107,7 +107,7 @@ class CompileFile
     options = null
 
     # if the file is compiled, read as utf8, if not read as buffer
-    opts = if @is_compiled then { encoding: 'utf8' } else null
+    opts = if @is_compiled then encoding: 'utf8' else null
     nodefn.call(fs.readFile, f.path, opts)
 
   ###*
@@ -159,10 +159,10 @@ class CompileFile
     normal_write_pushed = false
 
     for res in results
-      if res == true
+      if res
         if not normal_write_pushed then write_tasks.push(write_task.call(@))
         normal_write_pushed = true
-      else if typeof res == 'object' and not Array.isArray(res)
+      else if typeof res is 'object' and not Array.isArray(res)
         write_tasks.push(write_task.call(@, res))
       else if Array.isArray(res)
         write_tasks.concat(res.map((i) => write_task.call(@, i)))
@@ -190,9 +190,7 @@ class CompileFile
    * @return {Promise} a promise for the written file
   ###
 
-  write_task = (obj) ->
-    obj ?= {}
-
+  write_task = (obj = {}) ->
     obj = _.defaults obj,
       path: @file
       content: @content
@@ -229,7 +227,7 @@ class CompileFile
 
       adapters.push(if compiler then compiler else { output: ext })
 
-    if !adapters.length then adapters.push({ output: '' })
+    if !adapters.length then adapters.push(output: '')
 
     return adapters
 
@@ -244,7 +242,7 @@ class CompileFile
 
   each_pass = ->
     pass = new CompilePass(@)
-    pipeline(@adapters.map((a,i) -> pass.run.bind(pass,a,i+1)), @content)
+    pipeline(@adapters.map((a,i) -> pass.run.bind(pass, a, i + 1)), @content)
 
 ###*
  * @class CompilePass
@@ -310,8 +308,8 @@ class CompilePass
   ###
 
   configure_options = ->
-    global_options  = @file.roots.config.locals || {}
-    adapter_options = @file.roots.config[@adapter.name] || {}
+    global_options  = @file.roots.config.locals ? {}
+    adapter_options = @file.roots.config[@adapter.name] ? {}
     file_options    = @file.file_options
     compile_options = @file.compile_options
 

@@ -28,7 +28,7 @@ class Extensions
     if not Array.isArray(extensions) then extensions = [extensions]
 
     for ext in extensions.reverse()
-      if typeof ext != 'function'
+      if typeof ext isnt 'function'
         @roots.bail(125, "Extension must return a function/class", ext)
       if priority? then @all.unshift(ext) else @all.splice(priority, 0, ext)
 
@@ -77,7 +77,7 @@ class Extensions
    * @return {Boolean} whether it exists and is not a function or not
   ###
 
-  not_function = (prop) -> prop && typeof prop != 'function'
+  not_function = (prop) -> prop and typeof prop isnt 'function'
 
   ###*
    * Returns a given extension's hook, if it exists. The nitty gritty:
@@ -102,7 +102,7 @@ class Extensions
       called_namespace = ext[namespc]()
 
       if typeof called_namespace isnt 'object'
-        @[@length-2].roots.bail(125, "#{namespc} should return an object", ext)
+        @[@length - 2].roots.bail(125, "#{namespc} should return an object", ext)
 
       if category?
         if called_namespace.category

@@ -102,7 +102,7 @@ class Compile
 
     if Array.isArray(hook)
       hooks = hook.map((h) => h(@roots))
-    else if typeof hook == 'function'
+    else if typeof hook is 'function'
       hooks = [hook(@roots)]
     else
       return W.reject('before hook should be a function or array')
@@ -168,14 +168,14 @@ class Compile
     parallel = []
 
     compile_task = (cat) =>
-      W.map(ast[cat] || [], @compiler.compile.bind(@compiler, cat))
+      W.map(ast[cat] ? [], @compiler.compile.bind(@compiler, cat))
       .then(=> sequence(@extensions.hooks('category_hooks.after', cat), @, cat))
 
     for ext in @extensions
       extfs = if ext.fs then ext.fs() else {}
       category = if extfs.category then extfs.category else ext.category
 
-      if typeof extfs != 'object'
+      if typeof extfs isnt 'object'
         @roots.bail(125, 'fs must return an object', ext)
 
       # if extfs has keys, but no category, bail
