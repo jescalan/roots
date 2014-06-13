@@ -205,6 +205,7 @@ describe 'setup-function', ->
       .on('error', done)
       .on 'test', (v) =>
         v.should.equal('value')
+      .on 'done', =>
         path.join(@public, 'test.html').should.be.a.file()
         done()
 
