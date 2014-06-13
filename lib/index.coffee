@@ -117,6 +117,10 @@ class Roots extends EventEmitter
 
     @taskmaster = new EventEmitter
     for worker in @workers
-      worker.on('message', (msg) => @taskmaster.emit(msg.id, msg.data))
+      worker.on 'message', (msg) =>
+        if msg.id
+          @taskmaster.emit(msg.id, msg.data)
+        else
+          @emit(msg.eventName, msg.data)
 
 module.exports = Roots

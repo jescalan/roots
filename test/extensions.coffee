@@ -22,12 +22,6 @@ describe 'extension hooks', ->
     @project.extensions.all.length.should.be.above(2)
     @project
       .on('error', done)
-      # These don't work because the file is compiled inside a child process
-      # which has another version of the roots object. so they are not emitting
-      # events on this version of the roots object.
-      #
-      # This is not a bug and these hooks are actually working, it just means
-      # there needs to be a new way to test this.
       .on('before_file', => @before_file = true)
       .on('after_file', => @after_file = true)
       .on('before_pass', => @before_pass = true)
@@ -39,19 +33,19 @@ describe 'extension hooks', ->
 
     @project.compile()
 
-  it.skip 'before_file hook should work', ->
+  it 'before_file hook should work', ->
     @before_file.should.be.ok
 
-  it.skip 'after_file hook should work', ->
+  it 'after_file hook should work', ->
     @after_file.should.be.ok
 
-  it.skip 'before_pass hook should work', ->
+  it 'before_pass hook should work', ->
     @before_pass.should.be.ok
 
-  it.skip 'after_pass hook should work', ->
+  it 'after_pass hook should work', ->
     @after_pass.should.be.ok
 
-  it.skip 'write hook should work', ->
+  it 'write hook should work', ->
     @write.should.be.ok
 
   it 'after category hook should work', ->

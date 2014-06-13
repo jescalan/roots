@@ -26,6 +26,7 @@
     "coffee-script": "1.7.x",
     "colors": "0.6.x",
     "configstore": "0.3.x",
+    "eventemitter2": "0.4.x",
     "graceful-fs": "2.x",
     "js-yaml": "3.x",
     "lodash": "2.x",
