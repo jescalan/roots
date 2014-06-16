@@ -19,12 +19,11 @@ class Roots extends EventEmitter
    * @return {Function} - instance of the Roots class
   ###
 
-  constructor: (@root, opts={}) ->
+  constructor: (@root, @opts={}) ->
     @root = path.resolve(@root)
     if not fs.existsSync(@root) then throw new Error("path does not exist")
     @extensions = new Extensions(@)
     @config = new Config(@, opts)
-    set_up_workers.call(@, opts)
 
   ###*
    * Alternate constructor, creates a new roots project in a given folder and
@@ -60,8 +59,10 @@ class Roots extends EventEmitter
   ###
 
   compile: ->
+    set_up_workers.call(@, @opts)
     Compile = require('./api/compile')
     (new Compile(@)).exec()
+      .then(disconnect_workers.bind(@))
 
   ###*
    * Watches a folder for changes and compiles whenever changes happen.
@@ -70,8 +71,10 @@ class Roots extends EventEmitter
   ###
 
   watch: ->
+    set_up_workers.call(@, @opts)
     Watch = require('./api/watch')
     (new Watch(@)).exec()
+    # when watch is cancelled take down the workers
 
   ###*
    * Removes a project's output folder.
@@ -122,5 +125,8 @@ class Roots extends EventEmitter
           @taskmaster.emit(msg.id, msg.data)
         else
           @emit(msg.eventName, msg.data)
+
+  disconnect_workers = ->
+    worker.disconnect() for worker in @workers
 
 module.exports = Roots
