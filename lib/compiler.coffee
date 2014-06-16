@@ -6,6 +6,7 @@ pipeline = require 'when/pipeline'
 sequence = require 'when/sequence'
 File     = require 'fobject'
 mkdirp   = require 'mkdirp'
+url      = require 'url'
 
 ###*
  * @class Compiler
@@ -185,17 +186,22 @@ class CompileFile
     obj = _.defaults obj,
       path: @file
       content: @content
-
     if not obj.extension? and @is_compiled
       obj.extension = _.last(@adapters).output
-
     if not (obj.path instanceof File)
       obj.path = new File(obj.path, base: @roots.root)
 
-    obj.path.path = @roots.config.out(obj.path, obj.extension)
-
-    nodefn.call(mkdirp, path.dirname(obj.path))
-      .then(-> obj.path.write(obj.content))
+    assetPath = path.relative(
+      obj.path.base
+      @roots.config.out(obj.path, obj.extension)
+    )
+    asset =
+      url: url.resolve(@roots.assetgraph.root, assetPath)
+    if obj.content instanceof Buffer
+      asset.rawSrc = obj.content
+    else
+      asset.text = obj.content
+    nodefn.call((i = @roots.assetgraph.loadAssets([asset])).run.bind(i))
 
   ###*
    * Read the file's extension and grab any and all adapters that match. If

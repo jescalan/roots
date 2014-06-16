@@ -140,10 +140,9 @@ class Config
     res
 
   ###*
-   * Grabs all adapters necessary to compile files in this project.
-   * Scans the package.json file's dependencies for packages that have
-   * registered accord adapters and loads those. Alerts if dependencies
-   * have not been installed.
+   * Grabs all adapters necessary to compile files in this project. Scans the
+   * package.json file's dependencies for packages that have registered accord
+   * adapters and loads those. Alerts if dependencies have not been installed.
    *
    * @private
    *

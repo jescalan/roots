@@ -21,6 +21,7 @@
   "dependencies": {
     "accord": "0.10.0",
     "argparse": "0.1.x",
+    "assetgraph": "^1.6.35",
     "charge": "0.0.3",
     "chokidar": "0.8.x",
     "coffee-script": "1.7.x",
