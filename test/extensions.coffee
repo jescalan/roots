@@ -160,6 +160,7 @@ describe 'extension failures', ->
 
   it 'should bail when compile_hooks is a function but doesnt return an object', ->
     project = new Roots(path.join(@path, 'case6'))
+    project.on('error', ->)
     project.compile().should.be.rejectedWith('compile_hooks should return an object')
 
   it 'should bail when compile_hooks returned object keys are not functions'
@@ -184,6 +185,7 @@ describe 'extension failures', ->
 
   it 'should bail if write hook returns anything other than an array, object, or boolean', ->
     project = new Roots(path.join(@path, 'case9'))
+    project.on('error', ->)
     project.compile().should.be.rejectedWith('invalid return from write_hook')
 
   it "should bail if an extension's constructor throws an error", ->
