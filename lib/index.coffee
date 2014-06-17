@@ -131,7 +131,6 @@ class Roots extends EventEmitter
           @emit(msg.eventName, msg.data)
 
   disconnect_workers: ->
-    console.log "killing #{@workers.length} workers"
     worker.kill() for worker in @workers
 
 module.exports = Roots
