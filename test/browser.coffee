@@ -3,10 +3,10 @@ chaidriver = require 'chai-webdriver'
 CLI        = require '../lib/cli'
 fs         = require 'fs'
 
-cli = new CLI(debug: true)
-driver = new Driver.Builder().withCapabilities(Driver.Capabilities.phantomjs()).build()
-chai.use(chaidriver(driver))
-basic_path = path.join(base_path, 'compile/basic')
+# cli = new CLI(debug: true)
+# driver = new Driver.Builder().withCapabilities(Driver.Capabilities.phantomjs()).build()
+# chai.use(chaidriver(driver))
+# basic_path = path.join(base_path, 'compile/basic')
 
 describe 'browser', ->
 
