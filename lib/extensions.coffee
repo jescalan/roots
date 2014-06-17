@@ -102,7 +102,7 @@ class Extensions
       called_namespace = ext[namespc]()
 
       if typeof called_namespace isnt 'object'
-        @[@length - 2].roots.bail(125, "#{namespc} should return an object", ext)
+        @[@length-2].roots.bail(125, "#{namespc} should return an object", ext)
 
       if category?
         if called_namespace.category
