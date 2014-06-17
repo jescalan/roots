@@ -3,7 +3,7 @@ fs             = require 'fs'
 path           = require 'path'
 Config         = require './config'
 Extensions     = require './extensions'
-child_process  = require 'child_process'
+cp             = require 'child_process'
 cpus           = require('os').cpus().length
 
 ###*
@@ -23,7 +23,7 @@ class Roots extends EventEmitter
     @root = path.resolve(@root)
     if not fs.existsSync(@root) then throw new Error("path does not exist")
     @extensions = new Extensions(@)
-    @config = new Config(@, opts)
+    @config = new Config(@, @opts)
 
   ###*
    * Alternate constructor, creates a new roots project in a given folder and
@@ -58,11 +58,11 @@ class Roots extends EventEmitter
    * @return {Promise} promise for finished compile
   ###
 
-  compile: ->
-    set_up_workers.call(@, @opts)
+  compile: (persist = false) ->
+    if not @workers then @set_up_workers()
     Compile = require('./api/compile')
     (new Compile(@)).exec()
-      .then(disconnect_workers.bind(@))
+      .tap(=> if not persist then @disconnect_workers())
 
   ###*
    * Watches a folder for changes and compiles whenever changes happen.
@@ -71,10 +71,10 @@ class Roots extends EventEmitter
   ###
 
   watch: ->
-    set_up_workers.call(@, @opts)
+    if not @workers then @set_up_workers()
     Watch = require('./api/watch')
     (new Watch(@)).exec()
-    # when watch is cancelled take down the workers
+    # TODO: extend watcher.close to also disconnect workers
 
   ###*
    * Removes a project's output folder.
@@ -112,9 +112,9 @@ class Roots extends EventEmitter
    * @private
   ###
 
-  set_up_workers = (opts) ->
+  set_up_workers: ->
     @workers = [0...cpus].map =>
-      worker = child_process.fork(path.join(__dirname, 'worker'), [@root, opts])
+      worker = cp.fork(path.join(__dirname, 'worker'), [@root, @opts])
       worker.queue = []
       worker
 
@@ -126,7 +126,7 @@ class Roots extends EventEmitter
         else
           @emit(msg.eventName, msg.data)
 
-  disconnect_workers = ->
+  disconnect_workers: ->
     worker.disconnect() for worker in @workers
 
 module.exports = Roots

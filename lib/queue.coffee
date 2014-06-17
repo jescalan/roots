@@ -88,5 +88,5 @@ balance_pairs = (a,b) ->
  * @param  {child_process} worker - roots worker process
 ###
 
-queue_next = (worker) ->
+queue_next = (worker, f) ->
   worker.send(worker.queue[0])

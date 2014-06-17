@@ -21,7 +21,7 @@ class Watcher
   ###
 
   exec: ->
-    @roots.compile().finally =>
+    @roots.compile(true).finally =>
       @watcher
         .on('error', (err) => @roots.emit('error', err))
         .on('change', @roots.compile.bind(@roots))
