@@ -21,8 +21,11 @@ class Watcher
       .on('error', cb)
       .on 'done', ->
         if ++count is 1 then return first_compile()
+        watcher.close()
         cb()
-    project.watch()
+
+    watcher = null
+    project.watch().then (res) -> watcher = res
 
     setTimeout =>
       p = path.join(@root, file)

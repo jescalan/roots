@@ -63,6 +63,7 @@ class Roots extends EventEmitter
     Compile = require('./api/compile')
     (new Compile(@)).exec()
       .tap(=> if not persist then @disconnect_workers())
+      .catch((err) => if not persist then @disconnect_workers(); throw err)
 
   ###*
    * Watches a folder for changes and compiles whenever changes happen.
@@ -74,7 +75,7 @@ class Roots extends EventEmitter
     if not @workers then @set_up_workers()
     Watch = require('./api/watch')
     (new Watch(@)).exec()
-      .then (watcher) ->
+      .then (watcher) =>
         tmp = watcher.close
         watcher.close = => @disconnect_workers(); tmp()
         return watcher
@@ -130,6 +131,7 @@ class Roots extends EventEmitter
           @emit(msg.eventName, msg.data)
 
   disconnect_workers: ->
-    worker.disconnect() for worker in @workers
+    console.log "killing #{@workers.length} workers"
+    worker.kill() for worker in @workers
 
 module.exports = Roots
