@@ -130,6 +130,12 @@ class Roots extends EventEmitter
         else
           @emit(msg.eventName, msg.data)
 
+  ###*
+   * Fairly self-explanitory, disconnects and kills all workers.
+   *
+   * @private
+  ###
+
   disconnect_workers: ->
     worker.kill() for worker in @workers
 
