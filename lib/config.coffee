@@ -136,7 +136,7 @@ class Config
     if _.contains(@dump_dirs, res[0]) then res.shift()
     res.unshift(@output_path())
     res = res.join(path.sep)
-    if ext then res = res.replace(/\..*$/, ".#{ext}")
+    if ext then res = res.replace(///\.[^#{path.sep}]*$///, ".#{ext}")
     res
 
   ###*
