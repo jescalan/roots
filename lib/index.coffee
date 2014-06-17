@@ -1,8 +1,9 @@
-{EventEmitter} = require('events')
+{EventEmitter} = require 'events'
 fs             = require 'fs'
 path           = require 'path'
 Config         = require './config'
 Extensions     = require './extensions'
+AssetGraph     = require 'assetgraph'
 
 ###*
  * @class
@@ -19,7 +20,8 @@ class Roots extends EventEmitter
 
   constructor: (@root, opts={}) ->
     @root = path.resolve(@root)
-    if not fs.existsSync(@root) then throw new Error("path does not exist")
+    if not fs.existsSync(@root) then throw new Error('path does not exist')
+    @assetgraph = new AssetGraph(root: @root)
     @extensions = new Extensions(@)
     @config = new Config(@, opts)
 
