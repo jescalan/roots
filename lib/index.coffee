@@ -74,7 +74,10 @@ class Roots extends EventEmitter
     if not @workers then @set_up_workers()
     Watch = require('./api/watch')
     (new Watch(@)).exec()
-    # TODO: extend watcher.close to also disconnect workers
+      .then (watcher) ->
+        tmp = watcher.close
+        watcher.close = => @disconnect_workers(); tmp()
+        return watcher
 
   ###*
    * Removes a project's output folder.
