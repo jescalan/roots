@@ -126,6 +126,14 @@ describe 'compile', ->
       path.join(output, 'folder.withdot/manyOf∫chin/er mer .gerd.wat').should.be.a.file()
       done()
 
+  it 'should compile correctly if any of the project\'s parent directories have a dot in their name', (done) ->
+    p = path.join(test_path, 'dir.with_dot')
+    output = path.join(p, 'public')
+
+    compile_fixture p, done, ->
+      path.join(output, 'manatoge.html').should.be.a.file()
+      done()
+
   it 'should work with different environments', (done) ->
     p = path.join(test_path, 'environments')
     output = path.join(p, 'public')
