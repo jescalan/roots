@@ -3,8 +3,8 @@ path = require 'path'
 
 module.exports =
 
-  before: (cb) ->
-    fs.open(path.join(@root, 'before.txt'), 'w', cb)
+  before: (roots, cb) ->
+    fs.open(path.join(roots.root, 'before.txt'), 'w', cb)
 
-  after: (cb) ->
-    fs.open(path.join(@config.output_path(), 'after.txt'), 'w', cb)
+  after: (roots, cb) ->
+    fs.open(path.join(roots.config.output_path(), 'after.txt'), 'w', cb)

@@ -5,6 +5,7 @@ guard    = require 'when/guard'
 keys     = require 'when/keys'
 sequence = require 'when/sequence'
 mkdirp   = require 'mkdirp'
+_        = require 'lodash'
 
 FSParser = require '../fs_parser'
 Compiler = require '../compiler'
@@ -102,9 +103,9 @@ class Compile
     if not hook then return W.resolve()
 
     if Array.isArray(hook)
-      hooks = hook.map((h) => h(@roots))
+      hooks = hook.map((h) => nodefn.call(_.partial(h, @roots)))
     else if typeof hook is 'function'
-      hooks = [hook(@roots)]
+      hooks = [nodefn.call(_.partial(hook, @roots))]
     else
       return W.reject('before hook should be a function or array')
 
