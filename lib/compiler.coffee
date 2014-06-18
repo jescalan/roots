@@ -159,7 +159,7 @@ class CompileFile
     normal_write_pushed = false
 
     for res in results
-      if res
+      if res is true
         if not normal_write_pushed then write_tasks.push(write_task.call(@))
         normal_write_pushed = true
       else if typeof res is 'object' and not Array.isArray(res)

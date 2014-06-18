@@ -6,7 +6,8 @@ class Watcher
 
   compile_change_compare: (src, output, comp, cb) ->
     initalStamp = null
-    first_compile = => initalStamp = @stat_file(output)
+    first_compile = =>
+      initalStamp = @stat_file(output)
 
     @compile_and_change_file src, first_compile, (err) =>
       if err then return cb(err)
@@ -20,14 +21,17 @@ class Watcher
       .on('error', cb)
       .on 'done', ->
         if ++count is 1 then return first_compile()
+        watcher.close()
         cb()
-    project.watch()
+
+    watcher = null
+    project.watch().then (res) -> watcher = res
 
     setTimeout =>
       p = path.join(@root, file)
       fs.appendFileSync(p, ' ')
       fs.writeFileSync(p, fs.readFileSync(p, 'utf8').trim())
-    , 1000
+    , 3000
 
   stat_file: (file) ->
     fs.statSync(path.join(@output, file)).mtime.getTime()

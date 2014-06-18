@@ -3,14 +3,14 @@ chaidriver = require 'chai-webdriver'
 CLI        = require '../lib/cli'
 fs         = require 'fs'
 
-cli = new CLI(debug: true)
-driver = new Driver.Builder().withCapabilities(Driver.Capabilities.phantomjs()).build()
-chai.use(chaidriver(driver))
-basic_path = path.join(base_path, 'compile/basic')
+# cli = new CLI(debug: true)
+# driver = new Driver.Builder().withCapabilities(Driver.Capabilities.phantomjs()).build()
+# chai.use(chaidriver(driver))
+# basic_path = path.join(base_path, 'compile/basic')
 
 describe 'browser', ->
 
-  it 'should compile and serve the site on watch', (done) ->
+  it.skip 'should compile and serve the site on watch', (done) ->
     cli.run("watch #{basic_path} --no-open").then (res) ->
       driver.get('http://localhost:1111')
         .then -> chai.expect('p').dom.to.have.text('hello worlds')

@@ -27,8 +27,8 @@ module.exports = ->
 
     category_hooks: ->
       after: (ctx, category) ->
-        ctx.roots.emit('after_category', ctx.path)    
+        ctx.roots.emit('after_category', ctx.path)
 
     project_hooks: ->
       after: (ctx) ->
-        ctx.roots.emit('after_project', ctx.path)    
+        ctx.roots.emit('after_project', ctx.path)

@@ -28,6 +28,11 @@ module.exports = (cli, args) ->
   project.on('done', -> on_done(cli, app, res.server))
   project.on('error', (err) -> on_error(cli, app, res.server, err))
 
+  process.on 'SIGINT', ->
+    cli.emit('err', 'watcher cancelled')
+    project.disconnect_workers()
+    process.exit(1)
+
   project.watch()
     .then (w) ->
       res.watcher = w
