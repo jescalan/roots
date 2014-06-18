@@ -51,8 +51,10 @@ module.exports = (cli, args) ->
 ###
 
 on_error = (cli, server, active, err) ->
-  cli.emit('err', Error(err).stack)
-  if active then server.show_error(Error(err).stack)
+  err = Error(err)
+  if 'stack' in err then err = err.stack
+  cli.emit('err', err)
+  if active then server.show_error(err)
 
 ###*
  * When a change has been detected, notifies the cli and browser that a compile
