@@ -1,4 +1,4 @@
-fs        = require 'fs'
+fs        = require 'graceful-fs'
 path      = require 'path'
 W         = require 'when'
 readdirp  = require 'readdirp'
