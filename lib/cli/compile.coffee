@@ -8,10 +8,13 @@ Roots = require '../../lib'
  * @return {Promise} a promise for the compiled project
 ###
 
-module.exports = (cli, args)->
-  project = new Roots(args.path, { env: args.environment })
+module.exports = (cli, args) ->
+  project = new Roots args.path,
+    env: args.environment
+    verbose: args.verbose
 
   cli.emit('inline', 'compiling... '.grey)
+  if args.verbose then cli.emit('data', '')
 
   project.compile()
     .then -> cli.emit('data', 'done!'.green)

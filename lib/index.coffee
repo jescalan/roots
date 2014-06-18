@@ -118,7 +118,8 @@ class Roots extends EventEmitter
 
   set_up_workers: ->
     @workers = [0...cpus].map =>
-      worker = cp.fork(path.join(__dirname, 'worker'), [@root, @opts])
+      args = [@root, JSON.stringify(@opts)]
+      worker = cp.fork(path.join(__dirname, 'worker'), args)
       worker.queue = []
       worker
 
