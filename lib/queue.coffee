@@ -41,7 +41,12 @@ module.exports = (cat, file) ->
 
   @taskmaster.once job_id, (data) =>
     worker.queue.shift()
-    if data == true then deferred.resolve() else deferred.reject(data)
+
+    if data == true
+      deferred.resolve()
+    else
+      deferred.reject(JSON.parse(data))
+
     if worker.queue.length > 0 then queue_next(worker)
     @workers = balance_workers(@workers)
 
