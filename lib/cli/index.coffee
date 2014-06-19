@@ -136,6 +136,10 @@ class CLI extends EventEmitter
       defaultValue: 1111
       help: "Port you want to run the local server on (default 1111)"
 
+    s.addArgument ['--verbose', '-v'],
+      action: 'storeTrue'
+      help: "Offer more verbose output and compile stats"
+
     s.setDefaults(fn: 'watch')
 
   $compile = (sub) ->
@@ -150,6 +154,10 @@ class CLI extends EventEmitter
     s.addArgument ['--env', '-e'],
       defaultValue: process.env or 'development'
       help: "Your project's environment"
+
+    s.addArgument ['--verbose', '-v'],
+      action: 'storeTrue'
+      help: "Offer more verbose output and compile stats"
 
     s.setDefaults(fn: 'compile')
 

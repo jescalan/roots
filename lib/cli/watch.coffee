@@ -19,12 +19,15 @@ Server = require '../local_server'
 ###
 
 module.exports = (cli, args) ->
-  project = new Roots(args.path, { env: args.environment })
+  project = new Roots args.path,
+    env: args.environment
+    verbose: args.verbose
+
   app  = new Server(project)
   port = process.env.port or args.port
   res = { project: project }
 
-  project.on('start', -> on_start(cli, app, res.server))
+  project.on('start', -> on_start(cli, app, res.server, project.config.verbose))
   project.on('done', -> on_done(cli, app, res.server))
   project.on('error', (err) -> on_error(cli, app, res.server, err))
 
@@ -65,8 +68,9 @@ on_error = (cli, server, active, err) ->
  * @param  {Object} server - server instance
 ###
 
-on_start = (cli, server, active) ->
+on_start = (cli, server, active, verbose) ->
   cli.emit('inline', 'compiling... '.grey)
+  if verbose then cli.emit('data', '')
   if active then server.compiling()
 
 ###*

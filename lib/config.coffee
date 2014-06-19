@@ -41,6 +41,7 @@ class Config
     @output = 'public'
     @dump_dirs = ['views', 'assets']
     @env = opts.env ? 'development'
+    @verbose = opts.verbose ? false
     @debug = false
     @live_reload = true
     @open_browser = true
