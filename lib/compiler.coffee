@@ -65,7 +65,11 @@ class CompileFile
   constructor: (@roots, @extensions, @compile_options, @category, @file) ->
     @adapters = get_adapters.call(@)
     @is_compiled = !!_(@adapters).pluck('name').compact().value().length
-    @file_options = filename: @file.path
+    @file_options =
+      filename: @file.path
+      path: @roots.config.out(
+        new File(base: @roots.root, path: @file.path), _.last(@adapters).output
+      )
 
   ###*
    * Initialize the actual compilation. This method is a higher level wrapper
