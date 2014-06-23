@@ -134,6 +134,16 @@ describe 'compile', ->
       path.join(output, 'manatoge.html').should.be.a.file()
       done()
 
+  it 'should have the file\'s url path available locally in views', (done) ->
+    p = path.join(test_path, 'path_helper')
+    output = path.join(p, 'public')
+
+    compile_fixture p, done, ->
+      p = path.join(output, 'path_helper.html')
+      p.should.be.a.file()
+      p.should.have.content('/path_helper.html')
+      done()
+
   it 'should work with different environments', (done) ->
     p = path.join(test_path, 'environments')
     output = path.join(p, 'public')
