@@ -5,7 +5,7 @@ readdirp  = require 'readdirp'
 _         = require 'lodash'
 minimatch = require 'minimatch'
 pipeline  = require 'when/pipeline'
-File      = require 'vinyl'
+File      = require 'fobject'
 
 ###*
  * @class FS Parser
@@ -33,7 +33,7 @@ class FSParser
    * Parses the roots base class' root path, whether file or directory
    * returns an "ast" representing the files categorized by the way they
    * need to be parsed. The ast is an object with the key being the
-   * category name and the value being an array of vinyl file instances.
+   * category name and the value being an array of File instances.
    * It would look something like this (with one 'example' extension):
    *
    * {
@@ -95,16 +95,12 @@ class FSParser
    *
    * https://github.com/cujojs/when/blob/master/docs/api.md#whenpipeline
    *
-   * This method also wraps each file in a vinyl wrapper. More info in vinyl:
-   * https://github.com/wearefractal/vinyl
-   *
    * @private
-   *
-   * @param  {String} file - path to a file
+   * @param  {String} filePath - path to a file
   ###
 
-  parse_file = (file) ->
-    file = new File(base: @root, path: file)
+  parse_file = (filePath) ->
+    file = new File(filePath, base: @root)
     list = (sort.bind(@, ext, file) for ext in @extensions when ext.fs)
 
     pipeline(list, false).yield(@ast)
@@ -130,7 +126,7 @@ class FSParser
    * @private
    *
    * @param  {Function} ext - a roots extension instance
-   * @param  {File} file - vinyl wrapper for a file
+   * @param  {File} file
    * @param  {Boolean} extract - if true, function is skipped
    * @return {Boolean} promise for a boolean, passed as extract to next function
    *
@@ -155,27 +151,25 @@ class FSParser
 
   ###*
    * Makes sure there are no duplicate directories and that they all directories
-   * are passed through as vinyl-wrapped file objects.
-   *
+   * are passed through as file objects.
    * @private
-   *
    * @return {Object} - modified instance of the `ast`
   ###
 
   format_dirs = ->
-    @ast.dirs = _.uniq(@ast.dirs).map((d) => new File(base: @root, path: d))
+    @ast.dirs = _.uniq(@ast.dirs).map((d) => new File(d, base: @root))
     @ast
 
   ###*
    * Checks a file against the ignored list to see if it should be skipped.
    *
-   * @param  {String} f - file path
+   * @param  {String} filePath
    * @return {Boolean} whether the file should be ignored or not
   ###
 
-  ignored = (f) ->
+  ignored = (filePath) ->
     @config.ignores
-      .map (i) -> minimatch(f, i, dot: true)
+      .map (i) -> minimatch(filePath, i, dot: true)
       .filter (i) -> i
       .length
 

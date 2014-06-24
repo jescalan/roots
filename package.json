@@ -1,11 +1,23 @@
 {
   "name": "roots",
-  "description": "simple, flexible, and powerful static site compiler",
   "version": "3.0.0-rc.7",
   "author": "Jeff Escalante <hello@jenius.me>",
   "contributors": [
     "Sam Saccone <sam@samx.it>"
   ],
+  "description": "simple, flexible, and powerful static site compiler",
+  "main": "lib",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jenius/roots"
+  },
+  "directories": {
+    "lib": "lib",
+    "bin": "bin",
+    "man": "man",
+    "doc": "doc"
+  },
   "dependencies": {
     "accord-parallel": "0.x",
     "argparse": "0.1.x",
@@ -14,6 +26,7 @@
     "coffee-script": "1.7.x",
     "colors": "0.6.x",
     "configstore": "0.3.x",
+    "fobject": "0.0.1",
     "graceful-fs": "3.x",
     "lodash": "2.x",
     "minimatch": "0.4.x",
@@ -26,7 +39,6 @@
     "serve-static": "1.x",
     "sprout": "0.1.x",
     "update-notifier": "0.2.x",
-    "vinyl": "0.2.x",
     "when": "3.x"
   },
   "devDependencies": {
@@ -47,25 +59,13 @@
     "sinon": "1.x",
     "sinon-chai": "2.x"
   },
-  "directories": {
-    "lib": "lib",
-    "bin": "bin",
-    "man": "man",
-    "doc": "doc"
-  },
-  "engines": {
-    "node": ">=0.10.0"
-  },
-  "license": "MIT",
-  "main": "lib",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jenius/roots"
-  },
   "scripts": {
     "test": "npm run lint && mocha",
     "lint": "find lib/ -name '*.coffee' | xargs coffeelint",
     "coverage": "make build; istanbul cover _mocha --report html -- -R spec && open coverage/index.html && make unbuild",
     "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild"
+  },
+  "engines": {
+    "node": ">=0.10.0"
   }
 }
