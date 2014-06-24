@@ -65,11 +65,8 @@ class CompileFile
   constructor: (@roots, @extensions, @compile_options, @category, @file) ->
     @adapters = get_adapters.call(@)
     @is_compiled = !!_(@adapters).pluck('name').compact().value().length
-    @file_options =
-      filename: @file.path
-      path: @roots.config.out(
-        new File(base: @roots.root, path: @file.path), _.last(@adapters).output
-      )
+    @out_ext = _.last(@adapters).output
+    @file_options = {filename: @file.path, _path: url_path.call(@)}
 
   ###*
    * Initialize the actual compilation. This method is a higher level wrapper
@@ -200,7 +197,7 @@ class CompileFile
       content: @content
 
     if not obj.extension? and @is_compiled
-      obj.extension = _.last(@adapters).output
+      obj.extension = @out_ext
 
     if not (obj.path instanceof File)
       obj.path = new File(base: @roots.root, path: obj.path)
@@ -247,6 +244,20 @@ class CompileFile
   each_pass = ->
     pass = new CompilePass(@)
     pipeline(@adapters.map((a,i) -> pass.run.bind(pass, a, i + 1)), @content)
+
+  ###*
+   * Returns the absolute path to the file as requested through the browser,
+   * excluding the hostname, port, etc.
+   *
+   * @return {String} the absolute URL as requested through the browser
+   *
+  ###
+
+  url_path = ->
+    f = new File(base: @roots.root, path: @file.path)
+    out_path = @roots.config.out(f, @out_ext)
+    p = path.relative(path.join(@roots.root, @roots.config.output), out_path)
+    return "/#{p.replace(path.sep, '/')}"
 
 ###*
  * @class CompilePass
