@@ -1,3 +1,5 @@
+posix = require 'posix'
+
 before (done) ->
   util.project.install_dependencies('*/*', done)
 
@@ -13,3 +15,10 @@ describe 'constructor', ->
     project = new Roots(path.join(base_path, 'compile/basic'))
     project.root.should.exist
     project.config.should.exist
+
+  describe 'open file limit', ->
+    before -> @limit = process.env['ROOTS_RLIMIT'] = 5000
+
+    it 'raises the limit according to the environment', ->
+      project = new Roots(path.join(base_path, 'compile/basic'))
+      posix.getrlimit('nofile').soft.should.equal(@limit)
