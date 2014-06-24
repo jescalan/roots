@@ -41,7 +41,8 @@
     "sprout": "0.1.x",
     "update-notifier": "0.1.x",
     "vinyl": "0.2.x",
-    "when": "3.x"
+    "when": "3.x",
+    "posix": "1.0.x"
   },
   "devDependencies": {
     "chai": "*",
