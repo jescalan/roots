@@ -1,6 +1,6 @@
 path   = require 'path'
 fs     = require 'fs'
-accord = require 'accord'
+accord = require 'accord-parallel'
 coffee = require 'coffee-script'
 _      = require 'lodash'
 posix  = require 'posix'
