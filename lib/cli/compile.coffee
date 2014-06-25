@@ -12,6 +12,7 @@ module.exports = (cli, args) ->
   project = new Roots args.path,
     env: args.environment
     verbose: args.verbose
+    workers: !args.no_workers
 
   cli.emit('inline', 'compiling... '.grey)
   if args.verbose then cli.emit('data', '')
