@@ -131,6 +131,26 @@ describe 'cli', ->
           done()
         , done
 
+    it 'should compile a project with --no-workers option', (done) ->
+      spy = sinon.spy()
+
+      cli.on('inline', spy)
+      cli.on('data', spy)
+
+      cwd = process.cwd()
+      process.chdir(path.join(__dirname, 'fixtures/compile/basic'))
+
+      cli.run('compile --no-workers')
+        .done ->
+          spy.should.have.been.calledTwice
+          spy.should.have.been.calledWith('compiling... '.grey)
+          spy.should.have.been.calledWith('done!'.green)
+          process.chdir(cwd)
+          cli.removeListener('inline', spy)
+          cli.removeListener('data', spy)
+          done()
+        , done
+
     it 'should compile a project at a given path', (done) ->
       spy = sinon.spy()
 
