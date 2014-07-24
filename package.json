@@ -32,7 +32,6 @@
     "lodash": "2.x",
     "minimatch": "0.3.x",
     "mkdirp": "0.5.x",
-    "node-uuid": "1.4.x",
     "npm": "^1.4.6",
     "open": "0.0.5",
     "readdirp": "1.x",

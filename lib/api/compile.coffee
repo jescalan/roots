@@ -135,7 +135,8 @@ class Compile
     @__dirs = output_paths
 
     nodefn.call(mkdirp, @roots.config.output_path())
-      .then(-> W.map(output_paths, guard(guard.n(1), nodefn.lift(mkdirp))))
+      .then ->
+        W.map(output_paths, guard(guard.n(1), ((p) -> nodefn.call(mkdirp, p) )))
 
   ###*
    * Files are processed by category, and each category can be processed in
