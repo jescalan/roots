@@ -3,8 +3,6 @@ fs             = require 'fs'
 path           = require 'path'
 Config         = require './config'
 Extensions     = require './extensions'
-cp             = require 'child_process'
-cpus           = require('os').cpus().length
 
 ###*
  * @class
@@ -58,12 +56,9 @@ class Roots extends EventEmitter
    * @return {Promise} promise for finished compile
   ###
 
-  compile: (persist = false) ->
-    if not @workers then @set_up_workers()
+  compile: ->
     Compile = require('./api/compile')
     (new Compile(@)).exec()
-      .tap(=> if not persist then @disconnect_workers())
-      .catch((err) => if not persist then @disconnect_workers(); throw err)
 
   ###*
    * Watches a folder for changes and compiles whenever changes happen.
@@ -72,13 +67,8 @@ class Roots extends EventEmitter
   ###
 
   watch: ->
-    if not @workers then @set_up_workers()
     Watch = require('./api/watch')
     (new Watch(@)).exec()
-      .then (watcher) =>
-        tmp = watcher.close
-        watcher.close = => @disconnect_workers(); tmp()
-        return watcher
 
   ###*
    * Removes a project's output folder.
@@ -98,46 +88,5 @@ class Roots extends EventEmitter
   ###
 
   bail: require('./api/bail')
-
-  ###*
-   * Manages workers, which are child processes that compile files so everything
-   * can move along real fast distributed across your computer's cores.
-   *
-   * @private
-  ###
-
-  _queue: require('./queue')
-
-  ###*
-   * Creates a worker for each cpu core and adds a queue property to it.
-   * Creates a taskmaster, which is an event emitter that listens to all workers
-   * and emits events with the job's id when a job is completed.
-   *
-   * @private
-  ###
-
-  set_up_workers: ->
-    @workers = [0...cpus].map =>
-      args = [@root, JSON.stringify(@opts)]
-      worker = cp.fork(path.join(__dirname, 'worker'), args)
-      worker.queue = []
-      worker
-
-    @taskmaster = new EventEmitter
-    for worker in @workers
-      worker.on 'message', (msg) =>
-        if msg.id
-          @taskmaster.emit(msg.id, msg.data)
-        else
-          @emit(msg.eventName, msg.data)
-
-  ###*
-   * Fairly self-explanitory, disconnects and kills all workers.
-   *
-   * @private
-  ###
-
-  disconnect_workers: ->
-    worker.kill() for worker in @workers
 
 module.exports = Roots

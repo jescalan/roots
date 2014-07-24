@@ -170,12 +170,7 @@ class Compile
     parallel = []
 
     compile_task = (cat) =>
-      compile_fn = if @roots.config.workers
-        @roots._queue.bind(@roots, cat)
-      else
-        @compiler.compile.bind(@compiler, cat)
-
-      W.map(ast[cat] ? [], compile_fn)
+      W.map(ast[cat] ? [], @compiler.compile.bind(@compiler, cat))
       .then(=> sequence(@extensions.hooks('category_hooks.after', cat), @, cat))
 
     for ext in @extensions

@@ -208,10 +208,10 @@ describe 'setup-function', ->
     @project
       .on('error', done)
       .on 'test', (v) =>
-        sentinel = true
+        sentinel.should.be.true
         v.should.equal('value')
+        done()
 
     @project.compile().then =>
-      sentinel.should.be.true
       path.join(@public, 'test.html').should.be.a.file()
-      done()
+      sentinel = true
