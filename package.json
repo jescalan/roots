@@ -19,7 +19,7 @@
     "doc": "doc"
   },
   "dependencies": {
-    "accord": "0.10.0",
+    "accord": "0.11.x",
     "argparse": "0.1.x",
     "charge": "0.0.3",
     "chokidar": "0.8.x",
@@ -30,7 +30,7 @@
     "graceful-fs": "3.x",
     "js-yaml": "3.x",
     "lodash": "2.x",
-    "minimatch": "0.3.x",
+    "minimatch": "0.4.x",
     "mkdirp": "0.5.x",
     "npm": "^1.4.6",
     "open": "0.0.5",
@@ -38,7 +38,7 @@
     "rimraf": "2.x",
     "serve-static": "^1.1.0",
     "sprout": "0.1.x",
-    "update-notifier": "0.1.x",
+    "update-notifier": "0.2.x",
     "vinyl": "0.2.x",
     "when": "3.x",
     "posix": "1.0.x"
