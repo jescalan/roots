@@ -34,7 +34,7 @@
     "open": "0.0.5",
     "readdirp": "1.x",
     "rimraf": "2.x",
-    "serve-static": "1.1.x",
+    "serve-static": "1.x",
     "sprout": "0.1.x",
     "update-notifier": "0.2.x",
     "vinyl": "0.2.x",
