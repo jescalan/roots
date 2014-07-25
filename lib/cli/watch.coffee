@@ -22,7 +22,6 @@ module.exports = (cli, args) ->
   project = new Roots args.path,
     env: args.environment
     verbose: args.verbose
-    workers: !args.no_workers
 
   app  = new Server(project)
   port = process.env.port or args.port

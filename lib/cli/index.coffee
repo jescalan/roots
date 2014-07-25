@@ -131,11 +131,6 @@ class CLI extends EventEmitter
       help: "If present, this command will not automatically open a browser
       window"
 
-    s.addArgument ['--no-workers'],
-      action: 'storeTrue'
-      help: "If present, roots will not spawn any workers during compile
-      and instead use one single process"
-
     s.addArgument ['--port', '-p'],
       type: Number
       defaultValue: 1111
@@ -159,11 +154,6 @@ class CLI extends EventEmitter
     s.addArgument ['--env', '-e'],
       defaultValue: process.env or 'development'
       help: "Your project's environment"
-
-    s.addArgument ['--no-workers'],
-      action: 'storeTrue'
-      help: "If present, roots will not spawn any workers during compile
-      and instead use one single process"
 
     s.addArgument ['--verbose', '-v'],
       action: 'storeTrue'
