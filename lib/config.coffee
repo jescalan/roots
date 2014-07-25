@@ -1,6 +1,6 @@
 path   = require 'path'
 fs     = require 'fs'
-accord = require 'accord'
+accord = require 'accord-parallel'
 coffee = require 'coffee-script'
 _      = require 'lodash'
 posix  = require 'posix'
@@ -40,7 +40,9 @@ class Config
 
   constructor: (@roots, opts) ->
     # raise maximum number of open file descriptors, prevents EMFILE errors
-    posix.setrlimit('nofile', { soft: process.env['ROOTS_RLIMIT'] || 10000 })
+    # switching to graceful-fs in accord should remove the need for this hack,
+    # also this fails on linux so it's wrapped in a `try`
+    try posix.setrlimit('nofile', soft: process.env['ROOTS_RLIMIT'] || 10000)
 
     @output = 'public'
     @dump_dirs = ['views', 'assets']
@@ -49,7 +51,6 @@ class Config
     @debug = false
     @live_reload = true
     @open_browser = true
-    @workers = opts.workers ? true
 
     load_config.call(@)
 
@@ -93,7 +94,7 @@ class Config
   ###
 
   load_config = ->
-    basename = if @env is 'development' then "app" else "app.#{@env}"
+    basename = if @env is 'development' then 'app' else "app.#{@env}"
     config_path = path.join(@roots.root, basename)
     config_exists = fs.existsSync("#{config_path}.coffee")
 
@@ -122,7 +123,7 @@ class Config
     path.join(@roots.root, @output)
 
   ###*
-   * Given a vinyl-wrapped file and optional extension, this function produces
+   * Given a file and optional extension, this function produces
    * the path to the file's destination. To do so, it goes through these steps:
    *
    * - Take the relative path and split it by /
@@ -132,13 +133,13 @@ class Config
    * - Join it back together with /
    * - If an extension override was provided, replace the extension
    *
-   * @param  {File} f - vinyl instance
+   * @param  {File} file
    * @param  {String} ext - file extension, no dot
    * @return {String} path to where the file should be written
   ###
 
-  out: (f, ext) ->
-    res = f.relative.split(path.sep)
+  out: (file, ext) ->
+    res = file.relative.split(path.sep)
     if _.contains(@dump_dirs, res[0]) then res.shift()
     res.unshift(@output_path())
     res = res.join(path.sep)

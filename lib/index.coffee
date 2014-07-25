@@ -3,6 +3,7 @@ fs             = require 'fs'
 path           = require 'path'
 Config         = require './config'
 Extensions     = require './extensions'
+accord = require 'accord-parallel'
 
 ###*
  * @class
@@ -19,7 +20,7 @@ class Roots extends EventEmitter
 
   constructor: (@root, @opts={}) ->
     @root = path.resolve(@root)
-    if not fs.existsSync(@root) then throw new Error("path does not exist")
+    if not fs.existsSync(@root) then throw new Error('path does not exist')
     @extensions = new Extensions(@)
     @config = new Config(@, @opts)
 
@@ -56,9 +57,10 @@ class Roots extends EventEmitter
    * @return {Promise} promise for finished compile
   ###
 
-  compile: ->
+  compile: (persist = false) ->
     Compile = require('./api/compile')
     (new Compile(@)).exec()
+      .tap(-> if not persist then accord.endWorkerFarm())
 
   ###*
    * Watches a folder for changes and compiles whenever changes happen.
