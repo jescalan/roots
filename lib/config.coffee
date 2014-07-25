@@ -40,7 +40,9 @@ class Config
 
   constructor: (@roots, opts) ->
     # raise maximum number of open file descriptors, prevents EMFILE errors
-    posix.setrlimit('nofile', { soft: process.env['ROOTS_RLIMIT'] || 10000 })
+    # switching to graceful-fs in accord should remove the need for this hack,
+    # also this fails on linux so it's wrapped in a `try`
+    try posix.setrlimit('nofile', soft: process.env['ROOTS_RLIMIT'] || 10000)
 
     @output = 'public'
     @dump_dirs = ['views', 'assets']
