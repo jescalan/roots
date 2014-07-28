@@ -79,6 +79,10 @@ class Roots extends EventEmitter
     Clean = require('./api/clean')
     (new Clean(@)).exec()
 
+  deploy: (opts) ->
+    Deploy = require('./api/deploy')
+    (new Deploy(@)).exec(opts)
+
   ###*
    * If an irrecoverable error has occurred, exit the application with
    * as clear an error as possible and a specific exit code.

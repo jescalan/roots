@@ -32,14 +32,15 @@
     "mkdirp": "0.5.x",
     "npm": "1.4.x",
     "open": "0.0.5",
+    "posix": "1.0.x",
     "readdirp": "1.x",
     "rimraf": "2.x",
     "serve-static": "1.x",
+    "ship": "0.1.x",
     "sprout": "0.1.x",
     "update-notifier": "0.2.x",
     "vinyl": "0.2.x",
-    "when": "3.x",
-    "posix": "1.0.x"
+    "when": "3.x"
   },
   "devDependencies": {
     "chai": "1.x",
