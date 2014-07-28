@@ -102,3 +102,25 @@ If you need to cancel the watcher at any time, the actual ``watch`` method retur
     setTimeout(watcher.close, 1000)
 
 This code would, for some reason, start a watcher but stop it after 1 second. You get the idea.
+
+Deploying
+---------
+
+Roots is tightly integrated with `ship <https://github.com/carrot/ship>`_, which allows users to easily deploy their sites to a variety of targets. You can use a simplified version of ship's api through roots as such:
+
+.. code-block:: javascript
+
+    var Roots = require('roots');
+    var project = new Roots('/path/to/project');
+
+    project.deploy({ to: 's3' })
+      .progress(console.log)
+      .done(function(){
+        console.log('finished!');
+      }, function(err){
+        console.log('uh oh... ' + err);
+      })
+
+The deploy method is very simple, and only takes one parameter, which is an object specifying a value for the ``to`` key, which can be any of the deployers available through ship, as a string. If you listen for the progress event on the deploy promise, you will get back information about how the deployment is progressing. If the project hasn't been configured yet, you may also get back a readline instance, which can be used to programmatically respond to the command line inquiries, mostly for testing. If you want to ignore this, just ignore anything other than strings, as all deployment info will be returned as a string.
+
+The deployer will look for a ``ship.conf`` file at the root of the project. If there is not one present, it will prompt for that deployer's config values through the command line, then write ``ship.conf`` to root with those values before deploying. If there is a ``ship.conf`` file already, it will deploy directly with the provided values.
