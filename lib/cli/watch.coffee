@@ -33,7 +33,6 @@ module.exports = (cli, args) ->
 
   process.on 'SIGINT', ->
     cli.emit('err', 'watcher cancelled')
-    project.disconnect_workers()
     process.exit(1)
 
   project.watch()

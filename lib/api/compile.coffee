@@ -29,7 +29,6 @@ class Compile
   ###
 
   constructor: (@roots) ->
-    # extensions need to be instantiated inside each worker
     @extensions = @roots.extensions.instantiate()
     @fs_parser = new FSParser(@roots, @extensions)
     @compiler = new Compiler(@roots, @extensions)

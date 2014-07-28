@@ -49,7 +49,6 @@ class Config
     @debug = false
     @live_reload = true
     @open_browser = true
-    @workers = opts.workers ? true
 
     load_config.call(@)
 
