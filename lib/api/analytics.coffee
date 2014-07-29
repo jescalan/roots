@@ -6,5 +6,6 @@ global_config = require '../global_config'
 ###
 
 module.exports = (args) ->
-  if args.disable then global_config.set('analytics', false)
-  if args.enable then global_config.set('analytics', true)
+  conf = global_config()
+  if args.disable then conf.set('analytics', false)
+  if args.enable then conf.set('analytics', true)

@@ -1,4 +1,5 @@
-pkg = require '../package.json'
+Configstore = require 'configstore'
+pkg         = require '../package.json'
 
 ###*
  * Interface for interacting with the roots global config options
@@ -8,7 +9,7 @@ pkg = require '../package.json'
 ###
 
 module.exports = ->
-  new (require 'configstore') "#{pkg.name}-v#{pkg.version.split('.')[0]}",
+  new Configstore "#{pkg.name}-v#{pkg.version.split('.')[0]}",
     package_manager: 'bower'
     default_template: 'roots-base'
     analytics: true

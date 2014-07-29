@@ -1,8 +1,3 @@
-var mockery = require('mockery');
-
-mockery.enable({ warnOnUnregistered: false });
-mockery.registerMock('os', { cpus: function(){ return [1,2,3,4] } });
-
 var path = require('path'),
     fs = require('fs'),
     chai = require('chai'),
