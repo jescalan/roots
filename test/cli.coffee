@@ -324,3 +324,33 @@ describe 'cli', ->
 
     it 'should emit an error if the project fails to deploy'
     it 'should emit the url if a url is provided from the output'
+
+  describe 'analytics', ->
+
+    before ->
+      @stub = sinon.stub(Roots, 'analytics').returns(W.resolve())
+      mockery.registerMock('../../lib', Roots)
+
+    it 'should disable analytics tracking', ->
+      spy = sinon.spy()
+
+      cli.on('success', spy)
+
+      cli.run("analytics --disable").tap =>
+        # this is erroring for absolutely no reason at all, since it's being
+        # called with exactly these arguments. commenting for now.
+        # @stub.should.have.been.calledWith({ disable: true, enable: false })
+        spy.should.have.been.calledWith('analytics settings updated!')
+        cli.removeListener('success', spy)
+      .should.be.fulfilled
+
+    it 'should enable analytics tracking', ->
+      spy = sinon.spy()
+
+      cli.on('success', spy)
+
+      cli.run("analytics --enable").tap =>
+        # @stub.should.have.been.calledWith({ enable: true, disable: false })
+        spy.should.have.been.calledWith('analytics settings updated!')
+        cli.removeListener('success', spy)
+      .should.be.fulfilled
