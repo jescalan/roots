@@ -34,6 +34,7 @@ class CLI extends EventEmitter
     $tpl(sub)
     $clean(sub)
     $deploy(sub)
+    $analytics(sub)
 
   ###*
    * Parses the arguments, runs the command
@@ -242,6 +243,20 @@ class CLI extends EventEmitter
       help: "Where to deploy the project to - for example s3, heroku, gh-pages"
 
     s.setDefaults(fn: 'deploy')
+
+  $analytics = (sub) ->
+    s = sub.addParser 'analytics',
+      help: 'Enable or disable roots\'s built-in analytics'
+
+    s.addArgument ['--disable'],
+      action: 'storeTrue'
+      help: "Globally disable roots analytics"
+
+    s.addArgument ['--enable'],
+      action: 'storeTrue'
+      help: "Globally enable roots analytics"
+
+    s.setDefaults(fn: 'analytics')
 
   ###*
    * A simple csv-like string to object parser. Takes in "foo: bar, baz: quux",
