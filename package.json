@@ -27,6 +27,7 @@
     "colors": "0.6.x",
     "configstore": "0.3.x",
     "graceful-fs": "3.x",
+    "keen.io": "^0.1.2",
     "lodash": "2.x",
     "minimatch": "1.x",
     "mkdirp": "0.5.x",
@@ -64,7 +65,8 @@
     "test": "npm run lint && mocha",
     "lint": "find lib/ -name '*.coffee' | xargs coffeelint",
     "coverage": "make build; istanbul cover _mocha --report html -- -R spec && open coverage/index.html && make unbuild",
-    "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild"
+    "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild",
+    "postinstall": "node ./post_install.js"
   },
   "engines": {
     "node": ">=0.10.0"

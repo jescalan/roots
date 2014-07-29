@@ -15,6 +15,7 @@ class Clean
   ###
 
   exec: ->
+    __track('api', { name: 'clean' })
     nodefn.call(rimraf, @roots.config.output_path())
 
 module.exports = Clean

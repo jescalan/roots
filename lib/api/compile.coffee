@@ -46,6 +46,8 @@ class Compile
   ###
 
   exec: ->
+    __track('api', { name: 'compile' })
+
     @roots.emit('start')
 
     before_hook.call(@)

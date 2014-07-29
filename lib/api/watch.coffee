@@ -21,6 +21,8 @@ class Watcher
   ###
 
   exec: ->
+    __track('api', { name: 'watch' })
+
     @roots.compile(true).finally =>
       @watcher
         .on('error', (err) => @roots.emit('error', err))

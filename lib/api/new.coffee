@@ -34,6 +34,8 @@ class New
   constructor: (@Roots) ->
 
   exec: (opts = {}) ->
+    __track('api', { name: 'new', template: opts.template })
+
     d = W.defer()
 
     if not opts.path

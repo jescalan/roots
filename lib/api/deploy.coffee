@@ -5,6 +5,8 @@ class Deploy
   constructor: (@project) ->
 
   exec: (opts = {}) ->
+    __track('api', { name: 'deploy', deployer: opts.to })
+
     @project.compile()
     .then => new Ship(root: @project.root, deployer: opts.to)
     .tap (ship) ->

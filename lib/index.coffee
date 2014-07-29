@@ -1,3 +1,5 @@
+require('./analytics')
+
 {EventEmitter} = require('events')
 fs             = require 'fs'
 path           = require 'path'
@@ -92,5 +94,10 @@ class Roots extends EventEmitter
   ###
 
   bail: require('./api/bail')
+
+
+Roots.analytics = (args) ->
+  analytics = require('./api/analytics')
+  analytics(args)
 
 module.exports = Roots

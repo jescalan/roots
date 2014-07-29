@@ -13,7 +13,9 @@ global_config = require '../global_config'
  * @return {Promise} a promise for the added template
 ###
 
-exports.add = sprout.add.bind(sprout)
+exports.add = (args) ->
+  __track('api', { name: 'template-add', name: args.name })
+  sprout.add(args)
 
 ###*
  * Removes a template from sprout. Delegates directly to sprout's API.
@@ -22,14 +24,18 @@ exports.add = sprout.add.bind(sprout)
  * @return {Promise} promise for removed template
 ###
 
-exports.remove = sprout.remove.bind(sprout)
+exports.remove = (args) ->
+  __track('api', { name: 'template-remove', name: args.name })
+  sprout.remove(args)
 
 ###*
  * List all templates. Delegates directly to sprout's API.
  * @return {String} a string colored and formatted for the terminal
 ###
 
-exports.list = sprout.list.bind(sprout)
+exports.list = (args) ->
+  __track('api', { name: 'template-list' })
+  sprout.list(args)
 
 ###*
  * Set the default template used with roots new when one isn't supplied.
@@ -39,6 +45,8 @@ exports.list = sprout.list.bind(sprout)
 ###
 
 exports.default = (args = {}) ->
+  __track('api', { name: 'template-default', name: args.name })
+
   if not args.name
     return W.reject(new Error('please provide a template name'))
 
@@ -60,6 +68,8 @@ exports.default = (args = {}) ->
 ###
 
 exports.reset = (override) ->
+  __track('api', { name: 'template-reset' })
+
   deferred = W.defer()
 
   if override
