@@ -14,7 +14,7 @@ global_config = require '../global_config'
 ###
 
 exports.add = (args) ->
-  __track('api', { name: 'template-add', name: args.name })
+  __track('api', { name: 'template-add', template: args.name })
   sprout.add(args)
 
 ###*
@@ -25,7 +25,7 @@ exports.add = (args) ->
 ###
 
 exports.remove = (args) ->
-  __track('api', { name: 'template-remove', name: args.name })
+  __track('api', { name: 'template-remove', template: args.name })
   sprout.remove(args)
 
 ###*
@@ -45,7 +45,7 @@ exports.list = (args) ->
 ###
 
 exports.default = (args = {}) ->
-  __track('api', { name: 'template-default', name: args.name })
+  __track('api', { name: 'template-default', template: args.name })
 
   if not args.name
     return W.reject(new Error('please provide a template name'))
