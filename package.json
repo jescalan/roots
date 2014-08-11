@@ -28,7 +28,7 @@
     "configstore": "0.3.x",
     "graceful-fs": "3.x",
     "lodash": "2.x",
-    "minimatch": "0.4.x",
+    "minimatch": "1.x",
     "mkdirp": "0.5.x",
     "npm": "1.4.x",
     "open": "0.0.5",
@@ -39,7 +39,7 @@
     "ship": "0.1.x",
     "sprout": "0.1.x",
     "update-notifier": "0.2.x",
-    "vinyl": "0.2.x",
+    "vinyl": "0.3.x",
     "when": "3.x"
   },
   "devDependencies": {
