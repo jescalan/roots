@@ -56,7 +56,8 @@ class Config
     @ignores = @ignores.concat [
       'package.json',
       'app*.coffee',
-      "#{@output}/**/*"
+      "#{@output}/**/*",
+      '.git'
     ]
 
     @watcher_ignores ?= []
@@ -64,7 +65,8 @@ class Config
       'package.json',
       'app.coffee',
       'node_modules/**/*',
-      "#{@output}/**/*"
+      "#{@output}/**/*",
+      '.git'
     ]
 
     @compilers = get_compilers.call(@)
