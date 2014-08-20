@@ -17,4 +17,4 @@ module.exports = (cli, args) ->
   if args.verbose then cli.emit('data', '')
 
   project.compile()
-    .done -> cli.emit('data', 'done!'.green)
+    .then -> cli.emit('data', 'done!'.green)
