@@ -153,6 +153,23 @@ describe 'cli', ->
 
       cli.run('compile').should.be.rejected
 
+    describe 'compile environments', ->
+      before ->
+        @spy = sinon.spy(global, 'Roots')
+        mockery.registerMock('../../lib', Roots)
+
+      after ->
+        @spy.restore()
+        mockery.deregisterAll()
+
+      it 'compile should handle environments args correctly', (done) ->
+        env = 'doge'
+        p   = path.join(__dirname, 'fixtures/compile/environments')
+        cli.run("compile #{p} --env #{env}")
+          .done =>
+            @spy.args[0][1].env.should.equal(env)
+            done()
+
   describe 'watch', ->
 
     before ->
@@ -184,6 +201,23 @@ describe 'cli', ->
           obj.server.close(done)
 
     it 'should error when trying to compile invalid code'
+
+    describe 'watch environments', ->
+      before ->
+        @spy = sinon.spy(global, 'Roots')
+        mockery.registerMock('../../lib', Roots)
+
+      after ->
+        @spy.restore()
+        mockery.deregisterAll()
+
+      it 'watch should handle environments args correctly', (done) ->
+        env = 'doge'
+        p   = path.join(__dirname, 'fixtures/compile/environments')
+        cli.run("watch #{p} --env #{env}")
+          .done =>
+            @spy.args[0][1].env.should.equal(env)
+            done()
 
   describe 'clean', ->
 
