@@ -37,7 +37,7 @@ Roots is certainly not the only static site compiler out there. Check out a [com
 
 ### Installation
 
-`npm install roots -g`
+`npm install roots@pre -g`
 
 ### Usage
 
