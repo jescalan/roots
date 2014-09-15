@@ -25,7 +25,7 @@ Make sure you have [node.js](http://nodejs.org/) installed, then just run `npm i
 
 ##### Windows Installs
 * If you encounter problems when installing. Please ensure [Git](http://git-scm.com/downloads), Python 2.7, and Visual C++ runtime executables are installed.
-* You can install Windows Visual C++ components by doing any of the following: Installing Visual Studio 2005 or above, installing the .NET framework or manually adding it to your system PATH if it already exists on your machine.
+* You can install Windows Visual C++ components by doing any of the following: Installing Visual Studio 2005 or above, installing the [.NET framework](http://www.microsoft.com/en-us/download/confirmation.aspx?id=40779) or manually adding it to your system PATH if it already exists on your machine.
 
 Usage
 -----
