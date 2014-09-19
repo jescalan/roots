@@ -56,6 +56,7 @@ on_error = (cli, server, active, err) ->
   err = Error(err)
   if 'stack' in err then err = err.stack
   cli.emit('err', err)
+  console.log('\u0007')
   if active then server.show_error(err)
 
 ###*

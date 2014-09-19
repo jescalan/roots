@@ -70,6 +70,8 @@ class Server
 
   reload: -> @send_msg('reload')
   compiling: -> @send_msg('compiling')
-  show_error: (err) -> @send_msg('error', err)
+  show_error: (err) ->
+    err = err.toString() if err instanceof Error
+    @send_msg('error', err)
 
 module.exports = Server
