@@ -11,7 +11,9 @@ class Deploy
     .then => new Ship(root: @project.root, deployer: opts.to)
     .tap (ship) ->
       if not ship.is_configured()
-        ship.config_prompt().then(ship.write_config.bind(ship))
+        ship.config_prompt()
+          .tap (values) -> ship.config = values
+          .then -> ship.write_config()
     .tap (ship) => ship.deploy(@project.config.output_path())
 
 module.exports = Deploy

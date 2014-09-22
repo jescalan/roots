@@ -9,6 +9,7 @@ describe 'deploy', ->
     project.deploy(to: 'nowhere')
       .progress (prompt) -> prompt.rl.emit("line", "wow")
       .tap (ship) -> node.call(fs.unlink, ship.shipfile)
+      .catch (err) -> console.log err.stack
       .should.be.fulfilled
 
   it 'deploys when a shipfile is already present', ->
