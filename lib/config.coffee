@@ -3,7 +3,11 @@ fs     = require 'fs'
 accord = require 'accord'
 coffee = require 'coffee-script'
 _      = require 'lodash'
-posix  = require 'posix'
+
+try
+  posix  = require 'posix'
+catch
+  posix = null
 
 ###*
  * @class Config
@@ -41,7 +45,8 @@ class Config
   constructor: (@roots, opts) ->
     # raise maximum number of open file descriptors, prevents EMFILE errors
     limit = process.env['ROOTS_RLIMIT'] || 10000
-    try posix.setrlimit('nofile', { soft: limit, hard: limit })
+    if (posix)
+      try posix.setrlimit('nofile', { soft: limit, hard: limit })
 
     @output = 'public'
     @dump_dirs = ['views', 'assets']
