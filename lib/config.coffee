@@ -149,7 +149,7 @@ class Config
     if _.contains(@dump_dirs, res[0]) then res.shift()
     res.unshift(@output_path())
     res = res.join(path.sep)
-    pathSeparator = if path.sep is "\\" then "\\\\" # ensure windows \ doesn't ruin the regex
+    pathSeparator = if path.sep is "\\" then "\\\\" # allow for windows "\"
     if ext then res = res.replace(///\.[^#{pathSeparator}]*$///, ".#{ext}")
     res
 
