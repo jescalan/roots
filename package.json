@@ -33,7 +33,6 @@
     "mkdirp": "0.5.x",
     "npm": "2.x",
     "open": "0.0.5",
-    "posix": "1.0.x",
     "readdirp": "1.x",
     "rimraf": "2.x",
     "serve-static": "1.x",
@@ -60,6 +59,9 @@
     "selenium-webdriver": "2.x",
     "sinon": "1.x",
     "sinon-chai": "2.x"
+  },
+  "optionalDependencies":{
+    "posix": "1.0.x"
   },
   "scripts": {
     "test": "npm run lint && mocha",
