@@ -381,7 +381,7 @@ describe 'cli', ->
       p   = path.join(__dirname, 'fixtures/compile/environments')
       @cli.run("compile #{p} --env #{env}")
         .done =>
-          # @spy.args[0][1].env.should.equal(env)
+          @spy.args[0][1].env.should.equal(env)
           done()
 
     it 'watch should handle environments args correctly', (done) ->
@@ -390,5 +390,5 @@ describe 'cli', ->
       @cli.run("watch #{p} --env #{env} --no-open")
         .catch(->)
         .done =>
-          # @spy.args[0][1].env.should.equal(env)
+          @spy.args[0][1].env.should.equal(env)
           done()
