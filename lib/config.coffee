@@ -3,8 +3,9 @@ fs     = require 'fs'
 accord = require 'accord'
 coffee = require 'coffee-script'
 _      = require 'lodash'
+os     = require('os')
 
-if require('os').platform() is 'win32'
+if os.platform() is 'win32'
   posix = setrlimit: ->
 else
   posix  = require 'posix'
@@ -149,7 +150,11 @@ class Config
     if _.contains(@dump_dirs, res[0]) then res.shift()
     res.unshift(@output_path())
     res = res.join(path.sep)
-    if ext then res = res.replace(///\.[^#{path.sep}]*$///, ".#{ext}")
+    if ext
+      if (os.platform() is 'win32')
+        res = res.replace(///\.[^\#{path.sep}]*$///, ".#{ext}")
+      else
+        res = res.replace(///\.[^#{path.sep}]*$///, ".#{ext}")
     res
 
   ###*
