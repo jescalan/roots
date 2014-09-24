@@ -1,6 +1,6 @@
 {
   "name": "roots",
-  "version": "3.0.0-rc.9",
+  "version": "3.0.0-rc.10",
   "author": "Jeff Escalante <hello@jenius.me>",
   "contributors": [
     "Sam Saccone <sam@samx.it>"
@@ -60,7 +60,7 @@
     "sinon": "1.x",
     "sinon-chai": "2.x"
   },
-  "optionalDependencies":{
+  "optionalDependencies": {
     "posix": "1.0.x"
   },
   "scripts": {
