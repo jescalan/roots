@@ -20,7 +20,7 @@ Server = require '../local_server'
 
 module.exports = (cli, args) ->
   project = new Roots args.path,
-    env: args.environment
+    env: args.env
     verbose: args.verbose
 
   app  = new Server(project)
