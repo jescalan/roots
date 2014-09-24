@@ -3,7 +3,12 @@ fs     = require 'fs'
 accord = require 'accord'
 coffee = require 'coffee-script'
 _      = require 'lodash'
-posix  = require 'posix'
+os     = require('os')
+
+if os.platform() is 'win32'
+  posix = setrlimit: ->
+else
+  posix  = require 'posix'
 
 ###*
  * @class Config
@@ -41,7 +46,8 @@ class Config
   constructor: (@roots, opts) ->
     # raise maximum number of open file descriptors, prevents EMFILE errors
     limit = process.env['ROOTS_RLIMIT'] || 10000
-    try posix.setrlimit('nofile', { soft: limit, hard: limit })
+    if (posix)
+      try posix.setrlimit('nofile', { soft: limit, hard: limit })
 
     @output = 'public'
     @dump_dirs = ['views', 'assets']
@@ -144,7 +150,11 @@ class Config
     if _.contains(@dump_dirs, res[0]) then res.shift()
     res.unshift(@output_path())
     res = res.join(path.sep)
-    if ext then res = res.replace(///\.[^#{path.sep}]*$///, ".#{ext}")
+    if ext
+      if (os.platform() is 'win32')
+        res = res.replace(///\.[^\#{path.sep}]*$///, ".#{ext}")
+      else
+        res = res.replace(///\.[^#{path.sep}]*$///, ".#{ext}")
     res
 
   ###*

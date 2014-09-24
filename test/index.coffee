@@ -1,4 +1,7 @@
-posix = require 'posix'
+if require('os').platform() is 'win32'
+  posix = null
+else
+  posix  = require 'posix'
 
 before (done) ->
   util.project.install_dependencies('*/*', done)
@@ -16,9 +19,14 @@ describe 'constructor', ->
     project.root.should.exist
     project.config.should.exist
 
-  describe 'open file limit', ->
-    before -> @limit = process.env['ROOTS_RLIMIT'] = 5000
+    describe 'open file limit', ->
+      before ->
+        return unless posix
 
-    it 'raises the limit according to the environment', ->
-      project = new Roots(path.join(base_path, 'compile/basic'))
-      posix.getrlimit('nofile').soft.should.equal(@limit)
+        @limit = process.env['ROOTS_RLIMIT'] = 5000
+
+      it 'raises the limit according to the environment', ->
+        return unless posix
+
+        project = new Roots(path.join(base_path, 'compile/basic'))
+        posix.getrlimit('nofile').soft.should.equal(@limit)
