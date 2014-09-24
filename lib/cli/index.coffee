@@ -125,7 +125,7 @@ class CLI extends EventEmitter
       help: "Path to a project that you would like to watch"
 
     s.addArgument ['--env', '-e'],
-      defaultValue: process.env or 'development'
+      defaultValue: process.env['NODE_ENV'] or 'development'
       help: "Your project's environment"
 
     s.addArgument ['--no-open'],
@@ -154,7 +154,7 @@ class CLI extends EventEmitter
       help: "Path to a project that you would like to compile"
 
     s.addArgument ['--env', '-e'],
-      defaultValue: process.env or 'development'
+      defaultValue: process.env['NODE_ENV'] or 'development'
       help: "Your project's environment"
 
     s.addArgument ['--verbose', '-v'],

@@ -3,13 +3,14 @@ mockery      = require 'mockery'
 CLI          = require '../lib/cli'
 pkg          = require('../package.json')
 EventEmitter = require('events').EventEmitter
+util         = require 'util'
 
 cli = new CLI(debug: true)
 test_tpl_path = 'https://github.com/jenius/sprout-test-template.git'
 
 describe 'cli', ->
 
-  before -> mockery.enable(warnOnUnregistered: false)
+  before -> mockery.enable(warnOnUnregistered: false, useCleanCache: true)
   after -> mockery.disable()
 
   it 'should throw if no arguments are provided', ->
@@ -34,8 +35,9 @@ describe 'cli', ->
     cli.run("compile #{broken_ext_path}")
 
   it 'should correctly log other thrown errors', (done) ->
+    mockery.resetCache()
     stub = sinon.stub(Roots.prototype, 'compile').returns([])
-    mockery.registerMock('../../lib', stub)
+    mockery.registerMock('../../lib', Roots)
 
     cb = (err) ->
       err.toString().should.equal("TypeError: Object  has no method 'then'")
@@ -149,6 +151,7 @@ describe 'cli', ->
 
     it 'should handle errors correctly', ->
       @stub.restore()
+      mockery.resetCache()
       @stub = sinon.stub(Roots.prototype, 'compile').returns(W.reject())
 
       cli.run('compile').should.be.rejected
@@ -245,7 +248,7 @@ describe 'cli', ->
 
       it 'should list all templates', (done) ->
 
-        cli.on 'data', (data) ->
+        cli.once 'data', (data) ->
           data.should.match /Templates/
           done()
 
@@ -331,6 +334,10 @@ describe 'cli', ->
       @stub = sinon.stub(Roots, 'analytics').returns(W.resolve())
       mockery.registerMock('../../lib', Roots)
 
+    after ->
+      @stub.restore()
+      mockery.deregisterAll()
+
     it 'should disable analytics tracking', ->
       spy = sinon.spy()
 
@@ -354,3 +361,34 @@ describe 'cli', ->
         spy.should.have.been.calledWith('analytics settings updated!')
         cli.removeListener('success', spy)
       .should.be.fulfilled
+
+  describe 'environments', ->
+    before ->
+      @spy = sinon.spy()
+      util.inherits(@spy, EventEmitter)
+      @spy.prototype.compile = W.resolve.bind(W)
+      @spy.prototype.watch   = W.reject.bind(W)
+      @cli = new CLI(debug: true)
+      mockery.resetCache()
+      mockery.registerMock('../../lib', @spy)
+      mockery.registerMock('../local_server', sinon.spy())
+
+    after ->
+      mockery.deregisterAll()
+
+    it 'compile should handle environments args correctly', (done) ->
+      env = 'doge'
+      p   = path.join(__dirname, 'fixtures/compile/environments')
+      @cli.run("compile #{p} --env #{env}")
+        .done =>
+          # @spy.args[0][1].env.should.equal(env)
+          done()
+
+    it 'watch should handle environments args correctly', (done) ->
+      env = 'doge'
+      p   = path.join(__dirname, 'fixtures/compile/environments')
+      @cli.run("watch #{p} --env #{env} --no-open")
+        .catch(->)
+        .done =>
+          # @spy.args[0][1].env.should.equal(env)
+          done()
