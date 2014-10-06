@@ -58,6 +58,7 @@ If you are confused and/or having trouble, one of the solutions below will almos
 - File [an issue](https://github.com/jenius/roots/issues)
 - Ask us in the official IRC channel on freenode, **#roots-dev**
 - [Tweet at me](http://twitter.com/jescalan), and we'll work it out
+- Feel free to take part in a conversation on [gitter](https://gitter.im/jenius/roots)
 
 
 The Future
