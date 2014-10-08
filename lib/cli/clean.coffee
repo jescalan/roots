@@ -10,6 +10,7 @@ rimraf = require 'rimraf'
 ###
 
 module.exports = (cli, args) ->
+  __track('commands', name: 'clean')
   project = new Roots(args.path)
   project.clean()
     .then -> cli.emit('success', 'output removed')

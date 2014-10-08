@@ -19,6 +19,8 @@ Server = require '../local_server'
 ###
 
 module.exports = (cli, args) ->
+  __track('commands', name: 'watch')
+
   project = new Roots args.path,
     env: args.env
     verbose: args.verbose

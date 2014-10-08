@@ -9,6 +9,8 @@ Roots = require '../../lib'
 ###
 
 module.exports = (cli, args) ->
+  __track('commands', { name: 'deploy', deployer: args.to })
+
   project = new Roots(args.path)
 
   project.deploy(args)

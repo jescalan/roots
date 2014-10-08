@@ -9,6 +9,8 @@ Roots = require '../../lib'
 ###
 
 module.exports = (cli, args) ->
+  __track('commands', { name: 'new', template: args.template })
+
   Roots.new(args)
     .progress((i) -> cli.emit('info', i))
     .then (roots) ->

@@ -9,6 +9,8 @@ Roots = require '../../lib'
 ###
 
 module.exports = (cli, args) ->
+  __track('commands', name: 'compile')
+
   project = new Roots args.path,
     env: args.env
     verbose: args.verbose
