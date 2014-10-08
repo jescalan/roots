@@ -14,6 +14,8 @@
 
 A light, super fast, and intuitive static build system made for front end development and building web apps.
 
+> **NOTE:** If you are starting a new project with roots, we'd encourage you to check out v3, which is entirely useable and due for stable release very soon. You can find it on the [v3 branch](https://github.com/jenius/roots/tree/v3).
+
 Installation
 ------------
 
