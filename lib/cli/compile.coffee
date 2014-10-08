@@ -18,3 +18,4 @@ module.exports = (cli, args) ->
 
   project.compile()
     .then -> cli.emit('data', 'done!'.green)
+    .catch (err) -> cli.emit('err_exit', err); throw err

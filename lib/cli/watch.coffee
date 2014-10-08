@@ -32,8 +32,7 @@ module.exports = (cli, args) ->
   project.on('error', (err) -> on_error(cli, app, res.server, err))
 
   process.on 'SIGINT', ->
-    cli.emit('err', 'watcher cancelled')
-    process.exit(1)
+    cli.emit('err_exit', 'watcher cancelled')
 
   project.watch()
     .then (w) ->
