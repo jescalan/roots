@@ -18,6 +18,9 @@
     "man": "man",
     "doc": "doc"
   },
+  "bin": {
+    "roots": "bin/roots"
+  },
   "dependencies": {
     "accord": "0.12.x",
     "argparse": "0.1.x",
