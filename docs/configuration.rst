@@ -14,7 +14,7 @@ Format
     env: 'development'
     after: -> console.log('what a useful function')
 
-This is a great way to format the file for maximum simplicity. It ends up being very clean and easy to manage. However, if you want to do more advanced things like ``require``ing in files node/commonjs-style, you will not be able to do this. It is parsed simply as an object, not with full node functionality. If you do want full node functionality though, you're in luck -- all you have to do is add ``module.exports =`` to the top, like this:
+This is a great way to format the file for maximum simplicity. It ends up being very clean and easy to manage. However, if you want to do more advanced things like ``require`` files node/commonjs-style, you will not be able to do this. It is parsed simply as an object, not with full node functionality. If you do want full node functionality though, you're in luck -- all you have to do is add ``module.exports =`` to the top, like this:
 
 .. code-block:: coffee-script
 
