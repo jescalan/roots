@@ -13,6 +13,7 @@ exports.start = (serve_dir) ->
       <!-- roots development configuration -->
       <script>var __livereload  = #{roots.project.conf("livereloadEnabled")};
               var __rootsport   = #{port};
+              var __rootswsport   = #{roots.project.conf("wsPort") || port};
       </script>
       <script src='/__roots__/main.js'></script>
     """)
