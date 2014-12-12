@@ -30,6 +30,18 @@ This is a great way to format the file for maximum simplicity. It ends up being 
 
 As you can see, here we are able to locally require in extra dependencies and push them directly into the roots pipeline. Make sure if you are requiring locally to note the use of ``module.require`` - since this is loaded into roots' context, you'll need the ``module`` prefix in order to load your deps from the right place.
 
+Config Per Target
+-------
+
+You will most likely want to have a slightly different configuration depending on if you are in a development or production environment. Roots makes this easy to do. When you are running your roots command simply pass an argument to specify which enviroment you are in.
+
+For Example: `roots compile -e dev`
+
+Roots will then looks for a
+
+`app.__dev__.coffee` file to read its configuration from.
+
+
 Options
 -------
 
