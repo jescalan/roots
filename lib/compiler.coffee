@@ -346,4 +346,4 @@ class CompilePass
 
   compile_or_pass = ->
     if not @adapter.name then return @content
-    @adapter.render(@content, @opts)
+    @adapter.render(@content, @opts).then((r) -> r.result)
