@@ -299,9 +299,11 @@ class CompilePass
       .with(@)
       .tap(=> @opts = configure_options.call(@))
       .then(compile_or_pass)
-      .then((o) => @content = o)
-      .then(=> sequence(hooks('compile_hooks.after_pass'), @))
-      .then(=> @content)
+      .then (o) =>
+        @content = o.result
+        @sourcemap = o.sourcemap
+        return @content
+      .tap(=> sequence(hooks('compile_hooks.after_pass'), @))
 
   ###*
    * This function is responsible for getting all the options together for the
@@ -345,5 +347,5 @@ class CompilePass
   ###
 
   compile_or_pass = ->
-    if not @adapter.name then return @content
-    @adapter.render(@content, @opts).then((r) -> r.result)
+    if not @adapter.name then return { result: @content }
+    @adapter.render(@content, @opts)
