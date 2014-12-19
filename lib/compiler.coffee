@@ -90,7 +90,7 @@ class CompileFile
       .then((o) => @content = o)
       .then(=> sequence(hooks('compile_hooks.before_file'), @))
       .then(each_pass)
-      .tap((o) => @content = o)
+      .tap((o) => @content = o.result)
       .tap(=> @roots.emit('compile', @file))
       .then(=> sequence(hooks('compile_hooks.after_file'), @))
       .then(write_file)
@@ -243,7 +243,7 @@ class CompileFile
 
   each_pass = ->
     pass = new CompilePass(@)
-    pipeline(@adapters.map((a,i) -> pass.run.bind(pass, a, i + 1)), @content)
+    pipeline(@adapters.map((a,i) -> pass.run.bind(pass, a, i + 1)), { result: @content })
 
   ###*
    * Returns the absolute path to the file as requested through the browser,
@@ -292,8 +292,10 @@ class CompilePass
    * @todo is there a way to yield(@content)?
   ###
 
-  run: (@adapter, @index, @content) ->
+  run: (@adapter, @index, @input) ->
     hooks = (cat) => @file.extensions.hooks(cat, @file.category)
+
+    @content = @input.result
 
     sequence(hooks('compile_hooks.before_pass'), @)
       .with(@)
@@ -301,8 +303,11 @@ class CompilePass
       .then(compile_or_pass)
       .then (o) =>
         @content = o.result
-        @sourcemap = o.sourcemap
-        return @content
+        res = { result: @content }
+        if o.sourcemap
+          @sourcemap = o.sourcemap
+          res.sourcemap = @sourcemap
+        return res
       .tap(=> sequence(hooks('compile_hooks.after_pass'), @))
 
   ###*
@@ -347,5 +352,5 @@ class CompilePass
   ###
 
   compile_or_pass = ->
-    if not @adapter.name then return { result: @content }
+    if not @adapter.name then return @input
     @adapter.render(@content, @opts)
