@@ -1,0 +1,7 @@
+{
+  "name": "test",
+  "dependencies": {
+    "coffee-script": "*",
+    "stylus": "*"
+  }
+}

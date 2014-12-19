@@ -90,7 +90,9 @@ class CompileFile
       .then((o) => @content = o)
       .then(=> sequence(hooks('compile_hooks.before_file'), @))
       .then(each_pass)
-      .tap((o) => @content = o.result)
+      .tap (o) =>
+        @content = o.result
+        @sourcemap = o.sourcemap
       .tap(=> @roots.emit('compile', @file))
       .then(=> sequence(hooks('compile_hooks.after_file'), @))
       .then(write_file)
@@ -129,6 +131,7 @@ class CompileFile
   write_file = ->
     sequence(@extensions.hooks('compile_hooks.write', @category), @)
       .then(process_write_hook_results.bind(@))
+      .then(write_sourcemaps_if_present.bind(@))
       .then(W.all)
 
   ###*
@@ -172,6 +175,20 @@ class CompileFile
 
     return W.resolve(write_tasks)
 
+  write_sourcemaps_if_present = (tasks) ->
+    if not @sourcemap then return tasks
+
+    f = new File
+      base: @roots.root
+      path: @file.path + '.map'
+
+    tasks.push write_task.call @,
+      path: f
+      content: @sourcemap
+      sourcemap: true
+
+    return W.resolve(tasks)
+
   ###*
    * Single task to write a file. Accepts an optional object with the following
    * keys:
@@ -198,6 +215,9 @@ class CompileFile
 
     if not obj.extension? and @is_compiled
       obj.extension = @out_ext
+
+    if obj.sourcemap?
+      obj.extension += '.map'
 
     if not (obj.path instanceof File)
       obj.path = new File(base: @roots.root, path: obj.path)
