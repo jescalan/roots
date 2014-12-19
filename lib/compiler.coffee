@@ -263,7 +263,8 @@ class CompileFile
 
   each_pass = ->
     pass = new CompilePass(@)
-    pipeline(@adapters.map((a,i) -> pass.run.bind(pass, a, i + 1)), { result: @content })
+    pipeline(@adapters.map((a,i) -> pass.run.bind(pass, a, i + 1)),
+      { result: @content })
 
   ###*
    * Returns the absolute path to the file as requested through the browser,
