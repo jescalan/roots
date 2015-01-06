@@ -204,6 +204,12 @@ class CompileFile
    * override and there was a compile, otherwise any extensions are preserved as
    * is.
    *
+   * If there is a sourcemap for one of the files being written, two things need
+   * to happen. First, the sourcemap needs to be written with a .map extension.
+   * Second, the output file needs to get a source mapping url comment so that
+   * it knows where the sourcemap is. Both of these things happen as well in
+   * this method.
+   *
    * @param  {Object} obj - object with `path` and `content` properties
    * @return {Promise} a promise for the written file
   ###
@@ -223,6 +229,14 @@ class CompileFile
       obj.path = new File(base: @roots.root, path: obj.path)
 
     obj.path = @roots.config.out(obj.path, obj.extension)
+
+    if @sourcemap and not obj.sourcemap?
+      if @out_ext is 'css'
+        obj.content = "#{obj.content}\n
+        /*# sourceMappingURL=#{path.basename(obj.path)}.map */"
+      if @out_ext is 'js'
+        obj.content = "#{obj.content}\n
+        //# sourceMappingURL=#{path.basename(obj.path)}.map"
 
     nodefn.call(mkdirp, path.dirname(obj.path))
       .then(-> nodefn.call(fs.writeFile, obj.path, obj.content))
