@@ -167,4 +167,15 @@ describe 'compile', ->
       p3.should.be.a.file()
       p4 = path.join(output, 'test.js.map')
       p4.should.be.a.file()
+
+      sm1 = JSON.parse(fs.readFileSync(p2, 'utf8'))
+      sm2 = JSON.parse(fs.readFileSync(p4, 'utf8'))
+
+      sm1.version.should.equal(3)
+      sm2.version.should.equal(3)
+      sm1.file.should.equal('test.css')
+      sm2.file.should.equal('test.js')
+      sm1.mappings.length.should.be.above(1)
+      sm2.mappings.length.should.be.above(1)
+
       done()

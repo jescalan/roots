@@ -184,7 +184,7 @@ class CompileFile
 
     tasks.push write_task.call @,
       path: f
-      content: @sourcemap
+      content: JSON.stringify(@sourcemap)
       sourcemap: true
 
     return W.resolve(tasks)

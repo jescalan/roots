@@ -1,5 +1,5 @@
 stylus:
-  sourcemap: { comment: false }
+  sourcemap: true
 
 'coffee-script':
-  sourceMap: true
+  sourcemap: true

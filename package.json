@@ -19,7 +19,7 @@
     "doc": "doc"
   },
   "dependencies": {
-    "accord": "0.13.x",
+    "accord": "0.14.x",
     "argparse": "0.1.x",
     "charge": "0.0.3",
     "chokidar": "0.9.x",
