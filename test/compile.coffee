@@ -153,3 +153,29 @@ describe 'compile', ->
       path.join(output, 'dev_file.html').should.not.be.a.path()
       done()
     , done
+
+  it 'should output sourcemaps when specified', (done) ->
+    p = path.join(test_path, 'sourcemaps')
+    output = path.join(p, 'public')
+
+    compile_fixture p, done, ->
+      p = path.join(output, 'test.css')
+      p.should.be.a.file()
+      p2 = path.join(output, 'test.css.map')
+      p2.should.be.a.file()
+      p3 = path.join(output, 'test.js')
+      p3.should.be.a.file()
+      p4 = path.join(output, 'test.js.map')
+      p4.should.be.a.file()
+
+      sm1 = JSON.parse(fs.readFileSync(p2, 'utf8'))
+      sm2 = JSON.parse(fs.readFileSync(p4, 'utf8'))
+
+      sm1.version.should.equal(3)
+      sm2.version.should.equal(3)
+      sm1.file.should.equal('test.css')
+      sm2.file.should.equal('test.js')
+      sm1.mappings.length.should.be.above(1)
+      sm2.mappings.length.should.be.above(1)
+
+      done()

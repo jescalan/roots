@@ -90,7 +90,9 @@ class CompileFile
       .then((o) => @content = o)
       .then(=> sequence(hooks('compile_hooks.before_file'), @))
       .then(each_pass)
-      .tap((o) => @content = o)
+      .tap (o) =>
+        @content = o.result
+        @sourcemap = o.sourcemap
       .tap(=> @roots.emit('compile', @file))
       .then(=> sequence(hooks('compile_hooks.after_file'), @))
       .then(write_file)
@@ -129,6 +131,7 @@ class CompileFile
   write_file = ->
     sequence(@extensions.hooks('compile_hooks.write', @category), @)
       .then(process_write_hook_results.bind(@))
+      .then(write_sourcemaps_if_present.bind(@))
       .then(W.all)
 
   ###*
@@ -172,6 +175,20 @@ class CompileFile
 
     return W.resolve(write_tasks)
 
+  write_sourcemaps_if_present = (tasks) ->
+    if not @sourcemap then return tasks
+
+    f = new File
+      base: @roots.root
+      path: @file.path + '.map'
+
+    tasks.push write_task.call @,
+      path: f
+      content: JSON.stringify(@sourcemap)
+      sourcemap: true
+
+    return W.resolve(tasks)
+
   ###*
    * Single task to write a file. Accepts an optional object with the following
    * keys:
@@ -187,6 +204,12 @@ class CompileFile
    * override and there was a compile, otherwise any extensions are preserved as
    * is.
    *
+   * If there is a sourcemap for one of the files being written, two things need
+   * to happen. First, the sourcemap needs to be written with a .map extension.
+   * Second, the output file needs to get a source mapping url comment so that
+   * it knows where the sourcemap is. Both of these things happen as well in
+   * this method.
+   *
    * @param  {Object} obj - object with `path` and `content` properties
    * @return {Promise} a promise for the written file
   ###
@@ -199,10 +222,21 @@ class CompileFile
     if not obj.extension? and @is_compiled
       obj.extension = @out_ext
 
+    if obj.sourcemap?
+      obj.extension += '.map'
+
     if not (obj.path instanceof File)
       obj.path = new File(base: @roots.root, path: obj.path)
 
     obj.path = @roots.config.out(obj.path, obj.extension)
+
+    if @sourcemap and not obj.sourcemap?
+      if @out_ext is 'css'
+        obj.content = "#{obj.content}\n
+        /*# sourceMappingURL=#{path.basename(obj.path)}.map */"
+      if @out_ext is 'js'
+        obj.content = "#{obj.content}\n
+        //# sourceMappingURL=#{path.basename(obj.path)}.map"
 
     nodefn.call(mkdirp, path.dirname(obj.path))
       .then(-> nodefn.call(fs.writeFile, obj.path, obj.content))
@@ -243,7 +277,8 @@ class CompileFile
 
   each_pass = ->
     pass = new CompilePass(@)
-    pipeline(@adapters.map((a,i) -> pass.run.bind(pass, a, i + 1)), @content)
+    pipeline(@adapters.map((a,i) -> pass.run.bind(pass, a, i + 1)),
+      { result: @content })
 
   ###*
    * Returns the absolute path to the file as requested through the browser,
@@ -292,16 +327,23 @@ class CompilePass
    * @todo is there a way to yield(@content)?
   ###
 
-  run: (@adapter, @index, @content) ->
+  run: (@adapter, @index, @input) ->
     hooks = (cat) => @file.extensions.hooks(cat, @file.category)
+
+    @content = @input.result
 
     sequence(hooks('compile_hooks.before_pass'), @)
       .with(@)
       .tap(=> @opts = configure_options.call(@))
       .then(compile_or_pass)
-      .then((o) => @content = o)
-      .then(=> sequence(hooks('compile_hooks.after_pass'), @))
-      .then(=> @content)
+      .then (o) =>
+        @content = o.result
+        res = { result: @content }
+        if o.sourcemap
+          @sourcemap = o.sourcemap
+          res.sourcemap = @sourcemap
+        return res
+      .tap(=> sequence(hooks('compile_hooks.after_pass'), @))
 
   ###*
    * This function is responsible for getting all the options together for the
@@ -345,5 +387,5 @@ class CompilePass
   ###
 
   compile_or_pass = ->
-    if not @adapter.name then return @content
+    if not @adapter.name then return @input
     @adapter.render(@content, @opts)
