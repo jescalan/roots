@@ -1,0 +1,2 @@
+locals:
+  env: 'production'
