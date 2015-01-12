@@ -5,11 +5,6 @@ coffee = require 'coffee-script'
 _      = require 'lodash'
 os     = require('os')
 
-if os.platform() is 'win32'
-  posix = setrlimit: ->
-else
-  posix  = require 'posix'
-
 ###*
  * @class Config
  * @classdesc Manages configuration info and setup for roots
@@ -44,11 +39,6 @@ class Config
   ###
 
   constructor: (@roots, opts) ->
-    # raise maximum number of open file descriptors, prevents EMFILE errors
-    limit = process.env['ROOTS_RLIMIT'] || 10000
-    if (posix)
-      try posix.setrlimit('nofile', { soft: limit, hard: limit })
-
     @output = 'public'
     @dump_dirs = ['views', 'assets']
     @env = opts.env ? 'development'

@@ -36,7 +36,7 @@
     "readdirp": "1.x",
     "rimraf": "2.x",
     "serve-static": "1.x",
-    "ship": "0.1.x",
+    "ship": "0.2.x",
     "sprout": "0.1.x",
     "update-notifier": "0.2.x",
     "vinyl": "0.4.x",
@@ -55,13 +55,10 @@
     "mocha-lcov-reporter": "0.0.1",
     "mockery": "1.x",
     "phantomjs": "1.x",
-    "roots-util": "0.0.4",
+    "roots-util": "0.1.x",
     "selenium-webdriver": "2.x",
     "sinon": "1.x",
     "sinon-chai": "2.x"
-  },
-  "optionalDependencies": {
-    "posix": "1.0.x"
   },
   "scripts": {
     "test": "npm run lint && mocha",
