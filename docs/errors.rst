@@ -14,3 +14,12 @@ This error means that you fed roots an `extension <extensions.html>`_ of the inc
 ---------------------------------
 
 This error means that your extension's `write hook <extensions.html#write-hook>`_ returned incorrectly formatted output. See the docs for write hooks (linked above) for more details on how to correct this.
+
+EMFILE, too many open files
+----------------------------------
+
+This occurs when roots hits the maximum limit of open files on a UNIX system (more specifically the number file descriptors that can be assigned). Unfortunately, the default value on most Mac OS X machines is ``1024``, and a large roots project can easily exceed this value. In order to fix the issue, run:
+
+``$ ulimit -n <NEW_LIMIT>``
+
+For example, ``ulimit -n 10000`` will raise the open file limit to 10000. For more information, check out Isaac Schlueter's `blog post <http://blog.izs.me/post/56827866110/wtf-is-emfile-and-why-does-it-happen-to-me>`_ on the topic.
