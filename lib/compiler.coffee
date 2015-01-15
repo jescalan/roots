@@ -388,4 +388,5 @@ class CompilePass
 
   compile_or_pass = ->
     if not @adapter.name then return @input
+    if not @content.length then return @input
     @adapter.render(@content, @opts)
