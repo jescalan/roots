@@ -1,3 +1,5 @@
+fs    = require 'fs'
+path  = require 'path'
 Roots = require '../../lib'
 
 ###*
@@ -11,7 +13,11 @@ Roots = require '../../lib'
 module.exports = (cli, args) ->
   __track('commands', { name: 'deploy', deployer: args.to })
 
-  project = new Roots(args.path)
+  opts = {}
+  if fs.existsSync(path.join(args.path, 'app.production.coffee'))
+    opts.env = 'production'
+
+  project = new Roots(args.path, opts)
 
   project.deploy(args)
     .progress (msg) ->
