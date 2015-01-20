@@ -13,11 +13,11 @@ Roots = require '../../lib'
 module.exports = (cli, args) ->
   __track('commands', { name: 'deploy', deployer: args.to })
 
-  opts = {}
-  if fs.existsSync(path.join(args.path, 'app.production.coffee'))
-    opts.env = 'production'
+  if !args.env and fs.existsSync(path.join(args.path, 'app.production.coffee'))
+    args.env = 'production'
+  delete args.env
 
-  project = new Roots(args.path, opts)
+  project = new Roots args.path, env: args.env
 
   project.deploy(args)
     .progress (msg) ->

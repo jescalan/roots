@@ -47,3 +47,12 @@ describe 'deploy', ->
     .then -> path.join(p, 'public/index.html').should.have.content('production')
     .catch(console.log)
     .should.be.fulfilled
+
+  it 'compiles with another environment if available', ->
+    p = path.join(base_path, 'deploy/another_environment')
+    project = new Roots(p, env: 'foo')
+
+    project.deploy(to: 'nowhere')
+    .then -> path.join(p, 'public/index.html').should.have.content('foo')
+    .catch(console.log)
+    .should.be.fulfilled

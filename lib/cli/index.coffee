@@ -242,6 +242,10 @@ class CLI extends EventEmitter
     s.addArgument ['-to', '--to'],
       help: "Where to deploy the project to - for example s3, heroku, gh-pages"
 
+    s.addArgument ['--env', '-e'],
+      defaultValue: process.env['NODE_ENV']
+      help: "Your project's environment"
+
     s.setDefaults(fn: 'deploy')
 
   $analytics = (sub) ->
