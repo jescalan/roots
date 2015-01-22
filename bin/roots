@@ -4,8 +4,10 @@ require('coffee-script/register');
 var cli = new (require('../lib/cli')),
     pkg = require('../package.json')
     notifier = require('update-notifier')({
-      packageName: pkg.name,
-      packageVersion: pkg.version
+      pkg: {
+        name: pkg.name,
+        version: pkg.version
+      }
     });
 
 // new version notification
