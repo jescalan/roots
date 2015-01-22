@@ -14,7 +14,7 @@
   },
   "directories": {
     "lib": "lib",
-    "bin": "bin",
+    "bin": "bin"
   },
   "dependencies": {
     "accord": "0.14.x",
