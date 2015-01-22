@@ -15,8 +15,6 @@
   "directories": {
     "lib": "lib",
     "bin": "bin",
-    "man": "man",
-    "doc": "doc"
   },
   "dependencies": {
     "accord": "0.14.x",
@@ -27,7 +25,7 @@
     "colors": "1.x",
     "configstore": "0.3.x",
     "graceful-fs": "3.x",
-    "keen.io": "^0.1.2",
+    "keen.io": "0.1.x",
     "lodash": "2.x",
     "minimatch": "2.x",
     "mkdirp": "0.5.x",

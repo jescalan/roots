@@ -1,5 +1,6 @@
 test
-docs
 .editorconfig
 .travis.yml
 Makefile
+contributing.md
+
