@@ -21,5 +21,7 @@ client = Keen.configure
 
 global.__track = (category, e) ->
   enabled = global_config().get('analytics')
-  if enabled then return node.call(client.addEvent.bind(client), category, e)
-  return false
+  if enabled
+    return node.call(client.addEvent.bind(client), category, e).catch(->)
+  else
+    return false
