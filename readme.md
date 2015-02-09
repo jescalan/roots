@@ -31,7 +31,7 @@ Roots is certainly not the only static site compiler out there. But in our opini
 
 ### Installation
 
-`npm install roots -g`
+`npm install roots -g` - if you get an `EACCES` error, [check here](http://roots.cx/docs/error#eacces-permission-denied)
 
 ### Usage
 
