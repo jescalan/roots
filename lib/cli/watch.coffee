@@ -41,7 +41,10 @@ module.exports = (cli, args) ->
       res.watcher = w
       res.server = app.start(port)
       if project.config.open_browser and not args.no_open
-        open("http://localhost:#{port}/")
+        if project.config.open_browser == true
+          open("http://localhost:#{port}/")
+        else
+          open(project.config.open_browser)
     .yield(res)
 
 ###*
