@@ -9,12 +9,11 @@ module.exports =
   live_reload: false
   open_browser: false
   locals:
-    data: [
+    data:
       user:
         name: 'alfred'
         location: 'new york'
       values: [3, 4]
-    ]
   server:
     clean_urls: false
     exclude: ['another file']

@@ -9,12 +9,11 @@ module.exports =
   live_reload: true
   open_browser: true
   locals:
-    data: [
+    data:
       user:
         name: 'joe'
         age: 45
       values: [1, 2]
-    ]
   server:
     clean_urls: true
     exclude: ['some_file']
