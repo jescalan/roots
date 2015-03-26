@@ -85,31 +85,37 @@ class Config
    * If the file does export anything, this means it's being used as a node
    * file, so it is required and processed as a node file.
    *
+   * If an environment specific conf file is loaded, the locals and extensions
+   * from the environment specific file are then merged into the default
+   * app.coffee config to allow DRY reuse of locals and extensions between
+   * environments.
+   *
    * Each of the values that are exported are attached directly to the config
    * object, overwriting the defaults if this applies. Finally, extensions are
    * all registered with roots if they are provided.
   ###
 
   load_config = ->
-    basename = if @env is 'development' then "app" else "app.#{@env}"
-    config_path = path.join(@roots.root, basename)
-    config_exists = fs.existsSync("#{config_path}.coffee")
+    conf = read_config.call(@, "app")
 
-    if not config_exists
-      if @env isnt 'development'
-        console.warn "\nEnvironment config file not found. Make sure
-        'app.#{@env}.coffee' is present at the root of your project.\n".yellow
-      return
+    if @env isnt 'development'
+      env_conf        = read_config.call(@, "app.#{@env}")
 
-    conf = require(config_path)
-    if Object.keys(conf).length < 1
-      conf = eval coffee.compile(
-        fs.readFileSync("#{config_path}.coffee", 'utf8'), { bare: true }
-      )
+      # merge environment locals into default locals
+      env_conf.locals = _.merge(conf.locals, env_conf.locals)
+
+      # merge extensions having environment confg extensions override any w same
+      # name in the default conf extensions
+      for ext in env_conf.extensions
+        conf.extensions = _.reject(conf.extensions, (e) -> e.name == ext.name)
+      env_conf.extensions = env_conf.extensions.concat(conf.extensions)
+
+      conf = env_conf
 
     @[k] = v for k, v of conf
 
     @roots.extensions.register(@extensions) if @extensions
+
 
   ###*
    * Produces the full path to the output folder
@@ -174,5 +180,33 @@ class Config
         res[dep] = accord.load(dep, local_compiler)
 
     return res
+
+  ###*
+   * Given a basename (eg 'app' or `app.staging'), attempts to read the
+   * config from the path
+   *
+   * @private
+   * @param {String}  - basename for app conf file
+   * @return {Object} - the conf object from the file
+   *
+  ###
+
+  read_config = (basename) ->
+    config_path = path.join(@roots.root, basename)
+    config_exists = fs.existsSync("#{config_path}.coffee")
+
+    if not config_exists
+      if @env isnt 'development'
+        console.warn "\nEnvironment config file not found. Make sure
+        'app.#{@env}.coffee' is present at the root of your project.\n".yellow
+      return
+
+    conf = require(config_path)
+    if Object.keys(conf).length < 1
+      conf = eval coffee.compile(
+        fs.readFileSync("#{config_path}.coffee", 'utf8'), { bare: true }
+      )
+    return conf
+
 
 module.exports = Config

@@ -160,9 +160,6 @@ describe 'compile', ->
       @project.config.locals.data.user.name.should.eq('alfred')
       @project.config.locals.data.user.age.should.eq(45)
 
-    it 'should concat arrays in locals together at the same key', ->
-      @project.config.locals.data.values.should.eq([1,2,3,4])
-
     it 'should replace extensions from the default app.coffee w environment specific ones', ->
       @project.config.locals.test_extension.test.should.eq('app.doge.coffee')
       @project.config.locals.another_extension.test.should.eq('another extension')
