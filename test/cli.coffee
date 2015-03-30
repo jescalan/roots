@@ -40,7 +40,7 @@ describe 'cli', ->
     mockery.registerMock('../../lib', Roots)
 
     cb = (err) ->
-      err.toString().should.equal("TypeError: Object  has no method 'then'")
+      err.toString().should.equal("TypeError: undefined is not a function")
       cli.removeListener('err', cb)
       stub.restore()
       mockery.deregisterAll()
