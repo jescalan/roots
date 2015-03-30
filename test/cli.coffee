@@ -40,7 +40,7 @@ describe 'cli', ->
     mockery.registerMock('../../lib', Roots)
 
     cb = (err) ->
-      err.toString().should.equal("TypeError: undefined is not a function")
+      err.toString().should.be.a('string')
       cli.removeListener('err', cb)
       stub.restore()
       mockery.deregisterAll()

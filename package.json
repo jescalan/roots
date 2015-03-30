@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "accord": "0.16.x",
-    "argparse": "0.1.x",
+    "argparse": "1.x",
     "charge": "0.0.3",
     "chokidar": "0.9.x",
     "coffee-script": "1.8.x",
