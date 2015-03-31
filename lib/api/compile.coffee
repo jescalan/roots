@@ -104,9 +104,9 @@ class Compile
     if not hook then return W.resolve()
 
     if Array.isArray(hook)
-      hooks = hook.map((h) => nodefn.call(_.partial(h, @roots)))
+      hooks = hook.map((h) => nodefn.lift(_.partial(h, @roots).call(@roots)))
     else if typeof hook is 'function'
-      hooks = [nodefn.call(_.partial(hook, @roots))]
+      hooks = [nodefn.lift(_.partial(hook, @roots).call(@roots))]
     else
       return W.reject('before hook should be a function or array')
 
