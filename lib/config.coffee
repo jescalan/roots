@@ -99,7 +99,7 @@ class Config
     conf = read_config.call(@, "app")
 
     if @env isnt 'development'
-      env_conf        = read_config.call(@, "app.#{@env}")
+      env_conf = read_config.call(@, "app.#{@env}")
 
       # merge environment locals into default locals
       env_conf.locals = _.merge(conf.locals, env_conf.locals)
@@ -206,6 +206,8 @@ class Config
       conf = eval coffee.compile(
         fs.readFileSync("#{config_path}.coffee", 'utf8'), { bare: true }
       )
+
+    conf.extensions ?= []
     return conf
 
 
