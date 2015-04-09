@@ -11,6 +11,13 @@ os     = require('os')
 ###
 
 class Config
+  ###*
+   * This is an escaped version of the platform specific path seperator to be
+   * used in regular expressions. It is defined as a (derived) constant,
+   * because the path seperator does not change over the course of a run.
+  ###
+  
+  PATH_SEPERATOR_REGEXP_STRING = path.sep.replace '\\', '\\\\'
 
   ###*
    * Creates a new instance of the roots config. This happens once, as soon as
@@ -141,10 +148,7 @@ class Config
     res.unshift(@output_path())
     res = res.join(path.sep)
     if ext
-      if (os.platform() is 'win32')
-        res = res.replace(///\.[^\#{path.sep}]*$///, ".#{ext}")
-      else
-        res = res.replace(///\.[^#{path.sep}]*$///, ".#{ext}")
+      res = res.replace(///\.[^#{PATH_SEPERATOR_REGEXP_STRING}]*$///, ".#{ext}")
     res
 
   ###*
