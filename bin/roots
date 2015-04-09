@@ -16,11 +16,11 @@ notifier.notify();
 // log out data
 cli.on('info', function(m){ console.log(("▸ " + m).grey) });
 cli.on('success', function(m){ console.log(("✓ " + m).green) });
-cli.on('err', function(err){ console.error("✘ ".red + err); });
+cli.on('err', function(err){ console.error(err); });
 cli.on('data', console.log.bind(console));
 cli.on('inline', process.stdout.write.bind(process.stdout));
 cli.on('err_exit', function(err){
-  console.error("✘ ".red + err);
+  console.error(err);
   process.exit(1);
 });
 
