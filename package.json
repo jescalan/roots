@@ -20,7 +20,7 @@
     "accord": "0.16.x",
     "argparse": "1.x",
     "charge": "0.0.3",
-    "chokidar": "0.9.x",
+    "chokidar": "1.0.x",
     "coffee-script": "1.9.x",
     "colors": "1.x",
     "configstore": "0.3.x",
