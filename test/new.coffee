@@ -1,11 +1,15 @@
 rimraf        = require 'rimraf'
+_             = require 'lodash'
 nodefn        = require 'when/node'
 test_tpl_path = 'https://github.com/jenius/sprout-test-template.git'
 new_path      = path.join(base_path, 'new/testing')
 
 describe 'new', ->
 
-  before (done) -> Roots.template.remove('roots-base').done((-> done()), done)
+  before (done) ->
+    Roots.template.add(name: 'test', uri: test_tpl_path)
+      .then -> Roots.template.default(name: 'test')
+      .then -> done()
 
   it 'should reject if not given a path', ->
     Roots.new().should.be.rejected
@@ -30,9 +34,12 @@ describe 'new', ->
   it 'should create a project with another template if provided', (done) ->
     Roots.template.add(name: 'foobar', uri: test_tpl_path)
       .then ->
-        Roots.new(path: new_path, overrides: { foo: 'bar' }, template: 'foobar')
-      .then ->
-        util.file.exists('new/testing/index.html').should.be.true
+        overrides = {
+          name: 'foo',
+          description: 'bar'
+        }
+        Roots.new(path: new_path, overrides: overrides, template: 'foobar')
+      .then -> util.file.exists('new/testing/app.coffee').should.be.true
       .then ->
         Roots.template.remove(name: 'foobar')
         nodefn.call(rimraf, new_path)
