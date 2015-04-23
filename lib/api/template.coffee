@@ -2,8 +2,10 @@ fs            = require 'fs'
 _             = require 'lodash'
 W             = require 'when'
 nodefn        = require 'when/node'
-sprout        = require 'sprout'
+Sprout        = require '../sprout'
 global_config = require '../global_config'
+
+sprout        = Sprout()
 
 ###*
  * Adds a template to sprout. Delegates directly to sprout's API.
@@ -15,7 +17,8 @@ global_config = require '../global_config'
 
 exports.add = (args) ->
   __track('api', { name: 'template-add', template: args.name })
-  sprout.add(args)
+  sprout.add(args.name, args.uri, _.omit(args, 'name', 'uri'))
+    .then -> "template #{args.name} added"
 
 ###*
  * Removes a template from sprout. Delegates directly to sprout's API.
@@ -26,7 +29,8 @@ exports.add = (args) ->
 
 exports.remove = (args) ->
   __track('api', { name: 'template-remove', template: args.name })
-  sprout.remove(args)
+  sprout.remove(args.name)
+    .then -> "template #{args.name} removed"
 
 ###*
  * List all templates. Delegates directly to sprout's API.
@@ -35,7 +39,8 @@ exports.remove = (args) ->
 
 exports.list = (args) ->
   __track('api', { name: 'template-list' })
-  sprout.list(args)
+  _.keys(sprout.templates)
+
 
 ###*
  * Set the default template used with roots new when one isn't supplied.
@@ -50,7 +55,7 @@ exports.default = (args = {}) ->
   if not args.name
     return W.reject(new Error('please provide a template name'))
 
-  if not _.contains(sprout.list(), args.name)
+  if not _.contains(_.keys(sprout.templates), args.name)
     return W.reject(new Error "you do not have this template installed")
 
   config = global_config()

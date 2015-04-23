@@ -2,7 +2,7 @@ path          = require 'path'
 fs            = require 'fs'
 W             = require 'when'
 nodefn        = require 'when/node'
-sprout        = require 'sprout'
+Sprout        = require '../sprout'
 global_config = require '../global_config'
 _             = require 'lodash'
 npm           = require 'npm'
@@ -41,23 +41,23 @@ class New
     if not opts.path
       return W.reject(new Error('missing path'))
 
+    sprout = Sprout()
+    p = path.resolve(opts.path)
+
     opts =
-      path: path.resolve(opts.path)
-      name: opts.template           ? global_config().get('default_template')
-      overrides: opts.overrides     ? {}
-      defaults: opts.defaults       ? { name: path.basename(opts.path) }
+      locals: opts.overrides ? {}
+      
+    pkg = path.join(p, 'package.json')
 
-    pkg = path.join(opts.path, 'package.json')
-
-    W.resolve(_.contains(sprout.list(), base_tpl_name))
+    W.resolve(_.contains(sprout.templates, base_tpl_name))
       .then (res) ->
         if not res
-          sprout.add(name: base_tpl_name, uri: base_tpl_url)
+          sprout.add(base_tpl_name, base_tpl_url)
             .tap(-> d.notify('base template added'))
-      .then(-> sprout.init(opts))
+      .then(-> sprout.init(base_tpl_name, p, opts))
       .tap(-> d.notify('project created'))
       .then(-> if fs.existsSync(pkg) then install_deps(d, pkg))
-      .done((=> d.resolve(new @Roots(opts.path))), d.reject.bind(d))
+      .done((=> d.resolve(new @Roots(p))), d.reject.bind(d))
 
     return d.promise
 
