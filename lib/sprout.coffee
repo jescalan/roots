@@ -7,7 +7,7 @@ mkdirp        = require 'mkdirp'
 fs            = require 'fs'
 
 module.exports = (p = sprout_user_path()) ->
-  if p == sprout_user_path() and not fs.existsSync(p) then mkdirp(p)
+  if p == sprout_user_path() and not fs.existsSync(p) then mkdirp.sync(p)
   new Sprout(p)
 
 sprout_user_path = ->
