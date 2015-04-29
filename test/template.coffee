@@ -51,7 +51,6 @@ describe 'template', ->
       Roots.template.add(name: test_tpl_name, uri: test_tpl_path)
         .then(-> Roots.template.default(name: test_tpl_name))
         .then(-> Roots.template.remove(name: test_tpl_name))
-        .then(-> Roots.template.default(name: 'roots-base'))
         .should.be.fulfilled
 
   describe 'reset', ->
