@@ -46,10 +46,9 @@ class New
 
     opts =
       locals: opts.overrides ? {}
-      
-    pkg = path.join(p, 'package.json')
 
-    W.resolve(_.contains(sprout.templates, base_tpl_name))
+    pkg = path.join(p, 'package.json')
+    W.resolve(_.contains(_.keys(sprout.templates), base_tpl_name))
       .then (res) ->
         if not res
           sprout.add(base_tpl_name, base_tpl_url)
