@@ -216,25 +216,16 @@ describe 'cli', ->
         @stub.restore()
         mockery.deregisterAll()
 
-      it 'should error without a name', ->
+      it 'should error without two arguments', ->
         (-> cli.run('tpl add')).should.throw()
-
-      it 'should succeed with a name', (done) ->
-        spy = sinon.spy()
-
-        cli.on('success', spy)
-
-        cli.run('tpl add foo').then ->
-          spy.should.have.been.calledOnce
-          cli.removeListener('success', spy)
-          done()
+        (-> cli.run('tpl add foo')).should.throw()
 
       it 'should succeed with a name and url', (done) ->
         spy = sinon.spy()
 
         cli.on('success', spy)
 
-        cli.run('tpl add foo bar').then ->
+        cli.run('tpl add foo git@github.com:carrot/sprout-express').then ->
           spy.should.have.been.calledOnce
           cli.removeListener('success', spy)
           done()
@@ -242,14 +233,14 @@ describe 'cli', ->
       it 'should handle errors correctly', ->
         @stub.restore()
         @stub = sinon.stub(Roots.template, 'add').returns(W.reject())
-        cli.run('tpl add foo').should.be.rejected
+        cli.run('tpl add foo asdf').should.be.rejected
 
     describe 'list', ->
 
       it 'should list all templates', (done) ->
 
         cli.once 'data', (data) ->
-          data.should.match /Templates/
+          data.should.be.instanceof(Array)
           done()
 
         cli.run('tpl list')

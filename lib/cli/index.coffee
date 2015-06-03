@@ -177,7 +177,6 @@ class CLI extends EventEmitter
       help: 'Add a new template for future use'
 
     s.addArgument ['name'],
-      nargs: '?'
       help: "What you'd like to name the template"
 
     s.addArgument ['uri'],

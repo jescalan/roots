@@ -35,10 +35,11 @@
     "rimraf": "2.x",
     "serve-static": "1.x",
     "ship": "0.2.x",
-    "sprout": "0.1.x",
+    "sprout": "0.3.x",
     "update-notifier": "0.3.x",
     "vinyl": "0.4.x",
-    "when": "3.x"
+    "when": "3.x",
+    "osenv": "^0.1.0"
   },
   "devDependencies": {
     "chai": "1.x",
