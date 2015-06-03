@@ -39,7 +39,7 @@ exports.remove = (args) ->
 
 exports.list = (args) ->
   __track('api', { name: 'template-list' })
-  _.keys(sprout.templates)
+  "\n- #{_.keys(sprout.templates).join('\n- ')}\n"
 
 
 ###*
