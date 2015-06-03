@@ -17,7 +17,7 @@
     "bin": "bin"
   },
   "dependencies": {
-    "accord": "0.17.x",
+    "accord": "0.19.x",
     "argparse": "1.x",
     "charge": "0.0.3",
     "chokidar": "1.0.x",
