@@ -4,6 +4,14 @@ nodefn        = require 'when/node'
 test_tpl_path = 'https://github.com/jenius/sprout-test-template.git'
 new_path      = path.join(base_path, 'new/testing')
 
+
+before ->
+  @starting_templates = Roots.template.list()
+  if _.contains(@starting_templates, 'roots-base')
+    # remove roots-base to verify 'base template added'
+    # functionality in lib/api/new.coffee
+    Roots.template.remove(name: 'roots-base')
+
 describe 'new', ->
 
   before (done) ->
@@ -19,19 +27,17 @@ describe 'new', ->
 
   it 'should create a project', (done) ->
     spy = sinon.spy()
-    Roots.template.remove(name: 'roots-base')
-    .then ->
-      Roots.new
-        path: new_path
-        overrides: { foo: 'love it' }
-      .progress(spy)
-      .catch(done)
-      .done (proj) ->
-        proj.root.should.exist
-        spy.should.have.callCount(2)
-        spy.should.have.been.calledWith('base template added')
-        spy.should.have.been.calledWith('project created')
-        rimraf(new_path, done)
+    Roots.new
+      path: new_path
+      overrides: { foo: 'love it' }
+    .progress(spy)
+    .catch(done)
+    .done (proj) ->
+      proj.root.should.exist
+      spy.should.have.callCount(2)
+      spy.should.have.been.calledWith('base template added')
+      spy.should.have.been.calledWith('project created')
+      rimraf(new_path, done)
 
   it 'should create a project with another template if provided', (done) ->
     Roots.template.add(name: 'foobar', uri: test_tpl_path)
