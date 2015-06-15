@@ -27,19 +27,30 @@ exports.add = (args) ->
  * @return {Promise} promise for removed template
 ###
 
-exports.remove = (args) ->
+exports.remove = (args = {}) ->
   __track('api', { name: 'template-remove', template: args.name })
+
+  if not args.name
+    return W.reject(new Error('please provide a template name to remove'))
+
   sprout.remove(args.name)
-    .finally -> "template '#{args.name}' removed"
+    .then -> "template '#{args.name}' removed"
+    .catch (err) -> W.reject(err)
 
 ###*
  * List all templates. Delegates directly to sprout's API.
+ * @param {Object} args - can contain key `pretty`
  * @return {String} a string colored and formatted for the terminal
 ###
 
-exports.list = (args) ->
+exports.list = (args = {}) ->
   __track('api', { name: 'template-list' })
-  "\n- #{_.keys(sprout.templates).join('\n- ')}\n"
+
+  templates = _.keys(sprout.templates)
+  if args.pretty
+    "\n- #{templates.join('\n- ')}\n"
+  else
+    return templates
 
 
 ###*
