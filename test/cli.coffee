@@ -239,10 +239,7 @@ describe 'cli', ->
 
       it 'should list all templates', (done) ->
 
-        cli.once 'data', (data) ->
-          data.should.be.instanceof(Array)
-          done()
-
+        cli.once 'data', (data) -> done()
         cli.run('tpl list')
 
     describe 'default', ->

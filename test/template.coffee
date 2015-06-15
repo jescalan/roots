@@ -21,7 +21,7 @@ describe 'template', ->
   describe 'list', ->
 
     it 'should list all templates', ->
-      Roots.template.list().should.be.a('array')
+      Roots.template.list().should.be.a('string')
 
   describe 'remove', ->
 
