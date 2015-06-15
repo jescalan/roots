@@ -31,6 +31,26 @@ base_tpl_url  = 'https://github.com/roots-dev/base.git'
  * @return {Promise} promise for completed new template
 ###
 
+###*
+ * Creates a new roots project using a template. If a template is not provided,
+ * the roots-base template is used. If the roots-base template has not been
+ * installed, that is installed first. Once the template has been created, if it
+ * contains a package.json file with dependencies, they are installed. To review
+ * the promise chain:
+ *
+ * - check to see if roots-base is installed
+ * - if not, install it, emitting 'template:base_added' when finished
+ * - initialize the template with sprout
+ * - when finished, emit 'template:created'
+ * - check to see if deps are present
+ * - if so install them, emit 'deps:installing' before and 'deps:finished' after
+ * - at the end, emit 'done' or 'error events', and return a promise
+ *
+ * @param  {Roots} roots - roots instance
+ * @param  {Object} opts - options object
+ * @return {Promise} promise for completed new template
+###
+
 class New
   constructor: (@Roots) ->
 
@@ -42,11 +62,17 @@ class New
     if not opts.path
       return W.reject(new Error('missing path'))
 
-    sprout = Sprout()
-    p = path.resolve(opts.path)
-
     opts =
-      locals: opts.overrides ? {}
+      path: path.resolve(opts.path)
+      name: opts.template           ? global_config().get('default_template')
+      overrides: opts.overrides     ? {}
+      defaults: opts.defaults       ? { name: path.basename(opts.path) }
+
+    pkg = path.join(opts.path, 'package.json')
+
+    sprout = Sprout()
+    sprout_opts =
+      locals: opts.overrides
       questionnaire: (questions, skip) ->
         W.promise (resolve, reject) ->
           qs = []
@@ -54,16 +80,15 @@ class New
             qs.push(question) unless _.contains(skip, question.name)
           inquirer.prompt qs, (answers) -> resolve(answers)
 
-    pkg = path.join(p, 'package.json')
     W.resolve(_.contains(_.keys(sprout.templates), base_tpl_name))
       .then (res) ->
         if not res
           sprout.add(base_tpl_name, base_tpl_url)
             .tap(-> d.notify('base template added'))
-      .then(-> sprout.init(base_tpl_name, p, opts))
-      .tap(-> d.notify('project created'))
-      .then(-> if fs.existsSync(pkg) then install_deps(d, pkg))
-      .done((=> d.resolve(new @Roots(p))), d.reject.bind(d))
+      .then -> sprout.init(opts.name, opts.path, sprout_opts)
+      .tap -> d.notify('project created')
+      .then -> if fs.existsSync(pkg) then install_deps(d, pkg)
+      .done((=> d.resolve(new @Roots(opts.path))), d.reject.bind(d))
 
     return d.promise
 
