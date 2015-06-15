@@ -6,6 +6,7 @@ Sprout        = require '../sprout'
 global_config = require '../global_config'
 _             = require 'lodash'
 npm           = require 'npm'
+inquirer      = require 'inquirer'
 
 base_tpl_name = 'roots-base'
 base_tpl_url  = 'https://github.com/roots-dev/base.git'
@@ -46,6 +47,12 @@ class New
 
     opts =
       locals: opts.overrides ? {}
+      questionnaire: (questions, skip) ->
+        W.promise (resolve, reject) ->
+          qs = []
+          for question in questions
+            qs.push(question) unless _.contains(skip, question.name)
+          inquirer.prompt qs, (answers) -> resolve(answers)
 
     pkg = path.join(p, 'package.json')
     W.resolve(_.contains(_.keys(sprout.templates), base_tpl_name))
