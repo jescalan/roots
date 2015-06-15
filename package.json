@@ -25,12 +25,14 @@
     "colors": "1.x",
     "configstore": "0.3.x",
     "graceful-fs": "3.x",
+    "inquirer": "^0.8.5",
     "keen.io": "0.1.x",
     "lodash": "3.x",
     "minimatch": "2.x",
     "mkdirp": "0.5.x",
     "npm": "2.x",
     "open": "0.0.5",
+    "osenv": "^0.1.0",
     "readdirp": "1.x",
     "rimraf": "2.x",
     "serve-static": "1.x",
@@ -38,8 +40,7 @@
     "sprout": "0.4.x",
     "update-notifier": "0.3.x",
     "vinyl": "0.4.x",
-    "when": "3.x",
-    "osenv": "^0.1.0"
+    "when": "3.x"
   },
   "devDependencies": {
     "chai": "1.x",
