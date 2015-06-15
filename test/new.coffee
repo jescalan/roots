@@ -19,16 +19,19 @@ describe 'new', ->
 
   it 'should create a project', (done) ->
     spy = sinon.spy()
-    Roots.new
-      path: new_path
-      overrides: { foo: 'love it' }
-    .progress(spy)
-    .catch(done)
-    .done (proj) ->
-      proj.root.should.exist
-      spy.should.have.callCount(1)
-      spy.should.have.been.calledWith('project created')
-      rimraf(new_path, done)
+    Roots.template.remove(name: 'roots-base')
+    .then ->
+      Roots.new
+        path: new_path
+        overrides: { foo: 'love it' }
+      .progress(spy)
+      .catch(done)
+      .done (proj) ->
+        proj.root.should.exist
+        spy.should.have.callCount(2)
+        spy.should.have.been.calledWith('base template added')
+        spy.should.have.been.calledWith('project created')
+        rimraf(new_path, done)
 
   it 'should create a project with another template if provided', (done) ->
     Roots.template.add(name: 'foobar', uri: test_tpl_path)
