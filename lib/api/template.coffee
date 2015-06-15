@@ -30,7 +30,7 @@ exports.add = (args) ->
 exports.remove = (args) ->
   __track('api', { name: 'template-remove', template: args.name })
   sprout.remove(args.name)
-    .then -> "template '#{args.name}' removed"
+    .finally -> "template '#{args.name}' removed"
 
 ###*
  * List all templates. Delegates directly to sprout's API.
