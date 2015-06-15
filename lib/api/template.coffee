@@ -18,7 +18,7 @@ sprout        = Sprout()
 exports.add = (args) ->
   __track('api', { name: 'template-add', template: args.name })
   sprout.add(args.name, args.uri, _.omit(args, 'name', 'uri'))
-    .then -> "template #{args.name} added"
+    .then -> "template '#{args.name}' added"
 
 ###*
  * Removes a template from sprout. Delegates directly to sprout's API.
@@ -30,7 +30,7 @@ exports.add = (args) ->
 exports.remove = (args) ->
   __track('api', { name: 'template-remove', template: args.name })
   sprout.remove(args.name)
-    .then -> "template #{args.name} removed"
+    .then -> "template '#{args.name}' removed"
 
 ###*
  * List all templates. Delegates directly to sprout's API.
@@ -61,7 +61,7 @@ exports.default = (args = {}) ->
   config = global_config()
   config.set('default_template', args.name)
 
-  W.resolve("default template set to #{args.name}")
+  W.resolve("default template set to '#{args.name}'")
 
 ###*
  * Resets the global config file and removes all installed sprout templates.
