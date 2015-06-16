@@ -1,21 +1,14 @@
 {
   "name": "roots",
+  "description": "simple, flexible, and powerful static site compiler",
   "version": "3.1.0",
   "author": "Jeff Escalante <hello@jenius.me>",
+  "bugs": {
+    "url": "https://github.com/owner/project/issues"
+  },
   "contributors": [
     "Sam Saccone <sam@samx.it>"
   ],
-  "description": "simple, flexible, and powerful static site compiler",
-  "main": "lib",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jenius/roots"
-  },
-  "directories": {
-    "lib": "lib",
-    "bin": "bin"
-  },
   "dependencies": {
     "accord": "0.19.x",
     "argparse": "1.x",
@@ -58,14 +51,29 @@
     "sinon": "1.x",
     "sinon-chai": "2.x"
   },
-  "scripts": {
-    "test": "npm run lint && mocha",
-    "lint": "coffeelint lib",
-    "coverage": "make build; istanbul cover _mocha --report html -- -R spec && open coverage/index.html && make unbuild",
-    "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild",
-    "postinstall": "node ./post_install.js"
+  "directories": {
+    "lib": "lib",
+    "bin": "bin"
   },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "homepage": "http://roots.cx",
+  "keywords": [
+    "roots",
+    "static"
+  ],
+  "license": "MIT",
+  "main": "lib",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jenius/roots"
+  },
+  "scripts": {
+    "coverage": "make build; istanbul cover _mocha --report html -- -R spec && open coverage/index.html && make unbuild",
+    "coveralls": "make build; istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage; make unbuild",
+    "lint": "coffeelint lib",
+    "postinstall": "node ./post_install.js",
+    "test": "npm run lint && mocha"
   }
 }
