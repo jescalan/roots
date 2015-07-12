@@ -52,6 +52,13 @@ describe 'template', ->
         .then -> Roots.template.remove(name: test_tpl_name)
         .should.be.fulfilled
 
+    after (done) ->
+      Roots.template.add(
+        name: 'roots-base',
+        uri: 'https://github.com/roots-dev/base.git'
+      ).then -> Roots.template.default(name: 'roots-base')
+      .then(-> done())
+
   describe.skip 'reset', ->
     it 'should ask to confirm via command line'
     it 'should not ask to confirm via command line if override is passed'
