@@ -13,9 +13,9 @@ describe 'template', ->
 
     it 'should add a new template if given a valid name and uri', ->
       Roots.template.add(name: test_tpl_name, uri: test_tpl_path)
-        .then(-> Roots.template.list().should.include(test_tpl_name))
-        .then(-> Roots.template.remove(name: test_tpl_name))
-        .then(-> Roots.template.list().should.not.include(test_tpl_name))
+        .then -> Roots.template.list().should.include(test_tpl_name)
+        .then -> Roots.template.remove(name: test_tpl_name)
+        .then -> Roots.template.list().should.not.include(test_tpl_name)
         .should.be.fulfilled
 
   describe 'list', ->
@@ -25,18 +25,17 @@ describe 'template', ->
 
   describe 'remove', ->
 
-    # TODO: really this should return a rejected promise
     it 'should error if not given a name', ->
-      (-> Roots.template.remove()).should.throw()
+      Roots.template.remove().should.be.rejected
 
     it 'should error if trying to remove a non-existant template', ->
       Roots.template.remove(name: 'wow').should.be.rejected
 
     it 'should remove a template if it exists', ->
       Roots.template.add(name: test_tpl_name, uri: test_tpl_path)
-        .then(-> Roots.template.list().should.include(test_tpl_name))
-        .then(-> Roots.template.remove(name: test_tpl_name))
-        .then(-> Roots.template.list().should.not.include(test_tpl_name))
+        .then -> Roots.template.list().should.include(test_tpl_name)
+        .then -> Roots.template.remove(name: test_tpl_name)
+        .then -> Roots.template.list().should.not.include(test_tpl_name)
         .should.be.fulfilled
 
   describe 'default', ->
@@ -49,12 +48,18 @@ describe 'template', ->
 
     it 'should make a template the default if the name given is installed', ->
       Roots.template.add(name: test_tpl_name, uri: test_tpl_path)
-        .then(-> Roots.template.default(name: test_tpl_name))
-        .then(-> Roots.template.remove(name: test_tpl_name))
-        .then(-> Roots.template.default(name: 'roots-base'))
+        .then -> Roots.template.default(name: test_tpl_name)
+        .then -> Roots.template.remove(name: test_tpl_name)
         .should.be.fulfilled
 
-  describe 'reset', ->
+    after (done) ->
+      Roots.template.add(
+        name: 'roots-base',
+        uri: 'https://github.com/roots-dev/base.git'
+      ).then -> Roots.template.default(name: 'roots-base')
+      .then(-> done())
+
+  describe.skip 'reset', ->
     it 'should ask to confirm via command line'
     it 'should not ask to confirm via command line if override is passed'
     it 'should remove all templates and reset global config'

@@ -2,13 +2,34 @@ path          = require 'path'
 fs            = require 'fs'
 W             = require 'when'
 nodefn        = require 'when/node'
-sprout        = require 'sprout'
+Sprout        = require '../sprout'
 global_config = require '../global_config'
 _             = require 'lodash'
 npm           = require 'npm'
+inquirer      = require 'inquirer'
 
 base_tpl_name = 'roots-base'
 base_tpl_url  = 'https://github.com/roots-dev/base.git'
+
+###*
+ * Creates a new roots project using a template. If a template is not provided,
+ * the roots-base template is used. If the roots-base template has not been
+ * installed, that is installed first. Once the template has been created, if it
+ * contains a package.json file with dependencies, they are installed. To review
+ * the promise chain:
+ *
+ * - check to see if roots-base is installed
+ * - if not, install it, emitting 'template:base_added' when finished
+ * - initialize the template with sprout
+ * - when finished, emit 'template:created'
+ * - check to see if deps are present
+ * - if so install them, emit 'deps:installing' before and 'deps:finished' after
+ * - at the end, emit 'done' or 'error events', and return a promise
+ *
+ * @param  {Roots} roots - roots instance
+ * @param  {Object} opts - options object
+ * @return {Promise} promise for completed new template
+###
 
 ###*
  * Creates a new roots project using a template. If a template is not provided,
@@ -49,14 +70,24 @@ class New
 
     pkg = path.join(opts.path, 'package.json')
 
-    W.resolve(_.contains(sprout.list(), base_tpl_name))
+    sprout = Sprout()
+    sprout_opts =
+      locals: opts.overrides
+      questionnaire: (questions, skip) ->
+        W.promise (resolve, reject) ->
+          qs = []
+          for question in questions
+            qs.push(question) unless _.contains(skip, question.name)
+          inquirer.prompt qs, (answers) -> resolve(answers)
+
+    W.resolve(_.contains(_.keys(sprout.templates), base_tpl_name))
       .then (res) ->
         if not res
-          sprout.add(name: base_tpl_name, uri: base_tpl_url)
+          sprout.add(base_tpl_name, base_tpl_url)
             .tap(-> d.notify('base template added'))
-      .then(-> sprout.init(opts))
-      .tap(-> d.notify('project created'))
-      .then(-> if fs.existsSync(pkg) then install_deps(d, pkg))
+      .then -> sprout.init(opts.name, opts.path, sprout_opts)
+      .tap -> d.notify('project created')
+      .then -> if fs.existsSync(pkg) then install_deps(d, pkg)
       .done((=> d.resolve(new @Roots(opts.path))), d.reject.bind(d))
 
     return d.promise
