@@ -45,8 +45,11 @@ class Compile
    * - emit finished events
   ###
 
-  exec: ->
+  exec: (opts) ->
     __track('api', { name: 'compile' })
+
+    if opts
+      @file_changed = opts.fileChanged
 
     @roots.emit('start')
 

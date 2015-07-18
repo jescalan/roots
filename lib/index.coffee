@@ -58,9 +58,9 @@ class Roots extends EventEmitter
    * @return {Promise} promise for finished compile
   ###
 
-  compile: ->
+  compile: (opts) ->
     Compile = require('./api/compile')
-    (new Compile(@)).exec()
+    (new Compile(@)).exec(opts)
 
   ###*
    * Watches a folder for changes and compiles whenever changes happen.

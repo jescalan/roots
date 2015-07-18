@@ -23,10 +23,10 @@ class Watcher
   exec: ->
     __track('api', { name: 'watch' })
 
-    @roots.compile(true).finally =>
+    @roots.compile().finally =>
       @watcher
         .on('error', (err) => @roots.emit('error', err))
-        .on('change', @roots.compile.bind(@roots))
+        .on('change', (file) => @roots.compile(fileChanged: file))
     .yield(@watcher)
 
   ###*
