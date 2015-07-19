@@ -49,7 +49,7 @@ class Compile
     __track('api', { name: 'compile' })
 
     if opts
-      @file_changed = opts.fileChanged
+      @roots.file_changed = opts.fileChanged
 
     @roots.emit('start')
 
