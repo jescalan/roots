@@ -15,7 +15,6 @@ module.exports = (cli, args) ->
 
   if !args.env and fs.existsSync(path.join(args.path, 'app.production.coffee'))
     args.env = 'production'
-  delete args.env
 
   project = new Roots args.path, env: args.env
 
