@@ -29,8 +29,6 @@ class Server
   ###
 
   start: (port, cb) ->
-    # opts = @project.config.server ? {}
-
     bs_options =
       port: port
       logLevel: 'silent'
