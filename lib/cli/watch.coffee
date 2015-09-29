@@ -42,13 +42,6 @@ module.exports = (cli, args) ->
       res.watcher = w
       res.server = app
       node.call(app.start.bind(app), port)
-    .tap ->
-      # TODO: remove this, delgate to browsersync
-      if project.config.open_browser and not args.no_open
-        if project.config.open_browser == true
-          open("http://localhost:#{port}/")
-        else
-          open(project.config.open_browser)
     .yield(res)
 
 ###*
