@@ -1,4 +1,5 @@
 open   = require 'open'
+node   = require 'when/node'
 Roots  = require '../../lib'
 Server = require '../local_server'
 
@@ -39,7 +40,10 @@ module.exports = (cli, args) ->
   project.watch()
     .then (w) ->
       res.watcher = w
-      res.server = app.start(port)
+      res.server = app
+      node.call(app.start.bind(app), port)
+    .tap ->
+      # TODO: remove this, delgate to browsersync
       if project.config.open_browser and not args.no_open
         if project.config.open_browser == true
           open("http://localhost:#{port}/")

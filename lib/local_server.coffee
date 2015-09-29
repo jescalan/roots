@@ -1,6 +1,7 @@
 path         = require 'path'
 serve_static = require 'serve-static'
 charge       = require 'charge'
+browsersync  = require 'browser-sync'
 
 ###*
  * @class Server
@@ -17,6 +18,7 @@ class Server
   ###
 
   constructor: (@project) ->
+    @bs = browsersync.create()
 
   ###*
    * Start the local server on the given port.
@@ -29,49 +31,49 @@ class Server
     opts = @project.config.server ? {}
     opts.log = false
 
-    if @project.config.env is 'development'
-      opts.write = content:
-        "<!-- roots development configuration -->
-        <script>var __livereload = #{@project.config.live_reload};</script>
-        <script src='/__roots__/main.js'></script>"
-      opts.cache_control = {'**': 'max-age=0, no-cache, no-store'}
-
-    app = charge(@project.config.output_path(), opts)
-
-    if @project.config.env is 'development'
-      app.stack.splice app.stack.length - 2, 0,
-        route: '/__roots__'
-        handle: serve_static(path.resolve(__dirname, 'browser'))
-
-    @server = app.start(port, cb)
+    # use port, use options
+    @bs.init({
+      port: port
+      server:
+        baseDir: @project.config.output_path()
+        logLevel: 'silent'
+    }, cb)
 
   ###*
    * Close the server and remove it.
   ###
 
   stop: (cb) ->
-    @server.close(cb)
-    delete @server
+    @bs.exit()
 
   ###*
-   * Send a message through websockets to the browser.
-   *
-   * @param  {String} k - message key
-   * @param  {*} v - message value
+   * Reload the browser
   ###
 
-  send_msg: (k, v) ->
-    @server.send(type: k, data: v)
+  reload: ->
+    @bs.reload()
 
   ###*
-   * These three methods send 'reload', 'compiling', and 'error' messages
-   * through to the browser.
+   * Inject loading spinner while compiling
+  ###
+  compiling: ->
+    @bs.notify('<div id="roots-load-container"><div id="roots-compile-loader">
+    <div id="l1"></div><div id="l2"></div><div id="l3"></div><div id="l4"></div>
+    <div id="l5"></div><div id="l6"></div><div id="l7"></div><div id="l8"></div>
+    </div></div>')
+
+  ###*
+   * Sanitize error message and inject into page
+   * @param  {Error} err - an error object
   ###
 
-  reload: -> @send_msg('reload')
-  compiling: -> @send_msg('compiling')
   show_error: (err) ->
     err = err.toString() if err instanceof Error
-    @send_msg('error', err)
+    cleanError = if err.replace
+      err.replace(/(\r\n|\n|\r)/gm, '<br>')
+    else
+      ""
+    @bs.notify("<div id='roots-error'><pre><span>compile
+    error</span>#{cleanError}</pre></div>")
 
 module.exports = Server
