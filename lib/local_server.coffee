@@ -2,6 +2,7 @@ path         = require 'path'
 serve_static = require 'serve-static'
 charge       = require 'charge'
 browsersync  = require 'browser-sync'
+_            = require 'lodash'
 
 ###*
  * @class Server
@@ -28,16 +29,38 @@ class Server
   ###
 
   start: (port, cb) ->
-    opts = @project.config.server ? {}
-    opts.log = false
+    # opts = @project.config.server ? {}
 
-    # use port, use options
-    @bs.init({
+    bs_options =
       port: port
+      logLevel: 'silent'
       server:
         baseDir: @project.config.output_path()
-        logLevel: 'silent'
-    }, cb)
+
+    if @project.config.browser then _.merge(bs_options, @project.config.browser)
+
+    # add charge middleware after merge to prevent errors
+    opts = @project.config.server
+    middlewares = []
+
+    if opts.clean_urls
+      middlewares.push(charge.hygienist(@project.config.output_path()))
+    if opts.exclude
+      middlewares.push(charge.escapist(opts.exclude))
+    if opts.auth
+      middlewares.push(charge.publicist(opts.auth))
+    if opts.cache_control
+      middlewares.push(charge.archivist(opts.cache_control))
+    if opts.gzip
+      middlewares.push(charge.minimist(opts.gzip))
+    if opts.log
+      middlewares.push(charge.journalist(opts.log))
+    if opts.error_page
+      middlewares.push(charge.apologist(opts.error_page))
+
+    bs_options.server.middleware = middlewares
+
+    @bs.init(bs_options, cb)
 
   ###*
    * Close the server and remove it.
