@@ -40,7 +40,7 @@ class Server
     if @project.config.browser then _.merge(bs_options, @project.config.browser)
 
     # add charge middleware after merge to prevent errors
-    opts = @project.config.server
+    opts = @project.config.server or {}
     middlewares = []
 
     if opts.clean_urls
