@@ -370,7 +370,7 @@ class CompilePass
     file_options    = @file.file_options
     compile_options = @file.compile_options
 
-    _.extend(global_options, adapter_options, file_options, compile_options)
+    _.extend({}, global_options, adapter_options, file_options, compile_options)
 
   ###*
    * As small of a function as this is, it's the one that actually is doing
