@@ -34,6 +34,7 @@ class Server
     bs_options =
       port: port
       logLevel: 'silent'
+      open: @project.config.open_browser
       server:
         baseDir: @project.config.output_path()
 

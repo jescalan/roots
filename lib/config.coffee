@@ -52,7 +52,7 @@ class Config
     @verbose = opts.verbose ? false
     @debug = false
     @live_reload = true
-    @open_browser = true
+    @open_browser = !opts.no_open ? true
 
     load_config.call(@)
 
