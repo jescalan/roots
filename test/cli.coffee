@@ -184,7 +184,7 @@ describe 'cli', ->
           cli.removeListener('inline', spy)
           cli.removeListener('data', spy)
           cli.removeListener('err', spy)
-          obj.server.close(done)
+          obj.server.stop(done)
 
     it 'should error when trying to compile invalid code'
 
