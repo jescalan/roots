@@ -69,6 +69,7 @@ class Server
 
   stop: (cb) ->
     @bs.exit()
+    cb()
 
   ###*
    * Reload the browser
