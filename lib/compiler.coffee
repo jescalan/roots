@@ -64,7 +64,7 @@ class CompileFile
 
   constructor: (@roots, @extensions, @compile_options, @category, @file) ->
     @adapters = get_adapters.call(@)
-    @is_compiled = !!_(@adapters).pluck('name').compact().value().length
+    @is_compiled = !!_(@adapters).map('name').compact().value().length
     @out_ext = _.last(@adapters).output
     @file_options = {filename: @file.path, _path: url_path.call(@)}
 
@@ -157,7 +157,7 @@ class CompileFile
 
   process_write_hook_results = (results) ->
     if results.length < 1 then return [write_task.call(@)]
-    if _.contains(results, false) then return []
+    if _.includes(results, false) then return []
 
     write_tasks = []
     normal_write_pushed = false
@@ -258,7 +258,7 @@ class CompileFile
 
     for ext in _.clone(extensions).reverse()
       compiler = _.find @roots.config.compilers, (c) ->
-        _.contains(c.extensions, ext)
+        _.includes(c.extensions, ext)
 
       adapters.push(if compiler then compiler else { output: ext })
 

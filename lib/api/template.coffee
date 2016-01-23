@@ -66,7 +66,7 @@ exports.default = (args = {}) ->
   if not args.name
     return W.reject(new Error('please provide a template name'))
 
-  if not _.contains(_.keys(sprout.templates), args.name)
+  if not _.includes(_.keys(sprout.templates), args.name)
     return W.reject(new Error "you do not have this template installed")
 
   config = global_config()

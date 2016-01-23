@@ -144,7 +144,7 @@ class Config
 
   out: (f, ext) ->
     res = f.relative.split(path.sep)
-    if _.contains(@dump_dirs, res[0]) then res.shift()
+    if _.includes(@dump_dirs, res[0]) then res.shift()
     res.unshift(@output_path())
     res = res.join(path.sep)
     if ext

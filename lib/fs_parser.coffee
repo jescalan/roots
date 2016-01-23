@@ -150,7 +150,7 @@ class FSParser
       if not detected then return false
       cat = extfs.category ? ext.category
       @ast[cat] ?= []
-      @ast[cat].push(file) unless _.contains(@ast[cat], file)
+      @ast[cat].push(file) unless _.includes(@ast[cat], file)
       return extfs.extract
 
   ###*

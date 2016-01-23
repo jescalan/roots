@@ -80,10 +80,7 @@ class Server
    * Inject loading spinner while compiling
   ###
   compiling: ->
-    @bs.notify('<div id="roots-load-container"><div id="roots-compile-loader">
-    <div id="l1"></div><div id="l2"></div><div id="l3"></div><div id="l4"></div>
-    <div id="l5"></div><div id="l6"></div><div id="l7"></div><div id="l8"></div>
-    </div></div>')
+    @bs.notify('compiling...')
 
   ###*
    * Sanitize error message and inject into page
