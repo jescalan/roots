@@ -10,7 +10,7 @@
     "Sam Saccone <sam@samx.it>"
   ],
   "dependencies": {
-    "accord": "0.20.x",
+    "accord": "0.21.x",
     "argparse": "1.x",
     "charge": "0.1.x",
     "chokidar": "1.x",
@@ -18,12 +18,12 @@
     "colors": "1.x",
     "configstore": "0.3.x",
     "graceful-fs": "4.x",
-    "inquirer": "0.10.x",
+    "inquirer": "0.11.x",
     "keen.io": "0.1.x",
-    "lodash": "3.x",
+    "lodash": "4.x",
     "minimatch": "3.x",
     "mkdirp": "0.5.x",
-    "npm": "2.x",
+    "npm": "3.x",
     "open": "0.0.5",
     "osenv": "0.1.x",
     "readdirp": "2.x",
@@ -31,7 +31,7 @@
     "serve-static": "1.x",
     "ship": "0.2.x",
     "sprout": "0.4.x",
-    "update-notifier": "0.5.x",
+    "update-notifier": "0.6.x",
     "vinyl": "1.x",
     "when": "3.x"
   },
