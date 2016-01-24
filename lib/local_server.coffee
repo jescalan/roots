@@ -80,7 +80,7 @@ class Server
    * Inject loading spinner while compiling
   ###
   compiling: ->
-    @bs.notify('compiling...')
+    @bs.notify('compiling...', 999999)
 
   ###*
    * Sanitize error message and inject into page
@@ -93,6 +93,6 @@ class Server
       err.replace(/(\r\n|\n|\r)/gm, '<br>')
     else
       "compile error!"
-    @bs.notify(cleanError, 100000)
+    @bs.notify(cleanError, 999999)
 
 module.exports = Server
