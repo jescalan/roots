@@ -92,8 +92,7 @@ class Server
     cleanError = if err.replace
       err.replace(/(\r\n|\n|\r)/gm, '<br>')
     else
-      ""
-    @bs.notify("<div id='roots-error'><pre><span>compile
-    error</span>#{cleanError}</pre></div>")
+      "compile error!"
+    @bs.notify(cleanError, 100000)
 
 module.exports = Server
