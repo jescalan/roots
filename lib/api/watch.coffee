@@ -1,6 +1,6 @@
-chokidar  = require 'chokidar'
-minimatch = require 'minimatch'
-_         = require 'lodash'
+chokidar = require 'chokidar'
+mm       = require 'micromatch'
+_        = require 'lodash'
 
 ###*
  * @class Watcher
@@ -42,7 +42,7 @@ class Watcher
   ignore = (p) ->
     f = p.replace(@roots.root, '').slice(1)
     @roots.config.watcher_ignores
-      .map (i) -> minimatch(f, i, { dot: true })
+      .map (i) -> mm.isMatch(f, i, { dot: true })
       .filter (i) -> i
       .length
 

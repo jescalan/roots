@@ -1,11 +1,11 @@
-fs        = require 'graceful-fs'
-path      = require 'path'
-W         = require 'when'
-readdirp  = require 'readdirp'
-_         = require 'lodash'
-minimatch = require 'minimatch'
-pipeline  = require 'when/pipeline'
-File      = require 'vinyl'
+fs       = require 'graceful-fs'
+path     = require 'path'
+W        = require 'when'
+readdirp = require 'readdirp'
+_        = require 'lodash'
+mm       = require 'micromatch'
+pipeline = require 'when/pipeline'
+File     = require 'vinyl'
 
 ###*
  * @class FS Parser
@@ -175,8 +175,8 @@ class FSParser
 
   ignored = (f) ->
     @config.ignores
-      .map (i) -> minimatch(f, i, dot: true)
-      .filter (i) -> i
+      .map((i) -> mm.isMatch(f, i, dot: true))
+      .filter((i) -> i)
       .length
 
 module.exports = FSParser
