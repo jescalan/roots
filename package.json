@@ -10,7 +10,7 @@
     "Sam Saccone <sam@samx.it>"
   ],
   "dependencies": {
-    "accord": "0.21.x",
+    "accord": "0.22.x",
     "argparse": "1.x",
     "browser-sync": "2.x",
     "charge": "0.1.x",
