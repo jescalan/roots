@@ -1,4 +1,5 @@
 open   = require 'open'
+node   = require 'when/node'
 Roots  = require '../../lib'
 Server = require '../local_server'
 
@@ -24,6 +25,7 @@ module.exports = (cli, args) ->
   project = new Roots args.path,
     env: args.env
     verbose: args.verbose
+    no_open: args.no_open
 
   app  = new Server(project)
   port = process.env.port or args.port
@@ -39,12 +41,8 @@ module.exports = (cli, args) ->
   project.watch()
     .then (w) ->
       res.watcher = w
-      res.server = app.start(port)
-      if project.config.open_browser and not args.no_open
-        if project.config.open_browser == true
-          open("http://localhost:#{port}/")
-        else
-          open(project.config.open_browser)
+      res.server = app
+      node.call(app.start.bind(app), port)
     .yield(res)
 
 ###*

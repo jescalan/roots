@@ -77,10 +77,10 @@ class New
         W.promise (resolve, reject) ->
           qs = []
           for question in questions
-            qs.push(question) unless _.contains(skip, question.name)
+            qs.push(question) unless _.includes(skip, question.name)
           inquirer.prompt qs, (answers) -> resolve(answers)
 
-    W.resolve(_.contains(_.keys(sprout.templates), base_tpl_name))
+    W.resolve(_.includes(_.keys(sprout.templates), base_tpl_name))
       .then (res) ->
         if not res
           sprout.add(base_tpl_name, base_tpl_url)

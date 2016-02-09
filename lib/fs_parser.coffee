@@ -1,11 +1,11 @@
-fs        = require 'graceful-fs'
-path      = require 'path'
-W         = require 'when'
-readdirp  = require 'readdirp'
-_         = require 'lodash'
-minimatch = require 'minimatch'
-pipeline  = require 'when/pipeline'
-File      = require 'vinyl'
+fs       = require 'graceful-fs'
+path     = require 'path'
+W        = require 'when'
+readdirp = require 'readdirp'
+_        = require 'lodash'
+mm       = require 'micromatch'
+pipeline = require 'when/pipeline'
+File     = require 'vinyl'
 
 ###*
  * @class FS Parser
@@ -150,7 +150,7 @@ class FSParser
       if not detected then return false
       cat = extfs.category ? ext.category
       @ast[cat] ?= []
-      @ast[cat].push(file) unless _.contains(@ast[cat], file)
+      @ast[cat].push(file) unless _.includes(@ast[cat], file)
       return extfs.extract
 
   ###*
@@ -175,8 +175,8 @@ class FSParser
 
   ignored = (f) ->
     @config.ignores
-      .map (i) -> minimatch(f, i, dot: true)
-      .filter (i) -> i
+      .map((i) -> mm.isMatch(f, i, dot: true))
+      .filter((i) -> i)
       .length
 
 module.exports = FSParser

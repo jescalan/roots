@@ -7,7 +7,7 @@ new_path      = path.join(base_path, 'new/testing')
 
 before ->
   @starting_templates = Roots.template.list()
-  if _.contains(@starting_templates, 'roots-base')
+  if _.includes(@starting_templates, 'roots-base')
     # remove roots-base to verify 'base template added'
     # functionality in lib/api/new.coffee
     Roots.template.remove(name: 'roots-base')

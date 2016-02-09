@@ -1,6 +1,8 @@
 path         = require 'path'
 serve_static = require 'serve-static'
 charge       = require 'charge'
+browsersync  = require 'browser-sync'
+_            = require 'lodash'
 
 ###*
  * @class Server
@@ -17,6 +19,7 @@ class Server
   ###
 
   constructor: (@project) ->
+    @bs = browsersync.create()
 
   ###*
    * Start the local server on the given port.
@@ -26,52 +29,70 @@ class Server
   ###
 
   start: (port, cb) ->
-    opts = @project.config.server ? {}
-    opts.log = false
+    bs_options =
+      port: port
+      logLevel: 'silent'
+      open: @project.config.open_browser
+      server:
+        baseDir: @project.config.output_path()
 
-    if @project.config.env is 'development'
-      opts.write = content:
-        "<!-- roots development configuration -->
-        <script>var __livereload = #{@project.config.live_reload};</script>
-        <script src='/__roots__/main.js'></script>"
-      opts.cache_control = {'**': 'max-age=0, no-cache, no-store'}
+    if @project.config.browser then _.merge(bs_options, @project.config.browser)
 
-    app = charge(@project.config.output_path(), opts)
+    # add charge middleware after merge to prevent errors
+    opts = @project.config.server or {}
+    middlewares = []
 
-    if @project.config.env is 'development'
-      app.stack.splice app.stack.length - 2, 0,
-        route: '/__roots__'
-        handle: serve_static(path.resolve(__dirname, 'browser'))
+    if opts.clean_urls
+      middlewares.push(charge.hygienist(@project.config.output_path()))
+    if opts.exclude
+      middlewares.push(charge.escapist(opts.exclude))
+    if opts.auth
+      middlewares.push(charge.publicist(opts.auth))
+    if opts.cache_control
+      middlewares.push(charge.archivist(opts.cache_control))
+    if opts.gzip
+      middlewares.push(charge.minimist(opts.gzip))
+    if opts.log
+      middlewares.push(charge.journalist(opts.log))
+    if opts.error_page
+      middlewares.push(charge.apologist(opts.error_page))
 
-    @server = app.start(port, cb)
+    bs_options.server.middleware = middlewares
+
+    @bs.init(bs_options, cb)
 
   ###*
    * Close the server and remove it.
   ###
 
   stop: (cb) ->
-    @server.close(cb)
-    delete @server
+    @bs.exit()
+    cb()
 
   ###*
-   * Send a message through websockets to the browser.
-   *
-   * @param  {String} k - message key
-   * @param  {*} v - message value
+   * Reload the browser
   ###
 
-  send_msg: (k, v) ->
-    @server.send(type: k, data: v)
+  reload: ->
+    @bs.reload()
 
   ###*
-   * These three methods send 'reload', 'compiling', and 'error' messages
-   * through to the browser.
+   * Inject loading spinner while compiling
+  ###
+  compiling: ->
+    @bs.notify('compiling...', 999999)
+
+  ###*
+   * Sanitize error message and inject into page
+   * @param  {Error} err - an error object
   ###
 
-  reload: -> @send_msg('reload')
-  compiling: -> @send_msg('compiling')
   show_error: (err) ->
     err = err.toString() if err instanceof Error
-    @send_msg('error', err)
+    cleanError = if err.replace
+      err.replace(/(\r\n|\n|\r)/gm, '<br>')
+    else
+      "compile error!"
+    @bs.notify(cleanError, 999999)
 
 module.exports = Server
