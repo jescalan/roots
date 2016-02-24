@@ -54,7 +54,7 @@ class Server
     if opts.gzip
       middlewares.push(charge.minimist(opts.gzip))
     if opts.log
-      middlewares.push(charge.journalist(opts.log))
+      middlewares.push(charge.columnist(opts.log))
     if opts.error_page
       middlewares.push(charge.apologist(opts.error_page))
 
