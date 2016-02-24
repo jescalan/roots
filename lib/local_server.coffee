@@ -44,7 +44,9 @@ class Server
     middlewares = []
 
     if opts.clean_urls
-      middlewares.push(charge.hygienist(@project.config.output_path()))
+      middlewares.push(charge.hygienist(
+        @project.config.output_path(), opts.clean_urls
+      ))
     if opts.exclude
       middlewares.push(charge.escapist(opts.exclude))
     if opts.auth
@@ -54,7 +56,7 @@ class Server
     if opts.gzip
       middlewares.push(charge.minimist(opts.gzip))
     if opts.log
-      middlewares.push(charge.journalist(opts.log))
+      middlewares.push(charge.columnist(opts.log))
     if opts.error_page
       middlewares.push(charge.apologist(opts.error_page))
 
