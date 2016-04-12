@@ -55,3 +55,17 @@ describe 'deploy', ->
     .then -> path.join(p, 'public/index.html').should.have.content('foo')
     .catch(console.log)
     .should.be.fulfilled
+
+  it 'deploys with another environment if available', ->
+    p = path.join(base_path, 'deploy/another_environment')
+    project = new Roots(p, env: 'foo')
+    stubs = [
+      sinon.stub(fs, 'existsSync').returns(true)
+      sinon.stub(fs, 'readFileSync').returns('nowhere:\n  nothing: wow')
+    ]
+
+    project.deploy(to: 'nowhere')
+    .catch(console.log)
+    .then (ship) -> ship.env.should.eql('foo')
+    .should.be.fulfilled
+    .then -> stubs.forEach((stub) -> stub.restore())
