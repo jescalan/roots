@@ -13,8 +13,9 @@ class Deploy
     @project.clean()
     .then => @project.compile()
     .then =>
-      if fs.existsSync(path.join(@project.root, 'ship.production.conf'))
-        new Ship(root: @project.root, deployer: opts.to, env: 'production')
+      env = @project.config.env
+      if fs.existsSync(path.join(@project.root, "ship.#{env}.conf"))
+        new Ship(root: @project.root, deployer: opts.to, env: env)
       else
         new Ship(root: @project.root, deployer: opts.to)
     .tap (ship) ->
