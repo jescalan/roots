@@ -1,7 +1,7 @@
 {
   "name": "roots",
   "description": "simple, flexible, and powerful static site compiler",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "author": "Jeff Escalante <hello@jenius.me>",
   "bugs": {
     "url": "https://github.com/jenius/roots/issues"
