@@ -61,7 +61,7 @@ class Config
       'package.json',
       'app*.coffee',
       "#{@output}/**/*",
-      '.git'
+      '.git*'
     ]
 
     @watcher_ignores ?= []
@@ -70,7 +70,7 @@ class Config
       'app.coffee',
       'node_modules/**/*',
       "#{@output}/**/*",
-      '.git'
+      '.git*'
     ]
 
     @compilers = get_compilers.call(@)
