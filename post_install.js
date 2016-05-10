@@ -1,3 +1,4 @@
+require('coffee-script/register')
 require('colors')
 var mkdirp = require('mkdirp')
 var global_config = require('./lib/global_config')

@@ -5,7 +5,7 @@ nodefn        = require 'when/node'
 Sprout        = require '../sprout'
 global_config = require '../global_config'
 
-sprout = Sprout(global_config.dir)
+sprout = Sprout()
 
 ###*
  * Adds a template to sprout. Delegates directly to sprout's API.
@@ -45,7 +45,6 @@ exports.remove = (args = {}) ->
 
 exports.list = (args = {}) ->
   __track('api', { name: 'template-list' })
-
   templates = _.keys(sprout.templates)
   if args.pretty
     "\n- #{templates.join('\n- ')}\n"
