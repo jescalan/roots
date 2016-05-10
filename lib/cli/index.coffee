@@ -33,7 +33,6 @@ class CLI extends EventEmitter
     $compile(sub)
     $tpl(sub)
     $clean(sub)
-    $deploy(sub)
     $analytics(sub)
 
   ###*
@@ -228,24 +227,6 @@ class CLI extends EventEmitter
       help: "Path to a project that you'd like to remove the output from"
 
     s.setDefaults(fn: 'clean')
-
-  $deploy = (sub) ->
-    s = sub.addParser 'deploy',
-      help: 'Deploy the roots project'
-
-    s.addArgument ['path'],
-      nargs: '?'
-      defaultValue: process.cwd()
-      help: "Path to a project that you'd like to deploy"
-
-    s.addArgument ['-to', '--to'],
-      help: "Where to deploy the project to - for example s3, heroku, gh-pages"
-
-    s.addArgument ['--env', '-e'],
-      defaultValue: process.env['NODE_ENV']
-      help: "Your project's environment"
-
-    s.setDefaults(fn: 'deploy')
 
   $analytics = (sub) ->
     s = sub.addParser 'analytics',
