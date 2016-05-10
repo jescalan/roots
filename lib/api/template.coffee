@@ -5,7 +5,7 @@ nodefn        = require 'when/node'
 Sprout        = require '../sprout'
 global_config = require '../global_config'
 
-sprout        = Sprout()
+sprout = Sprout(global_config.dir)
 
 ###*
  * Adds a template to sprout. Delegates directly to sprout's API.

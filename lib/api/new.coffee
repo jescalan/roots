@@ -70,15 +70,10 @@ class New
 
     pkg = path.join(opts.path, 'package.json')
 
-    sprout = Sprout()
+    sprout = Sprout(global_config.dir)
     sprout_opts =
       locals: opts.overrides
-      questionnaire: (questions, skip) ->
-        W.promise (resolve, reject) ->
-          qs = []
-          for question in questions
-            qs.push(question) unless _.includes(skip, question.name)
-          inquirer.prompt qs, (answers) -> resolve(answers)
+      questionnaire: inquirer.prompt.bind(inquirer)
 
     W.resolve(_.includes(_.keys(sprout.templates), base_tpl_name))
       .then (res) ->
