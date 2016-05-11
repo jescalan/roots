@@ -31,26 +31,6 @@ base_tpl_url  = 'https://github.com/roots-dev/base.git'
  * @return {Promise} promise for completed new template
 ###
 
-###*
- * Creates a new roots project using a template. If a template is not provided,
- * the roots-base template is used. If the roots-base template has not been
- * installed, that is installed first. Once the template has been created, if it
- * contains a package.json file with dependencies, they are installed. To review
- * the promise chain:
- *
- * - check to see if roots-base is installed
- * - if not, install it, emitting 'template:base_added' when finished
- * - initialize the template with sprout
- * - when finished, emit 'template:created'
- * - check to see if deps are present
- * - if so install them, emit 'deps:installing' before and 'deps:finished' after
- * - at the end, emit 'done' or 'error events', and return a promise
- *
- * @param  {Roots} roots - roots instance
- * @param  {Object} opts - options object
- * @return {Promise} promise for completed new template
-###
-
 class New
   constructor: (@Roots) ->
 
@@ -73,12 +53,7 @@ class New
     sprout = Sprout()
     sprout_opts =
       locals: opts.overrides
-      questionnaire: (questions, skip) ->
-        W.promise (resolve, reject) ->
-          qs = []
-          for question in questions
-            qs.push(question) unless _.includes(skip, question.name)
-          inquirer.prompt qs, (answers) -> resolve(answers)
+      questionnaire: inquirer.prompt.bind(inquirer)
 
     W.resolve(_.includes(_.keys(sprout.templates), base_tpl_name))
       .then (res) ->

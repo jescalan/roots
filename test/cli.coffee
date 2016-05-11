@@ -285,37 +285,6 @@ describe 'cli', ->
         @stub = sinon.stub(Roots.template, 'remove').returns(W.reject())
         cli.run('tpl remove foo').should.be.rejected
 
-  describe 'deploy', ->
-
-    before ->
-      @stub = sinon.stub Roots.prototype, 'deploy', (args) ->
-        d = W.defer()
-        process.nextTick ->
-          d.notify({ shenanigans: 'very yes' })
-          d.notify('wow deploying')
-          d.resolve(deployer_name: 'foo')
-        return d.promise
-      mockery.registerMock('../../lib', Roots)
-
-    after ->
-      @stub.restore()
-      mockery.deregisterAll()
-
-    it 'should deploy a project', ->
-      spy = sinon.spy()
-      p = path.join(__dirname, 'fixtures/deploy/shipfile')
-
-      cli.on('info', spy)
-
-      cli.run("deploy #{p}")
-        .tap ->
-          spy.should.have.been.calledOnce
-          cli.removeListener('info', spy)
-        .should.be.fulfilled
-
-    it 'should emit an error if the project fails to deploy'
-    it 'should emit the url if a url is provided from the output'
-
   describe 'analytics', ->
 
     before ->

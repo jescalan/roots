@@ -1,5 +1,5 @@
 before (done) ->
-  util.project.install_dependencies('*/*', done)
+  util.project.install_dependencies('*/*', -> done())
 
 after ->
   util.project.remove_folders('**/public')
