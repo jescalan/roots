@@ -18,7 +18,7 @@
     "coffee-script": "1.11.0",
     "colors": "1.x",
     "configstore": "^2.0.0",
-    "graceful-fs": "^4.1.4",
+    "graceful-fs": "^4.1.9",
     "inquirer": "^1.0.2",
     "keen.io": "0.1.x",
     "lodash": "^4.12.0",
