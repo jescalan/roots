@@ -39,6 +39,9 @@ class Server
 
     if @project.config.browser then _.merge(bs_options, @project.config.browser)
 
+    user_bs_config = @project.config.browsersync
+    if user_bs_config then _.merge(bs_options, user_bs_config)
+
     # add charge middleware after merge to prevent errors
     opts = @project.config.server or {}
     middlewares = []
