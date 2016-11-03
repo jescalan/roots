@@ -47,7 +47,7 @@
     "mocha-lcov-reporter": "^1.2.0",
     "mockery": "^2.0.0",
     "roots-util": "^0.2.0",
-    "selenium-webdriver": "^2.53.2",
+    "selenium-webdriver": "^3.0.0",
     "sinon": "^1.17.4",
     "sinon-chai": "2.x"
   },
