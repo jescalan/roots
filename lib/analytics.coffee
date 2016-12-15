@@ -1,6 +1,7 @@
 Keen          = require 'keen.io'
 global_config = require './global_config'
 node          = require 'when/node'
+W             = require('when')
 
 # Yes, you can write analytics to our project. Please don't do this though.
 # Roots is an open source project. We're over here working hard to bring you
@@ -24,4 +25,4 @@ global.__track = (category, e) ->
   if enabled
     return node.call(client.addEvent.bind(client), category, e).catch(->)
   else
-    return false
+    return W.resolve(false)
