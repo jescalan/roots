@@ -19,6 +19,8 @@
 
 Roots is a fast, simple, and customizable static site compiler.
 
+> :warning: **WARNING**: Roots is currently in maintenance mode. It's not under active development and no new features will be added. The team behind roots is now working on [spike](https://github.com/static-dev/spike), which has already matched and superseded roots' capabilities. We'd encourage you to check it out if you're starting a new project!
+
 ### Why should you care?
 
 If you make a lot of websites, or perhaps even make websites as a profession, there's no doubt that you will want to be very efficient at making websites, and on top of that you'll probably want to have the websites you make be very fast, cheap to host, and simple to build and optimize. If this is the case for you, my friend, you have come to the right place - roots is what you are looking for.
