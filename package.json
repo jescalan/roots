@@ -19,7 +19,7 @@
     "colors": "1.x",
     "configstore": "^2.0.0",
     "graceful-fs": "^4.1.9",
-    "inquirer": "^2.0.0",
+    "inquirer": "^3.0.0",
     "keen.io": "0.1.x",
     "lodash": "^4.12.0",
     "micromatch": "^2.3.8",
