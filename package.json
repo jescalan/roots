@@ -31,7 +31,7 @@
     "rimraf": "2.x",
     "serve-static": "1.x",
     "sprout": "^1.1.0",
-    "update-notifier": "^2.0.0",
+    "update-notifier": "^2.1.0",
     "vinyl": "2.0.1",
     "when": "3.x"
   },
