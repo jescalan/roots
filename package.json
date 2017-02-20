@@ -33,7 +33,7 @@
     "sprout": "^1.1.0",
     "update-notifier": "^2.1.0",
     "vinyl": "2.0.1",
-    "when": "3.x"
+    "when": "3.7.8"
   },
   "devDependencies": {
     "chai": "3.x",
