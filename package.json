@@ -43,7 +43,7 @@
     "coveralls": "2.x",
     "glob": "^7.0.3",
     "istanbul": "^0.4.3",
-    "mocha": "2.x",
+    "mocha": "3.0.1",
     "mocha-lcov-reporter": "^1.2.0",
     "mockery": "^2.0.0",
     "roots-util": "^0.2.0",
