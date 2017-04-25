@@ -44,7 +44,7 @@
     "glob": "^7.0.3",
     "istanbul": "^0.4.3",
     "mocha": "2.x",
-    "mocha-lcov-reporter": "^1.2.0",
+    "mocha-lcov-reporter": "^1.3.0",
     "mockery": "^2.0.0",
     "roots-util": "^0.2.0",
     "sinon": "^1.17.4",
