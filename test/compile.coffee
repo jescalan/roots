@@ -144,15 +144,26 @@ describe 'compile', ->
       p.should.have.content('/path_helper.html')
       done()
 
-  it 'should work with different environments', (done) ->
-    p = path.join(test_path, 'environments')
-    output = path.join(p, 'public')
+  describe 'environments', ->
 
-    (new Roots(p, { env: 'doge' })).compile().done ->
-      path.join(output, 'doge_file.html').should.be.a.file()
-      path.join(output, 'dev_file.html').should.not.be.a.path()
-      done()
-    , done
+    before (done) ->
+      p        = path.join(test_path, 'environments')
+      @output  = path.join(p, 'public')
+      @project = (new Roots(p, { env: 'doge' }))
+      @project.compile().done((-> done()), done)
+
+    it 'should ignore files based off the correct environment', ->
+      path.join(@output, 'doge_file.html').should.be.a.file()
+      path.join(@output, 'dev_file.html').should.not.be.a.path()
+
+    it 'it should merge locals from the environment w the default locals from app.coffee', ->
+      @project.config.locals.data.user.name.should.eq('alfred')
+      @project.config.locals.data.user.age.should.eq(45)
+
+    it 'should replace extensions from the default app.coffee w environment specific ones', ->
+      @project.config.locals.test_extension.test.should.eq('app.doge.coffee')
+      @project.config.locals.another_extension.test.should.eq('another extension')
+
 
   it 'should output sourcemaps when specified', (done) ->
     p = path.join(test_path, 'sourcemaps')
