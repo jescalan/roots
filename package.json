@@ -36,7 +36,7 @@
     "when": "3.7.8"
   },
   "devDependencies": {
-    "chai": "3.x",
+    "chai": "4.0.0",
     "chai-as-promised": "6.0.0",
     "chai-fs": "jenius/chai-fs",
     "coffeelint": "^1.15.7",
