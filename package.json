@@ -22,7 +22,7 @@
     "inquirer": "^3.0.2",
     "keen.io": "0.1.x",
     "lodash": "^4.12.0",
-    "micromatch": "^2.3.8",
+    "micromatch": "^3.0.1",
     "mkdirp": "0.5.x",
     "npm": "^4.0.3",
     "open": "0.0.5",
