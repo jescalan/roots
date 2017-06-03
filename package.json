@@ -40,7 +40,7 @@
     "chai-as-promised": "6.0.0",
     "chai-fs": "jenius/chai-fs",
     "coffeelint": "^1.15.7",
-    "coveralls": "2.x",
+    "coveralls": "2.13.1",
     "glob": "^7.0.3",
     "istanbul": "^0.4.3",
     "mocha": "2.x",
