@@ -9,8 +9,8 @@
   <a title='Build Status' href="https://travis-ci.org/jescalan/roots">
     <img src='http://img.shields.io/travis/jescalan/roots/v3.svg?style=flat' />
   </a>
-  <a href='https://coveralls.io/r/jescalan/roots'>
-    <img src='http://img.shields.io/coveralls/jescalan/roots/master.svg?style=flat' alt='Coverage Status' />
+  <a href='https://coveralls.io/r/jenius/roots'>
+    <img src='http://img.shields.io/coveralls/jenius/roots/master.svg?style=flat' alt='Coverage Status' />
   </a>
   <a title='Dependency Status' href="https://david-dm.org/jescalan/roots">
     <img src='http://img.shields.io/david/jescalan/roots.svg?style=flat' />
