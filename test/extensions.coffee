@@ -32,6 +32,7 @@ describe 'extension hooks', ->
       .on('done', -> done())
 
     @project.compile()
+    return
 
   it 'before_file hook should work', ->
     @before_file.should.be.ok
@@ -63,6 +64,7 @@ describe 'write hook', ->
     project.extensions.all.length.should.be.above(2)
     project.on('error', done).on('done', -> done())
     project.compile()
+    return
 
   it 'returning false on write hook should prevent write', ->
     path.join(@public, 'prevent_write.html').should.not.be.a.path()
@@ -99,6 +101,7 @@ describe 'categories', ->
       .on('done', -> done())
 
     project.compile()
+    return
 
   it 'should scope all hooks to an extension-bound category property', ->
     @file.indexOf('[1] active').should.be.above(-1)
@@ -215,3 +218,4 @@ describe 'setup-function', ->
     @project.compile().then =>
       path.join(@public, 'test.html').should.be.a.file()
       sentinel = true
+    return

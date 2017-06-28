@@ -186,11 +186,13 @@ describe 'cli', ->
           cli.removeListener('err', spy)
           obj.server.stop(done)
 
+      return
+
     it 'should error when trying to compile invalid code'
 
   describe 'clean', ->
 
-    it 'should remove the output folder', (done) ->
+    it 'should remove the output folder', ->
       spy = sinon.spy()
 
       cli.on('success', spy)
@@ -199,7 +201,6 @@ describe 'cli', ->
         spy.should.have.been.calledOnce
         spy.should.have.been.calledWith('output removed')
         cli.removeListener('success', spy)
-        done()
 
   describe 'tpl', ->
 
@@ -220,7 +221,7 @@ describe 'cli', ->
         (-> cli.run('tpl add')).should.throw()
         (-> cli.run('tpl add foo')).should.throw()
 
-      it 'should succeed with a name and url', (done) ->
+      it 'should succeed with a name and url', ->
         spy = sinon.spy()
 
         cli.on('success', spy)
@@ -228,7 +229,6 @@ describe 'cli', ->
         cli.run('tpl add foo git@github.com:carrot/sprout-express').then ->
           spy.should.have.been.calledOnce
           cli.removeListener('success', spy)
-          done()
 
       it 'should handle errors correctly', ->
         @stub.restore()
@@ -247,7 +247,7 @@ describe 'cli', ->
       it 'should error without a name', ->
         (-> cli.run('tpl default')).should.throw()
 
-      it 'should error with non-present template name', (done) ->
+      it 'should error with non-present template name', ->
         spy = sinon.spy()
 
         cli.on('err', spy)
@@ -255,7 +255,6 @@ describe 'cli', ->
         cli.run('tpl default wow').catch ->
           spy.should.have.been.calledOnce
           cli.removeListener('err', spy)
-          done()
 
     describe 'remove', ->
 
@@ -270,7 +269,7 @@ describe 'cli', ->
       it 'should error without a name', ->
         (-> cli.run('tpl remove')).should.throw()
 
-      it 'should succeed with a name', (done) ->
+      it 'should succeed with a name', ->
         spy = sinon.spy()
 
         cli.on('success', spy)
@@ -278,7 +277,6 @@ describe 'cli', ->
         cli.run('tpl remove wow').then ->
           spy.should.have.been.calledOnce
           cli.removeListener('success', spy)
-          done()
 
       it 'should handle errors correctly', ->
         @stub.restore()

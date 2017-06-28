@@ -14,10 +14,9 @@ before ->
 
 describe 'new', ->
 
-  before (done) ->
+  before ->
     Roots.template.add(name: 'test', uri: test_tpl_path)
       .then -> Roots.template.default(name: 'test')
-      .then -> done()
 
   beforeEach (done) ->
     rimraf.sync(new_path, done())
