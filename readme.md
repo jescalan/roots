@@ -6,14 +6,14 @@
   <a title='NPM version' href="http://badge.fury.io/js/roots">
     <img src='http://img.shields.io/npm/v/roots.svg?style=flat' />
   </a>
-  <a title='Build Status' href="https://travis-ci.org/jenius/roots">
-    <img src='http://img.shields.io/travis/jenius/roots/v3.svg?style=flat' />
+  <a title='Build Status' href="https://travis-ci.org/jescalan/roots">
+    <img src='http://img.shields.io/travis/jescalan/roots/v3.svg?style=flat' />
   </a>
-  <a href='https://coveralls.io/r/jenius/roots?branch=v3'>
-    <img src='http://img.shields.io/coveralls/jenius/roots/v3.svg?style=flat' alt='Coverage Status' />
+  <a href='https://coveralls.io/r/jescalan/roots?branch=v3'>
+    <img src='http://img.shields.io/coveralls/jescalan/roots/v3.svg?style=flat' alt='Coverage Status' />
   </a>
-  <a title='Dependency Status' href="https://gemnasium.com/jenius/roots">
-    <img src='http://img.shields.io/gemnasium/jenius/roots.svg?style=flat' />
+  <a title='Dependency Status' href="https://david-dm.org/jescalan/roots">
+    <img src='http://img.shields.io/david/jescalan/roots.svg?style=flat' />
   </a>
 </p>
 
@@ -41,7 +41,7 @@ See [the docs](http://roots.cx/docs) for more info. You can also find a number o
 
 ### Support
 
-You can get support for and talk about roots in our [gitter chatroom](https://gitter.im/jenius/roots). Community, yay!
+You can get support for and talk about roots in our [gitter chatroom](https://gitter.im/jescalan/roots). Community, yay!
 
 ### License & Contributing
 
