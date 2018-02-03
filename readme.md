@@ -33,11 +33,11 @@ Roots is certainly not the only static site compiler out there. But in our opini
 
 ### Installation
 
-`npm install roots -g` - if you get an `EACCES` error, [check here](http://roots.cx/docs/error#eacces-permission-denied)
+`npm install roots -g` - if you get an `EACCES` error, [check here](http://roots.netlify.com/docs/error#eacces-permission-denied)
 
 ### Usage
 
-See [the docs](http://roots.cx/docs) for more info. You can also find a number of tutorial videos [here](http://roots.cx).
+See [the docs](http://roots.netlify.com/docs) for more info. You can also find a number of tutorial videos [here](http://roots.netlify.com).
 
 ### Support
 
